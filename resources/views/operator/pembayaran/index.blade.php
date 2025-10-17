@@ -73,59 +73,54 @@
     <!-- Payments Table -->
     <x-islamic-card title="Daftar Pembayaran">
         <x-data-table :headers="['NIM', 'Nama', 'Jenis', 'Nominal', 'Jatuh Tempo', 'Tgl Bayar', 'Status', 'Bukti', 'Aksi']">
-            @forelse(range(1, 10) as $index)
+            @forelse($pembayarans ?? [] as $pembayaran)
             <tr class="hover:bg-green-50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    2301{{ str_pad($index, 3, '0', STR_PAD_LEFT) }}
+                    {{ $pembayaran->mahasiswa->nim ?? '-' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {{ ['Ahmad Nur', 'Fatimah Zahra', 'Muhammad Ali', 'Khadijah', 'Umar Faruq', 'Aisyah', 'Bilal', 'Sumayah', 'Zaid', 'Hafsah'][$index - 1] }}
+                    {{ $pembayaran->mahasiswa->nama_lengkap ?? '-' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {{ ['SPP', 'UKT', 'Daftar Ulang', 'SPP', 'Wisuda', 'UKT', 'SPP', 'UKT', 'Daftar Ulang', 'SPP'][$index - 1] }}
+                    {{ ucwords(str_replace('_', ' ', $pembayaran->jenis_pembayaran)) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                    Rp {{ number_format(2000000 + ($index * 500000), 0, ',', '.') }}
+                    Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {{ \Carbon\Carbon::now()->addDays($index * 5)->format('d/m/Y') }}
+                    {{ $pembayaran->tanggal_jatuh_tempo ? \Carbon\Carbon::parse($pembayaran->tanggal_jatuh_tempo)->format('d/m/Y') : '-' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                    {{ $index % 3 == 0 ? '-' : \Carbon\Carbon::now()->subDays($index)->format('d/m/Y') }}
+                    {{ $pembayaran->tanggal_bayar ? \Carbon\Carbon::parse($pembayaran->tanggal_bayar)->format('d/m/Y') : '-' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                    <x-status-badge :status="$index % 3 == 0 ? 'pending' : ($index % 4 == 0 ? 'terlambat' : 'lunas')" type="payment" />
+                    <x-status-badge :status="$pembayaran->status" type="payment" />
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                    @if($index % 3 != 0)
-                    <button class="text-green-600 hover:text-green-800">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                    </button>
+                    @if($pembayaran->bukti_pembayaran)
+                        <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}" target="_blank" class="text-green-600 hover:text-green-800" title="Lihat Bukti">
+                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </a>
                     @else
-                    <span class="text-gray-400">-</span>
+                        <span class="text-gray-400 text-xs">Belum ada</span>
                     @endif
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <div class="flex items-center space-x-2">
-                        <a href="{{ route('operator.pembayaran.show', $index) }}" class="text-blue-600 hover:text-blue-800" title="Detail">
+                        <a href="{{ route('operator.pembayaran.show', $pembayaran->id) }}" class="text-blue-600 hover:text-blue-800" title="Detail">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                         </a>
-                        <a href="{{ route('operator.pembayaran.edit', $index) }}" class="text-yellow-600 hover:text-yellow-800" title="Edit">
+                        <a href="{{ route('operator.pembayaran.edit', $pembayaran->id) }}" class="text-yellow-600 hover:text-yellow-800" title="Edit">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
                         </a>
-                        <button class="text-red-600 hover:text-red-800" title="Hapus">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                            </svg>
-                        </button>
                     </div>
                 </td>
             </tr>
