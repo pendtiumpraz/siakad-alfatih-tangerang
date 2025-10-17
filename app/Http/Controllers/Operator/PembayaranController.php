@@ -187,6 +187,18 @@ class PembayaranController extends Controller
     }
 
     /**
+     * Display the specified payment
+     */
+    public function show($id)
+    {
+        $pembayaran = Pembayaran::with(['mahasiswa.programStudi', 'semester', 'operator'])
+            ->withTrashed()
+            ->findOrFail($id);
+
+        return view('operator.pembayaran.show', compact('pembayaran'));
+    }
+
+    /**
      * Show the form for editing the specified payment
      */
     public function edit($id)
