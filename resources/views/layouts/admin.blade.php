@@ -148,7 +148,7 @@
                 </a>
 
                 <!-- Role & Permission -->
-                <a href="{{ route('admin.roles.permissions.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.permissions.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
                     <i class="fas fa-shield-alt w-5"></i>
                     <span class="ml-3">Role & Permission</span>
                 </a>
@@ -163,23 +163,23 @@
                         <i class="fas fa-chevron-down transition-transform" :class="masterDataOpen ? 'rotate-180' : ''"></i>
                     </button>
                     <div class="dropdown-menu ml-4 mt-2" :class="masterDataOpen ? 'open' : ''">
-                        <a href="#" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm">
+                        <a href="{{ route('admin.program-studi.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.program-studi.*') ? 'active' : '' }}">
                             <i class="fas fa-graduation-cap w-4"></i>
                             <span class="ml-3">Program Studi</span>
                         </a>
-                        <a href="#" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm">
+                        <a href="{{ route('admin.kurikulum.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.kurikulum.*') ? 'active' : '' }}">
                             <i class="fas fa-book w-4"></i>
                             <span class="ml-3">Kurikulum</span>
                         </a>
-                        <a href="#" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm">
+                        <a href="{{ route('admin.mata-kuliah.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.mata-kuliah.*') ? 'active' : '' }}">
                             <i class="fas fa-book-open w-4"></i>
                             <span class="ml-3">Mata Kuliah</span>
                         </a>
-                        <a href="#" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm">
+                        <a href="{{ route('admin.ruangan.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.ruangan.*') ? 'active' : '' }}">
                             <i class="fas fa-door-open w-4"></i>
                             <span class="ml-3">Ruangan</span>
                         </a>
-                        <a href="#" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm">
+                        <a href="{{ route('admin.semester.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.semester.*') ? 'active' : '' }}">
                             <i class="fas fa-calendar-alt w-4"></i>
                             <span class="ml-3">Semester</span>
                         </a>
@@ -187,7 +187,7 @@
                 </div>
 
                 <!-- Pembayaran -->
-                <a href="#" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg">
+                <a href="{{ route('admin.pembayaran.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.pembayaran.*') ? 'active' : '' }}">
                     <i class="fas fa-money-bill-wave w-5"></i>
                     <span class="ml-3">Pembayaran</span>
                 </a>
