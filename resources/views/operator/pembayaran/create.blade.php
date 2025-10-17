@@ -106,9 +106,9 @@
                         Status <span class="text-red-500">*</span>
                     </label>
                     <select name="status" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                        <option value="pending">Pending</option>
+                        <option value="belum_lunas" selected>Belum Lunas</option>
+                        <option value="pending">Pending (Menunggu Verifikasi)</option>
                         <option value="lunas">Lunas</option>
-                        <option value="terlambat">Terlambat</option>
                     </select>
                     @error('status')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

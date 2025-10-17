@@ -31,33 +31,33 @@
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <p class="text-sm text-gray-600 mb-1">ID Pembayaran</p>
-                        <p class="text-lg font-semibold text-gray-800">#PAY-2024-001</p>
+                        <p class="text-lg font-semibold text-gray-800">#PAY-{{ str_pad($pembayaran->id, 6, '0', STR_PAD_LEFT) }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Status</p>
-                        <x-status-badge status="pending" type="payment" />
+                        <x-status-badge :status="$pembayaran->status" type="payment" />
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Jenis Pembayaran</p>
-                        <p class="text-lg font-semibold text-gray-800">SPP Semester 3</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ ucwords(str_replace('_', ' ', $pembayaran->jenis_pembayaran)) }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Nominal</p>
-                        <p class="text-2xl font-bold text-green-700">Rp 2.500.000</p>
+                        <p class="text-2xl font-bold text-green-700">Rp {{ number_format($pembayaran->jumlah, 0, ',', '.') }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Tanggal Jatuh Tempo</p>
-                        <p class="text-lg font-semibold text-gray-800">{{ \Carbon\Carbon::now()->addDays(30)->format('d/m/Y') }}</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ $pembayaran->tanggal_jatuh_tempo ? \Carbon\Carbon::parse($pembayaran->tanggal_jatuh_tempo)->format('d/m/Y') : '-' }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Tanggal Bayar</p>
-                        <p class="text-lg font-semibold text-gray-800">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ $pembayaran->tanggal_bayar ? \Carbon\Carbon::parse($pembayaran->tanggal_bayar)->format('d/m/Y') : '-' }}</p>
                     </div>
                 </div>
 
                 <div class="mt-6 pt-6 border-t border-gray-200">
                     <p class="text-sm text-gray-600 mb-2">Keterangan</p>
-                    <p class="text-gray-800">Pembayaran SPP untuk semester 3 tahun akademik 2024/2025</p>
+                    <p class="text-gray-800">{{ $pembayaran->keterangan ?? '-' }}</p>
                 </div>
             </x-islamic-card>
 
@@ -83,28 +83,28 @@
             <x-islamic-card title="Data Mahasiswa">
                 <div class="text-center mb-6">
                     <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-3xl font-bold mb-4">
-                        AN
+                        {{ strtoupper(substr($pembayaran->mahasiswa->nama_lengkap ?? 'M', 0, 2)) }}
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800">Ahmad Nur Rahman</h3>
-                    <p class="text-gray-600">NIM: 2301001</p>
+                    <h3 class="text-xl font-bold text-gray-800">{{ $pembayaran->mahasiswa->nama_lengkap ?? '-' }}</h3>
+                    <p class="text-gray-600">NIM: {{ $pembayaran->mahasiswa->nim ?? '-' }}</p>
                 </div>
 
                 <div class="space-y-3">
                     <div class="flex justify-between border-b border-gray-200 pb-2">
                         <span class="text-sm text-gray-600">Program Studi</span>
-                        <span class="text-sm font-semibold text-gray-800">Pendidikan Agama Islam</span>
+                        <span class="text-sm font-semibold text-gray-800">{{ $pembayaran->mahasiswa->programStudi->nama_program_studi ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between border-b border-gray-200 pb-2">
                         <span class="text-sm text-gray-600">Semester</span>
-                        <span class="text-sm font-semibold text-gray-800">3</span>
+                        <span class="text-sm font-semibold text-gray-800">{{ $pembayaran->semester->nama_semester ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between border-b border-gray-200 pb-2">
                         <span class="text-sm text-gray-600">Status</span>
-                        <x-status-badge status="active" type="status" />
+                        <x-status-badge :status="$pembayaran->mahasiswa->status ?? 'active'" type="status" />
                     </div>
                     <div class="flex justify-between">
                         <span class="text-sm text-gray-600">Email</span>
-                        <span class="text-sm font-semibold text-gray-800">ahmad@example.com</span>
+                        <span class="text-sm font-semibold text-gray-800">{{ $pembayaran->mahasiswa->email ?? '-' }}</span>
                     </div>
                 </div>
             </x-islamic-card>

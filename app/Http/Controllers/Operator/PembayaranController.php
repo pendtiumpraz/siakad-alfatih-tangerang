@@ -154,6 +154,12 @@ class PembayaranController extends Controller
                     ->store('pembayaran/bukti', 'public');
             }
 
+            // Auto-update status based on file upload
+            $status = $validated['status'];
+            if ($buktiPath && $status === 'belum_lunas') {
+                $status = 'pending'; // Auto change to pending when file is uploaded
+            }
+
             // Create payment
             $pembayaran = Pembayaran::create([
                 'mahasiswa_id' => $validated['mahasiswa_id'],
@@ -163,7 +169,7 @@ class PembayaranController extends Controller
                 'jumlah' => $validated['jumlah'],
                 'tanggal_jatuh_tempo' => $validated['tanggal_jatuh_tempo'],
                 'tanggal_bayar' => $validated['tanggal_bayar'] ?? null,
-                'status' => $validated['status'],
+                'status' => $status,
                 'bukti_pembayaran' => $buktiPath,
                 'keterangan' => $validated['keterangan'] ?? null,
             ]);
@@ -281,12 +287,22 @@ class PembayaranController extends Controller
                 // Upload new file
                 $updateData['bukti_pembayaran'] = $request->file('bukti_pembayaran')
                     ->store('pembayaran/bukti', 'public');
+
+                // Auto-update status to pending when file is uploaded and status is belum_lunas
+                if ($validated['status'] === 'belum_lunas') {
+                    $updateData['status'] = 'pending';
+                }
             }
 
             // Handle remove bukti request
             if ($request->boolean('remove_bukti') && $pembayaran->bukti_pembayaran) {
                 Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
                 $updateData['bukti_pembayaran'] = null;
+
+                // Auto-update status to belum_lunas when file is removed and status is pending
+                if ($validated['status'] === 'pending') {
+                    $updateData['status'] = 'belum_lunas';
+                }
             }
 
             // Update payment
