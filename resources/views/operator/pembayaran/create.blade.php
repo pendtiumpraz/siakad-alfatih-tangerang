@@ -129,20 +129,11 @@
 
             <!-- Bukti Pembayaran -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Bukti Pembayaran
-                </label>
-                <div class="flex items-center space-x-3">
-                    <label for="bukti_pembayaran" class="cursor-pointer inline-flex items-center px-4 py-2 bg-white border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors font-semibold">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        Pilih File
-                    </label>
-                    <span id="file-name" class="text-sm text-gray-500">Belum ada file dipilih</span>
-                    <input type="file" id="bukti_pembayaran" name="bukti_pembayaran" accept="image/*,.pdf" class="hidden" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'Belum ada file dipilih'">
-                </div>
-                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, PDF (Max: 2MB)</p>
+                <x-file-upload
+                    name="bukti_pembayaran"
+                    label="Bukti Pembayaran"
+                    accept="image/*,.pdf"
+                />
                 @error('bukti_pembayaran')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

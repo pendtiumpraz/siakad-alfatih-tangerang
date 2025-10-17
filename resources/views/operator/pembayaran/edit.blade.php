@@ -143,35 +143,12 @@
 
             <!-- Bukti Pembayaran -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Bukti Pembayaran
-                </label>
-
-                @if($pembayaran->bukti_pembayaran)
-                <div class="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            <span class="text-sm font-medium text-green-800">File saat ini: {{ basename($pembayaran->bukti_pembayaran) }}</span>
-                        </div>
-                        <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}" target="_blank" class="text-sm text-green-600 hover:text-green-800 font-semibold">Lihat</a>
-                    </div>
-                </div>
-                @endif
-
-                <div class="flex items-center space-x-3">
-                    <label for="bukti_pembayaran_edit" class="cursor-pointer inline-flex items-center px-4 py-2 bg-white border-2 border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors font-semibold">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                        </svg>
-                        {{ $pembayaran->bukti_pembayaran ? 'Ganti File' : 'Pilih File' }}
-                    </label>
-                    <span id="file-name-edit" class="text-sm text-gray-500">{{ $pembayaran->bukti_pembayaran ? 'File tidak diubah' : 'Belum ada file dipilih' }}</span>
-                    <input type="file" id="bukti_pembayaran_edit" name="bukti_pembayaran" accept="image/*,.pdf" class="hidden" onchange="document.getElementById('file-name-edit').textContent = this.files[0]?.name || 'Belum ada file dipilih'">
-                </div>
-                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, PDF (Max: 2MB)</p>
+                <x-file-upload
+                    name="bukti_pembayaran"
+                    label="Bukti Pembayaran"
+                    accept="image/*,.pdf"
+                    :currentFile="$pembayaran->bukti_pembayaran ?? null"
+                />
                 @error('bukti_pembayaran')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
