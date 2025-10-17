@@ -1,11 +1,279 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/* Islamic Theme CSS for STAI AL-FATIH */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+:root {
+    --primary-green: #4A7C59;
+    --dark-green: #2D5F3F;
+    --soft-green: #6B9E78;
+    --primary-gold: #D4AF37;
+    --light-yellow: #F4E5C3;
+    --bg-cream: #F9FAFB;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Islamic Pattern Background */
+.islamic-pattern-bg {
+    background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 50%, #6B9E78 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.islamic-pattern-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px),
+        repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px);
+    opacity: 0.3;
+}
+
+/* Islamic Geometric Patterns */
+.islamic-border {
+    position: relative;
+    border: 2px solid var(--primary-gold);
+    border-radius: 0.75rem;
+}
+
+.islamic-border::before,
+.islamic-border::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-gold);
+}
+
+.islamic-border::before {
+    top: -2px;
+    left: -2px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.islamic-border::after {
+    bottom: -2px;
+    right: -2px;
+    border-left: none;
+    border-top: none;
+}
+
+/* Islamic Decorative Elements */
+.islamic-star {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+
+.islamic-star::before,
+.islamic-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: var(--primary-gold);
+}
+
+.islamic-star::before {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+/* Card with Islamic Shadow */
+.islamic-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow:
+        0 4px 6px -1px rgba(45, 95, 63, 0.1),
+        0 2px 4px -1px rgba(45, 95, 63, 0.06),
+        0 0 0 1px rgba(212, 175, 55, 0.1);
+    transition: all 0.3s ease;
+}
+
+.islamic-card:hover {
+    box-shadow:
+        0 10px 15px -3px rgba(45, 95, 63, 0.15),
+        0 4px 6px -2px rgba(45, 95, 63, 0.08),
+        0 0 0 1px rgba(212, 175, 55, 0.2);
+}
+
+/* Gold Divider */
+.gold-divider {
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--primary-gold), transparent);
+    margin: 1rem 0;
+}
+
+/* Islamic Input Styling */
+.islamic-input {
+    border: 1.5px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.islamic-input:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+/* Islamic Button */
+.islamic-button {
+    background: var(--primary-green);
+    color: white;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.islamic-button:hover {
+    background: var(--primary-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.islamic-button:active {
+    transform: translateY(0);
+}
+
+/* Islamic Checkbox */
+.islamic-checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 0.25rem;
+    border: 1.5px solid #d1d5db;
+    transition: all 0.2s ease;
+}
+
+.islamic-checkbox:checked {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.islamic-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.1);
+}
+
+/* Islamic Link */
+.islamic-link {
+    color: var(--primary-green);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.islamic-link:hover {
+    color: var(--primary-gold);
+    text-decoration: underline;
+}
+
+/* Arabic Text Styling */
+.arabic-text {
+    font-size: 1.25rem;
+    color: var(--primary-gold);
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+/* Step Indicator */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    background: var(--primary-green);
+    width: 40px;
+    border-radius: 6px;
+}
+
+.step-dot.completed {
+    background: var(--primary-gold);
+}
+
+/* Logo Styling */
+.stai-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.stai-logo h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stai-logo h2 {
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--light-yellow);
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.stai-logo .logo-ornament {
+    display: inline-block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--primary-gold), transparent);
+    margin: 0.5rem auto;
+}
+
+/* Success Message */
+.success-message {
+    background: linear-gradient(135deg, #4A7C59 0%, #6B9E78 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    border: 2px solid var(--primary-gold);
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.shimmer {
+    animation: shimmer 2s infinite;
+    background: linear-gradient(to right, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
+    background-size: 1000px 100%;
 }
