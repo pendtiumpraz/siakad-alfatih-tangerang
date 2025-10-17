@@ -110,14 +110,12 @@
         >
             <!-- Logo Section -->
             <div class="p-6 border-b border-white/20 islamic-pattern">
-                <div class="text-center">
-                    <div class="mb-2">
-                        <svg class="w-16 h-16 mx-auto text-[#D4AF37]" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                        </svg>
+                <div class="flex items-center justify-center space-x-3">
+                    <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="h-16 w-16 object-contain">
+                    <div class="text-left">
+                        <h1 class="text-lg font-bold text-[#F4E5C3] leading-tight">STAI AL-FATIH</h1>
+                        <p class="text-xs text-white/80 mt-1">Portal Mahasiswa</p>
                     </div>
-                    <h1 class="text-xl font-bold text-[#F4E5C3]">STAI AL-FATIH</h1>
-                    <p class="text-xs text-white/80 mt-1">Portal Mahasiswa</p>
                 </div>
             </div>
 

@@ -126,10 +126,13 @@
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         >
             <!-- Logo Section -->
-            <div class="flex items-center justify-center h-20 bg-[#2D5F3F] border-b-2 border-[#D4AF37] islamic-pattern">
-                <div class="text-center">
-                    <h1 class="text-2xl font-bold text-white">STAI AL-FATIH</h1>
-                    <p class="text-xs text-[#F4E5C3]">Sistem Akademik</p>
+            <div class="flex items-center justify-center h-24 bg-[#2D5F3F] border-b-2 border-[#D4AF37] islamic-pattern px-4 py-3">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="h-16 w-16 object-contain">
+                    <div class="text-left">
+                        <h1 class="text-lg font-bold text-white leading-tight">STAI AL-FATIH</h1>
+                        <p class="text-xs text-[#F4E5C3]">Sistem Akademik</p>
+                    </div>
                 </div>
             </div>
 

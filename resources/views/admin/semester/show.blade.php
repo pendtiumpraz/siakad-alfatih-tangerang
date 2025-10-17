@@ -32,7 +32,7 @@
                         <i class="fas fa-calendar-alt text-3xl text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">Semester {{ $semester->semester }}</h2>
+                        <h2 class="text-2xl font-bold text-white">{{ $semester->nama_semester }}</h2>
                         <p class="text-[#F4E5C3]">Tahun Akademik {{ $semester->tahun_akademik }}</p>
                     </div>
                 </div>
@@ -63,9 +63,13 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <p class="text-sm text-gray-500">Semester</p>
-                            <p class="text-lg font-semibold {{ $semester->semester == 'Ganjil' ? 'text-blue-600' : 'text-purple-600' }}">
-                                {{ $semester->semester }}
+                            <p class="text-sm text-gray-500">Nama Semester</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $semester->nama_semester }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Jenis Semester</p>
+                            <p class="text-lg font-semibold {{ $semester->jenis == 'ganjil' ? 'text-blue-600' : ($semester->jenis == 'genap' ? 'text-purple-600' : 'text-orange-600') }}">
+                                {{ ucfirst($semester->jenis) }}
                             </p>
                         </div>
                         <div>

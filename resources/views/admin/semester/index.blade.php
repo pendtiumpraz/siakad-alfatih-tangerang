@@ -67,7 +67,7 @@
             <i class="fas fa-star text-[#2D5F3F] text-2xl mr-3"></i>
             <div>
                 <p class="font-semibold text-[#2D5F3F]">Semester Aktif Saat Ini</p>
-                <p class="text-sm text-gray-700">{{ $activeSemester->semester }} {{ $activeSemester->tahun_akademik }}</p>
+                <p class="text-sm text-gray-700">{{ $activeSemester->nama_semester }}</p>
             </div>
         </div>
     </div>
@@ -94,9 +94,12 @@
                                 {{ ($semesters->currentPage() - 1) * $semesters->perPage() + $index + 1 }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <span class="px-3 py-1 {{ $semester->semester == 'Ganjil' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }} text-xs font-semibold rounded-full">
-                                    {{ $semester->semester }}
-                                </span>
+                                <div>
+                                    <p class="font-semibold text-[#2D5F3F]">{{ $semester->nama_semester }}</p>
+                                    <span class="px-2 py-1 {{ $semester->jenis == 'ganjil' ? 'bg-blue-100 text-blue-800' : ($semester->jenis == 'genap' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800') }} text-xs font-semibold rounded-full">
+                                        {{ ucfirst($semester->jenis) }}
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#2D5F3F]">
                                 {{ $semester->tahun_akademik }}

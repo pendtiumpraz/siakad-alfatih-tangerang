@@ -23,10 +23,13 @@
             class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-green-800 to-green-900 shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
         >
             <!-- Logo & Title -->
-            <div class="flex items-center justify-center h-20 px-6 bg-green-900 border-b border-green-700">
-                <div class="text-center">
-                    <h1 class="text-xl font-bold text-white">STAI AL-FATIH</h1>
-                    <p class="text-xs text-green-200">Operator Keuangan</p>
+            <div class="flex items-center justify-center h-24 px-4 py-3 bg-green-900 border-b border-green-700">
+                <div class="flex items-center space-x-3">
+                    <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="h-16 w-16 object-contain">
+                    <div class="text-left">
+                        <h1 class="text-lg font-bold text-white leading-tight">STAI AL-FATIH</h1>
+                        <p class="text-xs text-green-200">Operator Keuangan</p>
+                    </div>
                 </div>
             </div>
 
