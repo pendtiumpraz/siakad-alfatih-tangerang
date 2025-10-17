@@ -132,14 +132,6 @@
                         </svg>
                         <span>Cetak Kwitansi</span>
                     </button>
-
-                    <form action="{{ route('operator.pembayaran.destroy', 1) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pembayaran ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold">
-                            Hapus Pembayaran
-                        </button>
-                    </form>
                 </div>
             </x-islamic-card>
 
