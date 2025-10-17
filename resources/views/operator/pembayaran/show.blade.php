@@ -112,7 +112,7 @@
             <!-- Actions -->
             <x-islamic-card title="Aksi">
                 <div class="space-y-3">
-                    <form action="{{ route('operator.pembayaran.verify', 1) }}" method="POST" class="w-full">
+                    <form action="{{ route('operator.pembayaran.verify', $pembayaran->id) }}" method="POST" class="w-full">
                         @csrf
                         <button type="submit" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center justify-center space-x-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,7 +122,7 @@
                         </button>
                     </form>
 
-                    <a href="{{ route('operator.pembayaran.edit', 1) }}" class="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center">
+                    <a href="{{ route('operator.pembayaran.edit', $pembayaran->id) }}" class="block w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold text-center">
                         Edit Pembayaran
                     </a>
 
