@@ -73,8 +73,8 @@ class PembayaranController extends Controller
             ->orderBy('nama_lengkap')
             ->get();
 
-        $semesters = Semester::orderBy('tahun_ajaran', 'desc')
-            ->orderBy('periode', 'desc')
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')
+            ->orderBy('jenis', 'asc')
             ->get();
 
         $jenisPembayaran = [
@@ -104,8 +104,8 @@ class PembayaranController extends Controller
             ->orderBy('nama_lengkap')
             ->get();
 
-        $semesters = Semester::orderBy('tahun_ajaran', 'desc')
-            ->orderBy('periode', 'desc')
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')
+            ->orderBy('jenis', 'asc')
             ->get();
 
         $jenisPembayaran = [
@@ -200,8 +200,8 @@ class PembayaranController extends Controller
             ->orderBy('nama_lengkap')
             ->get();
 
-        $semesters = Semester::orderBy('tahun_ajaran', 'desc')
-            ->orderBy('periode', 'desc')
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')
+            ->orderBy('jenis', 'asc')
             ->get();
 
         $jenisPembayaran = [
