@@ -32,7 +32,7 @@
     </div>
 
     <input
-        ref="fileInput"
+        x-ref="fileInput"
         type="file"
         name="{{ $name }}"
         accept="{{ $accept }}"
