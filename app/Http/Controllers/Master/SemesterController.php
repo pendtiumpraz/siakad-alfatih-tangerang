@@ -22,9 +22,9 @@ class SemesterController extends Controller
             $query->where('tahun_akademik', 'like', "%{$search}%");
         }
 
-        // Filter by semester (Ganjil/Genap)
-        if ($request->has('semester') && $request->semester != '') {
-            $query->where('semester', $request->semester);
+        // Filter by jenis (ganjil/genap/pendek)
+        if ($request->has('jenis') && $request->jenis != '') {
+            $query->where('jenis', $request->jenis);
         }
 
         // Filter by is_active
@@ -37,7 +37,7 @@ class SemesterController extends Controller
 
         // Pagination
         $semesters = $query->orderBy('tahun_akademik', 'desc')
-            ->orderBy('semester', 'desc')
+            ->orderBy('jenis', 'asc')
             ->paginate(15);
 
         return view('admin.semester.index', compact('semesters'));
@@ -58,8 +58,9 @@ class SemesterController extends Controller
     {
         // Validation rules
         $validated = $request->validate([
-            'semester' => 'required|in:Ganjil,Genap',
+            'nama_semester' => 'required|string|max:255',
             'tahun_akademik' => 'required|string|regex:/^\d{4}\/\d{4}$/',
+            'jenis' => 'required|in:ganjil,genap,pendek',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'is_active' => 'boolean'
@@ -123,8 +124,9 @@ class SemesterController extends Controller
 
         // Validation rules
         $validated = $request->validate([
-            'semester' => 'required|in:Ganjil,Genap',
+            'nama_semester' => 'required|string|max:255',
             'tahun_akademik' => 'required|string|regex:/^\d{4}\/\d{4}$/',
+            'jenis' => 'required|in:ganjil,genap,pendek',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'is_active' => 'boolean'

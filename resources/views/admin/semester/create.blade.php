@@ -38,17 +38,13 @@
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Semester -->
+                    <!-- Nama Semester -->
                     <div>
-                        <label for="semester" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Semester <span class="text-red-500">*</span>
+                        <label for="nama_semester" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Semester <span class="text-red-500">*</span>
                         </label>
-                        <select name="semester" id="semester" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('semester') border-red-500 @enderror" required>
-                            <option value="">Pilih Semester</option>
-                            <option value="Ganjil" {{ old('semester') == 'Ganjil' ? 'selected' : '' }}>Ganjil</option>
-                            <option value="Genap" {{ old('semester') == 'Genap' ? 'selected' : '' }}>Genap</option>
-                        </select>
-                        @error('semester')
+                        <input type="text" name="nama_semester" id="nama_semester" value="{{ old('nama_semester') }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_semester') border-red-500 @enderror" placeholder="Semester Ganjil 2024/2025" required>
+                        @error('nama_semester')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                     </div>
@@ -63,6 +59,22 @@
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">Format: 2024/2025</p>
+                    </div>
+
+                    <!-- Jenis Semester -->
+                    <div>
+                        <label for="jenis" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Jenis Semester <span class="text-red-500">*</span>
+                        </label>
+                        <select name="jenis" id="jenis" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('jenis') border-red-500 @enderror" required>
+                            <option value="">Pilih Jenis</option>
+                            <option value="ganjil" {{ old('jenis') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
+                            <option value="genap" {{ old('jenis') == 'genap' ? 'selected' : '' }}>Genap</option>
+                            <option value="pendek" {{ old('jenis') == 'pendek' ? 'selected' : '' }}>Pendek</option>
+                        </select>
+                        @error('jenis')
+                            <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Tanggal Mulai -->
