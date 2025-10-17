@@ -373,4 +373,38 @@ class PembayaranController extends Controller
             return back()->with('error', 'Failed to update payment status: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Verify payment (mark as lunas/verified)
+     */
+    public function verify(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $pembayaran = Pembayaran::findOrFail($id);
+
+            // Update status to lunas
+            $updateData = [
+                'status' => 'lunas',
+                'tanggal_bayar' => $pembayaran->tanggal_bayar ?? now(),
+            ];
+
+            // Update operator who verified
+            $operator = auth()->user()->operator;
+            if ($operator) {
+                $updateData['operator_id'] = $operator->id;
+            }
+
+            $pembayaran->update($updateData);
+
+            DB::commit();
+
+            return back()->with('success', 'Pembayaran berhasil diverifikasi sebagai LUNAS.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal memverifikasi pembayaran: ' . $e->getMessage());
+        }
+    }
 }
