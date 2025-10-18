@@ -12,21 +12,21 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             color: #1f2937;
-            padding: 20px;
+            padding: 15px;
         }
         .card {
             background: #ffffff;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
-            padding: 32px;
+            padding: 20px;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
             transform: scale(0.85);
             transform-origin: top center;
         }
         .header-section {
             text-align: center;
-            margin-bottom: 24px;
-            padding-bottom: 24px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
             border-bottom: 2px solid #D4AF37;
         }
         .header-section .star-icon {
@@ -58,8 +58,8 @@
             margin: 0;
         }
         .student-identity {
-            margin-bottom: 24px;
-            padding-bottom: 24px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
             border-bottom: 1px solid #d1d5db;
         }
         .student-identity table {
@@ -84,7 +84,7 @@
             color: #1f2937;
         }
         .grades-table-wrapper {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
         .grades-table {
             width: 100%;
@@ -132,7 +132,8 @@
         .status-lulus { color: #16a34a; font-size: 12px; }
         .status-tidak { color: #ef4444; font-size: 12px; }
         .summary-section {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+            page-break-inside: avoid;
         }
         .summary-section table {
             width: 100%;
@@ -140,7 +141,7 @@
         .summary-card {
             width: 48%;
             vertical-align: top;
-            padding: 24px;
+            padding: 16px;
             background: #ffffff;
             border: 2px solid #F4E5C3;
             border-radius: 8px;
@@ -193,11 +194,12 @@
             float: right;
         }
         .status-semester {
-            margin-bottom: 24px;
-            padding: 16px;
+            margin-bottom: 16px;
+            padding: 12px;
             background-color: #f0fdf4;
             border-left: 4px solid #16a34a;
             border-radius: 0 8px 8px 0;
+            page-break-inside: avoid;
         }
         .status-semester table {
             width: 100%;
@@ -222,9 +224,10 @@
             font-size: 20px;
         }
         .footer-section {
-            margin-top: 32px;
-            padding-top: 24px;
+            margin-top: 20px;
+            padding-top: 16px;
             border-top: 2px solid #D4AF37;
+            page-break-inside: avoid;
         }
         .footer-section table {
             width: 100%;
@@ -242,7 +245,7 @@
         .footer-text {
             font-size: 12px;
             color: #6b7280;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
         .footer-name {
             font-weight: bold;
@@ -274,8 +277,8 @@
             font-size: 12px;
         }
         .keterangan {
-            margin-top: 24px;
-            font-size: 12px;
+            margin-top: 16px;
+            font-size: 11px;
             color: #6b7280;
         }
         .keterangan p {
@@ -480,7 +483,7 @@
                                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                             </svg>
                             <p class="institution-name">STAI AL-FATIH</p>
-                            <p class="institution-arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+                            <p class="institution-arabic">Bismillahirrahmanirrahim</p>
                         </div>
                     </td>
                     <td class="footer-col">
