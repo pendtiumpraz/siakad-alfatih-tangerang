@@ -289,10 +289,9 @@
 
 <style>
     @media print {
-        /* Hide non-printable elements - ENHANCED */
-        aside, .sidebar, header, nav, button, a[href], .no-print, .islamic-divider,
-        .flex.items-center.justify-between:first-child,
-        [x-data] {
+        /* Hide non-printable elements */
+        aside, .sidebar, header[class], nav, button, .no-print, .islamic-divider,
+        .space-y-6 > .flex.items-center.justify-between:first-of-type {
             display: none !important;
             visibility: hidden !important;
         }
