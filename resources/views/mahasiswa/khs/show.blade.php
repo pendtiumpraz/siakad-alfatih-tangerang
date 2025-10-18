@@ -53,7 +53,7 @@
                 </div>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mt-4">KARTU HASIL STUDI (KHS)</h3>
-            <p class="text-gray-600 mt-2">Semester Genap Tahun Akademik 2024/2025</p>
+            <p class="text-gray-600 mt-2">{{ $khs->semester->nama_semester ?? 'Semester' }} Tahun Akademik {{ $khs->semester->tahun_akademik ?? '-' }}</p>
         </div>
 
         <!-- Student Identity -->
@@ -61,29 +61,29 @@
             <div class="space-y-2">
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">NIM</span>
-                    <span class="text-sm">: <strong>{{ auth()->user()->nim ?? '202301010001' }}</strong></span>
+                    <span class="text-sm">: <strong>{{ $mahasiswa->nim }}</strong></span>
                 </div>
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">Nama</span>
-                    <span class="text-sm">: <strong>{{ auth()->user()->name ?? 'Ahmad Fauzi Ramadhan' }}</strong></span>
+                    <span class="text-sm">: <strong>{{ $mahasiswa->nama_lengkap }}</strong></span>
                 </div>
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">Program Studi</span>
-                    <span class="text-sm">: <strong>Pendidikan Agama Islam</strong></span>
+                    <span class="text-sm">: <strong>{{ $mahasiswa->programStudi->nama_prodi ?? '-' }}</strong></span>
                 </div>
             </div>
             <div class="space-y-2">
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">Semester</span>
-                    <span class="text-sm">: <strong>5 (Lima)</strong></span>
+                    <span class="text-sm">: <strong>{{ $mahasiswa->semester_aktif }}</strong></span>
                 </div>
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">Tahun Akademik</span>
-                    <span class="text-sm">: <strong>2024/2025 Genap</strong></span>
+                    <span class="text-sm">: <strong>{{ $khs->semester->tahun_akademik ?? '-' }} {{ $khs->semester->jenis ?? '-' }}</strong></span>
                 </div>
                 <div class="flex">
                     <span class="w-40 text-sm text-gray-600">Status</span>
-                    <span class="text-sm">: <strong class="text-green-600">Aktif</strong></span>
+                    <span class="text-sm">: <strong class="text-green-600">{{ ucfirst($mahasiswa->status) }}</strong></span>
                 </div>
             </div>
         </div>
@@ -105,101 +105,66 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalSks = 0;
+                        $totalBobot = 0;
+                    @endphp
+                    @forelse($nilais as $index => $nilai)
+                    @php
+                        $bobot = 0;
+                        switch($nilai->grade) {
+                            case 'A': $bobot = 4.0; break;
+                            case 'AB': $bobot = 3.5; break;
+                            case 'B': $bobot = 3.0; break;
+                            case 'BC': $bobot = 2.5; break;
+                            case 'C': $bobot = 2.0; break;
+                            case 'D': $bobot = 1.0; break;
+                            case 'E': $bobot = 0.0; break;
+                        }
+                        $sks = $nilai->mataKuliah->sks ?? 0;
+                        $sksBobot = $bobot * $sks;
+                        $totalSks += $sks;
+                        $totalBobot += $sksBobot;
+
+                        // Grade color mapping
+                        $gradeColor = 'text-gray-600';
+                        switch($nilai->grade) {
+                            case 'A': $gradeColor = 'text-green-700'; break;
+                            case 'AB': $gradeColor = 'text-green-600'; break;
+                            case 'B': $gradeColor = 'text-green-500'; break;
+                            case 'BC': $gradeColor = 'text-blue-500'; break;
+                            case 'C': $gradeColor = 'text-yellow-500'; break;
+                            case 'D': $gradeColor = 'text-red-500'; break;
+                            case 'E': $gradeColor = 'text-red-600'; break;
+                        }
+                    @endphp
                     <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">1</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-501</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Ulumul Qur'an</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">3</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">88</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-700">A</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">4.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">12.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ $index + 1 }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm">{{ $nilai->mataKuliah->kode_mk ?? '-' }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm">{{ $nilai->mataKuliah->nama_mk ?? '-' }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">{{ $sks }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($nilai->nilai_akhir ?? 0, 2) }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold {{ $gradeColor }}">{{ $nilai->grade ?? '-' }}</span></td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($bobot, 1) }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">{{ number_format($sksBobot, 1) }}</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-{{ $nilai->status == 'lulus' ? 'green' : 'red' }}-600 text-xs">{{ $nilai->status == 'lulus' ? 'L' : 'TL' }}</span></td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">2</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-502</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Fiqih Muamalah</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">3</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">82</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-600">AB</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3.5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">10.5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="border border-gray-300 px-3 py-2 text-sm text-center" style="padding: 20px; color: #999;">
+                            Tidak ada data nilai
+                        </td>
                     </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-503</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Tafsir Tarbawi</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">2</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">78</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-500">B</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">6.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">4</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-504</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Ushul Fiqh</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">3</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">82</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-600">AB</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3.5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">10.5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-505</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Metodologi Penelitian</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">3</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">86</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-700">A</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">4.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">12.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">6</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-506</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Psikologi Pendidikan</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">2</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">78</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-500">B</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">6.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">7</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-507</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Sejarah Peradaban Islam</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">2</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">82</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-600">AB</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">3.5</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">7.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">8</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">PAI-508</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">Praktikum Microteaching</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">2</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">90</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold text-green-700">A</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">4.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">8.0</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-green-600 text-xs">L</span></td>
-                    </tr>
+                    @endforelse
+                    @if($nilais->count() > 0)
                     <tr class="bg-gray-100 font-bold">
                         <td colspan="3" class="border border-gray-300 px-3 py-2 text-sm text-right">JUMLAH</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">20</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ $totalSks }}</td>
                         <td colspan="3" class="border border-gray-300 px-3 py-2 text-sm text-center">-</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">72.0</td>
+                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($totalBobot, 1) }}</td>
                         <td class="border border-gray-300 px-3 py-2 text-sm text-center">-</td>
                     </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -211,15 +176,15 @@
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Total SKS Semester</span>
-                        <span class="font-bold text-gray-800 text-lg">20 SKS</span>
+                        <span class="font-bold text-gray-800 text-lg">{{ $khs->total_sks ?? 0 }} SKS</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Total SKS Lulus</span>
-                        <span class="font-bold text-green-600 text-lg">20 SKS</span>
+                        <span class="font-bold text-green-600 text-lg">{{ $khs->total_sks_lulus ?? 0 }} SKS</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E5C3] rounded-lg">
                         <span class="text-sm text-gray-700 font-semibold">IP Semester</span>
-                        <span class="font-bold text-white text-3xl">3.75</span>
+                        <span class="font-bold text-white text-3xl">{{ number_format($khs->ip_semester ?? 0, 2) }}</span>
                     </div>
                 </div>
             </div>
@@ -229,15 +194,15 @@
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Total SKS Tempuh</span>
-                        <span class="font-bold text-gray-800 text-lg">98 SKS</span>
+                        <span class="font-bold text-gray-800 text-lg">{{ $khs->total_sks ?? 0 }} SKS</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm text-gray-600">Total SKS Lulus</span>
-                        <span class="font-bold text-green-600 text-lg">92 SKS</span>
+                        <span class="font-bold text-green-600 text-lg">{{ $khs->total_sks_lulus ?? 0 }} SKS</span>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-gradient-to-r from-[#4A7C59] to-[#5a9c6f] rounded-lg">
                         <span class="text-sm text-white font-semibold">IPK</span>
-                        <span class="font-bold text-white text-3xl">3.68</span>
+                        <span class="font-bold text-white text-3xl">{{ number_format($khs->ip_kumulatif ?? 0, 2) }}</span>
                     </div>
                 </div>
             </div>
@@ -248,7 +213,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <p class="font-bold text-gray-800">Status Semester:</p>
-                    <p class="text-sm text-gray-600 mt-1">Berdasarkan IP Semester 3.75, mahasiswa dinyatakan:</p>
+                    <p class="text-sm text-gray-600 mt-1">Berdasarkan IP Semester {{ number_format($khs->ip_semester ?? 0, 2) }}, mahasiswa dinyatakan:</p>
                 </div>
                 <span class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg font-bold text-xl">
                     LULUS
