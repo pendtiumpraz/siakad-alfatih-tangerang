@@ -18,7 +18,7 @@ class KHSController extends Controller
     /**
      * Display a listing of KHS
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $dosen = Dosen::where('user_id', $user->id)->first();
@@ -27,15 +27,34 @@ class KHSController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        // Get all KHS for mahasiswa that this dosen teaches
-        $khs = Khs::whereHas('mahasiswa.nilais', function ($query) use ($dosen) {
+        // Get all mahasiswa that this dosen teaches
+        $mahasiswas = Mahasiswa::whereHas('nilais', function ($query) use ($dosen) {
                 $query->where('dosen_id', $dosen->id);
             })
-            ->with(['mahasiswa', 'semester'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->orderBy('nama_lengkap')
+            ->get();
 
-        return view('dosen.khs.index', compact('khs', 'dosen'));
+        // Get all semesters
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
+
+        // Get all KHS for mahasiswa that this dosen teaches with filters
+        $query = Khs::whereHas('mahasiswa.nilais', function ($query) use ($dosen) {
+                $query->where('dosen_id', $dosen->id);
+            })
+            ->with(['mahasiswa', 'semester']);
+
+        // Apply filters
+        if ($request->filled('mahasiswa_id')) {
+            $query->where('mahasiswa_id', $request->mahasiswa_id);
+        }
+
+        if ($request->filled('semester_id')) {
+            $query->where('semester_id', $request->semester_id);
+        }
+
+        $khs = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        return view('dosen.khs.index', compact('khs', 'dosen', 'mahasiswas', 'semesters'));
     }
 
     /**
@@ -169,16 +188,19 @@ class KHSController extends Controller
 
     /**
      * Get numeric value for grade
-     * Grade numeric: A=4.0, AB=3.5, B=3.0, BC=2.5, C=2.0, D=1.0, E=0
+     * Grade numeric: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, C-=1.7, D=1.0, E=0
      */
     private function getGradeNumeric($grade)
     {
         $gradeMap = [
             'A' => 4.0,
-            'AB' => 3.5,
+            'A-' => 3.7,
+            'B+' => 3.3,
             'B' => 3.0,
-            'BC' => 2.5,
+            'B-' => 2.7,
+            'C+' => 2.3,
             'C' => 2.0,
+            'C-' => 1.7,
             'D' => 1.0,
             'E' => 0.0,
         ];

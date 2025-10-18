@@ -11,6 +11,24 @@ use Illuminate\Support\Facades\DB;
 class MataKuliahController extends Controller
 {
     /**
+     * Get view path prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of mata kuliah with pagination, search, and filters
      */
     public function index(Request $request)
@@ -53,7 +71,8 @@ class MataKuliahController extends Controller
             ->where('is_active', true)
             ->get();
 
-        return view('admin.mata-kuliah.index', compact('mataKuliahs', 'kurikulums'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.mata-kuliah.index", compact('mataKuliahs', 'kurikulums'));
     }
 
     /**
@@ -113,7 +132,8 @@ class MataKuliahController extends Controller
             ->withCount(['jadwals', 'nilais'])
             ->findOrFail($id);
 
-        return view('admin.mata-kuliah.show', compact('mataKuliah'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.mata-kuliah.show", compact('mataKuliah'));
     }
 
     /**

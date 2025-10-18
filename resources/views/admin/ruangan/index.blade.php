@@ -24,10 +24,10 @@
 
             <!-- Availability Filter -->
             <div class="w-full md:w-48">
-                <select name="availability" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition">
+                <select name="is_available" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition">
                     <option value="">Semua Status</option>
-                    <option value="1" {{ request('availability') == '1' ? 'selected' : '' }}>Tersedia</option>
-                    <option value="0" {{ request('availability') == '0' ? 'selected' : '' }}>Tidak Tersedia</option>
+                    <option value="1" {{ request('is_available') == '1' ? 'selected' : '' }}>Tersedia</option>
+                    <option value="0" {{ request('is_available') == '0' ? 'selected' : '' }}>Tidak Tersedia</option>
                 </select>
             </div>
 

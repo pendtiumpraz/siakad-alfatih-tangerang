@@ -27,7 +27,7 @@
                         {{ substr($user->username, 0, 2) }}
                     </div>
                     <h2 class="mt-4 text-xl font-bold text-white">{{ $user->username }}</h2>
-                    <p class="text-[#F4E5C3] text-sm">{{ $user->email }}</p>
+                    <p class="text-emerald-50 text-sm">{{ $user->email }}</p>
                     <div class="mt-3">
                         <x-admin.badge :type="$user->role" :label="ucfirst($user->role)" />
                     </div>

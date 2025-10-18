@@ -18,7 +18,7 @@
 
     <!-- Form -->
     <x-islamic-card title="Informasi Jadwal">
-        <form action="{{ route('dosen.jadwal.update', 1) }}" method="POST" class="space-y-6">
+        <form action="{{ route('dosen.jadwal.update', $jadwal->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -28,16 +28,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Semester <span class="text-red-500">*</span>
                     </label>
-                    <select name="semester" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <select name="semester_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Semester</option>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3" selected>Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
+                        @foreach($semesters as $semester)
+                            <option value="{{ $semester->id }}" {{ old('semester_id', $jadwal->semester_id) == $semester->id ? 'selected' : '' }}>
+                                {{ $semester->nama_semester }} - {{ $semester->tahun_akademik }} ({{ ucfirst($semester->jenis) }})
+                            </option>
+                        @endforeach
                     </select>
-                    @error('semester')
+                    @error('semester_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -47,16 +46,15 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Mata Kuliah <span class="text-red-500">*</span>
                     </label>
-                    <select name="matakuliah_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <select name="mata_kuliah_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Mata Kuliah</option>
-                        <option value="1" selected>Aqidah Akhlak</option>
-                        <option value="2">Fiqih Ibadah</option>
-                        <option value="3">Tafsir Al-Quran</option>
-                        <option value="4">Hadist</option>
-                        <option value="5">Ushul Fiqh</option>
-                        <option value="6">Sejarah Islam</option>
+                        @foreach($mataKuliahs as $mk)
+                            <option value="{{ $mk->id }}" {{ old('mata_kuliah_id', $jadwal->mata_kuliah_id) == $mk->id ? 'selected' : '' }}>
+                                {{ $mk->kode_mk }} - {{ $mk->nama_mk }}
+                            </option>
+                        @endforeach
                     </select>
-                    @error('matakuliah_id')
+                    @error('mata_kuliah_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -68,11 +66,11 @@
                     </label>
                     <select name="ruangan_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Ruangan</option>
-                        <option value="1" selected>R101 (Kapasitas: 40)</option>
-                        <option value="2">R102 (Kapasitas: 35)</option>
-                        <option value="3">R201 (Kapasitas: 45)</option>
-                        <option value="4">R202 (Kapasitas: 40)</option>
-                        <option value="5">R103 (Kapasitas: 30)</option>
+                        @foreach($ruangans as $ruangan)
+                            <option value="{{ $ruangan->id }}" {{ old('ruangan_id', $jadwal->ruangan_id) == $ruangan->id ? 'selected' : '' }}>
+                                {{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})
+                            </option>
+                        @endforeach
                     </select>
                     @error('ruangan_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -86,11 +84,9 @@
                     </label>
                     <select name="hari" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Hari</option>
-                        <option value="senin" selected>Senin</option>
-                        <option value="selasa">Selasa</option>
-                        <option value="rabu">Rabu</option>
-                        <option value="kamis">Kamis</option>
-                        <option value="jumat">Jumat</option>
+                        @foreach($hariOptions as $hari)
+                            <option value="{{ $hari }}" {{ old('hari', $jadwal->hari) == $hari ? 'selected' : '' }}>{{ $hari }}</option>
+                        @endforeach
                     </select>
                     @error('hari')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -102,7 +98,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jam Mulai <span class="text-red-500">*</span>
                     </label>
-                    <input type="time" name="jam_mulai" required value="08:00" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <input type="time" name="jam_mulai" required value="{{ old('jam_mulai', substr($jadwal->jam_mulai, 0, 5)) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     @error('jam_mulai')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -113,7 +109,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jam Selesai <span class="text-red-500">*</span>
                     </label>
-                    <input type="time" name="jam_selesai" required value="10:00" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <input type="time" name="jam_selesai" required value="{{ old('jam_selesai', substr($jadwal->jam_selesai, 0, 5)) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     @error('jam_selesai')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -124,7 +120,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Kelas <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="kelas" required value="3A" placeholder="Contoh: 3A, 3B, dll" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <input type="text" name="kelas" required value="{{ old('kelas', $jadwal->kelas) }}" placeholder="Contoh: 3A, 3B, dll" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     @error('kelas')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

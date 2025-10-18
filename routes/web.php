@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Operator\OperatorDashboardController;
 use App\Http\Controllers\Operator\PembayaranController;
 use App\Http\Controllers\Dosen\DosenDashboardController;
+use App\Http\Controllers\Dosen\DosenController;
 use App\Http\Controllers\Dosen\JadwalController;
 use App\Http\Controllers\Dosen\NilaiController;
 use App\Http\Controllers\Dosen\KHSController;
@@ -61,9 +62,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 
     Route::resource('semester', SemesterController::class);
 
-    // Payment Management (Admin can view all)
-    Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
-    Route::get('pembayaran/{id}', [PembayaranController::class, 'show'])->name('pembayaran.show');
+    // Payment Management (Admin has full access)
+    Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
+    Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
+    Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
 });
 
 // Operator Routes
@@ -95,16 +97,22 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
     // Dashboard
     Route::get('/dashboard', [DosenDashboardController::class, 'index'])->name('dashboard');
 
+    // Profile
+    Route::get('profile', [DosenController::class, 'profile'])->name('profile');
+    Route::put('profile', [DosenController::class, 'updateProfile'])->name('profile.update');
+
     // Schedule Management
     Route::resource('jadwal', JadwalController::class);
     Route::post('jadwal/check-conflict', [JadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
 
     // Grade Management
     Route::get('nilai', [NilaiController::class, 'index'])->name('nilai.index');
-    Route::get('nilai/create', [NilaiController::class, 'create'])->name('nilai.create');
+    Route::get('nilai/mata-kuliah/{mataKuliahId}/mahasiswa', [NilaiController::class, 'mahasiswa'])->name('nilai.mahasiswa');
+    Route::get('nilai/mata-kuliah/{mataKuliahId}/create', [NilaiController::class, 'create'])->name('nilai.create');
     Route::post('nilai', [NilaiController::class, 'store'])->name('nilai.store');
     Route::get('nilai/{id}/edit', [NilaiController::class, 'edit'])->name('nilai.edit');
     Route::put('nilai/{id}', [NilaiController::class, 'update'])->name('nilai.update');
+    Route::delete('nilai/{id}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
     Route::get('nilai/export', [NilaiController::class, 'export'])->name('nilai.export');
 
     // KHS Management
@@ -133,19 +141,22 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('profile', [MahasiswaController::class, 'profile'])->name('profile');
     Route::put('profile', [MahasiswaController::class, 'updateProfile'])->name('profile.update');
 
-    Route::get('jadwal', [MahasiswaController::class, 'jadwal'])->name('jadwal');
+    Route::get('jadwal', [MahasiswaController::class, 'jadwal'])->name('jadwal.index');
     Route::get('jadwal/{id}', [MahasiswaController::class, 'jadwalDetail'])->name('jadwal.detail');
 
-    Route::get('nilai', [MahasiswaController::class, 'nilai'])->name('nilai');
+    Route::get('nilai', [MahasiswaController::class, 'nilai'])->name('nilai.index');
     Route::get('nilai/{semester_id}', [MahasiswaController::class, 'nilaiDetail'])->name('nilai.detail');
 
-    Route::get('khs', [MahasiswaController::class, 'khs'])->name('khs');
+    Route::get('khs', [MahasiswaController::class, 'khs'])->name('khs.index');
     Route::get('khs/{id}', [MahasiswaController::class, 'khsDetail'])->name('khs.detail');
     Route::get('khs/{id}/export', [MahasiswaController::class, 'khsExport'])->name('khs.export');
 
-    Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran');
+    Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
     Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.detail');
     Route::post('pembayaran/{id}/upload', [MahasiswaController::class, 'uploadBukti'])->name('pembayaran.upload');
+
+    // Notifications
+    Route::get('notifications', [MahasiswaController::class, 'notifications'])->name('notifications.index');
 
     Route::get('kurikulum', [MahasiswaController::class, 'kurikulum'])->name('kurikulum');
 });

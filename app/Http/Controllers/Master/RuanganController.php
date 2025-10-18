@@ -10,6 +10,24 @@ use Illuminate\Support\Facades\DB;
 class RuanganController extends Controller
 {
     /**
+     * Get the view prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of ruangan with pagination, search, and filters
      */
     public function index(Request $request)
@@ -46,7 +64,8 @@ class RuanganController extends Controller
         // Pagination
         $ruangans = $query->orderBy('kode_ruangan', 'asc')->paginate(15);
 
-        return view('admin.ruangan.index', compact('ruangans'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.ruangan.index", compact('ruangans'));
     }
 
     /**
@@ -103,7 +122,8 @@ class RuanganController extends Controller
             ->withCount('jadwals')
             ->findOrFail($id);
 
-        return view('admin.ruangan.show', compact('ruangan'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.ruangan.show", compact('ruangan'));
     }
 
     /**

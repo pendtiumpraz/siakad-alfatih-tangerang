@@ -15,7 +15,13 @@
                 </svg>
                 <span>Kembali</span>
             </a>
-            <button onclick="window.print()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold flex items-center space-x-2">
+            <button onclick="downloadPDF()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Download PDF</span>
+            </button>
+            <button onclick="printWithWarning()" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold flex items-center space-x-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
                 </svg>
@@ -164,26 +170,46 @@
 
             <!-- Grade Scale -->
             <x-islamic-card title="Skala Penilaian">
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between p-2 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">A (85-100)</span>
-                        <span class="text-sm font-semibold">= 4.00</span>
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">A (85-100)</span>
+                        <span class="text-xs font-semibold">= 4.0</span>
                     </div>
-                    <div class="flex items-center justify-between p-2 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">B (70-84)</span>
-                        <span class="text-sm font-semibold">= 3.00</span>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">A- (80-84)</span>
+                        <span class="text-xs font-semibold">= 3.7</span>
                     </div>
-                    <div class="flex items-center justify-between p-2 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">C (60-69)</span>
-                        <span class="text-sm font-semibold">= 2.00</span>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">B+ (75-79)</span>
+                        <span class="text-xs font-semibold">= 3.3</span>
                     </div>
-                    <div class="flex items-center justify-between p-2 border-b border-gray-200">
-                        <span class="text-sm text-gray-700">D (50-59)</span>
-                        <span class="text-sm font-semibold">= 1.00</span>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">B (70-74)</span>
+                        <span class="text-xs font-semibold">= 3.0</span>
                     </div>
-                    <div class="flex items-center justify-between p-2">
-                        <span class="text-sm text-gray-700">E (0-49)</span>
-                        <span class="text-sm font-semibold">= 0.00</span>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">B- (65-69)</span>
+                        <span class="text-xs font-semibold">= 2.7</span>
+                    </div>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">C+ (60-64)</span>
+                        <span class="text-xs font-semibold">= 2.3</span>
+                    </div>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">C (55-59)</span>
+                        <span class="text-xs font-semibold">= 2.0</span>
+                    </div>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">C- (50-54)</span>
+                        <span class="text-xs font-semibold">= 1.7</span>
+                    </div>
+                    <div class="flex items-center justify-between p-1 border-b border-gray-200">
+                        <span class="text-xs text-gray-700">D (45-49)</span>
+                        <span class="text-xs font-semibold">= 1.0</span>
+                    </div>
+                    <div class="flex items-center justify-between p-1">
+                        <span class="text-xs text-gray-700">E (0-44)</span>
+                        <span class="text-xs font-semibold">= 0.0</span>
                     </div>
                 </div>
 
@@ -215,9 +241,438 @@
 
 <style>
     @media print {
-        .no-print {
+        /* Hide non-printable elements */
+        .sidebar, header, button, a, nav, .no-print, .islamic-divider {
             display: none !important;
+        }
+
+        /* Page setup - PORTRAIT orientation with optimized margins */
+        @page {
+            size: A4 portrait;
+            margin: 0.8cm 1cm;
+        }
+
+        /* Body setup with readable font */
+        body {
+            background: white !important;
+            margin: 0;
+            padding: 0;
+            font-size: 10pt !important;
+            line-height: 1.3 !important;
+            color: #000 !important;
+        }
+
+        /* Main wrapper - clean and compact */
+        .bg-white.rounded-lg {
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0.12cm !important;
+        }
+
+        .space-y-6, main, .container, .max-w-7xl {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Header - Compact */
+        .text-center.mb-8 {
+            margin-bottom: 0.12cm !important;
+            padding-bottom: 0.06cm !important;
+            border-bottom: 2px solid #000 !important;
+        }
+
+        .text-center.mb-8 .flex {
+            display: none !important; /* Hide decorative elements */
+        }
+
+        h1.text-3xl {
+            font-size: 14pt !important;
+            margin: 0 0 2px 0 !important;
+            font-weight: bold !important;
+        }
+
+        h2.text-xl {
+            font-size: 11pt !important;
+            margin: 4px 0 2px 0 !important;
+            font-weight: bold !important;
+        }
+
+        .text-center p.text-lg {
+            font-size: 9pt !important;
+            margin: 2px 0 !important;
+        }
+
+        .text-center p.text-sm {
+            font-size: 8pt !important;
+            margin: 1px 0 !important;
+        }
+
+        /* Student info card - 2 columns */
+        .grid.grid-cols-2.gap-6 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.12cm !important;
+            margin: 0.06cm 0 !important;
+            padding: 0.06cm !important;
+            border: 1px solid #999 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+
+        .grid.grid-cols-2 .space-y-3 {
+            margin: 0 !important;
+        }
+
+        .grid.grid-cols-2 .flex {
+            margin: 2px 0 !important;
+        }
+
+        .grid.grid-cols-2 .flex .w-40 {
+            width: 110px !important;
+            font-size: 9pt !important;
+        }
+
+        .grid.grid-cols-2 .flex span {
+            font-size: 9pt !important;
+        }
+
+        /* Table wrapper */
+        .overflow-x-auto {
+            overflow: visible !important;
+        }
+
+        /* Table - Optimized */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 0.06cm 0 !important;
+            font-size: 9pt !important;
+        }
+
+        thead {
+            background: #e5e7eb !important;
+        }
+
+        th {
+            padding: 1px 2px !important;
+            font-size: 7pt !important;
+            font-weight: bold !important;
+            border: 1px solid #666 !important;
+            text-align: center !important;
+        }
+
+        td {
+            padding: 1px 2px !important;
+            font-size: 9pt !important;
+            border: 1px solid #999 !important;
+        }
+
+        /* Narrow columns for numbers */
+        th:nth-child(1), td:nth-child(1) { width: 25px !important; } /* No */
+        th:nth-child(2), td:nth-child(2) { width: 55px !important; } /* Kode */
+        th:nth-child(4), td:nth-child(4) { width: 35px !important; } /* SKS */
+        th:nth-child(5), td:nth-child(5) { width: 40px !important; } /* Nilai */
+        th:nth-child(6), td:nth-child(6) { width: 40px !important; } /* Grade */
+        th:nth-child(7), td:nth-child(7) { width: 45px !important; } /* Bobot */
+
+        tr.bg-gradient-to-r td {
+            background: #f3f4f6 !important;
+            font-weight: bold !important;
+        }
+
+        /* Islamic card */
+        .bg-white.border {
+            padding: 0.08cm !important;
+            margin: 0.06cm 0 !important;
+            border: 1px solid #999 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+
+        /* Summary grid */
+        .grid.grid-cols-1,
+        .grid.mt-6 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.12cm !important;
+            margin: 0.06cm 0 !important;
+        }
+
+        /* Card titles */
+        .bg-white.border h3,
+        .bg-white.border h4 {
+            font-size: 8pt !important;
+            margin: 0 0 1px 0 !important;
+            padding: 0 0 1px 0 !important;
+            border-bottom: 1px solid #999 !important;
+        }
+
+        /* Summary items */
+        .space-y-4 > div,
+        .space-y-2 > div {
+            margin: 0.5px 0 !important;
+            padding: 1.5px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 0 !important;
+        }
+
+        .space-y-4 .text-sm,
+        .space-y-2 .text-sm {
+            font-size: 7pt !important;
+        }
+
+        .space-y-4 .text-2xl,
+        .space-y-2 .text-2xl {
+            font-size: 9pt !important;
+        }
+
+        .space-y-4 .text-3xl,
+        .space-y-2 .text-3xl {
+            font-size: 10pt !important;
+        }
+
+        .space-y-4 .text-xl,
+        .space-y-2 .text-xl {
+            font-size: 9pt !important;
+        }
+
+        /* Footer - Islamic */
+        .mt-8.pt-6.text-center {
+            display: none !important;
+        }
+
+        /* Remove all decorative gradients and colors */
+        .bg-gradient-to-r, .bg-gradient-to-br, .bg-gradient-to-br {
+            background: white !important;
+        }
+
+        .shadow, .shadow-md, .shadow-lg {
+            box-shadow: none !important;
+        }
+
+        svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        /* Status badges */
+        .px-3.py-1 {
+            padding: 1px 3px !important;
+            font-size: 8pt !important;
+            border: 1px solid #ccc !important;
+            background: white !important;
+        }
+
+        /* Prevent page breaks */
+        table, .grid {
+            page-break-inside: avoid !important;
+        }
+
+        thead {
+            display: table-header-group !important;
+        }
+
+        tr {
+            page-break-inside: avoid !important;
+        }
+
+        /* Clean up spacing */
+        .mb-6, .mb-8, .mt-6, .mt-8 {
+            margin: 0.06cm 0 !important;
+        }
+
+        .pb-6 {
+            padding-bottom: 0.06cm !important;
+        }
+
+        .pt-4, .pt-6 {
+            padding-top: 0.06cm !important;
         }
     }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function printWithWarning() {
+    window.print();
+}
+
+function downloadPDF() {
+    const element = document.querySelector('.bg-white.rounded-lg.shadow-lg');
+    const nim = '2301001';
+    const semester = '3';
+    const filename = `KHS_${nim}_Semester${semester}.pdf`;
+
+    // Show loading
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<svg class="animate-spin h-5 w-5 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating PDF...';
+    btn.disabled = true;
+
+    // Add temporary print class
+    document.body.classList.add('generating-pdf');
+
+    // Create temporary style element for print styles
+    const printStyles = document.createElement('style');
+    printStyles.id = 'temp-print-styles';
+    printStyles.textContent = `
+        body.generating-pdf {
+            background: white !important;
+            font-size: 10pt !important;
+            line-height: 1.3 !important;
+            color: #000 !important;
+        }
+        body.generating-pdf .sidebar,
+        body.generating-pdf header,
+        body.generating-pdf button,
+        body.generating-pdf a,
+        body.generating-pdf nav {
+            display: none !important;
+        }
+        body.generating-pdf .bg-white.rounded-lg {
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0.12cm !important;
+        }
+        body.generating-pdf .text-center.mb-8 {
+            margin-bottom: 0.12cm !important;
+            padding-bottom: 0.06cm !important;
+            border-bottom: 2px solid #000 !important;
+        }
+        body.generating-pdf .text-center.mb-8 .flex {
+            display: none !important;
+        }
+        body.generating-pdf h1.text-3xl {
+            font-size: 14pt !important;
+            margin: 0 0 2px 0 !important;
+        }
+        body.generating-pdf h2.text-xl {
+            font-size: 11pt !important;
+            margin: 4px 0 2px 0 !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 {
+            gap: 0.12cm !important;
+            margin: 0.06cm 0 !important;
+            padding: 0.06cm !important;
+            border: 1px solid #999 !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 .flex span {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf table {
+            width: 100% !important;
+            font-size: 9pt !important;
+            margin: 0.06cm 0 !important;
+        }
+        body.generating-pdf th {
+            padding: 1px 2px !important;
+            font-size: 7pt !important;
+            border: 1px solid #666 !important;
+        }
+        body.generating-pdf td {
+            padding: 1px 2px !important;
+            font-size: 9pt !important;
+            border: 1px solid #999 !important;
+        }
+        body.generating-pdf td span,
+        body.generating-pdf td .px-3 {
+            padding: 1px 3px !important;
+            font-size: 8pt !important;
+        }
+        body.generating-pdf .bg-white.border {
+            padding: 0.08cm !important;
+            margin: 0.06cm 0 !important;
+            border: 1px solid #999 !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+        body.generating-pdf .bg-white.border h3,
+        body.generating-pdf .bg-white.border h4 {
+            font-size: 8pt !important;
+            margin: 0 0 1px 0 !important;
+        }
+        body.generating-pdf .space-y-4 {
+            margin: 0 !important;
+        }
+        body.generating-pdf .space-y-4 > div,
+        body.generating-pdf .space-y-2 > div {
+            margin: 0.5px 0 !important;
+            padding: 1.5px !important;
+            border-radius: 0 !important;
+            background: white !important;
+            border: 1px solid #ddd !important;
+        }
+        body.generating-pdf .space-y-4 .text-sm,
+        body.generating-pdf .space-y-2 .text-sm {
+            font-size: 7pt !important;
+        }
+        body.generating-pdf .space-y-4 .text-2xl,
+        body.generating-pdf .space-y-2 .text-2xl {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf .space-y-4 .text-3xl,
+        body.generating-pdf .space-y-2 .text-3xl {
+            font-size: 10pt !important;
+        }
+        body.generating-pdf .space-y-4 .text-xl,
+        body.generating-pdf .space-y-2 .text-xl {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf .mt-8.pt-6.border-t-4 {
+            display: none !important;
+        }
+        body.generating-pdf .bg-gradient-to-r, body.generating-pdf .bg-gradient-to-br {
+            background: white !important;
+        }
+        body.generating-pdf svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+    `;
+    document.head.appendChild(printStyles);
+
+    // Configure PDF options
+    const opt = {
+        margin: [8, 8, 8, 8],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    };
+
+    // Wait for styles to apply
+    setTimeout(() => {
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Cleanup
+            document.body.classList.remove('generating-pdf');
+            document.getElementById('temp-print-styles').remove();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }).catch((error) => {
+            console.error('Error generating PDF:', error);
+            alert('Gagal generate PDF. Silakan coba lagi.');
+            document.body.classList.remove('generating-pdf');
+            document.getElementById('temp-print-styles').remove();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }, 200);
+}
+</script>
 @endsection

@@ -18,14 +18,22 @@
                 </svg>
                 <span>Kembali</span>
             </a>
-            <button
-                onclick="window.print()"
-                class="bg-[#D4AF37] hover:bg-[#c49d2f] text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
+            <a href="{{ route('mahasiswa.khs.export', $khs->semester_id) }}"
+               target="_blank"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Download PDF</span>
+            </a>
+            <a href="{{ route('mahasiswa.khs.export', $khs->semester_id) }}"
+               target="_blank"
+               class="bg-[#D4AF37] hover:bg-[#c49d2f] text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
                 </svg>
                 <span>Print KHS</span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -274,16 +282,500 @@
         <div class="mt-6 text-xs text-gray-600 space-y-1">
             <p><strong>Keterangan:</strong></p>
             <p>L = Lulus | TL = Tidak Lulus | K = Kosong</p>
-            <p>Grade: A (85-100) | AB (80-84) | B (75-79) | BC (70-74) | C (65-69) | D (60-64) | E (0-59)</p>
+            <p>Grade: A (85-100) | A- (80-84) | B+ (75-79) | B (70-74) | B- (65-69) | C+ (60-64) | C (55-59) | C- (50-54) | D (45-49) | E (0-44)</p>
         </div>
     </div>
 </div>
 
 <style>
     @media print {
-        .sidebar, header, button, a { display: none !important; }
-        body { background: white !important; }
-        #khs-document { box-shadow: none !important; border: none !important; }
+        /* Hide non-printable elements - ENHANCED */
+        aside, .sidebar, header, nav, button, a[href], .no-print, .islamic-divider,
+        .flex.items-center.justify-between:first-child,
+        [x-data] {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* Force full width without sidebar */
+        body, html {
+            background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            overflow: visible !important;
+        }
+
+        main {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Page setup - PORTRAIT orientation with optimized margins */
+        @page {
+            size: A4 portrait;
+            margin: 0.8cm 1cm;
+        }
+
+        /* Body setup with readable font */
+        body {
+            font-size: 10pt !important;
+            line-height: 1.3 !important;
+            color: #000 !important;
+        }
+
+        /* Main wrapper - clean and compact */
+        #khs-document {
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
+            margin: 0 !important;
+            padding: 0.4cm !important;
+        }
+
+        .space-y-6, main, .container, .max-w-7xl {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Header - Compact single line */
+        .text-center.mb-6 {
+            margin-bottom: 0.3cm !important;
+            padding-bottom: 0.2cm !important;
+            border-bottom: 2px solid #000 !important;
+        }
+
+        .text-center.mb-6 .flex {
+            display: none !important; /* Hide decorative SVG */
+        }
+
+        h2.text-3xl {
+            font-size: 14pt !important;
+            margin: 0 0 2px 0 !important;
+            font-weight: bold !important;
+        }
+
+        h3.text-2xl {
+            font-size: 12pt !important;
+            margin: 4px 0 2px 0 !important;
+            font-weight: bold !important;
+        }
+
+        p.text-sm, p.text-gray-600 {
+            font-size: 9pt !important;
+            margin: 2px 0 !important;
+        }
+
+        /* Student info - 2 columns compact */
+        .grid.grid-cols-2.gap-6 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.3cm !important;
+            margin: 0.2cm 0 !important;
+            padding: 0.2cm 0 !important;
+            border-bottom: 1px solid #999 !important;
+        }
+
+        .grid.grid-cols-2 .space-y-2 {
+            margin: 0 !important;
+        }
+
+        .grid.grid-cols-2 .flex {
+            margin: 2px 0 !important;
+        }
+
+        .grid.grid-cols-2 .flex .w-40 {
+            width: 120px !important;
+            font-size: 9pt !important;
+        }
+
+        .grid.grid-cols-2 .flex span {
+            font-size: 9pt !important;
+        }
+
+        /* Table - Optimized columns */
+        table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 0.2cm 0 !important;
+            font-size: 9pt !important;
+        }
+
+        thead {
+            background: #e5e7eb !important;
+        }
+
+        th {
+            padding: 3px 4px !important;
+            font-size: 8pt !important;
+            font-weight: bold !important;
+            border: 1px solid #666 !important;
+            text-align: center !important;
+        }
+
+        td {
+            padding: 2px 4px !important;
+            font-size: 9pt !important;
+            border: 1px solid #999 !important;
+        }
+
+        /* Narrow columns for numbers */
+        th:nth-child(1), td:nth-child(1) { width: 25px !important; } /* No */
+        th:nth-child(2), td:nth-child(2) { width: 60px !important; } /* Kode */
+        th:nth-child(4), td:nth-child(4) { width: 35px !important; } /* SKS */
+        th:nth-child(5), td:nth-child(5) { width: 40px !important; } /* Nilai */
+        th:nth-child(6), td:nth-child(6) { width: 40px !important; } /* Grade */
+        th:nth-child(7), td:nth-child(7) { width: 45px !important; } /* Bobot */
+        th:nth-child(8), td:nth-child(8) { width: 60px !important; } /* SKSxBobot */
+        th:nth-child(9), td:nth-child(9) { width: 30px !important; } /* Ket */
+
+        tr.bg-gray-100 td {
+            background: #f3f4f6 !important;
+            font-weight: bold !important;
+        }
+
+        /* Summary cards - Inline grid */
+        .grid.grid-cols-1.md\\:grid-cols-2.gap-6 {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.3cm !important;
+            margin: 0.2cm 0 !important;
+        }
+
+        .card-islamic {
+            padding: 0.2cm !important;
+            border: 1px solid #999 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+
+        .card-islamic h4 {
+            font-size: 10pt !important;
+            margin: 0 0 4px 0 !important;
+            padding: 0 0 3px 0 !important;
+            border-bottom: 1px solid #999 !important;
+        }
+
+        .card-islamic .space-y-3 > div {
+            margin: 3px 0 !important;
+            padding: 2px !important;
+        }
+
+        .card-islamic .text-sm {
+            font-size: 8pt !important;
+        }
+
+        .card-islamic .text-lg, .card-islamic .text-3xl {
+            font-size: 11pt !important;
+        }
+
+        /* Status semester - Compact */
+        .bg-green-50 {
+            background: white !important;
+            border: 1px solid #999 !important;
+            border-radius: 0 !important;
+            padding: 0.2cm !important;
+            margin: 0.2cm 0 !important;
+        }
+
+        .bg-green-50 p {
+            font-size: 9pt !important;
+            margin: 2px 0 !important;
+        }
+
+        .bg-green-600 {
+            background: white !important;
+            color: #000 !important;
+            border: 1px solid #000 !important;
+            padding: 4px 8px !important;
+            font-size: 10pt !important;
+        }
+
+        /* Footer - Simplified */
+        .mt-8.pt-6 {
+            margin-top: 0.3cm !important;
+            padding-top: 0.2cm !important;
+            border-top: 1px solid #999 !important;
+        }
+
+        .mt-8.pt-6 .flex {
+            display: flex !important;
+            justify-content: space-between !important;
+        }
+
+        .mt-8.pt-6 .text-center {
+            font-size: 9pt !important;
+            margin: 0 !important;
+        }
+
+        .mt-8.pt-6 .text-xs {
+            font-size: 7pt !important;
+            margin-bottom: 30px !important;
+        }
+
+        .mt-8.pt-6 .font-bold {
+            font-size: 9pt !important;
+            border-top: 1px solid #000 !important;
+            padding-top: 2px !important;
+        }
+
+        .islamic-pattern {
+            padding: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        .islamic-pattern svg {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        .islamic-pattern p {
+            font-size: 8pt !important;
+        }
+
+        /* Keterangan */
+        .mt-6.text-xs {
+            margin-top: 0.2cm !important;
+            font-size: 7pt !important;
+            line-height: 1.2 !important;
+        }
+
+        .mt-6.text-xs p {
+            margin: 1px 0 !important;
+            font-size: 7pt !important;
+        }
+
+        /* Remove all decorative gradients and colors */
+        .bg-gradient-to-r, .bg-gradient-to-br {
+            background: white !important;
+        }
+
+        .shadow, .shadow-md, .shadow-lg {
+            box-shadow: none !important;
+        }
+
+        svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+
+        /* Prevent page breaks in critical sections */
+        table, .grid {
+            page-break-inside: avoid !important;
+        }
+
+        thead {
+            display: table-header-group !important;
+        }
+
+        tr {
+            page-break-inside: avoid !important;
+        }
     }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function printWithWarning() {
+    alert('📌 PENTING: Sebelum print, pastikan setting ukuran di Print Dialog diatur ke 80% agar pas 1 lembar!\n\nCara setting:\n1. Di Print Dialog, cari "Scale" atau "Ukuran"\n2. Ubah dari 100% menjadi 80%\n3. Klik Print');
+    window.print();
+}
+
+function downloadPDF() {
+    const element = document.getElementById('khs-document');
+    const nim = '{{ auth()->user()->nim ?? "202301010001" }}';
+    const semester = '5';
+    const filename = `KHS_${nim}_Semester${semester}.pdf`;
+
+    // Show loading
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<svg class="animate-spin h-5 w-5 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating PDF...';
+    btn.disabled = true;
+
+    // Add temporary print class
+    document.body.classList.add('generating-pdf');
+
+    // Create temporary style element for print styles
+    const printStyles = document.createElement('style');
+    printStyles.id = 'temp-print-styles';
+    printStyles.textContent = `
+        body.generating-pdf {
+            background: white !important;
+            font-size: 10pt !important;
+            line-height: 1.3 !important;
+            color: #000 !important;
+        }
+        body.generating-pdf .sidebar,
+        body.generating-pdf header,
+        body.generating-pdf button,
+        body.generating-pdf a,
+        body.generating-pdf nav,
+        body.generating-pdf .islamic-divider {
+            display: none !important;
+        }
+        body.generating-pdf #khs-document {
+            box-shadow: none !important;
+            border: 1px solid #333 !important;
+            margin: 0 !important;
+            padding: 0.12cm !important;
+        }
+        body.generating-pdf .text-center.mb-6 {
+            margin-bottom: 0.12cm !important;
+            padding-bottom: 0.06cm !important;
+            border-bottom: 2px solid #000 !important;
+        }
+        body.generating-pdf .text-center.mb-6 .flex {
+            display: none !important;
+        }
+        body.generating-pdf h2.text-3xl {
+            font-size: 14pt !important;
+            margin: 0 0 2px 0 !important;
+        }
+        body.generating-pdf h3.text-2xl {
+            font-size: 12pt !important;
+            margin: 4px 0 2px 0 !important;
+        }
+        body.generating-pdf p.text-sm, body.generating-pdf p.text-gray-600 {
+            font-size: 9pt !important;
+            margin: 2px 0 !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 {
+            gap: 0.12cm !important;
+            margin: 0.06cm 0 !important;
+            padding: 0.06cm 0 !important;
+            border-bottom: 1px solid #999 !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 .flex {
+            margin: 0.5px 0 !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 .flex .w-40 {
+            width: 120px !important;
+            font-size: 9pt !important;
+        }
+        body.generating-pdf .grid.grid-cols-2 .flex span {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf table {
+            width: 100% !important;
+            font-size: 9pt !important;
+            margin: 0.06cm 0 !important;
+        }
+        body.generating-pdf th {
+            padding: 1px 2px !important;
+            font-size: 7pt !important;
+            border: 1px solid #666 !important;
+        }
+        body.generating-pdf td {
+            padding: 1px 2px !important;
+            font-size: 9pt !important;
+            border: 1px solid #999 !important;
+        }
+        body.generating-pdf td span.font-bold,
+        body.generating-pdf td span {
+            padding: 1px 3px !important;
+            font-size: 8pt !important;
+        }
+        body.generating-pdf .card-islamic {
+            padding: 0.08cm !important;
+            border: 1px solid #999 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            background: white !important;
+        }
+        body.generating-pdf .card-islamic h4 {
+            font-size: 8pt !important;
+            margin: 0 0 1px 0 !important;
+            padding: 0 0 0.5px 0 !important;
+            border-bottom: 1px solid #999 !important;
+        }
+        body.generating-pdf .card-islamic .space-y-3 {
+            margin: 0 !important;
+        }
+        body.generating-pdf .card-islamic .space-y-3 > div {
+            margin: 0.5px 0 !important;
+            padding: 1.5px !important;
+            border-radius: 0 !important;
+            background: white !important;
+            border: 1px solid #ddd !important;
+        }
+        body.generating-pdf .card-islamic .text-sm {
+            font-size: 7pt !important;
+        }
+        body.generating-pdf .card-islamic .text-lg {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf .card-islamic .text-3xl {
+            font-size: 10pt !important;
+        }
+        body.generating-pdf .card-islamic .p-3 {
+            padding: 3px !important;
+        }
+        body.generating-pdf .bg-green-50 {
+            background: white !important;
+            border: 1px solid #999 !important;
+            padding: 0.06cm !important;
+            margin: 0.06cm 0 !important;
+        }
+        body.generating-pdf .mt-8.pt-6.border-t-2 {
+            margin-top: 0.12cm !important;
+            padding-top: 0.06cm !important;
+            border-top: 1px solid #999 !important;
+        }
+        body.generating-pdf .mt-8.pt-6.border-t-4 {
+            display: none !important;
+        }
+        body.generating-pdf .mt-8.pt-6 .text-center {
+            font-size: 9pt !important;
+        }
+        body.generating-pdf .bg-gradient-to-r, body.generating-pdf .bg-gradient-to-br {
+            background: white !important;
+        }
+        body.generating-pdf svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+    `;
+    document.head.appendChild(printStyles);
+
+    // Configure PDF options
+    const opt = {
+        margin: [8, 8, 8, 8],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            letterRendering: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    };
+
+    // Wait for styles to apply
+    setTimeout(() => {
+        html2pdf().set(opt).from(element).save().then(() => {
+            // Cleanup
+            document.body.classList.remove('generating-pdf');
+            document.getElementById('temp-print-styles').remove();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }).catch((error) => {
+            console.error('Error generating PDF:', error);
+            alert('Gagal generate PDF. Silakan coba lagi.');
+            document.body.classList.remove('generating-pdf');
+            document.getElementById('temp-print-styles').remove();
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }, 200);
+}
+</script>
 @endsection

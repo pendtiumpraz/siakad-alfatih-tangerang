@@ -45,28 +45,36 @@
 
     <!-- Filter -->
     <div class="card-islamic p-6">
-        <div class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
+        <form method="GET" action="{{ route('mahasiswa.pembayaran.index') }}" class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
             <div class="flex items-center space-x-4">
                 <label class="text-sm font-semibold text-gray-700">Filter Status:</label>
-                <select class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-2 focus:ring-[#4A7C59]/20 transition">
-                    <option value="all">Semua Status</option>
-                    <option value="pending">Menunggu Pembayaran</option>
-                    <option value="paid">Sudah Dibayar</option>
-                    <option value="overdue">Jatuh Tempo</option>
+                <select name="status" class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-2 focus:ring-[#4A7C59]/20 transition" onchange="this.form.submit()">
+                    <option value="">Semua Status</option>
+                    <option value="belum_lunas" {{ request('status') == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
                 </select>
             </div>
             <div class="flex items-center space-x-4">
-                <label class="text-sm font-semibold text-gray-700">Jenis:</label>
-                <select class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-2 focus:ring-[#4A7C59]/20 transition">
-                    <option value="all">Semua Jenis</option>
-                    <option value="spp">SPP</option>
-                    <option value="uts">UTS</option>
-                    <option value="uas">UAS</option>
-                    <option value="praktikum">Praktikum</option>
-                    <option value="lainnya">Lainnya</option>
+                <label class="text-sm font-semibold text-gray-700">Semester:</label>
+                <select name="semester_id" class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-2 focus:ring-[#4A7C59]/20 transition" onchange="this.form.submit()">
+                    <option value="">Semua Semester</option>
+                    @foreach($semesters ?? [] as $semester)
+                        <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
+                            {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
-        </div>
+            <div class="flex space-x-2">
+                <button type="submit" class="px-4 py-2 bg-[#4A7C59] text-white rounded-lg hover:bg-[#3d6849] transition font-semibold">
+                    Filter
+                </button>
+                <a href="{{ route('mahasiswa.pembayaran.index') }}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-semibold">
+                    Reset
+                </a>
+            </div>
+        </form>
     </div>
 
     <!-- Overdue Payment Alert -->

@@ -10,9 +10,48 @@ use App\Models\Operator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PembayaranController extends Controller
 {
+    /**
+     * Get view path prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        }
+
+        return 'operator'; // default
+    }
+
+    /**
+     * Generate custom filename for bukti pembayaran
+     */
+    private function generateBuktiFilename($mahasiswa, $semester, $jenisPembayaran, $extension)
+    {
+        // Sanitize nama: lowercase, remove spaces, keep only alphanumeric
+        $nama = Str::slug(strtolower($mahasiswa->nama_lengkap), '');
+
+        // Format: bukti_bayar_{jenis}_{tahun}_{semester}_{nama}_{tanggal}.{ext}
+        $filename = sprintf(
+            'bukti_bayar_%s_%s_%s_%s_%s.%s',
+            $jenisPembayaran,
+            $semester->tahun_akademik,
+            strtolower($semester->jenis), // ganjil or genap
+            $nama,
+            date('Ymd'),
+            $extension
+        );
+
+        return $filename;
+    }
+
     /**
      * Display a listing of payments with filters
      */
@@ -86,7 +125,8 @@ class PembayaranController extends Controller
             'lainnya',
         ];
 
-        return view('operator.pembayaran.index', compact(
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.pembayaran.index", compact(
             'pembayarans',
             'mahasiswas',
             'semesters',
@@ -117,7 +157,8 @@ class PembayaranController extends Controller
             'lainnya' => 'Lainnya',
         ];
 
-        return view('operator.pembayaran.create', compact(
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.pembayaran.create", compact(
             'mahasiswas',
             'semesters',
             'jenisPembayaran'
@@ -150,8 +191,24 @@ class PembayaranController extends Controller
             // Handle file upload
             $buktiPath = null;
             if ($request->hasFile('bukti_pembayaran')) {
+                // Load relations for filename generation
+                $mahasiswa = Mahasiswa::findOrFail($validated['mahasiswa_id']);
+                $semester = Semester::findOrFail($validated['semester_id']);
+
+                // Get file extension
+                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
+
+                // Generate custom filename
+                $filename = $this->generateBuktiFilename(
+                    $mahasiswa,
+                    $semester,
+                    $validated['jenis_pembayaran'],
+                    $extension
+                );
+
+                // Store with custom filename
                 $buktiPath = $request->file('bukti_pembayaran')
-                    ->store('pembayaran/bukti', 'public');
+                    ->storeAs('pembayaran/bukti', $filename, 'public');
             }
 
             // Auto-update status based on file upload
@@ -201,7 +258,8 @@ class PembayaranController extends Controller
             ->withTrashed()
             ->findOrFail($id);
 
-        return view('operator.pembayaran.show', compact('pembayaran'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.pembayaran.show", compact('pembayaran'));
     }
 
     /**
@@ -231,7 +289,8 @@ class PembayaranController extends Controller
             'lainnya' => 'Lainnya',
         ];
 
-        return view('operator.pembayaran.edit', compact(
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.pembayaran.edit", compact(
             'pembayaran',
             'mahasiswas',
             'semesters',
@@ -284,9 +343,24 @@ class PembayaranController extends Controller
                     Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
                 }
 
-                // Upload new file
+                // Load relations for filename generation
+                $mahasiswa = Mahasiswa::findOrFail($validated['mahasiswa_id']);
+                $semester = Semester::findOrFail($validated['semester_id']);
+
+                // Get file extension
+                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
+
+                // Generate custom filename
+                $filename = $this->generateBuktiFilename(
+                    $mahasiswa,
+                    $semester,
+                    $validated['jenis_pembayaran'],
+                    $extension
+                );
+
+                // Store with custom filename
                 $updateData['bukti_pembayaran'] = $request->file('bukti_pembayaran')
-                    ->store('pembayaran/bukti', 'public');
+                    ->storeAs('pembayaran/bukti', $filename, 'public');
 
                 // Auto-update status to pending when file is uploaded and status is belum_lunas
                 if ($validated['status'] === 'belum_lunas') {
@@ -366,9 +440,23 @@ class PembayaranController extends Controller
                     Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
                 }
 
-                // Upload new file
+                // Load relations for filename generation
+                $pembayaran->load(['mahasiswa', 'semester']);
+
+                // Get file extension
+                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
+
+                // Generate custom filename
+                $filename = $this->generateBuktiFilename(
+                    $pembayaran->mahasiswa,
+                    $pembayaran->semester,
+                    $pembayaran->jenis_pembayaran,
+                    $extension
+                );
+
+                // Store with custom filename
                 $updateData['bukti_pembayaran'] = $request->file('bukti_pembayaran')
-                    ->store('pembayaran/bukti', 'public');
+                    ->storeAs('pembayaran/bukti', $filename, 'public');
             }
 
             // Update operator

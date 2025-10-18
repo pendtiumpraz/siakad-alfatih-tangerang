@@ -89,8 +89,8 @@
                 <div>
                     <select name="jenis" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition">
                         <option value="">Semua Jenis</option>
-                        <option value="Wajib" {{ request('jenis') == 'Wajib' ? 'selected' : '' }}>Wajib</option>
-                        <option value="Pilihan" {{ request('jenis') == 'Pilihan' ? 'selected' : '' }}>Pilihan</option>
+                        <option value="wajib" {{ request('jenis') == 'wajib' ? 'selected' : '' }}>Wajib</option>
+                        <option value="pilihan" {{ request('jenis') == 'pilihan' ? 'selected' : '' }}>Pilihan</option>
                     </select>
                 </div>
             </div>

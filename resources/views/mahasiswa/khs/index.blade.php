@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t">
-                <a href="{{ route('mahasiswa.khs.show', 5) }}"
+                <a href="{{ route('mahasiswa.khs.detail', 5) }}"
                    class="block w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white text-center py-3 rounded-lg font-semibold transition">
                     Lihat Detail KHS
                 </a>
@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t">
-                <a href="{{ route('mahasiswa.khs.show', 4) }}"
+                <a href="{{ route('mahasiswa.khs.detail', 4) }}"
                    class="block w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white text-center py-3 rounded-lg font-semibold transition">
                     Lihat Detail KHS
                 </a>
@@ -156,7 +156,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t">
-                <a href="{{ route('mahasiswa.khs.show', 3) }}"
+                <a href="{{ route('mahasiswa.khs.detail', 3) }}"
                    class="block w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white text-center py-3 rounded-lg font-semibold transition">
                     Lihat Detail KHS
                 </a>
@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t">
-                <a href="{{ route('mahasiswa.khs.show', 2) }}"
+                <a href="{{ route('mahasiswa.khs.detail', 2) }}"
                    class="block w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white text-center py-3 rounded-lg font-semibold transition">
                     Lihat Detail KHS
                 </a>
@@ -230,7 +230,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-4 border-t">
-                <a href="{{ route('mahasiswa.khs.show', 1) }}"
+                <a href="{{ route('mahasiswa.khs.detail', 1) }}"
                    class="block w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white text-center py-3 rounded-lg font-semibold transition">
                     Lihat Detail KHS
                 </a>

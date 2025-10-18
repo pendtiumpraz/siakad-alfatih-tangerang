@@ -11,6 +11,24 @@ use Illuminate\Support\Facades\DB;
 class KurikulumController extends Controller
 {
     /**
+     * Get view path prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of kurikulum with pagination, search, and filters
      */
     public function index(Request $request)
@@ -42,7 +60,8 @@ class KurikulumController extends Controller
         // Get all program studi for filter dropdown
         $programStudis = ProgramStudi::where('is_active', true)->get();
 
-        return view('admin.kurikulum.index', compact('kurikulums', 'programStudis'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.kurikulum.index", compact('kurikulums', 'programStudis'));
     }
 
     /**
@@ -105,7 +124,8 @@ class KurikulumController extends Controller
             ->withCount('mataKuliahs')
             ->findOrFail($id);
 
-        return view('admin.kurikulum.show', compact('kurikulum'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.kurikulum.show", compact('kurikulum'));
     }
 
     /**

@@ -10,6 +10,24 @@ use Illuminate\Support\Facades\DB;
 class ProgramStudiController extends Controller
 {
     /**
+     * Get view path prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of program studi with pagination, search, and filters
      */
     public function index(Request $request)
@@ -41,7 +59,8 @@ class ProgramStudiController extends Controller
         // Pagination
         $programStudis = $query->orderBy('kode_prodi', 'asc')->paginate(15);
 
-        return view('admin.program-studi.index', compact('programStudis'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.program-studi.index", compact('programStudis'));
     }
 
     /**
@@ -97,7 +116,8 @@ class ProgramStudiController extends Controller
             ->withCount(['kurikulums', 'mahasiswas'])
             ->findOrFail($id);
 
-        return view('admin.program-studi.show', compact('programStudi'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.program-studi.show", compact('programStudi'));
     }
 
     /**

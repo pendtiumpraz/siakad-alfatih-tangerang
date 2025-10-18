@@ -57,68 +57,166 @@
             </div>
 
             <!-- Upload Bukti Payment -->
-            <div class="card-islamic p-6" x-data="{ file: null, preview: null }">
-                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center space-x-2 pb-3 border-b-2 border-[#F4E5C3]">
-                    <svg class="w-6 h-6 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                    </svg>
-                    <span>Upload Bukti Pembayaran</span>
-                </h3>
+            <div class="card-islamic p-6 border-l-4 border-[#D4AF37]" x-data="{ file: null, preview: null, fileName: '' }">
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 flex items-center space-x-2">
+                        <div class="w-10 h-10 bg-gradient-to-br from-[#4A7C59] to-[#2D5F3F] rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                        </div>
+                        <span>Upload Bukti Pembayaran</span>
+                    </h3>
+                    <p class="text-sm text-gray-600 ml-12">Upload bukti transfer pembayaran Anda untuk proses verifikasi</p>
+                </div>
 
-                <form action="{{ route('mahasiswa.pembayaran.upload', 1) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('mahasiswa.pembayaran.upload', 1) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                     @csrf
-                    <div class="mb-4">
-                        <label class="block w-full cursor-pointer">
-                            <div class="border-2 border-dashed border-[#4A7C59] rounded-lg p-8 text-center hover:bg-gray-50 transition"
-                                 @dragover.prevent
-                                 @drop.prevent="file = $event.dataTransfer.files[0]; preview = URL.createObjectURL(file)">
-                                <div x-show="!preview">
-                                    <svg class="w-16 h-16 text-[#4A7C59] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                                    </svg>
-                                    <p class="text-gray-700 font-semibold mb-2">Klik untuk upload atau drag and drop</p>
-                                    <p class="text-sm text-gray-500">PNG, JPG, PDF (Max. 2MB)</p>
-                                </div>
-                                <div x-show="preview" class="space-y-4">
-                                    <img :src="preview" class="max-w-md mx-auto rounded-lg shadow" alt="Preview">
-                                    <p class="text-sm text-gray-600" x-text="file ? file.name : ''"></p>
-                                    <button type="button" @click="file = null; preview = null" class="text-red-600 hover:text-red-800 text-sm">
-                                        Hapus dan pilih ulang
-                                    </button>
-                                </div>
-                            </div>
-                            <input
-                                type="file"
-                                name="bukti"
-                                accept="image/jpeg,image/png,application/pdf"
-                                class="hidden"
-                                @change="file = $event.target.files[0]; preview = URL.createObjectURL(file)"
-                                required
-                            >
+
+                    <!-- Upload Area -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span>File Bukti Pembayaran</span>
+                                <span class="text-red-500">*</span>
+                            </span>
                         </label>
+
+                        <div class="relative">
+                            <!-- Upload Box -->
+                            <label class="block cursor-pointer">
+                                <div class="border-3 border-dashed rounded-xl transition-all duration-300"
+                                     :class="preview ? 'border-green-400 bg-green-50' : 'border-[#4A7C59] hover:border-[#D4AF37] hover:bg-gradient-to-br hover:from-green-50 hover:to-yellow-50'"
+                                     @dragover.prevent="$el.classList.add('ring-4', 'ring-[#D4AF37]', 'ring-opacity-50')"
+                                     @dragleave.prevent="$el.classList.remove('ring-4', 'ring-[#D4AF37]', 'ring-opacity-50')"
+                                     @drop.prevent="
+                                         $el.classList.remove('ring-4', 'ring-[#D4AF37]', 'ring-opacity-50');
+                                         const droppedFile = $event.dataTransfer.files[0];
+                                         if (droppedFile && (droppedFile.type.startsWith('image/') || droppedFile.type === 'application/pdf')) {
+                                             file = droppedFile;
+                                             fileName = droppedFile.name;
+                                             if (droppedFile.type.startsWith('image/')) {
+                                                 preview = URL.createObjectURL(droppedFile);
+                                             } else {
+                                                 preview = 'pdf';
+                                             }
+                                         }
+                                     ">
+
+                                    <!-- Empty State -->
+                                    <div x-show="!preview" class="p-10 text-center">
+                                        <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#4A7C59] to-[#2D5F3F] rounded-full mb-4">
+                                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-lg font-bold text-gray-800 mb-2">Pilih File atau Drag & Drop</p>
+                                        <p class="text-sm text-gray-600 mb-1">Format yang didukung:</p>
+                                        <div class="flex items-center justify-center space-x-2 mb-3">
+                                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">JPG</span>
+                                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">PNG</span>
+                                            <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full">PDF</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500">Maksimal ukuran file: <span class="font-semibold text-gray-700">2MB</span></p>
+                                    </div>
+
+                                    <!-- Preview State -->
+                                    <div x-show="preview" class="p-6">
+                                        <div class="flex items-center justify-between p-4 bg-white rounded-lg border-2 border-green-400 shadow-sm">
+                                            <div class="flex items-center space-x-4">
+                                                <!-- Icon or Image Preview -->
+                                                <div class="flex-shrink-0">
+                                                    <div x-show="preview !== 'pdf'" class="w-16 h-16 rounded-lg overflow-hidden border-2 border-gray-200">
+                                                        <img :src="preview" class="w-full h-full object-cover" alt="Preview">
+                                                    </div>
+                                                    <div x-show="preview === 'pdf'" class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center">
+                                                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <!-- File Info -->
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-semibold text-gray-800 truncate" x-text="fileName"></p>
+                                                    <p class="text-xs text-green-600 font-medium">✓ File siap diupload</p>
+                                                </div>
+                                            </div>
+                                            <!-- Remove Button -->
+                                            <button type="button"
+                                                    @click.stop="file = null; preview = null; fileName = ''; $refs.fileInput.value = ''"
+                                                    class="flex-shrink-0 p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input
+                                    x-ref="fileInput"
+                                    type="file"
+                                    name="bukti"
+                                    accept="image/jpeg,image/jpg,image/png,application/pdf"
+                                    class="hidden"
+                                    @change="
+                                        const selectedFile = $event.target.files[0];
+                                        if (selectedFile) {
+                                            file = selectedFile;
+                                            fileName = selectedFile.name;
+                                            if (selectedFile.type.startsWith('image/')) {
+                                                preview = URL.createObjectURL(selectedFile);
+                                            } else {
+                                                preview = 'pdf';
+                                            }
+                                        }
+                                    "
+                                    required
+                                >
+                            </label>
+                        </div>
+
                         @error('bukti')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                        <div class="mt-2 flex items-center space-x-2 text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <p class="text-sm">{{ $message }}</p>
+                        </div>
                         @enderror
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
+                    <!-- Catatan -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                                </svg>
+                                <span>Catatan</span>
+                                <span class="text-gray-400 text-xs">(Opsional)</span>
+                            </span>
+                        </label>
                         <textarea
                             name="note"
                             rows="3"
-                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-2 focus:ring-[#4A7C59]/20 transition"
-                            placeholder="Tambahkan catatan jika diperlukan..."
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#4A7C59] focus:ring-4 focus:ring-[#4A7C59]/20 transition"
+                            placeholder="Contoh: Pembayaran via transfer BNI tanggal 15 Oktober 2024..."
                         ></textarea>
                     </div>
 
+                    <!-- Submit Button -->
                     <button
                         type="submit"
-                        class="w-full bg-[#4A7C59] hover:bg-[#3d6849] text-white py-4 rounded-lg font-bold transition transform hover:scale-105 flex items-center justify-center space-x-2"
+                        class="w-full bg-gradient-to-r from-[#4A7C59] to-[#2D5F3F] hover:from-[#3d6849] hover:to-[#234a31] text-white py-4 px-6 rounded-lg font-bold transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center space-x-3"
                     >
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        <span>Submit Bukti Pembayaran</span>
+                        <span class="text-lg">Submit Bukti Pembayaran</span>
                     </button>
                 </form>
             </div>

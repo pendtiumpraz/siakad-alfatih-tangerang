@@ -135,7 +135,7 @@
                     <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="h-16 w-16 object-contain">
                     <div class="text-left">
                         <h1 class="text-lg font-bold text-white leading-tight">STAI AL-FATIH</h1>
-                        <p class="text-xs text-[#F4E5C3]">Sistem Akademik</p>
+                        <p class="text-xs text-emerald-50">Sistem Akademik</p>
                     </div>
                 </div>
             </div>
@@ -203,7 +203,7 @@
             <!-- Islamic Decoration at Bottom -->
             <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
                 <div class="islamic-divider mb-4"></div>
-                <p class="text-[#F4E5C3] text-xs italic">"Tuntutlah ilmu dari buaian hingga liang lahat"</p>
+                <p class="text-emerald-50 text-xs italic">"Tuntutlah ilmu dari buaian hingga liang lahat"</p>
             </div>
         </aside>
 

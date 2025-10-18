@@ -38,7 +38,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">{{ $kurikulum->nama }}</h2>
-                        <p class="text-[#F4E5C3]">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
+                        <p class="text-emerald-50">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
                     </div>
                 </div>
                 <div>
@@ -226,7 +226,7 @@
     <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-md p-6 text-center islamic-pattern">
         <i class="fas fa-quote-left text-[#D4AF37] text-2xl mb-2"></i>
         <p class="text-white text-lg italic mb-2">"Menuntut ilmu adalah kewajiban bagi setiap Muslim"</p>
-        <p class="text-[#F4E5C3] text-sm">- HR. Ibnu Majah</p>
+        <p class="text-emerald-50 text-sm">- HR. Ibnu Majah</p>
         <i class="fas fa-quote-right text-[#D4AF37] text-2xl mt-2"></i>
     </div>
 </div>

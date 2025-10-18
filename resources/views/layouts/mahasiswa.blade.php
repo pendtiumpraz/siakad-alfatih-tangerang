@@ -117,7 +117,7 @@
                 <div class="flex items-center justify-center space-x-3">
                     <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="h-16 w-16 object-contain">
                     <div class="text-left">
-                        <h1 class="text-lg font-bold text-[#F4E5C3] leading-tight">STAI AL-FATIH</h1>
+                        <h1 class="text-lg font-bold text-emerald-50 leading-tight">STAI AL-FATIH</h1>
                         <p class="text-xs text-white/80 mt-1">Portal Mahasiswa</p>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                     <span>Dashboard</span>
                 </a>
 
-                <a href="{{ route('mahasiswa.profile.show') }}"
+                <a href="{{ route('mahasiswa.profile') }}"
                    class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('mahasiswa.profile.*') ? 'active' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -173,7 +173,7 @@
                     <span>Pembayaran</span>
                 </a>
 
-                <a href="{{ route('mahasiswa.kurikulum.index') }}"
+                <a href="{{ route('mahasiswa.kurikulum') }}"
                    class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('mahasiswa.kurikulum.*') ? 'active' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -274,7 +274,7 @@
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
                                 style="display: none;"
                             >
-                                <a href="{{ route('mahasiswa.profile.show') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="{{ route('mahasiswa.profile') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
                                     <div class="flex items-center space-x-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>

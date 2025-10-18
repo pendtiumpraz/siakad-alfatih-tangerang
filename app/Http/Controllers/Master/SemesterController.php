@@ -10,6 +10,24 @@ use Illuminate\Support\Facades\DB;
 class SemesterController extends Controller
 {
     /**
+     * Get view path prefix based on user role
+     */
+    protected function getViewPrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of semester with pagination, search, and filters
      */
     public function index(Request $request)
@@ -40,7 +58,8 @@ class SemesterController extends Controller
             ->orderBy('jenis', 'asc')
             ->paginate(15);
 
-        return view('admin.semester.index', compact('semesters'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.semester.index", compact('semesters'));
     }
 
     /**
@@ -102,7 +121,8 @@ class SemesterController extends Controller
             ->withCount(['jadwals', 'khs'])
             ->findOrFail($id);
 
-        return view('admin.semester.show', compact('semester'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.semester.show", compact('semester'));
     }
 
     /**

@@ -67,7 +67,7 @@
                     @php
                         $fileExtension = strtolower(pathinfo($pembayaran->bukti_pembayaran, PATHINFO_EXTENSION));
                         $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                        $fileUrl = asset('storage/' . $pembayaran->bukti_pembayaran);
+                        $fileUrl = \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran);
                     @endphp
 
                     @if($isImage)

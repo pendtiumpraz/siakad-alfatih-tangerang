@@ -18,7 +18,7 @@ class NilaiController extends Controller
     /**
      * Display a listing of mata kuliah that dosen teaches
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $dosen = Dosen::where('user_id', $user->id)->first();
@@ -27,12 +27,29 @@ class NilaiController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        // Get mata kuliah from jadwal
-        $mataKuliahs = Jadwal::where('dosen_id', $dosen->id)
-            ->with(['mataKuliah', 'semester'])
+        // Get filter data
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
+        $programStudis = \App\Models\ProgramStudi::orderBy('nama_prodi')->get();
+
+        // Get mata kuliah from jadwal with filters
+        $query = Jadwal::where('dosen_id', $dosen->id)
+            ->with(['mataKuliah.kurikulum.programStudi', 'semester'])
             ->select('mata_kuliah_id', 'semester_id')
-            ->distinct()
-            ->get()
+            ->distinct();
+
+        // Filter by semester
+        if ($request->filled('semester_id')) {
+            $query->where('semester_id', $request->semester_id);
+        }
+
+        // Filter by program studi
+        if ($request->filled('program_studi_id')) {
+            $query->whereHas('mataKuliah.kurikulum', function($q) use ($request) {
+                $q->where('program_studi_id', $request->program_studi_id);
+            });
+        }
+
+        $mataKuliahs = $query->get()
             ->map(function ($jadwal) use ($dosen) {
                 $mahasiswaCount = Nilai::where('mata_kuliah_id', $jadwal->mata_kuliah_id)
                     ->where('semester_id', $jadwal->semester_id)
@@ -46,7 +63,7 @@ class NilaiController extends Controller
                 ];
             });
 
-        return view('dosen.nilai.index', compact('mataKuliahs', 'dosen'));
+        return view('dosen.nilai.index', compact('mataKuliahs', 'dosen', 'semesters', 'programStudis'));
     }
 
     /**
@@ -95,12 +112,8 @@ class NilaiController extends Controller
             ->firstOrFail();
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
-        $semesters = Semester::where('status', 'aktif')->orderBy('tahun_akademik', 'desc')->get();
-
-        // Get mahasiswa from the same program studi
-        $mahasiswas = Mahasiswa::where('status', 'aktif')
-            ->orderBy('nama_lengkap')
-            ->get();
+        $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
+        $mahasiswas = Mahasiswa::where('status', 'aktif')->orderBy('nama_lengkap')->get();
 
         return view('dosen.nilai.create', compact('mataKuliah', 'mahasiswas', 'semesters', 'dosen'));
     }
@@ -151,9 +164,9 @@ class NilaiController extends Controller
                         'mahasiswa_id' => $nilaiData['mahasiswa_id'],
                         'mata_kuliah_id' => $validated['mata_kuliah_id'],
                         'semester_id' => $validated['semester_id'],
-                        'dosen_id' => $dosen->id,
                     ],
                     [
+                        'dosen_id' => $dosen->id,
                         'nilai_tugas' => $nilaiData['nilai_tugas'],
                         'nilai_uts' => $nilaiData['nilai_uts'],
                         'nilai_uas' => $nilaiData['nilai_uas'],
@@ -254,21 +267,27 @@ class NilaiController extends Controller
 
     /**
      * Calculate grade based on nilai_akhir
-     * A (85-100), AB (80-84), B (75-79), BC (70-74), C (65-69), D (60-64), E (<60)
+     * A (85-100), A- (80-84), B+ (75-79), B (70-74), B- (65-69), C+ (60-64), C (55-59), C- (50-54), D (45-49), E (<45)
      */
     private function calculateGrade($nilaiAkhir)
     {
         if ($nilaiAkhir >= 85) {
             return 'A';
         } elseif ($nilaiAkhir >= 80) {
-            return 'AB';
+            return 'A-';
         } elseif ($nilaiAkhir >= 75) {
-            return 'B';
+            return 'B+';
         } elseif ($nilaiAkhir >= 70) {
-            return 'BC';
+            return 'B';
         } elseif ($nilaiAkhir >= 65) {
-            return 'C';
+            return 'B-';
         } elseif ($nilaiAkhir >= 60) {
+            return 'C+';
+        } elseif ($nilaiAkhir >= 55) {
+            return 'C';
+        } elseif ($nilaiAkhir >= 50) {
+            return 'C-';
+        } elseif ($nilaiAkhir >= 45) {
             return 'D';
         } else {
             return 'E';

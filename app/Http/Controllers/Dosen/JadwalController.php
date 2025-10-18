@@ -18,7 +18,7 @@ class JadwalController extends Controller
     /**
      * Display a listing of jadwal for logged-in dosen
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $dosen = Dosen::where('user_id', $user->id)->first();
@@ -27,14 +27,29 @@ class JadwalController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $jadwals = Jadwal::where('dosen_id', $dosen->id)
-            ->with(['mataKuliah', 'ruangan', 'semester'])
-            ->orderBy('semester_id', 'desc')
+        // Get filter data
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
+
+        // Build query with filters
+        $query = Jadwal::where('dosen_id', $dosen->id)
+            ->with(['mataKuliah', 'ruangan', 'semester']);
+
+        // Filter by semester
+        if ($request->filled('semester_id')) {
+            $query->where('semester_id', $request->semester_id);
+        }
+
+        // Filter by hari
+        if ($request->filled('hari')) {
+            $query->where('hari', $request->hari);
+        }
+
+        $jadwals = $query->orderBy('semester_id', 'desc')
             ->orderBy('hari')
             ->orderBy('jam_mulai')
             ->paginate(15);
 
-        return view('dosen.jadwal.index', compact('jadwals', 'dosen'));
+        return view('dosen.jadwal.index', compact('jadwals', 'dosen', 'semesters'));
     }
 
     /**
@@ -50,8 +65,8 @@ class JadwalController extends Controller
         }
 
         $mataKuliahs = MataKuliah::orderBy('nama_mk')->get();
-        $ruangans = Ruangan::where('status', 'tersedia')->orderBy('nama_ruangan')->get();
-        $semesters = Semester::where('status', 'aktif')->orderBy('tahun_akademik', 'desc')->get();
+        $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
+        $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
 
         $hariOptions = [
             'Senin',
@@ -167,8 +182,8 @@ class JadwalController extends Controller
         $jadwal = Jadwal::where('dosen_id', $dosen->id)->findOrFail($id);
 
         $mataKuliahs = MataKuliah::orderBy('nama_mk')->get();
-        $ruangans = Ruangan::where('status', 'tersedia')->orderBy('nama_ruangan')->get();
-        $semesters = Semester::where('status', 'aktif')->orderBy('tahun_akademik', 'desc')->get();
+        $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
+        $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
 
         $hariOptions = [
             'Senin',

@@ -34,7 +34,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">{{ $programStudi->nama }}</h2>
-                        <p class="text-[#F4E5C3]">{{ $programStudi->jenjang }} - {{ $programStudi->kode }}</p>
+                        <p class="text-emerald-50">{{ $programStudi->jenjang }} - {{ $programStudi->kode }}</p>
                     </div>
                 </div>
                 <div>

@@ -33,7 +33,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">{{ $semester->nama_semester }}</h2>
-                        <p class="text-[#F4E5C3]">Tahun Akademik {{ $semester->tahun_akademik }}</p>
+                        <p class="text-emerald-50">Tahun Akademik {{ $semester->tahun_akademik }}</p>
                     </div>
                 </div>
                 <div>
@@ -249,7 +249,7 @@
     <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-md p-6 text-center islamic-pattern">
         <i class="fas fa-quote-left text-[#D4AF37] text-2xl mb-2"></i>
         <p class="text-white text-lg italic mb-2">"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia"</p>
-        <p class="text-[#F4E5C3] text-sm">- HR. Ahmad dan Thabrani</p>
+        <p class="text-emerald-50 text-sm">- HR. Ahmad dan Thabrani</p>
         <i class="fas fa-quote-right text-[#D4AF37] text-2xl mt-2"></i>
     </div>
 </div>

@@ -31,32 +31,57 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
                 <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Semua Status</option>
-                    <option value="pending">Pending</option>
-                    <option value="lunas">Lunas</option>
-                    <option value="terlambat">Terlambat</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                    <option value="belum_lunas" {{ request('status') == 'belum_lunas' ? 'selected' : '' }}>Belum Lunas</option>
                 </select>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mahasiswa</label>
-                <input type="text" name="student" placeholder="Cari NIM atau Nama..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Pembayaran</label>
-                <select name="type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <select name="jenis_pembayaran" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Semua Jenis</option>
-                    <option value="spp">SPP</option>
-                    <option value="ukt">UKT</option>
-                    <option value="daftar_ulang">Daftar Ulang</option>
-                    <option value="wisuda">Wisuda</option>
-                    <option value="lainnya">Lainnya</option>
+                    <option value="spp" {{ request('jenis_pembayaran') == 'spp' ? 'selected' : '' }}>SPP</option>
+                    <option value="uang_kuliah" {{ request('jenis_pembayaran') == 'uang_kuliah' ? 'selected' : '' }}>Uang Kuliah</option>
+                    <option value="ujian" {{ request('jenis_pembayaran') == 'ujian' ? 'selected' : '' }}>Ujian</option>
+                    <option value="praktikum" {{ request('jenis_pembayaran') == 'praktikum' ? 'selected' : '' }}>Praktikum</option>
+                    <option value="wisuda" {{ request('jenis_pembayaran') == 'wisuda' ? 'selected' : '' }}>Wisuda</option>
+                    <option value="lainnya" {{ request('jenis_pembayaran') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-                <input type="date" name="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Semester</label>
+                <select name="semester_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <option value="">Semua Semester</option>
+                    @foreach($semesters ?? [] as $semester)
+                        <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
+                            {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Cari Mahasiswa</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari NIM atau Nama..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai</label>
+                <input type="date" name="tanggal_mulai" value="{{ request('tanggal_mulai') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Akhir</label>
+                <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            </div>
+
+            <div class="md:col-span-2 lg:col-span-2 flex items-end">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" name="include_deleted" value="1" {{ request('include_deleted') ? 'checked' : '' }} class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
+                    <span class="ml-2 text-sm text-gray-700">Tampilkan data terhapus</span>
+                </label>
             </div>
 
             <div class="md:col-span-2 lg:col-span-4 flex justify-end space-x-2">
@@ -98,7 +123,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
                     @if($pembayaran->bukti_pembayaran)
-                        <a href="{{ asset('storage/' . $pembayaran->bukti_pembayaran) }}" target="_blank" class="text-green-600 hover:text-green-800" title="Lihat Bukti">
+                        <a href="{{ \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran) }}" target="_blank" class="text-green-600 hover:text-green-800" title="Lihat Bukti">
                             <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>

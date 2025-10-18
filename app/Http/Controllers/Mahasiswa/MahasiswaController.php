@@ -214,7 +214,71 @@ class MahasiswaController extends Controller
             ]);
         }
 
-        return view('mahasiswa.khs', compact('khsList', 'selectedKhs', 'mahasiswa'));
+        return view('mahasiswa.khs.index', compact('khsList', 'selectedKhs', 'mahasiswa'));
+    }
+
+    /**
+     * Display detail KHS for specific semester.
+     */
+    public function khsDetail($id)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        // Get KHS by semester ID
+        $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $id)
+            ->with('semester')
+            ->first();
+
+        if (!$khs) {
+            return redirect()->route('mahasiswa.khs.index')
+                ->with('error', 'Data KHS tidak ditemukan');
+        }
+
+        // Get all nilais for this KHS
+        $nilais = \App\Models\Nilai::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $id)
+            ->with('mataKuliah')
+            ->get();
+
+        return view('mahasiswa.khs.show', compact('khs', 'mahasiswa', 'nilais'));
+    }
+
+    /**
+     * Export KHS to PDF.
+     */
+    public function khsExport($id)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        // Get KHS by semester ID
+        $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $id)
+            ->with('semester')
+            ->first();
+
+        if (!$khs) {
+            return redirect()->route('mahasiswa.khs.index')
+                ->with('error', 'Data KHS tidak ditemukan');
+        }
+
+        // Get all nilais for this KHS
+        $nilais = \App\Models\Nilai::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $id)
+            ->with('mataKuliah')
+            ->get();
+
+        // Load view for PDF
+        $pdf = \PDF::loadView('mahasiswa.khs.print', compact('khs', 'mahasiswa', 'nilais'))
+            ->setPaper('a4', 'portrait');
+
+        $filename = sprintf(
+            'KHS_%s_Semester_%s.pdf',
+            $mahasiswa->nim ?? 'mahasiswa',
+            str_replace(['/', '\\'], '-', $khs->semester->nama_semester ?? $id)
+        );
+
+        return $pdf->download($filename);
     }
 
     /**
@@ -250,5 +314,173 @@ class MahasiswaController extends Controller
         }
 
         return view('mahasiswa.pembayaran', compact('pembayarans', 'semesters', 'mahasiswa'));
+    }
+
+    /**
+     * Display notifications for the authenticated mahasiswa.
+     */
+    public function notifications(Request $request)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        // Placeholder for notifications - implement as needed
+        $notifications = collect([
+            (object)[
+                'id' => 1,
+                'title' => 'Selamat Datang',
+                'message' => 'Selamat datang di Portal Mahasiswa STAI AL-FATIH',
+                'type' => 'info',
+                'read_at' => null,
+                'created_at' => now()->subDays(1),
+            ],
+        ]);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $notifications
+            ]);
+        }
+
+        return view('mahasiswa.notifications.index', compact('notifications', 'mahasiswa'));
+    }
+
+    /**
+     * Display nilai (grades) for the authenticated mahasiswa.
+     */
+    public function nilai(Request $request)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        // Get semester filter
+        $semesterId = $request->input('semester_id');
+
+        $query = \App\Models\Nilai::where('mahasiswa_id', $mahasiswa->id)
+            ->with(['mataKuliah', 'semester']);
+
+        if ($semesterId) {
+            $query->where('semester_id', $semesterId);
+        }
+
+        $nilais = $query->orderBy('semester_id', 'desc')->get();
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $nilais
+            ]);
+        }
+
+        return view('mahasiswa.nilai', compact('nilais', 'semesters', 'mahasiswa'));
+    }
+
+    /**
+     * Display kurikulum for the authenticated mahasiswa's program studi.
+     */
+    public function kurikulum(Request $request)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+        $mahasiswa->load('programStudi');
+
+        $kurikulum = $mahasiswa->programStudi->kurikulums()
+            ->where('is_active', true)
+            ->with('mataKuliahs')
+            ->first();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'data' => $kurikulum
+            ]);
+        }
+
+        return view('mahasiswa.kurikulum', compact('kurikulum', 'mahasiswa'));
+    }
+
+    /**
+     * Upload bukti pembayaran by mahasiswa.
+     */
+    public function uploadBukti(Request $request, $id)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        // Validate the payment belongs to this mahasiswa
+        $pembayaran = Pembayaran::where('id', $id)
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->firstOrFail();
+
+        // Validate the upload
+        $validated = $request->validate([
+            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ], [
+            'bukti_pembayaran.required' => 'File bukti pembayaran wajib diupload',
+            'bukti_pembayaran.mimes' => 'File harus berformat JPG, JPEG, PNG, atau PDF',
+            'bukti_pembayaran.max' => 'Ukuran file maksimal 2MB',
+        ]);
+
+        try {
+            \DB::beginTransaction();
+
+            // Delete old file if exists
+            if ($pembayaran->bukti_pembayaran && Storage::disk('public')->exists($pembayaran->bukti_pembayaran)) {
+                Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
+            }
+
+            // Generate custom filename
+            $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
+            $semester = Semester::find($pembayaran->semester_id);
+
+            $filename = sprintf(
+                'bukti_bayar_%s_%s_%s_%s_%s.%s',
+                str_replace(' ', '_', strtolower($pembayaran->jenis_pembayaran)),
+                $semester ? $semester->tahun_akademik : date('Y'),
+                $semester ? strtolower($semester->jenis) : 'reguler',
+                \Str::slug($mahasiswa->nama_lengkap),
+                date('Ymd_His'),
+                $extension
+            );
+
+            // Store the file
+            $buktiPath = $request->file('bukti_pembayaran')
+                ->storeAs('pembayaran/bukti', $filename, 'public');
+
+            // Update pembayaran record
+            $pembayaran->update([
+                'bukti_pembayaran' => $buktiPath,
+                'status' => 'pending', // Change status to pending when bukti uploaded
+            ]);
+
+            \DB::commit();
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Bukti pembayaran berhasil diupload. Menunggu verifikasi dari operator.',
+                    'data' => $pembayaran
+                ]);
+            }
+
+            return redirect()->route('mahasiswa.pembayaran.index')
+                ->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi dari operator.');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+
+            // Delete uploaded file if transaction fails
+            if (isset($buktiPath) && Storage::disk('public')->exists($buktiPath)) {
+                Storage::disk('public')->delete($buktiPath);
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengupload bukti pembayaran: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->route('mahasiswa.pembayaran.index')
+                ->with('error', 'Gagal mengupload bukti pembayaran. Silakan coba lagi.');
+        }
     }
 }

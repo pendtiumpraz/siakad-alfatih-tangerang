@@ -127,6 +127,7 @@
                     Quick Actions
                 </h3>
                 <div class="space-y-3">
+                    {{-- Temporary hidden until user management implemented
                     <a href="{{ route('admin.users.create') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition">
                         <span class="text-sm font-medium">
                             <i class="fas fa-user-plus mr-2"></i>
@@ -142,6 +143,7 @@
                         </span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
+                    --}}
 
                     <a href="#" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#6B9E78] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition">
                         <span class="text-sm font-medium">
@@ -183,7 +185,7 @@
             <div class="bg-gradient-to-br from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-md p-6 text-white text-center">
                 <i class="fas fa-quote-right text-3xl mb-3 text-[#D4AF37]"></i>
                 <p class="text-sm italic mb-2">"Barangsiapa menempuh suatu jalan untuk mencari ilmu, maka Allah akan memudahkan baginya jalan menuju surga"</p>
-                <p class="text-xs text-[#F4E5C3]">- HR. Muslim -</p>
+                <p class="text-xs text-emerald-50">- HR. Muslim -</p>
             </div>
         </div>
     </div>
