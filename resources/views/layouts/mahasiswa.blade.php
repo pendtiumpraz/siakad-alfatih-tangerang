@@ -264,11 +264,17 @@
                                 @click="open = !open"
                                 class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
                             >
-                                <img src="https://ui-avatars.com/api/?name={{ $mahasiswa->nama ?? auth()->user()->name ?? 'Mahasiswa' }}&background=4A7C59&color=fff"
-                                     alt="Profile"
-                                     class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37]">
+                                @if($mahasiswa && $mahasiswa->foto)
+                                    <img src="{{ Storage::url($mahasiswa->foto) }}"
+                                         alt="Profile"
+                                         class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37] object-cover">
+                                @else
+                                    <img src="https://ui-avatars.com/api/?name={{ $mahasiswa->nama_lengkap ?? 'Mahasiswa' }}&background=4A7C59&color=fff"
+                                         alt="Profile"
+                                         class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37]">
+                                @endif
                                 <div class="hidden md:block text-left">
-                                    <div class="text-sm font-semibold text-gray-800">{{ $mahasiswa->nama ?? auth()->user()->name ?? 'Mahasiswa' }}</div>
+                                    <div class="text-sm font-semibold text-gray-800">{{ $mahasiswa->nama_lengkap ?? 'Mahasiswa' }}</div>
                                     <div class="text-xs text-gray-500">{{ $mahasiswa->nim ?? 'NIM: -' }}</div>
                                 </div>
                                 <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
