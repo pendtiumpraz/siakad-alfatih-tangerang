@@ -134,7 +134,7 @@
             <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] p-8">
 
                 <!-- Overview Section -->
-                <div x-show="activeTab === 'overview'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'overview'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-home mr-3"></i>Overview - Super Admin
                     </h2>
@@ -258,7 +258,7 @@
                 </div>
 
                 <!-- User Management Section -->
-                <div x-show="activeTab === 'users'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'users'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-users mr-3"></i>User Management
                     </h2>
@@ -409,7 +409,7 @@
                 </div>
 
                 <!-- SPMB Section -->
-                <div x-show="activeTab === 'spmb'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'spmb'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-user-graduate mr-3"></i>SPMB (Seleksi Penerimaan Mahasiswa Baru)
                     </h2>
@@ -574,7 +574,7 @@
                 </div>
 
                 <!-- Pengurus Section -->
-                <div x-show="activeTab === 'pengurus'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'pengurus'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-user-tie mr-3"></i>Pengurus (Ketua Prodi & Dosen Wali)
                     </h2>
@@ -682,7 +682,7 @@
                 </div>
 
                 <!-- Master Data Section -->
-                <div x-show="activeTab === 'master'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'master'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-database mr-3"></i>Master Data
                     </h2>
@@ -835,7 +835,7 @@
                 </div>
 
                 <!-- Jadwal Section -->
-                <div x-show="activeTab === 'jadwal'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'jadwal'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-calendar mr-3"></i>Jadwal Kuliah
                     </h2>
@@ -931,7 +931,7 @@
                 </div>
 
                 <!-- Pembayaran Section -->
-                <div x-show="activeTab === 'pembayaran'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'pembayaran'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-money-bill mr-3"></i>Pembayaran
                     </h2>
@@ -1001,7 +1001,7 @@
                 </div>
 
                 <!-- Pengumuman Section -->
-                <div x-show="activeTab === 'pengumuman'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'pengumuman'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-bullhorn mr-3"></i>Pengumuman
                     </h2>
@@ -1075,7 +1075,7 @@
                 </div>
 
                 <!-- Tips & Tricks Section -->
-                <div x-show="activeTab === 'tips'" x-transition class="prose max-w-none">
+                <div x-show="activeTab === 'tips'" x-transition>
                     <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                         <i class="fas fa-lightbulb mr-3"></i>Tips & Tricks
                     </h2>
