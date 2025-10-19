@@ -190,12 +190,13 @@ class MahasiswaController extends Controller
         $mahasiswa = $this->getAuthMahasiswa();
 
         // Get all KHS for the mahasiswa that have been properly generated
-        // Only show KHS where nilai records exist for that semester
+        // Only show KHS where nilai records exist for that mahasiswa in that semester
         $khsList = Khs::where('mahasiswa_id', $mahasiswa->id)
-            ->whereHas('mahasiswa', function($query) use ($mahasiswa) {
-                $query->whereHas('nilais', function($subQuery) {
-                    $subQuery->whereColumn('semester_id', 'khs.semester_id');
-                });
+            ->whereExists(function($query) use ($mahasiswa) {
+                $query->select(\DB::raw(1))
+                    ->from('nilais')
+                    ->whereColumn('nilais.semester_id', 'khs.semester_id')
+                    ->where('nilais.mahasiswa_id', $mahasiswa->id);
             })
             ->with('semester')
             ->orderBy('semester_id', 'desc')
@@ -206,10 +207,11 @@ class MahasiswaController extends Controller
         if ($request->has('semester_id')) {
             $selectedKhs = Khs::where('mahasiswa_id', $mahasiswa->id)
                 ->where('semester_id', $request->semester_id)
-                ->whereHas('mahasiswa', function($query) use ($mahasiswa) {
-                    $query->whereHas('nilais', function($subQuery) {
-                        $subQuery->whereColumn('semester_id', 'khs.semester_id');
-                    });
+                ->whereExists(function($query) use ($mahasiswa) {
+                    $query->select(\DB::raw(1))
+                        ->from('nilais')
+                        ->whereColumn('nilais.semester_id', 'khs.semester_id')
+                        ->where('nilais.mahasiswa_id', $mahasiswa->id);
                 })
                 ->with(['semester'])
                 ->first();
@@ -238,10 +240,11 @@ class MahasiswaController extends Controller
         // Get KHS by semester ID - only if it has nilai records
         $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $id)
-            ->whereHas('mahasiswa', function($query) use ($mahasiswa, $id) {
-                $query->whereHas('nilais', function($subQuery) use ($id) {
-                    $subQuery->where('semester_id', $id);
-                });
+            ->whereExists(function($query) use ($mahasiswa, $id) {
+                $query->select(\DB::raw(1))
+                    ->from('nilais')
+                    ->where('nilais.semester_id', $id)
+                    ->where('nilais.mahasiswa_id', $mahasiswa->id);
             })
             ->with('semester')
             ->first();
@@ -270,10 +273,11 @@ class MahasiswaController extends Controller
         // Get KHS by semester ID - only if it has nilai records
         $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $id)
-            ->whereHas('mahasiswa', function($query) use ($mahasiswa, $id) {
-                $query->whereHas('nilais', function($subQuery) use ($id) {
-                    $subQuery->where('semester_id', $id);
-                });
+            ->whereExists(function($query) use ($mahasiswa, $id) {
+                $query->select(\DB::raw(1))
+                    ->from('nilais')
+                    ->where('nilais.semester_id', $id)
+                    ->where('nilais.mahasiswa_id', $mahasiswa->id);
             })
             ->with('semester')
             ->first();
