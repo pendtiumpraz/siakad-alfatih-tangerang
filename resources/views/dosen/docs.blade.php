@@ -1,88 +1,126 @@
 @extends('layouts.dosen')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8" x-data="{
+<div class="space-y-6" x-data="{
     activeTab: 'overview',
-    menuOpen: true
+    searchTerm: '',
+    menuOpen: true,
+    menuItems: [
+        { id: 'overview', title: 'Overview', icon: 'fa-home', keywords: 'overview ringkasan pengenalan intro panduan awal' },
+        { id: 'jadwal', title: 'Jadwal Mengajar', icon: 'fa-calendar', keywords: 'jadwal mengajar schedule kelas ruangan waktu' },
+        { id: 'nilai', title: 'Input Nilai', icon: 'fa-edit', keywords: 'nilai input grade tugas uts uas kehadiran penilaian' },
+        { id: 'khs', title: 'Generate KHS', icon: 'fa-file-alt', keywords: 'khs kartu hasil studi generate ip ipk semester' },
+        { id: 'bimbingan', title: 'Mahasiswa Bimbingan', icon: 'fa-user-friends', keywords: 'bimbingan mahasiswa wali monitoring' },
+        { id: 'tips', title: 'Tips & Best Practices', icon: 'fa-lightbulb', keywords: 'tips trik best practice panduan' }
+    ],
+    get filteredMenuItems() {
+        if (!this.searchTerm) return this.menuItems;
+        const search = this.searchTerm.toLowerCase();
+        return this.menuItems.filter(item =>
+            item.title.toLowerCase().includes(search) ||
+            item.keywords.toLowerCase().includes(search)
+        );
+    },
+    selectTab(tabId) {
+        this.activeTab = tabId;
+        this.searchTerm = '';
+    }
 }">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-2xl p-8 mb-8 text-white">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-4xl font-bold mb-2">
-                        <i class="fas fa-chalkboard-teacher mr-3"></i>
-                        Panduan Dosen
-                    </h1>
-                    <p class="text-lg opacity-90">Tutorial lengkap untuk Dosen STAI AL-FATIH</p>
-                </div>
-                <div class="hidden lg:block">
-                    <div class="bg-white/20 backdrop-blur rounded-xl p-6 text-center">
-                        <i class="fas fa-graduation-cap text-5xl text-green-300"></i>
-                        <p class="mt-2 font-semibold">Dosen</p>
-                    </div>
+    <!-- Page Header -->
+    <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-xl p-8 text-white">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-bold mb-2 flex items-center">
+                    <i class="fas fa-chalkboard-teacher mr-4"></i>
+                    Panduan Dosen
+                </h1>
+                <p class="text-lg text-gray-100">
+                    Tutorial lengkap untuk Dosen STAI AL-FATIH
+                </p>
+            </div>
+            <div class="hidden lg:block">
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+                    <i class="fas fa-user-tie text-5xl text-[#D4AF37]"></i>
+                    <p class="mt-2 font-semibold">Dosen</p>
                 </div>
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- Sidebar -->
-            <div class="lg:w-1/4">
-                <div class="bg-white rounded-lg shadow-md border-2 border-green-400 sticky top-4">
+        <!-- Search Bar -->
+        <div class="mt-6">
+            <div class="relative">
+                <input
+                    type="text"
+                    x-model="searchTerm"
+                    @keyup.escape="searchTerm = ''"
+                    placeholder="Cari tutorial, fitur, atau panduan..."
+                    class="w-full px-6 py-3 pr-24 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                >
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
                     <button
-                        @click="menuOpen = !menuOpen"
-                        class="lg:hidden w-full px-4 py-3 bg-[#2D5F3F] text-white rounded-t-lg font-semibold flex items-center justify-between"
+                        x-show="searchTerm"
+                        @click="searchTerm = ''"
+                        class="text-gray-400 hover:text-gray-600 transition"
+                        title="Clear search"
                     >
-                        <span>Menu</span>
-                        <i class="fas" :class="menuOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        <i class="fas fa-times"></i>
                     </button>
-
-                    <nav class="p-4" x-show="menuOpen" x-transition>
-                        <h3 class="font-bold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-green-400">Daftar Isi</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li>
-                                <a @click="activeTab = 'overview'" :class="activeTab === 'overview' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-home mr-2"></i>Overview
-                                </a>
-                            </li>
-                            <li>
-                                <a @click="activeTab = 'jadwal'" :class="activeTab === 'jadwal' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-calendar mr-2"></i>Jadwal
-                                </a>
-                            </li>
-                            <li>
-                                <a @click="activeTab = 'nilai'" :class="activeTab === 'nilai' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-edit mr-2"></i>Input Nilai
-                                </a>
-                            </li>
-                            <li>
-                                <a @click="activeTab = 'khs'" :class="activeTab === 'khs' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-file-alt mr-2"></i>Generate KHS
-                                </a>
-                            </li>
-                            <li>
-                                <a @click="activeTab = 'bimbingan'" :class="activeTab === 'bimbingan' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-user-friends mr-2"></i>Mahasiswa Bimbingan
-                                </a>
-                            </li>
-                            <li>
-                                <a @click="activeTab = 'tips'" :class="activeTab === 'tips' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'" class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                    <i class="fas fa-lightbulb mr-2"></i>Tips
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <i class="fas fa-search text-gray-400"></i>
                 </div>
             </div>
+            <div x-show="searchTerm && filteredMenuItems.length > 0" class="mt-2 text-sm text-gray-200">
+                Ditemukan <span class="font-bold" x-text="filteredMenuItems.length"></span> hasil
+            </div>
+            <div x-show="searchTerm && filteredMenuItems.length === 0" class="mt-2 text-sm text-yellow-200">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                Tidak ada hasil untuk "<span x-text="searchTerm"></span>"
+            </div>
+        </div>
+    </div>
 
-            <!-- Content -->
-            <div class="lg:w-3/4">
-                <div class="bg-white rounded-lg shadow-md border-2 border-green-400 p-8">
+    <!-- Main Content Layout -->
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Sidebar Navigation -->
+        <div class="lg:w-1/4">
+            <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] sticky top-4">
+                <!-- Toggle Button for Mobile -->
+                <button
+                    @click="menuOpen = !menuOpen"
+                    class="lg:hidden w-full px-4 py-3 bg-[#2D5F3F] text-white rounded-t-lg font-semibold flex items-center justify-between"
+                >
+                    <span>Menu Dokumentasi</span>
+                    <i class="fas" :class="menuOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+
+                <nav class="p-4" x-show="menuOpen" x-transition>
+                    <h3 class="font-bold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
+                        <i class="fas fa-list mr-2"></i>
+                        Daftar Isi
+                    </h3>
+
+                    <ul class="space-y-2">
+                        <template x-for="item in filteredMenuItems" :key="item.id">
+                            <li>
+                                <a @click="selectTab(item.id)"
+                                   :class="activeTab === item.id ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
+                                   class="block px-4 py-2 rounded-lg cursor-pointer transition">
+                                    <i class="fas mr-2" :class="item.icon"></i>
+                                    <span x-text="item.title"></span>
+                                </a>
+                            </li>
+                        </template>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="lg:w-3/4">
+            <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] p-8">
 
                     <!-- Overview -->
                     <div x-show="activeTab === 'overview'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-info-circle mr-3"></i>Overview - Dosen
                         </h2>
 
@@ -142,7 +180,7 @@
 
                     <!-- Jadwal -->
                     <div x-show="activeTab === 'jadwal'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-calendar mr-3"></i>Jadwal Mengajar
                         </h2>
 
@@ -175,7 +213,7 @@
 
                     <!-- Input Nilai -->
                     <div x-show="activeTab === 'nilai'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-edit mr-3"></i>Input Nilai Mahasiswa
                         </h2>
 
@@ -283,7 +321,7 @@
 
                     <!-- Generate KHS -->
                     <div x-show="activeTab === 'khs'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-file-alt mr-3"></i>Generate KHS
                         </h2>
 
@@ -354,7 +392,7 @@
 
                     <!-- Mahasiswa Bimbingan -->
                     <div x-show="activeTab === 'bimbingan'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-user-friends mr-3"></i>Mahasiswa Bimbingan
                         </h2>
 
@@ -411,7 +449,7 @@
 
                     <!-- Tips -->
                     <div x-show="activeTab === 'tips'" x-transition>
-                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-green-400">
+                        <h2 class="text-3xl font-bold text-[#2D5F3F] mb-6 pb-3 border-b-2 border-[#D4AF37]">
                             <i class="fas fa-lightbulb mr-3"></i>Tips & Best Practices
                         </h2>
 
@@ -446,17 +484,17 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Footer -->
-        <div class="mt-8 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-xl p-6 text-white text-center">
-            <p class="text-sm">
-                <i class="fas fa-question-circle mr-2"></i>
-                Butuh bantuan? Hubungi <a href="mailto:support@stai-alfatih.ac.id" class="underline hover:text-green-300">support@stai-alfatih.ac.id</a>
-            </p>
-            <p class="text-xs mt-2 opacity-75">
-                Dibuat dengan ❤️ menggunakan Laravel & Claude Code
-            </p>
-        </div>
+    <!-- Footer -->
+    <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-xl p-6 text-white text-center">
+        <p class="text-sm">
+            <i class="fas fa-question-circle mr-2"></i>
+            Butuh bantuan? Hubungi <a href="mailto:support@stai-alfatih.ac.id" class="underline hover:text-[#D4AF37]">support@stai-alfatih.ac.id</a>
+        </p>
+        <p class="text-xs mt-2 text-gray-200">
+            Dibuat dengan ❤️ menggunakan Laravel & Claude Code
+        </p>
     </div>
 </div>
 @endsection
