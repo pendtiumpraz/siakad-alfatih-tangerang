@@ -130,7 +130,7 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="lg:w-3/4 mt-6 lg:mt-0">
+        <div class="lg:w-3/4">
             <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] p-8">
 
                 <!-- Overview Section -->
