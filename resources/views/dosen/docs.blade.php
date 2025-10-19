@@ -279,15 +279,61 @@
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">5</span>
                                     <div>
-                                        <h5 class="font-bold">Grade Otomatis</h5>
-                                        <div class="bg-gray-50 p-4 rounded mt-2">
-                                            <table class="w-full text-xs">
-                                                <tr><td class="py-1">A : 90-100</td><td class="py-1">C+ : 65-69</td></tr>
-                                                <tr><td class="py-1">A- : 85-89</td><td class="py-1">C : 60-64</td></tr>
-                                                <tr><td class="py-1">B+ : 80-84</td><td class="py-1">C- : 55-59</td></tr>
-                                                <tr><td class="py-1">B : 75-79</td><td class="py-1">D : 45-54</td></tr>
-                                                <tr><td class="py-1">B- : 70-74</td><td class="py-1">E : 0-44</td></tr>
-                                            </table>
+                                        <h5 class="font-bold mb-3">Grade Otomatis</h5>
+                                        <div class="bg-white border-2 border-gray-200 rounded-lg p-4 mt-2">
+                                            <p class="text-xs text-gray-600 mb-3 font-semibold">Sistem Penilaian:</p>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <!-- A Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">A</span>
+                                                    <span class="text-sm font-semibold">90-100</span>
+                                                </div>
+                                                <!-- A- Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">A-</span>
+                                                    <span class="text-sm font-semibold">85-89</span>
+                                                </div>
+                                                <!-- B+ Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">B+</span>
+                                                    <span class="text-sm font-semibold">80-84</span>
+                                                </div>
+                                                <!-- B Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">B</span>
+                                                    <span class="text-sm font-semibold">75-79</span>
+                                                </div>
+                                                <!-- B- Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">B-</span>
+                                                    <span class="text-sm font-semibold">70-74</span>
+                                                </div>
+                                                <!-- C+ Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">C+</span>
+                                                    <span class="text-sm font-semibold">65-69</span>
+                                                </div>
+                                                <!-- C Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">C</span>
+                                                    <span class="text-sm font-semibold">60-64</span>
+                                                </div>
+                                                <!-- C- Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">C-</span>
+                                                    <span class="text-sm font-semibold">55-59</span>
+                                                </div>
+                                                <!-- D Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-orange-600 to-red-500 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">D</span>
+                                                    <span class="text-sm font-semibold">45-54</span>
+                                                </div>
+                                                <!-- E Grade -->
+                                                <div class="flex items-center justify-between bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg px-4 py-2.5 shadow-sm">
+                                                    <span class="text-xl font-bold">E</span>
+                                                    <span class="text-sm font-semibold">0-44</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
