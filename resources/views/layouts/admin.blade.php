@@ -220,6 +220,15 @@
                     <i class="fas fa-user-tie w-5"></i>
                     <span class="ml-3">Pengurus</span>
                 </a>
+
+                <!-- Divider -->
+                <div class="my-4 border-t border-white/20"></div>
+
+                <!-- Dokumentasi -->
+                <a href="{{ route('admin.docs') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.docs') ? 'active' : '' }}">
+                    <i class="fas fa-book w-5"></i>
+                    <span class="ml-3">Dokumentasi</span>
+                </a>
             </nav>
 
             <!-- Islamic Decoration at Bottom -->

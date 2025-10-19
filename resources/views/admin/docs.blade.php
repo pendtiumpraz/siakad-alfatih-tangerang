@@ -35,7 +35,7 @@
                     placeholder="Cari tutorial, fitur, atau panduan..."
                     class="w-full px-6 py-3 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                 >
-                <i class="fas fa-search absolute right-4 top-4 text-gray-400"></i>
+                <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
         </div>
     </div>
