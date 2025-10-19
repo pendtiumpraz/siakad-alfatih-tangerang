@@ -43,6 +43,24 @@
                         @enderror
                     </div>
 
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value="{{ old('name', $user->name) }}"
+                            required
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('name') border-red-500 @enderror"
+                        >
+                        @error('name')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -57,6 +75,24 @@
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('email') border-red-500 @enderror"
                         >
                         @error('email')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Nomor HP -->
+                    <div>
+                        <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nomor HP
+                        </label>
+                        <input
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            value="{{ old('phone', $user->phone) }}"
+                            placeholder="08xx-xxxx-xxxx"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('phone') border-red-500 @enderror"
+                        >
+                        @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
