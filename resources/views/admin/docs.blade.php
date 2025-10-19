@@ -41,9 +41,9 @@
     </div>
 
     <!-- Main Content Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div class="lg:flex lg:gap-6">
         <!-- Sidebar Navigation -->
-        <div class="lg:col-span-1">
+        <div class="lg:w-1/4">
             <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] sticky top-4">
                 <!-- Toggle Button for Mobile -->
                 <button
@@ -130,7 +130,7 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="lg:col-span-3">
+        <div class="lg:w-3/4 mt-6 lg:mt-0">
             <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] p-8">
 
                 <!-- Overview Section -->
