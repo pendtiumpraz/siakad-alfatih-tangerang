@@ -46,4 +46,9 @@ class DosenDashboardController extends Controller
             'recentGrades'
         ));
     }
+
+    public function docs()
+    {
+        return view('dosen.docs');
+    }
 }

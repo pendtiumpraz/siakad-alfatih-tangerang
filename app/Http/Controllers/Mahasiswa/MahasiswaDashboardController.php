@@ -116,4 +116,9 @@ class MahasiswaDashboardController extends Controller
             'khsTerakhir'
         ));
     }
+
+    public function docs()
+    {
+        return view('mahasiswa.docs');
+    }
 }

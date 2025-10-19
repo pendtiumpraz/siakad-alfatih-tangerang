@@ -110,6 +110,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/bulk-assign-dosen-wali', [\App\Http\Controllers\Admin\PengurusController::class, 'bulkAssignDosenWali'])->name('bulk-assign-dosen-wali');
         Route::delete('/remove-dosen-wali/{mahasiswaId}', [\App\Http\Controllers\Admin\PengurusController::class, 'removeDosenWali'])->name('remove-dosen-wali');
     });
+
+    // Documentation
+    Route::get('/docs', [AdminDashboardController::class, 'docs'])->name('docs');
 });
 
 // Operator Routes
@@ -145,6 +148,9 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
         Route::get('/{id}', [OperatorSPMBController::class, 'show'])->name('show');
         Route::post('/{id}/verify', [OperatorSPMBController::class, 'verify'])->name('verify');
     });
+
+    // Documentation
+    Route::get('/docs', [OperatorDashboardController::class, 'docs'])->name('docs');
 });
 
 // Dosen Routes
@@ -188,6 +194,9 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Dosen\PengumumanController::class);
+
+    // Documentation
+    Route::get('/docs', [DosenDashboardController::class, 'docs'])->name('docs');
 });
 
 // Mahasiswa Routes
@@ -218,6 +227,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::post('notifications/{pengumumanId}/mark-read', [MahasiswaController::class, 'markNotificationAsRead'])->name('notifications.mark-read');
 
     Route::get('kurikulum', [MahasiswaController::class, 'kurikulum'])->name('kurikulum');
+
+    // Documentation
+    Route::get('/docs', [MahasiswaDashboardController::class, 'docs'])->name('docs');
 });
 
 // Shared Master Data Routes (accessible by multiple roles)

@@ -28,4 +28,9 @@ class OperatorDashboardController extends Controller
             'recentPembayaran'
         ));
     }
+
+    public function docs()
+    {
+        return view('operator.docs');
+    }
 }

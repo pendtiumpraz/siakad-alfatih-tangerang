@@ -34,4 +34,9 @@ class AdminDashboardController extends Controller
             'activeSemester'
         ));
     }
+
+    public function docs()
+    {
+        return view('admin.docs');
+    }
 }
