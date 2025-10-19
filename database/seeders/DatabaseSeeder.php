@@ -22,36 +22,39 @@ class DatabaseSeeder extends Seeder
             // 2. Seed program studi (no dependencies)
             ProgramStudiSeeder::class,
 
-            // 3. Seed users (no dependencies)
+            // 3. Seed jalur seleksi (no dependencies) - SPMB
+            JalurSeleksiSeeder::class,
+
+            // 4. Seed users (no dependencies)
             UserSeeder::class,
 
-            // 4. Seed user-related tables (depends on users)
+            // 5. Seed user-related tables (depends on users)
             OperatorSeeder::class,
             DosenSeeder::class,
             MahasiswaSeeder::class,
 
-            // 5. Seed kurikulum (depends on program_studi)
+            // 6. Seed kurikulum (depends on program_studi)
             KurikulumSeeder::class,
 
-            // 6. Seed mata kuliah (depends on kurikulum)
+            // 7. Seed mata kuliah (depends on kurikulum)
             MataKuliahSeeder::class,
 
-            // 7. Seed semester (no dependencies)
+            // 8. Seed semester (no dependencies)
             SemesterSeeder::class,
 
-            // 8. Seed ruangan (no dependencies)
+            // 9. Seed ruangan (no dependencies)
             RuanganSeeder::class,
 
-            // 9. Seed jadwal (depends on semester, mata_kuliah, dosen, ruangan)
+            // 10. Seed jadwal (depends on semester, mata_kuliah, dosen, ruangan)
             JadwalSeeder::class,
 
-            // 10. Seed nilai (depends on mahasiswa, mata_kuliah, dosen, semester)
+            // 11. Seed nilai (depends on mahasiswa, mata_kuliah, dosen, semester)
             // NilaiSeeder::class, // Commented - Dosen will input manually
 
-            // 11. Seed KHS (depends on mahasiswa, semester, nilai)
+            // 12. Seed KHS (depends on mahasiswa, semester, nilai)
             // KhsSeeder::class, // Commented - Will be generated after nilai input
 
-            // 12. Seed pembayaran (depends on mahasiswa, semester, operator)
+            // 13. Seed pembayaran (depends on mahasiswa, semester, operator)
             PembayaranSeeder::class,
         ]);
 

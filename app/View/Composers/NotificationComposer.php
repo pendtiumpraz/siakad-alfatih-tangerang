@@ -26,6 +26,9 @@ class NotificationComposer
         if ($user->role === 'mahasiswa') {
             $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
 
+            // Always set mahasiswa variable
+            $view->with('mahasiswa', $mahasiswa);
+
             if (!$mahasiswa) {
                 $view->with('recentPengumumans', collect());
                 $view->with('unreadCount', 0);
@@ -49,7 +52,6 @@ class NotificationComposer
 
             $view->with('recentPengumumans', $recentPengumumans);
             $view->with('unreadCount', $unreadCount);
-            $view->with('mahasiswa', $mahasiswa);
         } else {
             // For admin/dosen/operator - show all active pengumumans
             $recentPengumumans = Pengumuman::active()

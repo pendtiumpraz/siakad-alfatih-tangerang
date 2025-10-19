@@ -4,8 +4,11 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\RolePermissionController;
+use App\Http\Controllers\Admin\NimRangeController;
+use App\Http\Controllers\Admin\SPMBController as AdminSPMBController;
 use App\Http\Controllers\Operator\OperatorDashboardController;
 use App\Http\Controllers\Operator\PembayaranController;
+use App\Http\Controllers\Operator\SPMBController as OperatorSPMBController;
 use App\Http\Controllers\Dosen\DosenDashboardController;
 use App\Http\Controllers\Dosen\DosenController;
 use App\Http\Controllers\Dosen\JadwalController;
@@ -18,11 +21,22 @@ use App\Http\Controllers\Master\KurikulumController;
 use App\Http\Controllers\Master\MataKuliahController;
 use App\Http\Controllers\Master\RuanganController;
 use App\Http\Controllers\Master\SemesterController;
+use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+// Public SPMB Routes (No authentication required)
+Route::prefix('spmb')->name('public.spmb.')->group(function() {
+    Route::get('/', [PublicController::class, 'showSPMB'])->name('index');
+    Route::get('/register', [PublicController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [PublicController::class, 'storeRegistration'])->name('store');
+    Route::get('/check', [PublicController::class, 'checkRegistration'])->name('check');
+    Route::post('/check', [PublicController::class, 'checkRegistrationPost'])->name('check.post');
+    Route::get('/result', [PublicController::class, 'showResult'])->name('result');
 });
 
 // Authentication Routes
@@ -69,6 +83,33 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
+
+    // NIM Range Management
+    Route::resource('nim-ranges', NimRangeController::class);
+    Route::post('nim-ranges/bulk-create', [NimRangeController::class, 'bulkCreate'])->name('nim-ranges.bulk-create');
+
+    // SPMB Management
+    Route::prefix('spmb')->name('spmb.')->group(function() {
+        Route::get('/', [AdminSPMBController::class, 'index'])->name('index');
+        Route::get('/export', [AdminSPMBController::class, 'export'])->name('export');
+        Route::get('/{id}', [AdminSPMBController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [AdminSPMBController::class, 'verify'])->name('verify');
+        Route::post('/{id}/reject', [AdminSPMBController::class, 'reject'])->name('reject');
+        Route::post('/{id}/accept', [AdminSPMBController::class, 'accept'])->name('accept');
+        Route::post('/bulk-verify', [AdminSPMBController::class, 'bulkVerify'])->name('bulk-verify');
+        Route::post('/bulk-reject', [AdminSPMBController::class, 'bulkReject'])->name('bulk-reject');
+    });
+
+    // Pengurus Management (Dosen Wali & Ketua Prodi)
+    Route::prefix('pengurus')->name('pengurus.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\PengurusController::class, 'index'])->name('index');
+        Route::post('/assign-ketua-prodi', [\App\Http\Controllers\Admin\PengurusController::class, 'assignKetuaProdi'])->name('assign-ketua-prodi');
+        Route::delete('/remove-ketua-prodi/{programStudiId}', [\App\Http\Controllers\Admin\PengurusController::class, 'removeKetuaProdi'])->name('remove-ketua-prodi');
+        Route::get('/dosen-wali', [\App\Http\Controllers\Admin\PengurusController::class, 'dosenWali'])->name('dosen-wali');
+        Route::post('/assign-dosen-wali', [\App\Http\Controllers\Admin\PengurusController::class, 'assignDosenWali'])->name('assign-dosen-wali');
+        Route::post('/bulk-assign-dosen-wali', [\App\Http\Controllers\Admin\PengurusController::class, 'bulkAssignDosenWali'])->name('bulk-assign-dosen-wali');
+        Route::delete('/remove-dosen-wali/{mahasiswaId}', [\App\Http\Controllers\Admin\PengurusController::class, 'removeDosenWali'])->name('remove-dosen-wali');
+    });
 });
 
 // Operator Routes
@@ -96,6 +137,14 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Operator\PengumumanController::class);
+
+    // SPMB Management (Limited for Operator)
+    Route::prefix('spmb')->name('spmb.')->group(function() {
+        Route::get('/', [OperatorSPMBController::class, 'index'])->name('index');
+        Route::get('/export', [OperatorSPMBController::class, 'export'])->name('export');
+        Route::get('/{id}', [OperatorSPMBController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [OperatorSPMBController::class, 'verify'])->name('verify');
+    });
 });
 
 // Dosen Routes

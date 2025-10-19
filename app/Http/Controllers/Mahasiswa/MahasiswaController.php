@@ -189,8 +189,14 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = $this->getAuthMahasiswa();
 
-        // Get all KHS for the mahasiswa
+        // Get all KHS for the mahasiswa that have been properly generated
+        // Only show KHS where nilai records exist for that semester
         $khsList = Khs::where('mahasiswa_id', $mahasiswa->id)
+            ->whereHas('mahasiswa', function($query) use ($mahasiswa) {
+                $query->whereHas('nilais', function($subQuery) {
+                    $subQuery->whereColumn('semester_id', 'khs.semester_id');
+                });
+            })
             ->with('semester')
             ->orderBy('semester_id', 'desc')
             ->get();
@@ -200,6 +206,11 @@ class MahasiswaController extends Controller
         if ($request->has('semester_id')) {
             $selectedKhs = Khs::where('mahasiswa_id', $mahasiswa->id)
                 ->where('semester_id', $request->semester_id)
+                ->whereHas('mahasiswa', function($query) use ($mahasiswa) {
+                    $query->whereHas('nilais', function($subQuery) {
+                        $subQuery->whereColumn('semester_id', 'khs.semester_id');
+                    });
+                })
                 ->with(['semester'])
                 ->first();
         }
@@ -224,15 +235,20 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = $this->getAuthMahasiswa();
 
-        // Get KHS by semester ID
+        // Get KHS by semester ID - only if it has nilai records
         $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $id)
+            ->whereHas('mahasiswa', function($query) use ($mahasiswa, $id) {
+                $query->whereHas('nilais', function($subQuery) use ($id) {
+                    $subQuery->where('semester_id', $id);
+                });
+            })
             ->with('semester')
             ->first();
 
         if (!$khs) {
             return redirect()->route('mahasiswa.khs.index')
-                ->with('error', 'Data KHS tidak ditemukan');
+                ->with('error', 'Data KHS tidak ditemukan atau belum digenerate oleh dosen');
         }
 
         // Get all nilais for this KHS
@@ -251,15 +267,20 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = $this->getAuthMahasiswa();
 
-        // Get KHS by semester ID
+        // Get KHS by semester ID - only if it has nilai records
         $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $id)
+            ->whereHas('mahasiswa', function($query) use ($mahasiswa, $id) {
+                $query->whereHas('nilais', function($subQuery) use ($id) {
+                    $subQuery->where('semester_id', $id);
+                });
+            })
             ->with('semester')
             ->first();
 
         if (!$khs) {
             return redirect()->route('mahasiswa.khs.index')
-                ->with('error', 'Data KHS tidak ditemukan');
+                ->with('error', 'Data KHS tidak ditemukan atau belum digenerate oleh dosen');
         }
 
         // Get all nilais for this KHS

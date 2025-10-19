@@ -53,4 +53,14 @@ class Dosen extends Model
             ->withPivot('semester_id', 'ruangan_id', 'hari', 'jam_mulai', 'jam_selesai')
             ->withTimestamps();
     }
+
+    public function mahasiswaBimbingan()
+    {
+        return $this->hasMany(Mahasiswa::class, 'dosen_wali_id');
+    }
+
+    public function programStudiAsKetuaProdi()
+    {
+        return $this->hasOne(ProgramStudi::class, 'ketua_prodi_id');
+    }
 }

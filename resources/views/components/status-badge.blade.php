@@ -8,6 +8,13 @@ $classes = [
         'terlambat' => 'bg-red-100 text-red-800 border border-gold-400',
         'verified' => 'bg-green-100 text-green-800 border border-green-300',
     ],
+    'spmb' => [
+        'pending' => 'bg-yellow-100 text-yellow-800 border border-yellow-300',
+        'verified' => 'bg-blue-100 text-blue-800 border border-blue-300',
+        'accepted' => 'bg-green-100 text-green-800 border border-green-300',
+        'rejected' => 'bg-red-100 text-red-800 border border-red-300',
+        'registered' => 'bg-purple-100 text-purple-800 border border-purple-300',
+    ],
     'grade' => [
         'A' => 'text-white border-2',
         'A-' => 'text-white border-2',
@@ -55,6 +62,13 @@ $labels = [
         'lunas' => 'Lunas',
         'terlambat' => 'Terlambat',
         'verified' => 'Terverifikasi',
+    ],
+    'spmb' => [
+        'pending' => 'Pending',
+        'verified' => 'Terverifikasi',
+        'accepted' => 'Diterima',
+        'rejected' => 'Ditolak',
+        'registered' => 'Sudah Daftar Ulang',
     ],
     'grade' => [
         'A' => 'A',

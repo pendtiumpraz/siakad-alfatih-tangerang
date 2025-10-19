@@ -70,6 +70,16 @@ class User extends Authenticatable
         return $this->hasOne(Operator::class);
     }
 
+    public function verifiedPembayaranPendaftarans()
+    {
+        return $this->hasMany(PembayaranPendaftaran::class, 'verified_by');
+    }
+
+    public function verifiedDaftarUlangs()
+    {
+        return $this->hasMany(DaftarUlang::class, 'verified_by');
+    }
+
     /**
      * Helper methods for role checking
      */

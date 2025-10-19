@@ -15,11 +15,17 @@ class ProgramStudi extends Model
         'nama_prodi',
         'jenjang',
         'akreditasi',
+        'ketua_prodi_id',
     ];
 
     /**
      * Relationships
      */
+    public function ketuaProdi()
+    {
+        return $this->belongsTo(Dosen::class, 'ketua_prodi_id');
+    }
+
     public function mahasiswas()
     {
         return $this->hasMany(Mahasiswa::class);
@@ -28,5 +34,20 @@ class ProgramStudi extends Model
     public function kurikulums()
     {
         return $this->hasMany(Kurikulum::class);
+    }
+
+    public function pendaftarsPilihan1()
+    {
+        return $this->hasMany(Pendaftar::class, 'program_studi_pilihan_1');
+    }
+
+    public function pendaftarsPilihan2()
+    {
+        return $this->hasMany(Pendaftar::class, 'program_studi_pilihan_2');
+    }
+
+    public function nimRanges()
+    {
+        return $this->hasMany(NimRange::class);
     }
 }

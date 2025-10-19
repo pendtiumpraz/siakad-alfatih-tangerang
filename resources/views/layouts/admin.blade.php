@@ -196,6 +196,10 @@
                             <i class="fas fa-calendar-alt w-4"></i>
                             <span class="ml-3">Semester</span>
                         </a>
+                        <a href="{{ route('admin.nim-ranges.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.nim-ranges.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-card w-4"></i>
+                            <span class="ml-3">NIM Range</span>
+                        </a>
                     </div>
                 </div>
 
@@ -203,6 +207,18 @@
                 <a href="{{ route('admin.pembayaran.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.pembayaran.*') ? 'active' : '' }}">
                     <i class="fas fa-money-bill-wave w-5"></i>
                     <span class="ml-3">Pembayaran</span>
+                </a>
+
+                <!-- SPMB -->
+                <a href="{{ route('admin.spmb.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.spmb.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-graduate w-5"></i>
+                    <span class="ml-3">SPMB</span>
+                </a>
+
+                <!-- Pengurus -->
+                <a href="{{ route('admin.pengurus.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.pengurus.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-tie w-5"></i>
+                    <span class="ml-3">Pengurus</span>
                 </a>
             </nav>
 

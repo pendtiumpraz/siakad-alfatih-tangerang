@@ -13,6 +13,7 @@ class Mahasiswa extends Model
     protected $fillable = [
         'user_id',
         'program_studi_id',
+        'dosen_wali_id',
         'nim',
         'nama_lengkap',
         'tempat_lahir',
@@ -43,6 +44,11 @@ class Mahasiswa extends Model
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class);
+    }
+
+    public function dosenWali()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_wali_id');
     }
 
     public function pembayarans()
