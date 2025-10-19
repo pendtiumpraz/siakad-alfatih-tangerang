@@ -41,7 +41,7 @@
     </div>
 
     <!-- Main Content Layout -->
-    <div class="lg:flex lg:gap-6">
+    <div class="flex flex-col lg:flex-row gap-6">
         <!-- Sidebar Navigation -->
         <div class="lg:w-1/4">
             <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] sticky top-4">

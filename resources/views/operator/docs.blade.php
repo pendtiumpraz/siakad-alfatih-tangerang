@@ -42,7 +42,7 @@
         <!-- Main Content -->
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Sidebar -->
-            <div class="w-full lg:w-64 lg:min-w-64 lg:max-w-64 flex-shrink-0">
+            <div class="lg:w-1/4">
                 <div class="bg-white rounded-lg shadow-md border-2 border-yellow-400 sticky top-4">
                     <button
                         @click="menuOpen = !menuOpen"
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Content Area -->
-            <div class="flex-1">
+            <div class="lg:w-3/4 mt-6 lg:mt-0">
                 <div class="bg-white rounded-lg shadow-md border-2 border-yellow-400 p-8">
 
                     <!-- Overview -->
