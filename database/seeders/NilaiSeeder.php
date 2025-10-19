@@ -22,13 +22,16 @@ class NilaiSeeder extends Seeder
 
         // Define grades with their corresponding letter and numeric values
         $gradeMapping = [
-            'A' => ['min' => 85, 'max' => 100, 'angka' => 4.0],
-            'AB' => ['min' => 80, 'max' => 84, 'angka' => 3.5],
+            'A' => ['min' => 90, 'max' => 100, 'angka' => 4.0],
+            'A-' => ['min' => 85, 'max' => 89, 'angka' => 3.7],
+            'B+' => ['min' => 80, 'max' => 84, 'angka' => 3.3],
             'B' => ['min' => 75, 'max' => 79, 'angka' => 3.0],
-            'BC' => ['min' => 70, 'max' => 74, 'angka' => 2.5],
-            'C' => ['min' => 65, 'max' => 69, 'angka' => 2.0],
-            'D' => ['min' => 55, 'max' => 64, 'angka' => 1.0],
-            'E' => ['min' => 0, 'max' => 54, 'angka' => 0.0],
+            'B-' => ['min' => 70, 'max' => 74, 'angka' => 2.7],
+            'C+' => ['min' => 65, 'max' => 69, 'angka' => 2.3],
+            'C' => ['min' => 60, 'max' => 64, 'angka' => 2.0],
+            'C-' => ['min' => 55, 'max' => 59, 'angka' => 1.7],
+            'D' => ['min' => 45, 'max' => 54, 'angka' => 1.0],
+            'E' => ['min' => 0, 'max' => 44, 'angka' => 0.0],
         ];
 
         foreach ($mahasiswas as $mahasiswa) {

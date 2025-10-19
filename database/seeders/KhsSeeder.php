@@ -22,10 +22,13 @@ class KhsSeeder extends Seeder
         // Grade to numeric mapping
         $gradeToNumeric = [
             'A' => 4.0,
-            'AB' => 3.5,
+            'A-' => 3.7,
+            'B+' => 3.3,
             'B' => 3.0,
-            'BC' => 2.5,
+            'B-' => 2.7,
+            'C+' => 2.3,
             'C' => 2.0,
+            'C-' => 1.7,
             'D' => 1.0,
             'E' => 0.0,
         ];

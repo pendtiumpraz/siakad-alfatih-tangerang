@@ -267,25 +267,25 @@ class NilaiController extends Controller
 
     /**
      * Calculate grade based on nilai_akhir
-     * A (85-100), A- (80-84), B+ (75-79), B (70-74), B- (65-69), C+ (60-64), C (55-59), C- (50-54), D (45-49), E (<45)
+     * A (90-100), A- (85-89), B+ (80-84), B (75-79), B- (70-74), C+ (65-69), C (60-64), C- (55-59), D (45-54), E (0-44)
      */
     private function calculateGrade($nilaiAkhir)
     {
-        if ($nilaiAkhir >= 85) {
+        if ($nilaiAkhir >= 90) {
             return 'A';
-        } elseif ($nilaiAkhir >= 80) {
+        } elseif ($nilaiAkhir >= 85) {
             return 'A-';
-        } elseif ($nilaiAkhir >= 75) {
+        } elseif ($nilaiAkhir >= 80) {
             return 'B+';
-        } elseif ($nilaiAkhir >= 70) {
+        } elseif ($nilaiAkhir >= 75) {
             return 'B';
-        } elseif ($nilaiAkhir >= 65) {
+        } elseif ($nilaiAkhir >= 70) {
             return 'B-';
-        } elseif ($nilaiAkhir >= 60) {
+        } elseif ($nilaiAkhir >= 65) {
             return 'C+';
-        } elseif ($nilaiAkhir >= 55) {
+        } elseif ($nilaiAkhir >= 60) {
             return 'C';
-        } elseif ($nilaiAkhir >= 50) {
+        } elseif ($nilaiAkhir >= 55) {
             return 'C-';
         } elseif ($nilaiAkhir >= 45) {
             return 'D';

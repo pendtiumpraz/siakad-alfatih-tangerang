@@ -160,7 +160,7 @@ class MahasiswaController extends Controller
         $jadwals = Jadwal::where('semester_id', $semester->id)
             ->whereHas('mataKuliah', function($query) use ($kurikulum, $mahasiswa) {
                 $query->where('kurikulum_id', $kurikulum->id)
-                      ->where('semester', '<=', $mahasiswa->semester_aktif);
+                      ->where('semester', '=', $mahasiswa->semester_aktif);
             })
             ->with(['mataKuliah', 'dosen', 'ruangan'])
             ->orderBy('hari')
@@ -323,17 +323,29 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = $this->getAuthMahasiswa();
 
-        // Placeholder for notifications - implement as needed
-        $notifications = collect([
-            (object)[
-                'id' => 1,
-                'title' => 'Selamat Datang',
-                'message' => 'Selamat datang di Portal Mahasiswa STAI AL-FATIH',
-                'type' => 'info',
-                'read_at' => null,
-                'created_at' => now()->subDays(1),
-            ],
-        ]);
+        // Get active pengumumans for mahasiswa
+        $pengumumans = \App\Models\Pengumuman::active()
+            ->forMahasiswa()
+            ->with(['pembuat', 'reads' => function($query) use ($mahasiswa) {
+                $query->where('mahasiswa_id', $mahasiswa->id);
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Transform to notifications format
+        $notifications = $pengumumans->map(function($pengumuman) use ($mahasiswa) {
+            $read = $pengumuman->reads->first();
+            return (object)[
+                'id' => $pengumuman->id,
+                'title' => $pengumuman->judul,
+                'message' => $pengumuman->isi,
+                'type' => $pengumuman->tipe,
+                'read_at' => $read ? $read->read_at : null,
+                'created_at' => $pengumuman->created_at,
+                'pembuat' => $pengumuman->pembuat->username ?? '-',
+                'pembuat_role' => ucfirst(str_replace('_', ' ', $pengumuman->pembuat_role)),
+            ];
+        });
 
         if ($request->expectsJson()) {
             return response()->json([
@@ -343,6 +355,29 @@ class MahasiswaController extends Controller
         }
 
         return view('mahasiswa.notifications.index', compact('notifications', 'mahasiswa'));
+    }
+
+    /**
+     * Mark notification as read
+     */
+    public function markNotificationAsRead($pengumumanId)
+    {
+        $mahasiswa = $this->getAuthMahasiswa();
+
+        $pengumuman = \App\Models\Pengumuman::findOrFail($pengumumanId);
+
+        // Create or update read record
+        \App\Models\PengumumanRead::updateOrCreate(
+            [
+                'pengumuman_id' => $pengumuman->id,
+                'mahasiswa_id' => $mahasiswa->id,
+            ],
+            [
+                'read_at' => now(),
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Notifikasi ditandai sudah dibaca');
     }
 
     /**

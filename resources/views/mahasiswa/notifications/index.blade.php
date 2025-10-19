@@ -3,7 +3,7 @@
 @section('title', 'Pengumuman')
 
 @section('content')
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ filter: 'all' }">
     <!-- Page Title -->
     <div class="flex items-center justify-between">
         <div>
@@ -15,18 +15,12 @@
             </h1>
             <p class="text-gray-600 mt-1">Informasi dan pengumuman penting</p>
         </div>
-        <button class="bg-[#4A7C59] hover:bg-[#3d6849] text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            <span>Tandai Semua Sudah Dibaca</span>
-        </button>
     </div>
 
     <div class="islamic-divider"></div>
 
     <!-- Filter Tabs -->
-    <div class="card-islamic p-2" x-data="{ filter: 'all' }">
+    <div class="card-islamic p-2">
         <div class="flex space-x-2">
             <button
                 @click="filter = 'all'"
@@ -41,7 +35,12 @@
                 class="px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2"
             >
                 <span>Belum Dibaca</span>
-                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                @php
+                    $unreadCount = $notifications->whereNull('read_at')->count();
+                @endphp
+                @if($unreadCount > 0)
+                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">{{ $unreadCount }}</span>
+                @endif
             </button>
             <button
                 @click="filter = 'read'"
@@ -55,173 +54,132 @@
 
     <!-- Notification Cards -->
     <div class="space-y-4">
-        <!-- Unread Notification 1 -->
-        <div class="card-islamic p-6 hover:shadow-xl transition border-l-4 border-blue-500 bg-blue-50">
-            <div class="flex items-start justify-between">
-                <div class="flex items-start space-x-4 flex-1">
-                    <div class="bg-blue-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">Pembayaran UTS Semester Genap</h3>
-                            <span class="inline-block px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-bold">
-                                Baru
-                            </span>
-                        </div>
-                        <p class="text-sm text-gray-700 mb-3 leading-relaxed">
-                            Kepada seluruh mahasiswa semester 5, dimohon untuk segera melakukan pembayaran UTS Semester Genap paling lambat tanggal 30 Oktober 2025. Pembayaran dapat dilakukan melalui transfer ke rekening kampus yang telah disediakan. Untuk informasi lebih lanjut, silakan hubungi bagian keuangan.
-                        </p>
-                        <div class="flex items-center space-x-4 text-sm text-gray-600">
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                <span>14 Oktober 2025</span>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span>Bagian Keuangan</span>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <button class="text-[#4A7C59] hover:text-[#D4AF37] font-semibold text-sm flex items-center space-x-1">
-                                <span>Tandai sudah dibaca</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @forelse($notifications as $notification)
+            @php
+                $isUnread = is_null($notification->read_at);
+                $borderColor = match($notification->type) {
+                    'info' => 'border-blue-500',
+                    'penting' => 'border-red-500',
+                    'pengingat' => 'border-yellow-500',
+                    'kegiatan' => 'border-green-500',
+                    default => 'border-gray-500'
+                };
+                $bgColor = match($notification->type) {
+                    'info' => 'bg-blue-50',
+                    'penting' => 'bg-red-50',
+                    'pengingat' => 'bg-yellow-50',
+                    'kegiatan' => 'bg-green-50',
+                    default => 'bg-gray-50'
+                };
+                $iconBgColor = match($notification->type) {
+                    'info' => 'bg-blue-100',
+                    'penting' => 'bg-red-100',
+                    'pengingat' => 'bg-yellow-100',
+                    'kegiatan' => 'bg-green-100',
+                    default => 'bg-gray-100'
+                };
+                $iconColor = match($notification->type) {
+                    'info' => 'text-blue-600',
+                    'penting' => 'text-red-600',
+                    'pengingat' => 'text-yellow-600',
+                    'kegiatan' => 'text-green-600',
+                    default => 'text-gray-600'
+                };
+                $badgeColor = match($notification->type) {
+                    'info' => 'bg-blue-600',
+                    'penting' => 'bg-red-600',
+                    'pengingat' => 'bg-yellow-600',
+                    'kegiatan' => 'bg-green-600',
+                    default => 'bg-gray-600'
+                };
+            @endphp
 
-        <!-- Unread Notification 2 -->
-        <div class="card-islamic p-6 hover:shadow-xl transition border-l-4 border-yellow-500 bg-yellow-50">
-            <div class="flex items-start justify-between">
-                <div class="flex items-start space-x-4 flex-1">
-                    <div class="bg-yellow-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">Perubahan Jadwal Kuliah</h3>
-                            <span class="inline-block px-3 py-1 bg-yellow-600 text-white rounded-full text-xs font-bold">
-                                Baru
-                            </span>
+            <div
+                class="card-islamic p-6 hover:shadow-xl transition border-l-4 {{ $borderColor }} {{ $isUnread ? $bgColor : 'opacity-75' }}"
+                x-show="filter === 'all' || (filter === 'unread' && {{ $isUnread ? 'true' : 'false' }}) || (filter === 'read' && {{ $isUnread ? 'false' : 'true' }})"
+                x-transition
+            >
+                <div class="flex items-start justify-between">
+                    <div class="flex items-start space-x-4 flex-1">
+                        <div class="{{ $iconBgColor }} p-3 rounded-full">
+                            @if($notification->type === 'info')
+                                <svg class="w-8 h-8 {{ $iconColor }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($notification->type === 'penting')
+                                <svg class="w-8 h-8 {{ $iconColor }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($notification->type === 'pengingat')
+                                <svg class="w-8 h-8 {{ $iconColor }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($notification->type === 'kegiatan')
+                                <svg class="w-8 h-8 {{ $iconColor }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                                </svg>
+                            @else
+                                <svg class="w-8 h-8 {{ $iconColor }}" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                            @endif
                         </div>
-                        <p class="text-sm text-gray-700 mb-3 leading-relaxed">
-                            Informasi perubahan jadwal kuliah Mata Kuliah Fiqih Muamalah yang semula di Ruang A-103 dipindah ke Ruang C-204 mulai hari Selasa, 15 Oktober 2025. Perubahan ini dilakukan karena ada kegiatan di Ruang A-103. Mohon perhatiannya.
-                        </p>
-                        <div class="flex items-center space-x-4 text-sm text-gray-600">
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                <span>12 Oktober 2025</span>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <h3 class="text-lg font-bold text-gray-800">{{ $notification->title }}</h3>
+                                @if($isUnread)
+                                    <span class="inline-block px-3 py-1 {{ $badgeColor }} text-white rounded-full text-xs font-bold">
+                                        Baru
+                                    </span>
+                                @else
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                @endif
                             </div>
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span>Bagian Akademik</span>
+                            <p class="text-sm text-gray-700 mb-3 leading-relaxed">
+                                {{ $notification->message }}
+                            </p>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                    <span>{{ $notification->created_at->format('d M Y') }}</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    <span>{{ $notification->pembuat }} ({{ $notification->pembuat_role }})</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mt-4">
-                            <button class="text-[#4A7C59] hover:text-[#D4AF37] font-semibold text-sm flex items-center space-x-1">
-                                <span>Tandai sudah dibaca</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Read Notification -->
-        <div class="card-islamic p-6 hover:shadow-xl transition border-l-4 border-green-500 opacity-75">
-            <div class="flex items-start justify-between">
-                <div class="flex items-start space-x-4 flex-1">
-                    <div class="bg-green-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">Nilai UAS Telah Keluar</h3>
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <p class="text-sm text-gray-700 mb-3 leading-relaxed">
-                            Kepada seluruh mahasiswa, nilai UAS Semester Ganjil Tahun Akademik 2024/2025 sudah dapat dilihat melalui portal akademik. Silakan cek nilai Anda di menu Nilai. Jika ada keberatan terhadap nilai, dapat mengajukan komplain ke dosen pengampu maksimal 7 hari setelah pengumuman ini.
-                        </p>
-                        <div class="flex items-center space-x-4 text-sm text-gray-600">
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                <span>10 Oktober 2025</span>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span>Bagian Akademik</span>
-                            </div>
+                            @if($isUnread)
+                                <div class="mt-4">
+                                    <form action="{{ route('mahasiswa.notifications.mark-read', $notification->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="text-[#4A7C59] hover:text-[#D4AF37] font-semibold text-sm flex items-center space-x-1">
+                                            <span>Tandai sudah dibaca</span>
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Read Notification 2 -->
-        <div class="card-islamic p-6 hover:shadow-xl transition border-l-4 border-purple-500 opacity-75">
-            <div class="flex items-start justify-between">
-                <div class="flex items-start space-x-4 flex-1">
-                    <div class="bg-purple-100 p-3 rounded-full">
-                        <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex items-center space-x-2 mb-2">
-                            <h3 class="text-lg font-bold text-gray-800">Seminar Nasional Pendidikan Islam</h3>
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <p class="text-sm text-gray-700 mb-3 leading-relaxed">
-                            STAI AL-FATIH akan menyelenggarakan Seminar Nasional Pendidikan Islam dengan tema "Inovasi Pembelajaran PAI di Era Digital" pada tanggal 20 November 2025. Pendaftaran dibuka mulai sekarang hingga 15 November 2025. Mahasiswa yang berminat dapat mendaftar di sekretariat kampus. Sertifikat akan diberikan kepada peserta.
-                        </p>
-                        <div class="flex items-center space-x-4 text-sm text-gray-600">
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                <span>3 Oktober 2025</span>
-                            </div>
-                            <div class="flex items-center space-x-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                </svg>
-                                <span>Himpunan Mahasiswa</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        @empty
+            <div class="card-islamic p-12 text-center">
+                <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+                <p class="text-gray-600 text-lg font-semibold mb-2">Belum ada pengumuman</p>
+                <p class="text-gray-500 text-sm">Pengumuman akan muncul di sini ketika tersedia</p>
             </div>
-        </div>
+        @endforelse
     </div>
 
     <!-- Islamic Quote -->

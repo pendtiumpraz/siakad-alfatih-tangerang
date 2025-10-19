@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register view composers for notifications
+        view()->composer(
+            ['layouts.admin', 'layouts.dosen', 'layouts.operator', 'layouts.mahasiswa'],
+            \App\View\Composers\NotificationComposer::class
+        );
     }
 }

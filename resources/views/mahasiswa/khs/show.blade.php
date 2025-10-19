@@ -114,10 +114,13 @@
                         $bobot = 0;
                         switch($nilai->grade) {
                             case 'A': $bobot = 4.0; break;
-                            case 'AB': $bobot = 3.5; break;
+                            case 'A-': $bobot = 3.7; break;
+                            case 'B+': $bobot = 3.3; break;
                             case 'B': $bobot = 3.0; break;
-                            case 'BC': $bobot = 2.5; break;
+                            case 'B-': $bobot = 2.7; break;
+                            case 'C+': $bobot = 2.3; break;
                             case 'C': $bobot = 2.0; break;
+                            case 'C-': $bobot = 1.7; break;
                             case 'D': $bobot = 1.0; break;
                             case 'E': $bobot = 0.0; break;
                         }
@@ -130,10 +133,13 @@
                         $gradeColor = 'text-gray-600';
                         switch($nilai->grade) {
                             case 'A': $gradeColor = 'text-green-700'; break;
-                            case 'AB': $gradeColor = 'text-green-600'; break;
-                            case 'B': $gradeColor = 'text-green-500'; break;
-                            case 'BC': $gradeColor = 'text-blue-500'; break;
+                            case 'A-': $gradeColor = 'text-green-600'; break;
+                            case 'B+': $gradeColor = 'text-green-500'; break;
+                            case 'B': $gradeColor = 'text-blue-600'; break;
+                            case 'B-': $gradeColor = 'text-blue-500'; break;
+                            case 'C+': $gradeColor = 'text-yellow-600'; break;
                             case 'C': $gradeColor = 'text-yellow-500'; break;
+                            case 'C-': $gradeColor = 'text-yellow-400'; break;
                             case 'D': $gradeColor = 'text-red-500'; break;
                             case 'E': $gradeColor = 'text-red-600'; break;
                         }

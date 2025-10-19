@@ -46,10 +46,10 @@ class DatabaseSeeder extends Seeder
             JadwalSeeder::class,
 
             // 10. Seed nilai (depends on mahasiswa, mata_kuliah, dosen, semester)
-            NilaiSeeder::class,
+            // NilaiSeeder::class, // Commented - Dosen will input manually
 
             // 11. Seed KHS (depends on mahasiswa, semester, nilai)
-            KhsSeeder::class,
+            // KhsSeeder::class, // Commented - Will be generated after nilai input
 
             // 12. Seed pembayaran (depends on mahasiswa, semester, operator)
             PembayaranSeeder::class,

@@ -40,6 +40,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mata Kuliah</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dosen</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ruangan</th>
                     </tr>
                 </thead>
@@ -50,6 +51,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $jadwal->mataKuliah->nama_mk }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $jadwal->dosen->nama_lengkap ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $jadwal->kelas }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $jadwal->ruangan->nama_ruangan ?? '-' }}</td>
                         </tr>
                     @endforeach

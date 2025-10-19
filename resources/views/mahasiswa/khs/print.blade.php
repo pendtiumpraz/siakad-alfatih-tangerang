@@ -366,10 +366,13 @@
                         $bobot = 0;
                         switch($nilai->grade) {
                             case 'A': $bobot = 4.0; break;
-                            case 'AB': $bobot = 3.5; break;
+                            case 'A-': $bobot = 3.7; break;
+                            case 'B+': $bobot = 3.3; break;
                             case 'B': $bobot = 3.0; break;
-                            case 'BC': $bobot = 2.5; break;
+                            case 'B-': $bobot = 2.7; break;
+                            case 'C+': $bobot = 2.3; break;
                             case 'C': $bobot = 2.0; break;
+                            case 'C-': $bobot = 1.7; break;
                             case 'D': $bobot = 1.0; break;
                             case 'E': $bobot = 0.0; break;
                         }
@@ -498,7 +501,7 @@
         <div class="keterangan">
             <p><strong>Keterangan:</strong></p>
             <p>L = Lulus | TL = Tidak Lulus | K = Kosong</p>
-            <p>Grade: A (85-100) | AB (80-84) | B (70-79) | BC (65-69) | C (55-64) | D (45-54) | E (0-44)</p>
+            <p>Grade: A (90-100) | A- (85-89) | B+ (80-84) | B (75-79) | B- (70-74) | C+ (65-69) | C (60-64) | C- (55-59) | D (45-54) | E (0-44)</p>
         </div>
     </div>
 </body>

@@ -66,6 +66,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
     Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
     Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
+
+    // Pengumuman Management
+    Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
 });
 
 // Operator Routes
@@ -90,6 +93,9 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
 
     Route::get('semester', [SemesterController::class, 'index'])->name('semester.index');
     Route::get('semester/{id}', [SemesterController::class, 'show'])->name('semester.show');
+
+    // Pengumuman Management
+    Route::resource('pengumuman', \App\Http\Controllers\Operator\PengumumanController::class);
 });
 
 // Dosen Routes
@@ -130,6 +136,9 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 
     Route::get('semester', [SemesterController::class, 'index'])->name('semester.index');
     Route::get('semester/{id}', [SemesterController::class, 'show'])->name('semester.show');
+
+    // Pengumuman Management
+    Route::resource('pengumuman', \App\Http\Controllers\Dosen\PengumumanController::class);
 });
 
 // Mahasiswa Routes
@@ -157,6 +166,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
     // Notifications
     Route::get('notifications', [MahasiswaController::class, 'notifications'])->name('notifications.index');
+    Route::post('notifications/{pengumumanId}/mark-read', [MahasiswaController::class, 'markNotificationAsRead'])->name('notifications.mark-read');
 
     Route::get('kurikulum', [MahasiswaController::class, 'kurikulum'])->name('kurikulum');
 });

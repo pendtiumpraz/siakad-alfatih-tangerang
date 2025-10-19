@@ -160,6 +160,12 @@
                     <span class="ml-3">Role & Permission</span>
                 </a>
 
+                <!-- Pengumuman -->
+                <a href="{{ route('admin.pengumuman.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.pengumuman.*') ? 'active' : '' }}">
+                    <i class="fas fa-bullhorn w-5"></i>
+                    <span class="ml-3">Pengumuman</span>
+                </a>
+
                 <!-- Master Data (Expandable) -->
                 <div class="mb-2">
                     <button @click="masterDataOpen = !masterDataOpen" class="sidebar-link flex items-center justify-between w-full px-4 py-3 text-white rounded-lg">
@@ -226,7 +232,7 @@
                     <!-- Right Section -->
                     <div class="flex items-center space-x-4">
                         <!-- Notification Bell -->
-                        <x-admin.notification-bell :count="3" />
+                        <x-admin.notification-bell :pengumumans="$recentPengumumans ?? []" :count="$unreadCount ?? 0" />
 
                         <!-- User Dropdown -->
                         <div x-data="{ userDropdownOpen: false }" class="relative">
