@@ -4,7 +4,30 @@
 <div class="space-y-6" x-data="{
     activeTab: 'overview',
     searchTerm: '',
-    menuOpen: true
+    menuOpen: true,
+    menuItems: [
+        { id: 'overview', title: 'Overview', icon: 'fa-home', keywords: 'overview ringkasan pengenalan intro quick start panduan awal' },
+        { id: 'users', title: 'User Management', icon: 'fa-users', keywords: 'user pengguna admin operator dosen mahasiswa create edit delete manajemen' },
+        { id: 'spmb', title: 'SPMB', icon: 'fa-user-graduate', keywords: 'spmb pendaftaran mahasiswa baru penerimaan registrasi verifikasi aktivasi' },
+        { id: 'pengurus', title: 'Pengurus', icon: 'fa-user-tie', keywords: 'pengurus ketua prodi dosen wali assign' },
+        { id: 'master', title: 'Master Data', icon: 'fa-database', keywords: 'master data program studi prodi mata kuliah kurikulum semester' },
+        { id: 'jadwal', title: 'Jadwal Kuliah', icon: 'fa-calendar', keywords: 'jadwal kuliah schedule kelas ruangan bentrok' },
+        { id: 'pembayaran', title: 'Pembayaran', icon: 'fa-money-bill', keywords: 'pembayaran bayar spp verifikasi transfer laporan keuangan' },
+        { id: 'pengumuman', title: 'Pengumuman', icon: 'fa-bullhorn', keywords: 'pengumuman announcement broadcast notifikasi publish' },
+        { id: 'tips', title: 'Tips & Tricks', icon: 'fa-lightbulb', keywords: 'tips trik best practice shortcut keyboard' }
+    ],
+    get filteredMenuItems() {
+        if (!this.searchTerm) return this.menuItems;
+        const search = this.searchTerm.toLowerCase();
+        return this.menuItems.filter(item =>
+            item.title.toLowerCase().includes(search) ||
+            item.keywords.toLowerCase().includes(search)
+        );
+    },
+    selectTab(tabId) {
+        this.activeTab = tabId;
+        this.searchTerm = '';
+    }
 }">
     <!-- Page Header -->
     <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-xl p-8 text-white">
@@ -32,10 +55,28 @@
                 <input
                     type="text"
                     x-model="searchTerm"
+                    @keyup.escape="searchTerm = ''"
                     placeholder="Cari tutorial, fitur, atau panduan..."
-                    class="w-full px-6 py-3 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
+                    class="w-full px-6 py-3 pr-24 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]"
                 >
-                <i class="fas fa-search absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                    <button
+                        x-show="searchTerm"
+                        @click="searchTerm = ''"
+                        class="text-gray-400 hover:text-gray-600 transition"
+                        title="Clear search"
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <i class="fas fa-search text-gray-400"></i>
+                </div>
+            </div>
+            <div x-show="searchTerm && filteredMenuItems.length > 0" class="mt-2 text-sm text-gray-200">
+                Ditemukan <span class="font-bold" x-text="filteredMenuItems.length"></span> hasil
+            </div>
+            <div x-show="searchTerm && filteredMenuItems.length === 0" class="mt-2 text-sm text-yellow-200">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                Tidak ada hasil untuk "<span x-text="searchTerm"></span>"
             </div>
         </div>
     </div>
@@ -61,69 +102,16 @@
                     </h3>
 
                     <ul class="space-y-2">
-                        <li>
-                            <a @click="activeTab = 'overview'"
-                               :class="activeTab === 'overview' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-home mr-2"></i>Overview
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'users'"
-                               :class="activeTab === 'users' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-users mr-2"></i>User Management
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'spmb'"
-                               :class="activeTab === 'spmb' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-user-graduate mr-2"></i>SPMB
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'pengurus'"
-                               :class="activeTab === 'pengurus' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-user-tie mr-2"></i>Pengurus
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'master'"
-                               :class="activeTab === 'master' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-database mr-2"></i>Master Data
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'jadwal'"
-                               :class="activeTab === 'jadwal' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-calendar mr-2"></i>Jadwal Kuliah
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'pembayaran'"
-                               :class="activeTab === 'pembayaran' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-money-bill mr-2"></i>Pembayaran
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'pengumuman'"
-                               :class="activeTab === 'pengumuman' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-bullhorn mr-2"></i>Pengumuman
-                            </a>
-                        </li>
-                        <li>
-                            <a @click="activeTab = 'tips'"
-                               :class="activeTab === 'tips' ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
-                               class="block px-4 py-2 rounded-lg cursor-pointer transition">
-                                <i class="fas fa-lightbulb mr-2"></i>Tips & Tricks
-                            </a>
-                        </li>
+                        <template x-for="item in filteredMenuItems" :key="item.id">
+                            <li>
+                                <a @click="selectTab(item.id)"
+                                   :class="activeTab === item.id ? 'bg-[#2D5F3F] text-white' : 'text-gray-700 hover:bg-gray-100'"
+                                   class="block px-4 py-2 rounded-lg cursor-pointer transition">
+                                    <i class="fas mr-2" :class="item.icon"></i>
+                                    <span x-text="item.title"></span>
+                                </a>
+                            </li>
+                        </template>
                     </ul>
                 </nav>
             </div>

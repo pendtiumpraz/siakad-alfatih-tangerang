@@ -244,10 +244,11 @@
                                         <h5 class="font-bold">Grade Otomatis</h5>
                                         <div class="bg-gray-50 p-4 rounded mt-2">
                                             <table class="w-full text-xs">
-                                                <tr><td class="py-1">A : 85-100</td><td class="py-1">B- : 65-69</td></tr>
-                                                <tr><td class="py-1">A- : 80-84</td><td class="py-1">C+ : 60-64</td></tr>
-                                                <tr><td class="py-1">B+ : 75-79</td><td class="py-1">C : 55-59</td></tr>
-                                                <tr><td class="py-1">B : 70-74</td><td class="py-1">D : 50-54, E : <50</td></tr>
+                                                <tr><td class="py-1">A : 90-100</td><td class="py-1">C+ : 65-69</td></tr>
+                                                <tr><td class="py-1">A- : 85-89</td><td class="py-1">C : 60-64</td></tr>
+                                                <tr><td class="py-1">B+ : 80-84</td><td class="py-1">C- : 55-59</td></tr>
+                                                <tr><td class="py-1">B : 75-79</td><td class="py-1">D : 45-54</td></tr>
+                                                <tr><td class="py-1">B- : 70-74</td><td class="py-1">E : 0-44</td></tr>
                                             </table>
                                         </div>
                                     </div>
