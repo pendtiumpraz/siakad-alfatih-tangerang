@@ -1,0 +1,133 @@
+name: Deploy via FTP (Alternative)
+
+# Workflow ini untuk deployment via FTP jika SSH tidak tersedia
+# Nonaktifkan workflow ini jika sudah menggunakan SSH deployment
+
+on:
+  workflow_dispatch: # Manual trigger only
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Create deployment package
+        run: |
+          # Remove unnecessary files
+          rm -rf node_modules
+          rm -rf tests
+          rm -rf .git
+          rm -rf .github
+          rm -f .env
+          rm -f .env.example
+
+          # Create zip package
+          zip -r deploy.zip . -x "*.git*" "node_modules/*" "tests/*" ".env*"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-package
+          path: deploy.zip
+          retention-days: 1
+
+  deploy:
+    name: Deploy to Server via FTP
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Download deployment package
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-package
+
+      - name: Extract package
+        run: unzip deploy.zip -d deployment/
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deployment/
+          server-dir: ${{ secrets.FTP_REMOTE_PATH }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/.env
+            **/storage/**
+            **/bootstrap/cache/**
+
+      - name: Deployment completed
+        run: |
+          echo "✅ FTP deployment completed!"
+          echo "⚠️  Manual steps required:"
+          echo "1. Login to cPanel File Manager"
+          echo "2. Navigate to deployment folder"
+          echo "3. Run: php artisan migrate --force"
+          echo "4. Run: php artisan config:cache"
+          echo "5. Run: php artisan route:cache"
+          echo "6. Run: php artisan view:cache"
+          echo "7. Set permissions: chmod -R 775 storage bootstrap/cache"
+
+  notify:
+    name: Deployment Notification
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Success notification
+        if: success()
+        run: |
+          echo "🎉 Deployment berhasil!"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+
+      - name: Failure notification
+        if: failure()
+        run: |
+          echo "❌ Deployment gagal!"
+          echo "Silakan cek logs di atas untuk detail error"

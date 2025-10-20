@@ -1,0 +1,117 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, pdo_mysql
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy to Server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'ENDSSH'
+            set -e
+
+            # Navigate to project directory
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Enable maintenance mode
+            php artisan down --retry=60 || true
+
+            # Pull latest changes
+            git fetch origin
+            git reset --hard origin/main
+
+            # Install/update dependencies
+            composer install --no-interaction --no-dev --prefer-dist --optimize-autoloader
+
+            # Clear and cache config
+            php artisan config:clear
+            php artisan cache:clear
+            php artisan route:clear
+            php artisan view:clear
+
+            # Run migrations
+            php artisan migrate --force
+
+            # Optimize application
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            # Build frontend assets (if not already built)
+            npm ci --production=false
+            npm run build
+
+            # Set permissions
+            chmod -R 775 storage bootstrap/cache
+
+            # Disable maintenance mode
+            php artisan up
+
+            # Queue restart (if using queue workers)
+            php artisan queue:restart || true
+
+            echo "✅ Deployment completed successfully!"
+          ENDSSH
+
+      - name: Cleanup SSH keys
+        if: always()
+        run: rm -rf ~/.ssh/deploy_key
+
+      - name: Deployment Status
+        if: success()
+        run: echo "🚀 Application deployed successfully to production!"
+
+      - name: Deployment Failed
+        if: failure()
+        run: echo "❌ Deployment failed. Please check the logs above."
