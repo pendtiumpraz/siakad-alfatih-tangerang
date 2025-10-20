@@ -52,6 +52,17 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
 
+      - name: Copy built assets to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          # Copy built assets to server
+          rsync -avz -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            public/build/ \
+            $SSH_USER@$SSH_HOST:$DEPLOY_PATH/public/build/
+
       - name: Deploy to Server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
@@ -87,10 +98,6 @@ jobs:
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-
-            # Build frontend assets (if not already built)
-            npm ci --production=false
-            npm run build
 
             # Set permissions
             chmod -R 775 storage bootstrap/cache
