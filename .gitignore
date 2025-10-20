@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Allow compiled assets for production
+\!public/css/
+\!public/js/
