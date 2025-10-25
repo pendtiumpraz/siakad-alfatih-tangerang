@@ -12,7 +12,36 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Override local filesystem driver with fallback MIME detector
+        $this->app->resolving(\Illuminate\Filesystem\FilesystemManager::class, function ($manager) {
+            $manager->extend('local', function ($app, $config) {
+                return $this->createFallbackLocalDriver($config);
+            });
+
+            $manager->extend('public', function ($app, $config) {
+                return $this->createFallbackLocalDriver($config);
+            });
+        });
+    }
+
+    /**
+     * Create a fallback local filesystem driver
+     *
+     * @param array $config
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     */
+    protected function createFallbackLocalDriver(array $config)
+    {
+        $adapter = new \App\Support\FallbackLocalFilesystemAdapter(
+            $config['root'] ?? storage_path('app'),
+            null, // visibility converter - will use default
+            $config['lock'] ?? LOCK_EX,
+            \League\Flysystem\Local\LocalFilesystemAdapter::DISALLOW_LINKS
+        );
+
+        $driver = new \League\Flysystem\Filesystem($adapter, $config);
+
+        return new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter, $config);
     }
 
     /**
