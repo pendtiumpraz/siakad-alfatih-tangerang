@@ -170,21 +170,7 @@
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- NIM -->
-                    <div>
-                        <label for="nim" class="block text-sm font-semibold text-gray-700 mb-2">
-                            NIM <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="nim"
-                            name="nim"
-                            value="{{ old('nim', $user->mahasiswa->nim ?? '') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
-                        >
-                    </div>
-
-                    <!-- Nama Lengkap -->
+                    <!-- Nama Lengkap Mahasiswa -->
                     <div>
                         <label for="mahasiswa_nama_lengkap" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Lengkap <span class="text-red-500">*</span>
@@ -201,6 +187,20 @@
                         @enderror
                     </div>
 
+                    <!-- NIM -->
+                    <div>
+                        <label for="nim" class="block text-sm font-semibold text-gray-700 mb-2">
+                            NIM <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="nim"
+                            name="nim"
+                            value="{{ old('nim', $user->mahasiswa->nim ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                        >
+                    </div>
+
                     <!-- Program Studi -->
                     <div>
                         <label for="program_studi_id" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -209,13 +209,18 @@
                         <select
                             id="program_studi_id"
                             name="program_studi_id"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('program_studi_id') border-red-500 @enderror"
                         >
                             <option value="">Pilih Program Studi</option>
-                            <option value="1" {{ old('program_studi_id', $user->mahasiswa->program_studi_id ?? '') == 1 ? 'selected' : '' }}>Pendidikan Agama Islam</option>
-                            <option value="2" {{ old('program_studi_id', $user->mahasiswa->program_studi_id ?? '') == 2 ? 'selected' : '' }}>Ekonomi Syariah</option>
-                            <option value="3" {{ old('program_studi_id', $user->mahasiswa->program_studi_id ?? '') == 3 ? 'selected' : '' }}>Hukum Keluarga Islam</option>
+                            @foreach($programStudis as $prodi)
+                                <option value="{{ $prodi->id }}" {{ old('program_studi_id', $user->mahasiswa->program_studi_id ?? '') == $prodi->id ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }} ({{ $prodi->jenjang }})
+                                </option>
+                            @endforeach
                         </select>
+                        @error('program_studi_id')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Angkatan -->
@@ -229,8 +234,123 @@
                             name="angkatan"
                             value="{{ old('angkatan', $user->mahasiswa->angkatan ?? '') }}"
                             placeholder="2024"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('angkatan') border-red-500 @enderror"
                         >
+                        @error('angkatan')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Semester Aktif -->
+                    <div>
+                        <label for="semester_aktif" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Semester Aktif <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            id="semester_aktif"
+                            name="semester_aktif"
+                            value="{{ old('semester_aktif', $user->mahasiswa->semester_aktif ?? '') }}"
+                            min="1"
+                            max="14"
+                            placeholder="Auto-calculated"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('semester_aktif') border-red-500 @enderror"
+                        >
+                        @error('semester_aktif')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Otomatis dihitung dari angkatan, bisa diubah manual</p>
+                    </div>
+
+                    <!-- Tempat Lahir -->
+                    <div>
+                        <label for="tempat_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tempat Lahir
+                        </label>
+                        <input
+                            type="text"
+                            id="tempat_lahir"
+                            name="tempat_lahir"
+                            value="{{ old('tempat_lahir', $user->mahasiswa->tempat_lahir ?? '') }}"
+                            placeholder="Jakarta"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tempat_lahir') border-red-500 @enderror"
+                        >
+                        @error('tempat_lahir')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Tanggal Lahir -->
+                    <div>
+                        <label for="tanggal_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tanggal Lahir
+                        </label>
+                        <input
+                            type="date"
+                            id="tanggal_lahir"
+                            name="tanggal_lahir"
+                            value="{{ old('tanggal_lahir', $user->mahasiswa->tanggal_lahir ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lahir') border-red-500 @enderror"
+                        >
+                        @error('tanggal_lahir')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Jenis Kelamin -->
+                    <div>
+                        <label for="jenis_kelamin" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Jenis Kelamin
+                        </label>
+                        <select
+                            id="jenis_kelamin"
+                            name="jenis_kelamin"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('jenis_kelamin') border-red-500 @enderror"
+                        >
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="L" {{ old('jenis_kelamin', $user->mahasiswa->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin', $user->mahasiswa->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                        @error('jenis_kelamin')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Alamat -->
+                    <div class="md:col-span-2">
+                        <label for="alamat" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Alamat
+                        </label>
+                        <textarea
+                            id="alamat"
+                            name="alamat"
+                            rows="3"
+                            placeholder="Alamat lengkap"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('alamat') border-red-500 @enderror"
+                        >{{ old('alamat', $user->mahasiswa->alamat ?? '') }}</textarea>
+                        @error('alamat')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Status Mahasiswa -->
+                    <div>
+                        <label for="mahasiswa_status" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Status
+                        </label>
+                        <select
+                            id="mahasiswa_status"
+                            name="mahasiswa_status"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('mahasiswa_status') border-red-500 @enderror"
+                        >
+                            <option value="aktif" {{ old('mahasiswa_status', $user->mahasiswa->status ?? 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="cuti" {{ old('mahasiswa_status', $user->mahasiswa->status ?? '') == 'cuti' ? 'selected' : '' }}>Cuti</option>
+                            <option value="lulus" {{ old('mahasiswa_status', $user->mahasiswa->status ?? '') == 'lulus' ? 'selected' : '' }}>Lulus</option>
+                            <option value="dropout" {{ old('mahasiswa_status', $user->mahasiswa->status ?? '') == 'dropout' ? 'selected' : '' }}>Dropout</option>
+                        </select>
+                        @error('mahasiswa_status')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
@@ -350,8 +470,45 @@
 <script>
     function userForm() {
         return {
-            selectedRole: '{{ old('role', $user->role) }}'
+            selectedRole: '{{ old('role', $user->role) }}',
+            calculateSemester() {
+                const angkatan = document.getElementById('angkatan')?.value;
+                const semesterField = document.getElementById('semester_aktif');
+
+                if (angkatan && semesterField) {
+                    const currentYear = new Date().getFullYear();
+                    const currentMonth = new Date().getMonth() + 1;
+
+                    // Determine if we're in odd (ganjil) or even (genap) semester
+                    // Odd semester: Aug-Dec (month 8-12), Even semester: Jan-Jul (month 1-7)
+                    const isOddSemester = currentMonth >= 8;
+
+                    // Calculate years since enrollment
+                    const yearsSince = currentYear - parseInt(angkatan);
+
+                    // Calculate semester: (years * 2) + current semester type
+                    const calculatedSemester = (yearsSince * 2) + (isOddSemester ? 1 : 2);
+
+                    // Only auto-fill if field is empty or has placeholder
+                    if (!semesterField.value || semesterField.value == '') {
+                        semesterField.value = Math.max(1, Math.min(14, calculatedSemester));
+                    }
+                }
+            }
         }
     }
+
+    // Add event listener for angkatan field
+    document.addEventListener('DOMContentLoaded', function() {
+        const angkatanField = document.getElementById('angkatan');
+        if (angkatanField) {
+            angkatanField.addEventListener('blur', function() {
+                const app = Alpine.$data(document.querySelector('[x-data]'));
+                if (app && app.selectedRole === 'mahasiswa') {
+                    app.calculateSemester();
+                }
+            });
+        }
+    });
 </script>
 @endsection
