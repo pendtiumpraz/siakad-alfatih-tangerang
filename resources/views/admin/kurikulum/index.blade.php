@@ -114,7 +114,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{ $kurikulum->nama }}
+                                {{ $kurikulum->nama_kurikulum }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 <i class="fas fa-calendar mr-1"></i>

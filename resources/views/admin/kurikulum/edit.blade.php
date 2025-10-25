@@ -65,7 +65,7 @@
                             type="text"
                             name="nama"
                             id="nama"
-                            value="{{ old('nama', $kurikulum->nama) }}"
+                            value="{{ old('nama', $kurikulum->nama_kurikulum) }}"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror"
                             placeholder="Contoh: Kurikulum 2024"
                             required

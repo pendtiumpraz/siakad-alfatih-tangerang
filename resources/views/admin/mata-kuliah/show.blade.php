@@ -32,8 +32,8 @@
                         <i class="fas fa-book-open text-3xl text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">{{ $mataKuliah->nama }}</h2>
-                        <p class="text-emerald-50">{{ $mataKuliah->kode }}</p>
+                        <h2 class="text-2xl font-bold text-white">{{ $mataKuliah->nama_mk }}</h2>
+                        <p class="text-emerald-50">{{ $mataKuliah->kode_mk }}</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -67,7 +67,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Kode Mata Kuliah</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $mataKuliah->kode }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $mataKuliah->kode_mk }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">SKS</p>

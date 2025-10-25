@@ -164,10 +164,10 @@
                                 {{ ($mataKuliahs->currentPage() - 1) * $mataKuliahs->perPage() + $index + 1 }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#2D5F3F]">
-                                {{ $mk->kode }}
+                                {{ $mk->kode_mk }}
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{ $mk->nama }}
+                                {{ $mk->nama_mk }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 <div>

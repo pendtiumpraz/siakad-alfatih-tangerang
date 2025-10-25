@@ -51,7 +51,7 @@
                         <label for="kode" class="block text-sm font-semibold text-gray-700 mb-2">
                             Kode Mata Kuliah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="kode" id="kode" value="{{ old('kode', $mataKuliah->kode) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode') border-red-500 @enderror" placeholder="Contoh: MK001" required>
+                        <input type="text" name="kode" id="kode" value="{{ old('kode', $mataKuliah->kode_mk) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode') border-red-500 @enderror" placeholder="Contoh: MK001" required>
                         @error('kode')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
@@ -75,7 +75,7 @@
                         <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Mata Kuliah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama" id="nama" value="{{ old('nama', $mataKuliah->nama) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror" placeholder="Contoh: Pemrograman Web" required>
+                        <input type="text" name="nama" id="nama" value="{{ old('nama', $mataKuliah->nama_mk) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror" placeholder="Contoh: Pemrograman Web" required>
                         @error('nama')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror

@@ -37,7 +37,7 @@
                         <i class="fas fa-book text-3xl text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">{{ $kurikulum->nama }}</h2>
+                        <h2 class="text-2xl font-bold text-white">{{ $kurikulum->nama_kurikulum }}</h2>
                         <p class="text-emerald-50">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500">Nama Kurikulum</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $kurikulum->nama }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $kurikulum->nama_kurikulum }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Tahun Mulai</p>
