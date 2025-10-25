@@ -32,19 +32,19 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Kode Program Studi -->
                     <div>
-                        <label for="kode" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="kode_prodi" class="block text-sm font-semibold text-gray-700 mb-2">
                             Kode Program Studi <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
-                            name="kode"
-                            id="kode"
-                            value="{{ old('kode', $programStudi->kode) }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode') border-red-500 @enderror"
+                            name="kode_prodi"
+                            id="kode_prodi"
+                            value="{{ old('kode_prodi', $programStudi->kode_prodi) }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode_prodi') border-red-500 @enderror"
                             placeholder="Contoh: S1-TI"
                             required
                         >
-                        @error('kode')
+                        @error('kode_prodi')
                             <p class="mt-1 text-sm text-red-500">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ $message }}
@@ -80,19 +80,19 @@
 
                     <!-- Nama Program Studi -->
                     <div class="md:col-span-2">
-                        <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="nama_prodi" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Program Studi <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
-                            name="nama"
-                            id="nama"
-                            value="{{ old('nama', $programStudi->nama) }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror"
+                            name="nama_prodi"
+                            id="nama_prodi"
+                            value="{{ old('nama_prodi', $programStudi->nama_prodi) }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_prodi') border-red-500 @enderror"
                             placeholder="Contoh: Teknik Informatika"
                             required
                         >
-                        @error('nama')
+                        @error('nama_prodi')
                             <p class="mt-1 text-sm text-red-500">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ $message }}
@@ -164,8 +164,8 @@
 <script>
 function previewData() {
     return {
-        kode: '{{ old('kode', $programStudi->kode) }}',
-        nama: '{{ old('nama', $programStudi->nama) }}',
+        kode: '{{ old('kode_prodi', $programStudi->kode_prodi) }}',
+        nama: '{{ old('nama_prodi', $programStudi->nama_prodi) }}',
         jenjang: '{{ old('jenjang', $programStudi->jenjang) }}',
         isActive: {{ old('is_active', $programStudi->is_active ? '1' : '0') }},
         init() {
@@ -174,8 +174,8 @@ function previewData() {
             this.$watch('jenjang', () => this.updatePreview());
         },
         updatePreview() {
-            this.kode = document.getElementById('kode')?.value || '';
-            this.nama = document.getElementById('nama')?.value || '';
+            this.kode = document.getElementById('kode_prodi')?.value || '';
+            this.nama = document.getElementById('nama_prodi')?.value || '';
             this.jenjang = document.getElementById('jenjang')?.value || '';
         }
     }
