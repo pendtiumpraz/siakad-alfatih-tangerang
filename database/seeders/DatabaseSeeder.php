@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             ProgramStudiSeeder::class,
 
             // 2a. Seed STAI AL-FATIH programs (no dependencies)
-            StaiAlfatihProgramStudiSeeder::class,
+            StaiAlfatihProgramStudiSeederFixed::class,
 
             // 3. Seed jalur seleksi (no dependencies) - SPMB
             JalurSeleksiSeeder::class,
