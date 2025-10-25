@@ -234,7 +234,7 @@
                     <p class="text-xs text-gray-600 mb-16">Mengetahui,</p>
                     <p class="font-bold text-gray-800 border-t-2 border-gray-800 pt-2">Ketua Program Studi</p>
                 </div>
-                <div class="text-center islamic-pattern p-6 rounded-lg">
+                <div class="text-center p-6 rounded-lg">
                     <svg class="w-12 h-12 text-[#D4AF37] mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                     </svg>
@@ -491,19 +491,6 @@
             padding-top: 2px !important;
         }
 
-        .islamic-pattern {
-            padding: 0 !important;
-            border-radius: 0 !important;
-        }
-
-        .islamic-pattern svg {
-            width: 20px !important;
-            height: 20px !important;
-        }
-
-        .islamic-pattern p {
-            font-size: 8pt !important;
-        }
 
         /* Keterangan */
         .mt-6.text-xs {

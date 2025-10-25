@@ -25,7 +25,7 @@
 
     <!-- Main Info Card -->
     <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] overflow-hidden islamic-border">
-        <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] px-6 py-4 islamic-pattern">
+        <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="w-16 h-16 bg-[#D4AF37] rounded-full flex items-center justify-center mr-4">
@@ -246,7 +246,7 @@
     @endif
 
     <!-- Islamic Quote -->
-    <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-md p-6 text-center islamic-pattern">
+    <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] rounded-lg shadow-md p-6 text-center">
         <i class="fas fa-quote-left text-[#D4AF37] text-2xl mb-2"></i>
         <p class="text-white text-lg italic mb-2">"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia"</p>
         <p class="text-emerald-50 text-sm">- HR. Ahmad dan Thabrani</p>

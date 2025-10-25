@@ -27,7 +27,7 @@
     <div class="islamic-divider"></div>
 
     <!-- Profile Photo Section -->
-    <div class="card-islamic p-6 text-center islamic-pattern">
+    <div class="card-islamic p-6 text-center">
         <div class="inline-block relative">
             <div class="w-32 h-32 rounded-full islamic-border overflow-hidden bg-white p-2 mx-auto">
                 <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name ?? 'Mahasiswa' }}&size=300&background=4A7C59&color=fff"
@@ -199,7 +199,7 @@
     </div>
 
     <!-- Islamic Quote -->
-    <div class="card-islamic p-6 text-center islamic-pattern">
+    <div class="card-islamic p-6 text-center">
         <svg class="w-10 h-10 text-[#D4AF37] mx-auto mb-3" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
         </svg>
