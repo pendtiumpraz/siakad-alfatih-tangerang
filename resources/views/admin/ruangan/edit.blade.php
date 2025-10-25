@@ -30,11 +30,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Kode Ruangan -->
                     <div>
-                        <label for="kode" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="kode_ruangan" class="block text-sm font-semibold text-gray-700 mb-2">
                             Kode Ruangan <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="kode" id="kode" value="{{ old('kode', $ruangan->kode) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode') border-red-500 @enderror" placeholder="Contoh: R101" required>
-                        @error('kode')
+                        <input type="text" name="kode_ruangan" id="kode_ruangan" value="{{ old('kode_ruangan', $ruangan->kode_ruangan) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode_ruangan') border-red-500 @enderror" placeholder="Contoh: R101" required>
+                        @error('kode_ruangan')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                     </div>
@@ -59,11 +59,11 @@
 
                     <!-- Nama Ruangan -->
                     <div class="md:col-span-2">
-                        <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="nama_ruangan" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Ruangan <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama" id="nama" value="{{ old('nama', $ruangan->nama) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror" placeholder="Contoh: Ruang Kuliah 101" required>
-                        @error('nama')
+                        <input type="text" name="nama_ruangan" id="nama_ruangan" value="{{ old('nama_ruangan', $ruangan->nama_ruangan) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_ruangan') border-red-500 @enderror" placeholder="Contoh: Ruang Kuliah 101" required>
+                        @error('nama_ruangan')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                     </div>
