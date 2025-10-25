@@ -285,11 +285,15 @@
                         <label for="tanggal_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
                             Tanggal Lahir
                         </label>
+                        @php
+                            $tanggalLahirMahasiswa = optional($user->mahasiswa)->tanggal_lahir;
+                            $formattedTanggalMahasiswa = $tanggalLahirMahasiswa ? \Carbon\Carbon::parse($tanggalLahirMahasiswa)->format('Y-m-d') : '';
+                        @endphp
                         <input
                             type="date"
                             id="tanggal_lahir"
                             name="tanggal_lahir"
-                            value="{{ old('tanggal_lahir', $user->mahasiswa->tanggal_lahir ?? '') }}"
+                            value="{{ old('tanggal_lahir', $formattedTanggalMahasiswa) }}"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lahir') border-red-500 @enderror"
                         >
                         @error('tanggal_lahir')
@@ -456,11 +460,15 @@
                         <label for="tanggal_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
                             Tanggal Lahir
                         </label>
+                        @php
+                            $tanggalLahirDosen = optional($user->dosen)->tanggal_lahir;
+                            $formattedTanggalDosen = $tanggalLahirDosen ? \Carbon\Carbon::parse($tanggalLahirDosen)->format('Y-m-d') : '';
+                        @endphp
                         <input
                             type="date"
                             id="tanggal_lahir"
                             name="tanggal_lahir"
-                            value="{{ old('tanggal_lahir', $user->dosen->tanggal_lahir ?? '') }}"
+                            value="{{ old('tanggal_lahir', $formattedTanggalDosen) }}"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lahir') border-red-500 @enderror"
                         >
                         @error('tanggal_lahir')
