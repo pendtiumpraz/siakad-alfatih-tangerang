@@ -69,7 +69,7 @@
                         <option value="">Semua Kurikulum</option>
                         @foreach($kurikulums ?? [] as $kurikulum)
                             <option value="{{ $kurikulum->id }}" {{ request('kurikulum_id') == $kurikulum->id ? 'selected' : '' }}>
-                                {{ $kurikulum->nama }}
+                                {{ $kurikulum->nama_kurikulum }}
                             </option>
                         @endforeach
                     </select>
@@ -171,8 +171,8 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
                                 <div>
-                                    <p class="font-medium">{{ $mk->kurikulum->nama ?? '-' }}</p>
-                                    <p class="text-xs text-gray-500">{{ $mk->kurikulum->programStudi->nama ?? '-' }}</p>
+                                    <p class="font-medium">{{ $mk->kurikulum->nama_kurikulum ?? '-' }}</p>
+                                    <p class="text-xs text-gray-500">{{ $mk->kurikulum->programStudi->nama_prodi ?? '-' }}</p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
@@ -186,7 +186,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                @if($mk->jenis == 'Wajib')
+                                @if(strtolower($mk->jenis) == 'wajib')
                                     <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
                                         <i class="fas fa-star mr-1"></i>
                                         Wajib
@@ -266,11 +266,42 @@
                             </a>
                         @endif
 
-                        @foreach ($mataKuliahs->getUrlRange(1, $mataKuliahs->lastPage()) as $page => $url)
-                            @if ($page == $mataKuliahs->currentPage())
+                        @php
+                            $current = $mataKuliahs->currentPage();
+                            $last = $mataKuliahs->lastPage();
+                            $delta = 2;
+                            $left = $current - $delta;
+                            $right = $current + $delta + 1;
+                            $range = [];
+                            $rangeWithDots = [];
+                            $l = null;
+
+                            for ($i = 1; $i <= $last; $i++) {
+                                if ($i == 1 || $i == $last || ($i >= $left && $i < $right)) {
+                                    $range[] = $i;
+                                }
+                            }
+
+                            foreach ($range as $i) {
+                                if ($l) {
+                                    if ($i - $l === 2) {
+                                        $rangeWithDots[] = $l + 1;
+                                    } else if ($i - $l !== 1) {
+                                        $rangeWithDots[] = '...';
+                                    }
+                                }
+                                $rangeWithDots[] = $i;
+                                $l = $i;
+                            }
+                        @endphp
+
+                        @foreach ($rangeWithDots as $page)
+                            @if ($page === '...')
+                                <span class="px-4 py-2 bg-white border border-gray-300 text-gray-400 rounded cursor-default">...</span>
+                            @elseif ($page == $current)
                                 <span class="px-4 py-2 bg-[#2D5F3F] text-white rounded font-semibold">{{ $page }}</span>
                             @else
-                                <a href="{{ $url }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-[#D4AF37] hover:text-white transition">{{ $page }}</a>
+                                <a href="{{ $mataKuliahs->url($page) }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-[#D4AF37] hover:text-white transition">{{ $page }}</a>
                             @endif
                         @endforeach
 

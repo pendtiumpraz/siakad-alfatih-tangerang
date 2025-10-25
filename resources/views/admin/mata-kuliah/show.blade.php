@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="text-right">
-                    @if($mataKuliah->jenis == 'Wajib')
+                    @if(strtolower($mataKuliah->jenis) == 'wajib')
                         <span class="px-4 py-2 bg-green-500 text-white text-sm font-semibold rounded-full">
                             <i class="fas fa-star mr-1"></i>Wajib
                         </span>
@@ -62,8 +62,8 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500">Kurikulum</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $mataKuliah->kurikulum->nama ?? '-' }}</p>
-                            <p class="text-sm text-gray-600">{{ $mataKuliah->kurikulum->programStudi->nama ?? '-' }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $mataKuliah->kurikulum->nama_kurikulum ?? '-' }}</p>
+                            <p class="text-sm text-gray-600">{{ $mataKuliah->kurikulum->programStudi->nama_prodi ?? '-' }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Kode Mata Kuliah</p>
@@ -82,7 +82,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Jenis</p>
-                            <p class="text-lg font-semibold {{ $mataKuliah->jenis == 'Wajib' ? 'text-green-600' : 'text-yellow-600' }}">
+                            <p class="text-lg font-semibold {{ strtolower($mataKuliah->jenis) == 'wajib' ? 'text-green-600' : 'text-yellow-600' }}">
                                 {{ $mataKuliah->jenis }}
                             </p>
                         </div>
@@ -159,8 +159,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             @foreach($prerequisites as $prereq)
             <div class="border border-gray-300 rounded-lg p-3 hover:border-[#D4AF37] transition">
-                <p class="font-semibold text-gray-800">{{ $prereq->nama }}</p>
-                <p class="text-sm text-gray-600">{{ $prereq->kode }} - {{ $prereq->sks }} SKS</p>
+                <p class="font-semibold text-gray-800">{{ $prereq->nama_mk }}</p>
+                <p class="text-sm text-gray-600">{{ $prereq->kode_mk }} - {{ $prereq->sks }} SKS</p>
             </div>
             @endforeach
         </div>

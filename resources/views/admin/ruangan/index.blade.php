@@ -199,11 +199,42 @@
                             </a>
                         @endif
 
-                        @foreach ($ruangans->getUrlRange(1, $ruangans->lastPage()) as $page => $url)
-                            @if ($page == $ruangans->currentPage())
+                        @php
+                            $current = $ruangans->currentPage();
+                            $last = $ruangans->lastPage();
+                            $delta = 2;
+                            $left = $current - $delta;
+                            $right = $current + $delta + 1;
+                            $range = [];
+                            $rangeWithDots = [];
+                            $l = null;
+
+                            for ($i = 1; $i <= $last; $i++) {
+                                if ($i == 1 || $i == $last || ($i >= $left && $i < $right)) {
+                                    $range[] = $i;
+                                }
+                            }
+
+                            foreach ($range as $i) {
+                                if ($l) {
+                                    if ($i - $l === 2) {
+                                        $rangeWithDots[] = $l + 1;
+                                    } else if ($i - $l !== 1) {
+                                        $rangeWithDots[] = '...';
+                                    }
+                                }
+                                $rangeWithDots[] = $i;
+                                $l = $i;
+                            }
+                        @endphp
+
+                        @foreach ($rangeWithDots as $page)
+                            @if ($page === '...')
+                                <span class="px-4 py-2 bg-white border border-gray-300 text-gray-400 rounded cursor-default">...</span>
+                            @elseif ($page == $current)
                                 <span class="px-4 py-2 bg-[#2D5F3F] text-white rounded font-semibold">{{ $page }}</span>
                             @else
-                                <a href="{{ $url }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-[#D4AF37] hover:text-white transition">{{ $page }}</a>
+                                <a href="{{ $ruangans->url($page) }}" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded hover:bg-[#D4AF37] hover:text-white transition">{{ $page }}</a>
                             @endif
                         @endforeach
 

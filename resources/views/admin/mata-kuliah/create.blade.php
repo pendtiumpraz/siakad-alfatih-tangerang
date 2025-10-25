@@ -36,7 +36,7 @@
                             <option value="">Pilih Kurikulum</option>
                             @foreach($kurikulums ?? [] as $kurikulum)
                                 <option value="{{ $kurikulum->id }}" {{ old('kurikulum_id') == $kurikulum->id ? 'selected' : '' }}>
-                                    {{ $kurikulum->nama }} - {{ $kurikulum->programStudi->nama ?? '' }}
+                                    {{ $kurikulum->nama_kurikulum }} - {{ $kurikulum->programStudi->nama_prodi ?? '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -47,11 +47,11 @@
 
                     <!-- Kode MK -->
                     <div>
-                        <label for="kode" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="kode_mk" class="block text-sm font-semibold text-gray-700 mb-2">
                             Kode Mata Kuliah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="kode" id="kode" value="{{ old('kode') }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode') border-red-500 @enderror" placeholder="Contoh: MK001" required>
-                        @error('kode')
+                        <input type="text" name="kode_mk" id="kode_mk" value="{{ old('kode_mk') }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode_mk') border-red-500 @enderror" placeholder="Contoh: MK001" required>
+                        @error('kode_mk')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                         <p class="mt-1 text-xs text-gray-500">Kode unik untuk mata kuliah</p>
@@ -71,11 +71,11 @@
 
                     <!-- Nama MK -->
                     <div class="md:col-span-2">
-                        <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="nama_mk" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Mata Kuliah <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" name="nama" id="nama" value="{{ old('nama') }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror" placeholder="Contoh: Pemrograman Web" required>
-                        @error('nama')
+                        <input type="text" name="nama_mk" id="nama_mk" value="{{ old('nama_mk') }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_mk') border-red-500 @enderror" placeholder="Contoh: Pemrograman Web" required>
+                        @error('nama_mk')
                             <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
                         @enderror
                     </div>
