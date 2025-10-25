@@ -48,9 +48,7 @@
                     <select name="jenis_pembayaran" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Jenis</option>
                         <option value="spp">SPP</option>
-                        <option value="uang_kuliah">Uang Kuliah</option>
-                        <option value="ujian">Ujian</option>
-                        <option value="praktikum">Praktikum</option>
+                        <option value="daftar_ulang">Daftar Ulang</option>
                         <option value="wisuda">Wisuda</option>
                         <option value="lainnya">Lainnya</option>
                     </select>

@@ -49,9 +49,7 @@
                     <select name="jenis_pembayaran" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Jenis</option>
                         <option value="spp" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'spp' ? 'selected' : '' }}>SPP</option>
-                        <option value="uang_kuliah" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'uang_kuliah' ? 'selected' : '' }}>Uang Kuliah</option>
-                        <option value="ujian" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'ujian' ? 'selected' : '' }}>Ujian</option>
-                        <option value="praktikum" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'praktikum' ? 'selected' : '' }}>Praktikum</option>
+                        <option value="daftar_ulang" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'daftar_ulang' ? 'selected' : '' }}>Daftar Ulang</option>
                         <option value="wisuda" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'wisuda' ? 'selected' : '' }}>Wisuda</option>
                         <option value="lainnya" {{ old('jenis_pembayaran', $pembayaran->jenis_pembayaran ?? '') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                     </select>
