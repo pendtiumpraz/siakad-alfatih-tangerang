@@ -24,10 +24,22 @@
                 <!-- Profile Header -->
                 <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] p-6 text-center">
                     <div class="w-24 h-24 mx-auto bg-gradient-to-br from-[#D4AF37] to-[#F4E5C3] rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg">
-                        {{ substr($user->username, 0, 2) }}
+                        @php
+                            $displayName = $user->username;
+                            if ($user->role === 'mahasiswa' && $user->mahasiswa) {
+                                $displayName = $user->mahasiswa->nama_lengkap ?? $user->username;
+                            } elseif ($user->role === 'dosen' && $user->dosen) {
+                                $displayName = $user->dosen->nama_lengkap ?? $user->username;
+                            } elseif ($user->role === 'operator' && $user->operator) {
+                                $displayName = $user->operator->nama_lengkap ?? $user->username;
+                            }
+                        @endphp
+                        {{ substr($displayName, 0, 2) }}
                     </div>
-                    <h2 class="mt-4 text-xl font-bold text-white">{{ $user->username }}</h2>
-                    <p class="text-emerald-50 text-sm">{{ $user->email }}</p>
+                    <h2 class="mt-4 text-xl font-bold text-white">{{ $displayName }}</h2>
+                    <p class="text-emerald-50 text-sm">
+                        <i class="fas fa-envelope mr-1"></i>{{ $user->email }}
+                    </p>
                     <div class="mt-3">
                         <x-admin.badge :type="$user->role" :label="ucfirst($user->role)" />
                     </div>
@@ -80,19 +92,84 @@
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="text-sm text-gray-600">Username</label>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-user mr-1 text-[#D4AF37]"></i>Nama Lengkap
+                        </label>
+                        <p class="font-semibold text-[#2D5F3F]">
+                            @if($user->role === 'mahasiswa' && $user->mahasiswa)
+                                {{ $user->mahasiswa->nama_lengkap }}
+                            @elseif($user->role === 'dosen' && $user->dosen)
+                                {{ $user->dosen->nama_lengkap }}
+                            @elseif($user->role === 'operator' && $user->operator)
+                                {{ $user->operator->nama_lengkap }}
+                            @else
+                                {{ $user->username }}
+                            @endif
+                        </p>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-id-card mr-1 text-[#D4AF37]"></i>
+                            @if($user->role === 'mahasiswa')
+                                NIM
+                            @elseif($user->role === 'dosen')
+                                NIDN
+                            @elseif($user->role === 'operator')
+                                Employee ID
+                            @else
+                                ID
+                            @endif
+                        </label>
+                        <p class="font-semibold text-[#2D5F3F]">
+                            @if($user->role === 'mahasiswa' && $user->mahasiswa)
+                                {{ $user->mahasiswa->nim }}
+                            @elseif($user->role === 'dosen' && $user->dosen)
+                                {{ $user->dosen->nidn }}
+                            @elseif($user->role === 'operator' && $user->operator)
+                                {{ $user->operator->employee_id }}
+                            @else
+                                -
+                            @endif
+                        </p>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-user-circle mr-1 text-[#D4AF37]"></i>Username
+                        </label>
                         <p class="font-semibold text-[#2D5F3F]">{{ $user->username }}</p>
                     </div>
                     <div>
-                        <label class="text-sm text-gray-600">Email</label>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-envelope mr-1 text-[#D4AF37]"></i>Email
+                        </label>
                         <p class="font-semibold text-[#2D5F3F]">{{ $user->email }}</p>
                     </div>
                     <div>
-                        <label class="text-sm text-gray-600">Role</label>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-phone mr-1 text-[#D4AF37]"></i>Nomor Telepon
+                        </label>
+                        <p class="font-semibold text-[#2D5F3F]">
+                            @if($user->role === 'mahasiswa' && $user->mahasiswa)
+                                {{ $user->mahasiswa->no_telepon ?? '-' }}
+                            @elseif($user->role === 'dosen' && $user->dosen)
+                                {{ $user->dosen->no_telepon ?? '-' }}
+                            @elseif($user->role === 'operator' && $user->operator)
+                                {{ $user->operator->no_telepon ?? '-' }}
+                            @else
+                                -
+                            @endif
+                        </p>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-user-tag mr-1 text-[#D4AF37]"></i>Role
+                        </label>
                         <p class="font-semibold text-[#2D5F3F]">{{ ucfirst($user->role) }}</p>
                     </div>
                     <div>
-                        <label class="text-sm text-gray-600">Status Akun</label>
+                        <label class="text-sm text-gray-600">
+                            <i class="fas fa-toggle-on mr-1 text-[#D4AF37]"></i>Status Akun
+                        </label>
                         <p class="font-semibold {{ $user->is_active ? 'text-green-600' : 'text-red-600' }}">
                             {{ $user->is_active ? 'Aktif' : 'Tidak Aktif' }}
                         </p>
@@ -109,19 +186,39 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="text-sm text-gray-600">NIM</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-id-badge mr-1 text-[#D4AF37]"></i>NIM
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->nim }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Program Studi</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-user mr-1 text-[#D4AF37]"></i>Nama Lengkap
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->nama_lengkap }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-graduation-cap mr-1 text-[#D4AF37]"></i>Program Studi
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->programStudi->nama ?? '-' }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Angkatan</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-calendar mr-1 text-[#D4AF37]"></i>Angkatan
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->angkatan }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Status Akademik</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-phone mr-1 text-[#D4AF37]"></i>Nomor Telepon
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->no_telepon ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-check-circle mr-1 text-[#D4AF37]"></i>Status Akademik
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->status_akademik ?? 'Aktif' }}</p>
                         </div>
                     </div>
@@ -136,15 +233,33 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="text-sm text-gray-600">NIDN</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-id-badge mr-1 text-[#D4AF37]"></i>NIDN
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->nidn }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Gelar</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-user mr-1 text-[#D4AF37]"></i>Nama Lengkap
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->nama_lengkap }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-award mr-1 text-[#D4AF37]"></i>Gelar
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->gelar ?? '-' }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Status Dosen</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-phone mr-1 text-[#D4AF37]"></i>Nomor Telepon
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->no_telepon ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-check-circle mr-1 text-[#D4AF37]"></i>Status Dosen
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->status ?? 'Aktif' }}</p>
                         </div>
                     </div>
@@ -159,12 +274,28 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="text-sm text-gray-600">Employee ID</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-id-badge mr-1 text-[#D4AF37]"></i>Employee ID
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->operator->employee_id }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-gray-600">Departemen</label>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-user mr-1 text-[#D4AF37]"></i>Nama Lengkap
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->operator->nama_lengkap }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-building mr-1 text-[#D4AF37]"></i>Departemen
+                            </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->operator->department ?? 'Akademik' }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-phone mr-1 text-[#D4AF37]"></i>Nomor Telepon
+                            </label>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->operator->no_telepon ?? '-' }}</p>
                         </div>
                     </div>
                 </div>

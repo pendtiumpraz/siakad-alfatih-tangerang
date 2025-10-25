@@ -43,24 +43,6 @@
                         @enderror
                     </div>
 
-                    <!-- Nama Lengkap -->
-                    <div>
-                        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Nama Lengkap <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value="{{ old('name', $user->name) }}"
-                            required
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('name') border-red-500 @enderror"
-                        >
-                        @error('name')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -87,12 +69,12 @@
                         <input
                             type="text"
                             id="phone"
-                            name="phone"
-                            value="{{ old('phone', $user->phone) }}"
+                            name="no_telepon"
+                            value="{{ old('no_telepon', $user->phone) }}"
                             placeholder="08xx-xxxx-xxxx"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('phone') border-red-500 @enderror"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('no_telepon') border-red-500 @enderror"
                         >
-                        @error('phone')
+                        @error('no_telepon')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -166,6 +148,20 @@
             </div>
 
             <!-- Role-Specific Fields -->
+            <!-- Super Admin Fields -->
+            <div x-show="selectedRole === 'super_admin'" x-transition>
+                <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
+                    <i class="fas fa-user-shield mr-2"></i>
+                    Informasi Super Admin
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-sm text-gray-600">Super Admin tidak memerlukan data tambahan.</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Mahasiswa Fields -->
             <div x-show="selectedRole === 'mahasiswa'" x-transition>
                 <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
@@ -186,6 +182,23 @@
                             value="{{ old('nim', $user->mahasiswa->nim ?? '') }}"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
                         >
+                    </div>
+
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label for="mahasiswa_nama_lengkap" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="mahasiswa_nama_lengkap"
+                            name="mahasiswa_nama_lengkap"
+                            value="{{ old('mahasiswa_nama_lengkap', $user->mahasiswa->nama_lengkap ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('mahasiswa_nama_lengkap') border-red-500 @enderror"
+                        >
+                        @error('mahasiswa_nama_lengkap')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Program Studi -->
@@ -244,6 +257,23 @@
                         >
                     </div>
 
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label for="dosen_nama_lengkap" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="dosen_nama_lengkap"
+                            name="dosen_nama_lengkap"
+                            value="{{ old('dosen_nama_lengkap', $user->dosen->nama_lengkap ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('dosen_nama_lengkap') border-red-500 @enderror"
+                        >
+                        @error('dosen_nama_lengkap')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Gelar -->
                     <div>
                         <label for="gelar" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -269,6 +299,23 @@
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nama Lengkap -->
+                    <div>
+                        <label for="operator_nama_lengkap" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Nama Lengkap <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="operator_nama_lengkap"
+                            name="operator_nama_lengkap"
+                            value="{{ old('operator_nama_lengkap', $user->operator->nama_lengkap ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('operator_nama_lengkap') border-red-500 @enderror"
+                        >
+                        @error('operator_nama_lengkap')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Employee ID -->
                     <div>
                         <label for="employee_id" class="block text-sm font-semibold text-gray-700 mb-2">
