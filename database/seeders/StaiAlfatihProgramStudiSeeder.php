@@ -35,21 +35,21 @@ class StaiAlfatihProgramStudiSeeder extends Seeder
                 // Ilmu Al-Qur'an dan Tafsir - DARING
                 [
                     'kode_prodi' => 'IQT-D-S1',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Daring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Daring",
                     'jenjang' => 'S1',
                     'akreditasi' => 'B',
                     'is_active' => true,
                 ],
                 [
                     'kode_prodi' => 'IQT-D-S2',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Daring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Daring",
                     'jenjang' => 'S2',
                     'akreditasi' => 'B',
                     'is_active' => true,
                 ],
                 [
                     'kode_prodi' => 'IQT-D-S3',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Daring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Daring",
                     'jenjang' => 'S3',
                     'akreditasi' => 'B',
                     'is_active' => true,
@@ -85,21 +85,21 @@ class StaiAlfatihProgramStudiSeeder extends Seeder
                 // Ilmu Al-Qur'an dan Tafsir - LURING
                 [
                     'kode_prodi' => 'IQT-L-S1',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Luring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Luring",
                     'jenjang' => 'S1',
                     'akreditasi' => 'B',
                     'is_active' => true,
                 ],
                 [
                     'kode_prodi' => 'IQT-L-S2',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Luring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Luring",
                     'jenjang' => 'S2',
                     'akreditasi' => 'B',
                     'is_active' => true,
                 ],
                 [
                     'kode_prodi' => 'IQT-L-S3',
-                    'nama_prodi' => 'Ilmu Al-Qur\'an dan Tafsir - Luring',
+                    'nama_prodi' => "Ilmu Al-Qur'an dan Tafsir - Luring",
                     'jenjang' => 'S3',
                     'akreditasi' => 'B',
                     'is_active' => true,

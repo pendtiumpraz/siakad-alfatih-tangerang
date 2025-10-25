@@ -129,15 +129,15 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
     {
         return [
             // Semester 1
-            ['kode_mk' => "{$kodeProdi}-101", 'nama_mk' => 'Ulumul Qur\'an', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu-ilmu Al-Qur\'an'],
-            ['kode_mk' => "{$kodeProdi}-102", 'nama_mk' => 'Bahasa Arab I', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Arab dasar untuk studi Al-Qur\'an'],
-            ['kode_mk' => "{$kodeProdi}-103", 'nama_mk' => 'Tahsin Al-Qur\'an', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Perbaikan bacaan Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-101", 'nama_mk' => "Ulumul Qur'an", 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => "Ilmu-ilmu Al-Qur'an"],
+            ['kode_mk' => "{$kodeProdi}-102", 'nama_mk' => 'Bahasa Arab I', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => "Bahasa Arab dasar untuk studi Al-Qur'an"],
+            ['kode_mk' => "{$kodeProdi}-103", 'nama_mk' => "Tahsin Al-Qur'an", 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => "Perbaikan bacaan Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-104", 'nama_mk' => 'Aqidah Islamiyah', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Studi aqidah Islam'],
             ['kode_mk' => "{$kodeProdi}-105", 'nama_mk' => 'Pendidikan Pancasila', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Pendidikan Pancasila dan Kewarganegaraan'],
             ['kode_mk' => "{$kodeProdi}-106", 'nama_mk' => 'Bahasa Indonesia', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Indonesia akademik'],
 
             // Semester 2
-            ['kode_mk' => "{$kodeProdi}-201", 'nama_mk' => 'Tafsir Maudhu\'i', 'sks' => 3, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir tematik Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-201", 'nama_mk' => "Tafsir Maudhu'i", 'sks' => 3, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => "Tafsir tematik Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-202", 'nama_mk' => 'Bahasa Arab II', 'sks' => 3, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Arab lanjutan'],
             ['kode_mk' => "{$kodeProdi}-203", 'nama_mk' => 'Tajwid', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu tajwid'],
             ['kode_mk' => "{$kodeProdi}-204", 'nama_mk' => 'Hadits I', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Pengantar ilmu hadits'],
@@ -146,7 +146,7 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
 
             // Semester 3
             ['kode_mk' => "{$kodeProdi}-301", 'nama_mk' => 'Tafsir Tahlili I', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir analitis juz 1-10'],
-            ['kode_mk' => "{$kodeProdi}-302", 'nama_mk' => 'Qira\'at', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu qira\'at sab\'ah'],
+            ['kode_mk' => "{$kodeProdi}-302", 'nama_mk' => "Qira'at", 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => "Ilmu qira'at sab\"ah'],
             ['kode_mk' => "{$kodeProdi}-303", 'nama_mk' => 'Nahwu I', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Tata bahasa Arab - Nahwu dasar'],
             ['kode_mk' => "{$kodeProdi}-304", 'nama_mk' => 'Hadits II', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu hadits lanjutan'],
             ['kode_mk' => "{$kodeProdi}-305", 'nama_mk' => 'Fiqh I', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Fiqh ibadah'],
@@ -162,15 +162,15 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
 
             // Semester 5
             ['kode_mk' => "{$kodeProdi}-501", 'nama_mk' => 'Tafsir Tahlili III', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir analitis juz 21-30'],
-            ['kode_mk' => "{$kodeProdi}-502", 'nama_mk' => 'Asbabun Nuzul', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Sebab-sebab turunnya ayat Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-502", 'nama_mk' => 'Asbabun Nuzul', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Sebab-sebab turunnya ayat Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-503", 'nama_mk' => 'Sharaf II', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Morfologi bahasa Arab lanjutan'],
-            ['kode_mk' => "{$kodeProdi}-504", 'nama_mk' => 'I\'jaz Al-Qur\'an', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Kemukjizatan Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-504", 'nama_mk' => "I'jaz Al-Qur\"an', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Kemukjizatan Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-505", 'nama_mk' => 'Ushul Fiqh II', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Ushul fiqh lanjutan'],
-            ['kode_mk' => "{$kodeProdi}-506", 'nama_mk' => 'Balaghah', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu balaghah (Ma\'ani, Bayan, Badi\')'],
+            ['kode_mk' => "{$kodeProdi}-506", 'nama_mk' => 'Balaghah', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Ilmu balaghah (Ma'ani, Bayan, Badi\")'],
 
             // Semester 6
-            ['kode_mk' => "{$kodeProdi}-601", 'nama_mk' => 'Tafsir bi al-Ma\'tsur', 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir dengan riwayat'],
-            ['kode_mk' => "{$kodeProdi}-602", 'nama_mk' => 'Tafsir bi ar-Ra\'yi', 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir dengan pendapat/ijtihad'],
+            ['kode_mk' => "{$kodeProdi}-601", 'nama_mk' => "Tafsir bi al-Ma'tsur", 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir dengan riwayat'],
+            ['kode_mk' => "{$kodeProdi}-602", 'nama_mk' => "Tafsir bi ar-Ra'yi", 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir dengan pendapat/ijtihad'],
             ['kode_mk' => "{$kodeProdi}-603", 'nama_mk' => 'Nasikh Mansukh', 'sks' => 2, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Ayat-ayat yang menasikh dan mansukh'],
             ['kode_mk' => "{$kodeProdi}-604", 'nama_mk' => 'Manhaj Mufassirin', 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Metode para mufassir'],
             ['kode_mk' => "{$kodeProdi}-605", 'nama_mk' => 'Tasawuf', 'sks' => 2, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu tasawuf dan akhlak'],
@@ -180,7 +180,7 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
             ['kode_mk' => "{$kodeProdi}-701", 'nama_mk' => 'Tafsir Kontemporer', 'sks' => 3, 'semester' => 7, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir kontemporer dan metodologinya'],
             ['kode_mk' => "{$kodeProdi}-702", 'nama_mk' => 'Studi Kitab Tafsir Klasik', 'sks' => 3, 'semester' => 7, 'jenis' => 'pilihan', 'deskripsi' => 'Kajian kitab tafsir klasik (Tabari, Ibnu Katsir, dll)'],
             ['kode_mk' => "{$kodeProdi}-703", 'nama_mk' => 'Tafsir Indonesia', 'sks' => 2, 'semester' => 7, 'jenis' => 'pilihan', 'deskripsi' => 'Tafsir karya ulama Indonesia'],
-            ['kode_mk' => "{$kodeProdi}-704", 'nama_mk' => 'Tahfizh Al-Qur\'an', 'sks' => 2, 'semester' => 7, 'jenis' => 'wajib', 'deskripsi' => 'Program hafalan Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-704", 'nama_mk' => "Tahfizh Al-Qur'an", 'sks' => 2, 'semester' => 7, 'jenis' => 'wajib', 'deskripsi' => "Program hafalan Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-705", 'nama_mk' => 'Seminar Proposal', 'sks' => 2, 'semester' => 7, 'jenis' => 'wajib', 'deskripsi' => 'Seminar proposal skripsi'],
             ['kode_mk' => "{$kodeProdi}-706", 'nama_mk' => 'KKN (Kuliah Kerja Nyata)', 'sks' => 3, 'semester' => 7, 'jenis' => 'wajib', 'deskripsi' => 'Kuliah Kerja Nyata'],
 
@@ -198,8 +198,8 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
             // Semester 1
             ['kode_mk' => "{$kodeProdi}-101", 'nama_mk' => 'Metodologi Penelitian Lanjutan', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Metodologi penelitian tingkat master'],
             ['kode_mk' => "{$kodeProdi}-102", 'nama_mk' => 'Filsafat Ilmu', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Filsafat ilmu pengetahuan'],
-            ['kode_mk' => "{$kodeProdi}-103", 'nama_mk' => 'Studi Al-Qur\'an Kontemporer', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Kajian Al-Qur\'an kontemporer'],
-            ['kode_mk' => "{$kodeProdi}-104", 'nama_mk' => 'Hermeneutika Al-Qur\'an', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Hermeneutika dalam tafsir'],
+            ['kode_mk' => "{$kodeProdi}-103", 'nama_mk' => "Studi Al-Qur'an Kontemporer", 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => "Kajian Al-Qur'an kontemporer"],
+            ['kode_mk' => "{$kodeProdi}-104", 'nama_mk' => "Hermeneutika Al-Qur'an", 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Hermeneutika dalam tafsir'],
 
             // Semester 2
             ['kode_mk' => "{$kodeProdi}-201", 'nama_mk' => 'Tafsir Tarbawi', 'sks' => 3, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir pendidikan'],
@@ -208,10 +208,10 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
             ['kode_mk' => "{$kodeProdi}-204", 'nama_mk' => 'Tafsir Hukum', 'sks' => 3, 'semester' => 2, 'jenis' => 'pilihan', 'deskripsi' => 'Tafsir ayat-ayat hukum (ahkam)'],
 
             // Semester 3
-            ['kode_mk' => "{$kodeProdi}-301", 'nama_mk' => 'Studi Kitab Tafsir Mu\'tabarah', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Kajian kitab tafsir mu\'tabarah'],
+            ['kode_mk' => "{$kodeProdi}-301", 'nama_mk' => "Studi Kitab Tafsir Mu'tabarah", 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => "Kajian kitab tafsir mu'tabarah"],
             ['kode_mk' => "{$kodeProdi}-302", 'nama_mk' => 'Tafsir Nusantara', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir karya ulama Nusantara'],
             ['kode_mk' => "{$kodeProdi}-303", 'nama_mk' => 'Seminar Proposal Tesis', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Seminar proposal tesis'],
-            ['kode_mk' => "{$kodeProdi}-304", 'nama_mk' => 'Living Qur\'an', 'sks' => 3, 'semester' => 3, 'jenis' => 'pilihan', 'deskripsi' => 'Al-Qur\'an dalam kehidupan masyarakat'],
+            ['kode_mk' => "{$kodeProdi}-304", 'nama_mk' => "Living Qur'an", 'sks' => 3, 'semester' => 3, 'jenis' => 'pilihan', 'deskripsi' => "Al-Qur'an dalam kehidupan masyarakat"],
 
             // Semester 4
             ['kode_mk' => "{$kodeProdi}-401", 'nama_mk' => 'Tesis', 'sks' => 6, 'semester' => 4, 'jenis' => 'wajib', 'deskripsi' => 'Penelitian tugas akhir S2'],
@@ -259,7 +259,7 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
 
             // Semester 2
             ['kode_mk' => "{$kodeProdi}-MPK-201", 'nama_mk' => 'Pendidikan Kewarganegaraan', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Mata Kuliah Pengembangan Kepribadian - PKN'],
-            ['kode_mk' => "{$kodeProdi}-MPB-201", 'nama_mk' => 'Ulumul Qur\'an', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu-ilmu Al-Qur\'an'],
+            ['kode_mk' => "{$kodeProdi}-MPB-201", 'nama_mk' => "Ulumul Qur'an", 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => "Ilmu-ilmu Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-MKK-201", 'nama_mk' => 'Sejarah Hukum', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Mata Kuliah Keilmuan dan Keterampilan - Sejarah Hukum'],
             ['kode_mk' => "{$kodeProdi}-MKB-201", 'nama_mk' => 'Ekonomi Makro Syariah', 'sks' => 3, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Mata Kuliah Keahlian Berkarya - Ekonomi Makro'],
             ['kode_mk' => "{$kodeProdi}-MKB-202", 'nama_mk' => 'Bahasa Arab I', 'sks' => 2, 'semester' => 2, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Arab Dasar'],
