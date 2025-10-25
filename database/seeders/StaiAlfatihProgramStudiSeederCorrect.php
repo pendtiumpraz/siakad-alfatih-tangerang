@@ -83,11 +83,18 @@ class StaiAlfatihProgramStudiSeederCorrect extends Seeder
                 ],
 
                 // ========================================
-                // S2 PROGRAM (Daring only)
+                // S2 PROGRAMS (Daring only)
                 // ========================================
                 [
                     'kode_prodi' => 'MPI-S2-D',
                     'nama_prodi' => 'Manajemen Pendidikan Islam - Daring',
+                    'jenjang' => 'S2',
+                    'akreditasi' => 'B',
+                    'is_active' => true,
+                ],
+                [
+                    'kode_prodi' => 'HES-S2-D',
+                    'nama_prodi' => 'Hukum Ekonomi Syariah - Daring',
                     'jenjang' => 'S2',
                     'akreditasi' => 'B',
                     'is_active' => true,
@@ -132,7 +139,7 @@ class StaiAlfatihProgramStudiSeederCorrect extends Seeder
 
             DB::commit();
             $this->command->info("\n✓ STAI AL-FATIH Program Studi seeder completed!");
-            $this->command->info("Total: 12 programs (8 S1, 1 S2, 3 S3)");
+            $this->command->info("Total: 13 programs (8 S1, 2 S2, 3 S3)");
 
         } catch (\Exception $e) {
             DB::rollBack();
