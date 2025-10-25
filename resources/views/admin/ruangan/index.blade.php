@@ -94,10 +94,10 @@
                                 {{ ($ruangans->currentPage() - 1) * $ruangans->perPage() + $index + 1 }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#2D5F3F]">
-                                {{ $ruangan->kode }}
+                                {{ $ruangan->kode_ruangan }}
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{ $ruangan->nama }}
+                                {{ $ruangan->nama_ruangan }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                 <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">
