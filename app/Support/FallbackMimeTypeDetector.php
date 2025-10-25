@@ -56,6 +56,30 @@ class FallbackMimeTypeDetector implements MimeTypeDetector
     }
 
     /**
+     * Detect MIME type from file (required by interface)
+     *
+     * @param string $path
+     * @return string|null
+     */
+    public function detectMimeTypeFromFile(string $path): ?string
+    {
+        // Try using mime_content_type if available
+        if (function_exists('mime_content_type') && file_exists($path)) {
+            try {
+                $mimeType = mime_content_type($path);
+                if ($mimeType !== false) {
+                    return $mimeType;
+                }
+            } catch (\Exception $e) {
+                // Continue to fallback
+            }
+        }
+
+        // Fallback: Detect based on file extension
+        return $this->detectFromExtension($path);
+    }
+
+    /**
      * Detect MIME type from file extension
      *
      * @param string $path
