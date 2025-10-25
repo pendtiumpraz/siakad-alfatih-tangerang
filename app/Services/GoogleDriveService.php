@@ -136,7 +136,8 @@ class GoogleDriveService
                 'data' => $content,
                 'mimeType' => $mimeType,
                 'uploadType' => 'multipart',
-                'fields' => 'id, webViewLink, webContentLink'
+                'fields' => 'id, webViewLink, webContentLink',
+                'supportsAllDrives' => true
             ]);
 
             Log::info("Google Drive: Uploaded file '{$fileName}' with ID: {$file->id}");
