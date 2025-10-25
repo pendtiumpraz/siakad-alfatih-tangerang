@@ -39,6 +39,8 @@ class Pendaftar extends Model
         'status',
         'keterangan',
         'foto',
+        'google_drive_file_id',
+        'google_drive_link',
     ];
 
     protected $casts = [

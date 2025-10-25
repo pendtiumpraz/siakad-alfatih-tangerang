@@ -5,12 +5,86 @@ namespace App\Http\Controllers;
 use App\Models\Pendaftar;
 use App\Models\JalurSeleksi;
 use App\Models\ProgramStudi;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class PublicController extends Controller
 {
+    protected $driveService;
+
+    public function __construct()
+    {
+        // Initialize Google Drive service if enabled
+        if (config('google-drive.enabled')) {
+            try {
+                $this->driveService = new GoogleDriveService();
+            } catch (Exception $e) {
+                \Log::warning('Google Drive service initialization failed: ' . $e->getMessage());
+                $this->driveService = null;
+            }
+        }
+    }
+    /**
+     * Upload foto pendaftar to Google Drive or local storage
+     */
+    protected function uploadFotoPendaftar($file, $pendaftarId)
+    {
+        $result = [
+            'foto' => null,
+            'google_drive_file_id' => null,
+            'google_drive_link' => null,
+        ];
+
+        if ($this->driveService) {
+            // Upload to Google Drive
+            try {
+                $driveResult = $this->driveService->uploadDokumenSPMB(
+                    $file,
+                    $pendaftarId,
+                    'Foto'
+                );
+
+                $result['google_drive_file_id'] = $driveResult['id'];
+                $result['google_drive_link'] = $driveResult['webViewLink'];
+                $result['foto'] = $driveResult['webViewLink'];
+
+                \Log::info("Uploaded foto pendaftar to Google Drive: {$driveResult['id']}");
+            } catch (Exception $e) {
+                \Log::error("Failed to upload to Google Drive: " . $e->getMessage());
+                // Fallback to local storage
+                $result['foto'] = $file->store('pendaftar/foto', 'public');
+            }
+        } else {
+            // Upload to local storage
+            $result['foto'] = $file->store('pendaftar/foto', 'public');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Delete foto pendaftar from Google Drive or local storage
+     */
+    protected function deleteFotoPendaftar($pendaftar)
+    {
+        // Delete from Google Drive if file_id exists
+        if ($pendaftar->google_drive_file_id && $this->driveService) {
+            try {
+                $this->driveService->deleteFile($pendaftar->google_drive_file_id);
+            } catch (Exception $e) {
+                \Log::error("Failed to delete from Google Drive: " . $e->getMessage());
+            }
+        }
+
+        // Delete from local storage if path exists
+        if ($pendaftar->foto && !$pendaftar->google_drive_file_id) {
+            Storage::disk('public')->delete($pendaftar->foto);
+        }
+    }
+
     /**
      * Show SPMB landing page with info jalur seleksi
      */
@@ -100,7 +174,7 @@ class PublicController extends Controller
         }
 
         // Handle photo upload
-        $fotoPath = null;
+        $uploadResult = null;
         if ($request->hasFile('foto')) {
             $foto = $request->file('foto');
 
@@ -115,19 +189,27 @@ class PublicController extends Controller
                     ->withInput();
             }
 
-            // Store photo
-            $fotoPath = $foto->store('pendaftar/foto', 'public');
-
             // Delete old photo if updating
-            if ($request->input('id') && $request->input('old_foto')) {
-                Storage::disk('public')->delete($request->input('old_foto'));
+            if ($request->input('id')) {
+                $existingPendaftar = Pendaftar::find($request->input('id'));
+                if ($existingPendaftar) {
+                    $this->deleteFotoPendaftar($existingPendaftar);
+                }
             }
+
+            // Generate temporary ID for new pendaftar (will use nomor_pendaftaran later)
+            $pendaftarId = $request->input('id') ?: 'SPMB' . date('Ymd') . rand(1000, 9999);
+
+            // Upload photo
+            $uploadResult = $this->uploadFotoPendaftar($foto, $pendaftarId);
         }
 
         // Prepare data
         $data = $request->except(['foto', 'save_as_draft', 'old_foto', 'id']);
-        if ($fotoPath) {
-            $data['foto'] = $fotoPath;
+        if ($uploadResult) {
+            $data['foto'] = $uploadResult['foto'];
+            $data['google_drive_file_id'] = $uploadResult['google_drive_file_id'];
+            $data['google_drive_link'] = $uploadResult['google_drive_link'];
         }
 
         $data['status'] = $isDraft ? 'draft' : 'pending';
