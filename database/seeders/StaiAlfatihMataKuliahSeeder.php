@@ -146,7 +146,7 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
 
             // Semester 3
             ['kode_mk' => "{$kodeProdi}-301", 'nama_mk' => 'Tafsir Tahlili I', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir analitis juz 1-10'],
-            ['kode_mk' => "{$kodeProdi}-302", 'nama_mk' => "Qira'at", 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => "Ilmu qira'at sab\"ah'],
+            ['kode_mk' => "{$kodeProdi}-302", 'nama_mk' => "Qira'at", 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => "Ilmu qira'at sab'ah"],
             ['kode_mk' => "{$kodeProdi}-303", 'nama_mk' => 'Nahwu I', 'sks' => 3, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Tata bahasa Arab - Nahwu dasar'],
             ['kode_mk' => "{$kodeProdi}-304", 'nama_mk' => 'Hadits II', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Ilmu hadits lanjutan'],
             ['kode_mk' => "{$kodeProdi}-305", 'nama_mk' => 'Fiqh I', 'sks' => 2, 'semester' => 3, 'jenis' => 'wajib', 'deskripsi' => 'Fiqh ibadah'],
@@ -164,9 +164,9 @@ class StaiAlfatihMataKuliahSeeder extends Seeder
             ['kode_mk' => "{$kodeProdi}-501", 'nama_mk' => 'Tafsir Tahlili III', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir analitis juz 21-30'],
             ['kode_mk' => "{$kodeProdi}-502", 'nama_mk' => 'Asbabun Nuzul', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Sebab-sebab turunnya ayat Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-503", 'nama_mk' => 'Sharaf II', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Morfologi bahasa Arab lanjutan'],
-            ['kode_mk' => "{$kodeProdi}-504", 'nama_mk' => "I'jaz Al-Qur\"an', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Kemukjizatan Al-Qur'an"],
+            ['kode_mk' => "{$kodeProdi}-504", 'nama_mk' => "I'jaz Al-Qur'an", 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Kemukjizatan Al-Qur'an"],
             ['kode_mk' => "{$kodeProdi}-505", 'nama_mk' => 'Ushul Fiqh II', 'sks' => 2, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => 'Ushul fiqh lanjutan'],
-            ['kode_mk' => "{$kodeProdi}-506", 'nama_mk' => 'Balaghah', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Ilmu balaghah (Ma'ani, Bayan, Badi\")'],
+            ['kode_mk' => "{$kodeProdi}-506", 'nama_mk' => 'Balaghah', 'sks' => 3, 'semester' => 5, 'jenis' => 'wajib', 'deskripsi' => "Ilmu balaghah (Ma'ani, Bayan, Badi)"],
 
             // Semester 6
             ['kode_mk' => "{$kodeProdi}-601", 'nama_mk' => "Tafsir bi al-Ma'tsur", 'sks' => 3, 'semester' => 6, 'jenis' => 'wajib', 'deskripsi' => 'Tafsir dengan riwayat'],
