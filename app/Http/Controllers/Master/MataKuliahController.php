@@ -29,11 +29,32 @@ class MataKuliahController extends Controller
     }
 
     /**
+     * Get route prefix based on user role
+     */
+    protected function getRoutePrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of mata kuliah with pagination, search, and filters
      */
     public function index(Request $request)
     {
-        $query = MataKuliah::query()->withTrashed();
+        // Check if showing trashed items
+        $showTrashed = $request->has('trashed') && $request->trashed == 1;
+
+        $query = $showTrashed ? MataKuliah::onlyTrashed() : MataKuliah::query();
 
         // Search logic
         if ($request->has('search') && $request->search != '') {
@@ -66,13 +87,26 @@ class MataKuliahController extends Controller
         // Pagination
         $mataKuliahs = $query->orderBy('kode_mk', 'asc')->paginate(15);
 
+        // Calculate statistics (only for non-trashed)
+        $totalMataKuliah = MataKuliah::count();
+        $totalSKS = MataKuliah::sum('sks');
+        $totalWajib = MataKuliah::where('jenis', 'Wajib')->count();
+        $totalPilihan = MataKuliah::where('jenis', 'Pilihan')->count();
+
         // Get all kurikulum for filter dropdown
         $kurikulums = Kurikulum::with('programStudi')
             ->where('is_active', true)
             ->get();
 
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.mata-kuliah.index", compact('mataKuliahs', 'kurikulums'));
+        return view("{$viewPrefix}.mata-kuliah.index", compact(
+            'mataKuliahs',
+            'kurikulums',
+            'totalMataKuliah',
+            'totalSKS',
+            'totalWajib',
+            'totalPilihan'
+        ));
     }
 
     /**
@@ -86,7 +120,8 @@ class MataKuliahController extends Controller
             ->orderBy('nama_kurikulum', 'asc')
             ->get();
 
-        return view('admin.mata-kuliah.create', compact('kurikulums'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.mata-kuliah.create", compact('kurikulums'));
     }
 
     /**
@@ -112,7 +147,8 @@ class MataKuliahController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.mata-kuliah.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.mata-kuliah.index")
                 ->with('success', 'Mata Kuliah created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -149,7 +185,8 @@ class MataKuliahController extends Controller
             ->orderBy('nama_kurikulum', 'asc')
             ->get();
 
-        return view('admin.mata-kuliah.edit', compact('mataKuliah', 'kurikulums'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.mata-kuliah.edit", compact('mataKuliah', 'kurikulums'));
     }
 
     /**
@@ -177,7 +214,8 @@ class MataKuliahController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.mata-kuliah.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.mata-kuliah.index")
                 ->with('success', 'Mata Kuliah updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -196,7 +234,8 @@ class MataKuliahController extends Controller
             $mataKuliah = MataKuliah::findOrFail($id);
             $mataKuliah->delete();
 
-            return redirect()->route('admin.mata-kuliah.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.mata-kuliah.index")
                 ->with('success', 'Mata Kuliah deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -213,7 +252,8 @@ class MataKuliahController extends Controller
             $mataKuliah = MataKuliah::withTrashed()->findOrFail($id);
             $mataKuliah->restore();
 
-            return redirect()->route('admin.mata-kuliah.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.mata-kuliah.index")
                 ->with('success', 'Mata Kuliah restored successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -230,7 +270,8 @@ class MataKuliahController extends Controller
             $mataKuliah = MataKuliah::withTrashed()->findOrFail($id);
             $mataKuliah->forceDelete();
 
-            return redirect()->route('admin.mata-kuliah.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.mata-kuliah.index")
                 ->with('success', 'Mata Kuliah permanently deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()

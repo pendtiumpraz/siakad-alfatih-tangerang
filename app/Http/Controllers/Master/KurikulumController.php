@@ -29,11 +29,32 @@ class KurikulumController extends Controller
     }
 
     /**
+     * Get route prefix based on user role
+     */
+    protected function getRoutePrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of kurikulum with pagination, search, and filters
      */
     public function index(Request $request)
     {
-        $query = Kurikulum::query()->withTrashed();
+        // Check if showing trashed items
+        $showTrashed = $request->has('trashed') && $request->trashed == 1;
+
+        $query = $showTrashed ? Kurikulum::onlyTrashed() : Kurikulum::query();
 
         // Search logic
         if ($request->has('search') && $request->search != '') {
@@ -57,11 +78,22 @@ class KurikulumController extends Controller
         // Pagination
         $kurikulums = $query->orderBy('tahun_mulai', 'desc')->paginate(15);
 
+        // Calculate statistics (only for non-trashed)
+        $totalKurikulum = Kurikulum::count();
+        $totalAktif = Kurikulum::where('is_active', true)->count();
+        $totalTidakAktif = Kurikulum::where('is_active', false)->count();
+
         // Get all program studi for filter dropdown
         $programStudis = ProgramStudi::where('is_active', true)->get();
 
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.kurikulum.index", compact('kurikulums', 'programStudis'));
+        return view("{$viewPrefix}.kurikulum.index", compact(
+            'kurikulums',
+            'programStudis',
+            'totalKurikulum',
+            'totalAktif',
+            'totalTidakAktif'
+        ));
     }
 
     /**
@@ -74,7 +106,8 @@ class KurikulumController extends Controller
             ->orderBy('nama_prodi', 'asc')
             ->get();
 
-        return view('admin.kurikulum.create', compact('programStudis'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.kurikulum.create", compact('programStudis'));
     }
 
     /**
@@ -104,7 +137,8 @@ class KurikulumController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.kurikulum.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.kurikulum.index")
                 ->with('success', 'Kurikulum created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -140,7 +174,8 @@ class KurikulumController extends Controller
             ->orderBy('nama_prodi', 'asc')
             ->get();
 
-        return view('admin.kurikulum.edit', compact('kurikulum', 'programStudis'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.kurikulum.edit", compact('kurikulum', 'programStudis'));
     }
 
     /**
@@ -167,7 +202,8 @@ class KurikulumController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.kurikulum.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.kurikulum.index")
                 ->with('success', 'Kurikulum updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -186,7 +222,8 @@ class KurikulumController extends Controller
             $kurikulum = Kurikulum::findOrFail($id);
             $kurikulum->delete();
 
-            return redirect()->route('admin.kurikulum.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.kurikulum.index")
                 ->with('success', 'Kurikulum deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -203,7 +240,8 @@ class KurikulumController extends Controller
             $kurikulum = Kurikulum::withTrashed()->findOrFail($id);
             $kurikulum->restore();
 
-            return redirect()->route('admin.kurikulum.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.kurikulum.index")
                 ->with('success', 'Kurikulum restored successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -220,7 +258,8 @@ class KurikulumController extends Controller
             $kurikulum = Kurikulum::withTrashed()->findOrFail($id);
             $kurikulum->forceDelete();
 
-            return redirect()->route('admin.kurikulum.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.kurikulum.index")
                 ->with('success', 'Kurikulum permanently deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()

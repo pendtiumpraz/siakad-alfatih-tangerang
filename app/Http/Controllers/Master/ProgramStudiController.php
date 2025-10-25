@@ -28,11 +28,29 @@ class ProgramStudiController extends Controller
     }
 
     /**
+     * Get route prefix based on user role
+     */
+    protected function getRoutePrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of program studi with pagination, search, and filters
      */
     public function index(Request $request)
     {
-        $query = ProgramStudi::query()->withTrashed();
+        $query = ProgramStudi::query();
 
         // Search logic
         if ($request->has('search') && $request->search != '') {
@@ -53,14 +71,27 @@ class ProgramStudiController extends Controller
             $query->where('is_active', $request->is_active);
         }
 
+        // Filter by trashed
+        if ($request->has('trashed') && $request->trashed != '') {
+            if ($request->trashed == 'only') {
+                $query->onlyTrashed();
+            } elseif ($request->trashed == 'with') {
+                $query->withTrashed();
+            }
+            // Default is without trashed (no additional query needed)
+        }
+
         // Load relations with counts
         $query->withCount(['kurikulums', 'mahasiswas']);
 
         // Pagination
         $programStudis = $query->orderBy('kode_prodi', 'asc')->paginate(15);
 
+        // Statistics
+        $totalProgramStudi = ProgramStudi::count();
+
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.program-studi.index", compact('programStudis'));
+        return view("{$viewPrefix}.program-studi.index", compact('programStudis', 'totalProgramStudi'));
     }
 
     /**
@@ -68,7 +99,8 @@ class ProgramStudiController extends Controller
      */
     public function create()
     {
-        return view('admin.program-studi.create');
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.program-studi.create");
     }
 
     /**
@@ -80,7 +112,7 @@ class ProgramStudiController extends Controller
         $validated = $request->validate([
             'kode_prodi' => 'required|string|max:10|unique:program_studis,kode_prodi',
             'nama_prodi' => 'required|string|max:255',
-            'jenjang' => 'required|in:D3,S1,S2,S3',
+            'jenjang' => 'required|in:D3,D4,S1,S2,S3',
             'is_active' => 'boolean'
         ]);
 
@@ -96,7 +128,8 @@ class ProgramStudiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.program-studi.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.program-studi.index")
                 ->with('success', 'Program Studi created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -127,7 +160,8 @@ class ProgramStudiController extends Controller
     {
         $programStudi = ProgramStudi::withTrashed()->findOrFail($id);
 
-        return view('admin.program-studi.edit', compact('programStudi'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.program-studi.edit", compact('programStudi'));
     }
 
     /**
@@ -141,7 +175,7 @@ class ProgramStudiController extends Controller
         $validated = $request->validate([
             'kode_prodi' => 'required|string|max:10|unique:program_studis,kode_prodi,' . $id,
             'nama_prodi' => 'required|string|max:255',
-            'jenjang' => 'required|in:D3,S1,S2,S3',
+            'jenjang' => 'required|in:D3,D4,S1,S2,S3',
             'is_active' => 'boolean'
         ]);
 
@@ -152,7 +186,8 @@ class ProgramStudiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.program-studi.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.program-studi.index")
                 ->with('success', 'Program Studi updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -171,7 +206,8 @@ class ProgramStudiController extends Controller
             $programStudi = ProgramStudi::findOrFail($id);
             $programStudi->delete();
 
-            return redirect()->route('admin.program-studi.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.program-studi.index")
                 ->with('success', 'Program Studi deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -188,7 +224,8 @@ class ProgramStudiController extends Controller
             $programStudi = ProgramStudi::withTrashed()->findOrFail($id);
             $programStudi->restore();
 
-            return redirect()->route('admin.program-studi.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.program-studi.index")
                 ->with('success', 'Program Studi restored successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -205,7 +242,8 @@ class ProgramStudiController extends Controller
             $programStudi = ProgramStudi::withTrashed()->findOrFail($id);
             $programStudi->forceDelete();
 
-            return redirect()->route('admin.program-studi.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.program-studi.index")
                 ->with('success', 'Program Studi permanently deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
