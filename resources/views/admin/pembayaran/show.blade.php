@@ -63,11 +63,24 @@
 
             <!-- Bukti Pembayaran -->
             <x-islamic-card title="Bukti Pembayaran">
-                @if($pembayaran->bukti_pembayaran)
+                @if($pembayaran->google_drive_link || $pembayaran->bukti_pembayaran)
                     @php
-                        $fileExtension = strtolower(pathinfo($pembayaran->bukti_pembayaran, PATHINFO_EXTENSION));
-                        $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                        $fileUrl = \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran);
+                        // Prioritas pakai Google Drive link
+                        if ($pembayaran->google_drive_link) {
+                            $fileUrl = $pembayaran->google_drive_link;
+                            $fileName = 'Bukti Pembayaran (Google Drive)';
+                            $isImage = false; // Google Drive link tidak bisa preview langsung
+                        } else {
+                            // Cek apakah bukti_pembayaran sudah berupa full URL
+                            if (filter_var($pembayaran->bukti_pembayaran, FILTER_VALIDATE_URL)) {
+                                $fileUrl = $pembayaran->bukti_pembayaran;
+                            } else {
+                                $fileUrl = \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran);
+                            }
+                            $fileName = basename($pembayaran->bukti_pembayaran);
+                            $fileExtension = strtolower(pathinfo($pembayaran->bukti_pembayaran, PATHINFO_EXTENSION));
+                            $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                        }
                     @endphp
 
                     @if($isImage)
@@ -86,12 +99,12 @@
                                 </div>
                             </div>
                             <div class="flex justify-between items-center text-sm text-gray-600">
-                                <span>{{ basename($pembayaran->bukti_pembayaran) }}</span>
-                                <a href="{{ $fileUrl }}" download class="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1">
+                                <span>{{ $fileName }}</span>
+                                <a href="{{ $fileUrl }}" target="_blank" class="text-green-600 hover:text-green-800 font-semibold flex items-center space-x-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                     </svg>
-                                    <span>Download</span>
+                                    <span>Lihat</span>
                                 </a>
                             </div>
                         </div>
@@ -102,22 +115,24 @@
                                 <svg class="w-24 h-24 mx-auto text-red-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                 </svg>
-                                <p class="text-sm text-gray-800 font-semibold mb-1">{{ basename($pembayaran->bukti_pembayaran) }}</p>
-                                <p class="text-xs text-gray-500 mb-4">Dokumen PDF</p>
+                                <p class="text-sm text-gray-800 font-semibold mb-1">{{ $fileName }}</p>
+                                <p class="text-xs text-gray-500 mb-4">{{ $pembayaran->google_drive_link ? 'Dokumen di Google Drive' : 'Dokumen PDF' }}</p>
                                 <div class="flex justify-center space-x-3">
                                     <a href="{{ $fileUrl }}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold flex items-center space-x-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                         </svg>
-                                        <span>Lihat PDF</span>
+                                        <span>{{ $pembayaran->google_drive_link ? 'Buka di Google Drive' : 'Lihat PDF' }}</span>
                                     </a>
+                                    @if(!$pembayaran->google_drive_link)
                                     <a href="{{ $fileUrl }}" download class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center space-x-2">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                                         </svg>
                                         <span>Download</span>
                                     </a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
