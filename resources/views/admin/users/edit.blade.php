@@ -180,6 +180,7 @@
                             id="mahasiswa_nama_lengkap"
                             name="mahasiswa_nama_lengkap"
                             value="{{ old('mahasiswa_nama_lengkap', $user->mahasiswa->nama_lengkap ?? '') }}"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('mahasiswa_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('mahasiswa_nama_lengkap')
@@ -197,8 +198,12 @@
                             id="nim"
                             name="nim"
                             value="{{ old('nim', $user->mahasiswa->nim ?? '') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                            required
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nim') border-red-500 @enderror"
                         >
+                        @error('nim')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Program Studi -->
@@ -209,6 +214,7 @@
                         <select
                             id="program_studi_id"
                             name="program_studi_id"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('program_studi_id') border-red-500 @enderror"
                         >
                             <option value="">Pilih Program Studi</option>
@@ -234,6 +240,7 @@
                             name="angkatan"
                             value="{{ old('angkatan', $user->mahasiswa->angkatan ?? '') }}"
                             placeholder="2024"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('angkatan') border-red-500 @enderror"
                         >
                         @error('angkatan')
@@ -244,7 +251,7 @@
                     <!-- Semester Aktif -->
                     <div>
                         <label for="semester_aktif" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Semester Aktif <span class="text-red-500">*</span>
+                            Semester Aktif
                         </label>
                         <input
                             type="number"
@@ -304,11 +311,12 @@
                     <!-- Jenis Kelamin -->
                     <div>
                         <label for="jenis_kelamin" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Jenis Kelamin
+                            Jenis Kelamin <span class="text-red-500">*</span>
                         </label>
                         <select
                             id="jenis_kelamin"
                             name="jenis_kelamin"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('jenis_kelamin') border-red-500 @enderror"
                         >
                             <option value="">Pilih Jenis Kelamin</option>
@@ -377,6 +385,7 @@
                             id="nidn"
                             name="nidn"
                             value="{{ old('nidn', $user->dosen->nidn ?? '') }}"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nidn') border-red-500 @enderror"
                         >
                         @error('nidn')
@@ -394,6 +403,7 @@
                             id="dosen_nama_lengkap"
                             name="dosen_nama_lengkap"
                             value="{{ old('dosen_nama_lengkap', $user->dosen->nama_lengkap ?? '') }}"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('dosen_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('dosen_nama_lengkap')
@@ -550,25 +560,12 @@
                             id="operator_nama_lengkap"
                             name="operator_nama_lengkap"
                             value="{{ old('operator_nama_lengkap', $user->operator->nama_lengkap ?? '') }}"
+                            required
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('operator_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('operator_nama_lengkap')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <!-- Employee ID -->
-                    <div>
-                        <label for="employee_id" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Employee ID <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="employee_id"
-                            name="employee_id"
-                            value="{{ old('employee_id', $user->operator->employee_id ?? '') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
-                        >
                     </div>
                 </div>
             </div>
