@@ -22,7 +22,8 @@ class GoogleDriveService
         }
 
         $this->authType = config('google-drive.auth_type', 'service_account');
-        $this->userId = $userId ?? auth()->id();
+        // Use shared token (user_id = null) for OAuth, unless specific user is provided
+        $this->userId = $this->authType === 'oauth' ? null : ($userId ?? auth()->id());
 
         $this->initializeClient();
         $this->rootFolderId = config('google-drive.root_folder_id');
@@ -61,26 +62,24 @@ class GoogleDriveService
         $this->client->setAccessType('offline');
         $this->client->setPrompt('consent');
 
-        // Load token from database
-        if ($this->userId) {
-            $tokenRecord = GoogleDriveToken::where('user_id', $this->userId)->first();
+        // Load shared token from database (user_id is null for shared token)
+        $tokenRecord = GoogleDriveToken::whereNull('user_id')->first();
 
-            if (!$tokenRecord) {
-                throw new Exception('User has not connected Google Drive. Please connect first.');
-            }
-
-            // Check if token needs refresh
-            if ($tokenRecord->needsRefresh() && $tokenRecord->refresh_token) {
-                $this->refreshToken($tokenRecord);
-            }
-
-            $this->client->setAccessToken([
-                'access_token' => $tokenRecord->access_token,
-                'refresh_token' => $tokenRecord->refresh_token,
-                'expires_in' => $tokenRecord->expires_in,
-                'token_type' => $tokenRecord->token_type,
-            ]);
+        if (!$tokenRecord) {
+            throw new Exception('Google Drive has not been connected. Admin must connect first via /oauth/google/connect');
         }
+
+        // Check if token needs refresh
+        if ($tokenRecord->needsRefresh() && $tokenRecord->refresh_token) {
+            $this->refreshToken($tokenRecord);
+        }
+
+        $this->client->setAccessToken([
+            'access_token' => $tokenRecord->access_token,
+            'refresh_token' => $tokenRecord->refresh_token,
+            'expires_in' => $tokenRecord->expires_in,
+            'token_type' => $tokenRecord->token_type,
+        ]);
     }
 
     /**
@@ -122,17 +121,16 @@ class GoogleDriveService
     }
 
     /**
-     * Check if user has connected Google Drive
+     * Check if Google Drive is connected (shared token)
      */
-    public static function isConnected($userId = null): bool
+    public static function isConnected(): bool
     {
-        $userId = $userId ?? auth()->id();
-
         if (config('google-drive.auth_type') !== 'oauth') {
             return true; // Service account always connected
         }
 
-        return GoogleDriveToken::where('user_id', $userId)->exists();
+        // Check for shared token (user_id is null)
+        return GoogleDriveToken::whereNull('user_id')->exists();
     }
 
     /**

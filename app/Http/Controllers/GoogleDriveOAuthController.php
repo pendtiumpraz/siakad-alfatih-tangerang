@@ -50,9 +50,9 @@ class GoogleDriveOAuthController extends Controller
                 throw new Exception($token['error_description'] ?? 'Failed to get access token');
             }
 
-            // Save token to database
+            // Save shared token to database (user_id = null for shared access)
             GoogleDriveToken::updateOrCreate(
-                ['user_id' => auth()->id()],
+                ['user_id' => null], // Shared token for all users
                 [
                     'access_token' => $token['access_token'],
                     'refresh_token' => $token['refresh_token'] ?? null,
@@ -77,12 +77,13 @@ class GoogleDriveOAuthController extends Controller
     }
 
     /**
-     * Disconnect Google Drive
+     * Disconnect Google Drive (admin only)
      */
     public function disconnect()
     {
         try {
-            $tokenRecord = GoogleDriveToken::where('user_id', auth()->id())->first();
+            // Get shared token
+            $tokenRecord = GoogleDriveToken::whereNull('user_id')->first();
 
             if ($tokenRecord) {
                 // Revoke token from Google
@@ -109,7 +110,8 @@ class GoogleDriveOAuthController extends Controller
      */
     public function status()
     {
-        $tokenRecord = GoogleDriveToken::where('user_id', auth()->id())->first();
+        // Get shared token (user_id = null)
+        $tokenRecord = GoogleDriveToken::whereNull('user_id')->first();
 
         $status = [
             'connected' => $tokenRecord !== null,
