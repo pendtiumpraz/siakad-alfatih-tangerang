@@ -7,13 +7,29 @@ use App\Models\Pembayaran;
 use App\Models\Mahasiswa;
 use App\Models\Semester;
 use App\Models\Operator;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Exception;
 
 class PembayaranController extends Controller
 {
+    protected $driveService;
+
+    public function __construct()
+    {
+        // Initialize Google Drive service if enabled
+        if (config('google-drive.enabled')) {
+            try {
+                $this->driveService = new GoogleDriveService();
+            } catch (Exception $e) {
+                \Log::warning('Google Drive service initialization failed: ' . $e->getMessage());
+                $this->driveService = null;
+            }
+        }
+    }
     /**
      * Get view path prefix based on user role
      */
@@ -28,6 +44,86 @@ class PembayaranController extends Controller
         }
 
         return 'operator'; // default
+    }
+
+    /**
+     * Upload bukti pembayaran to Google Drive or local storage
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param Mahasiswa $mahasiswa
+     * @param string $jenisPembayaran
+     * @return array ['bukti_path' => path, 'google_drive_file_id' => id, 'google_drive_link' => link]
+     */
+    protected function uploadBuktiPembayaran($file, $mahasiswa, $jenisPembayaran)
+    {
+        $result = [
+            'bukti_pembayaran' => null,
+            'google_drive_file_id' => null,
+            'google_drive_link' => null,
+        ];
+
+        if ($this->driveService) {
+            // Upload to Google Drive
+            try {
+                $driveResult = $this->driveService->uploadPembayaran(
+                    $file,
+                    $mahasiswa->nim,
+                    $jenisPembayaran
+                );
+
+                $result['google_drive_file_id'] = $driveResult['id'];
+                $result['google_drive_link'] = $driveResult['webViewLink'];
+                $result['bukti_pembayaran'] = $driveResult['webViewLink']; // For backward compatibility
+
+                \Log::info("Uploaded bukti pembayaran to Google Drive: {$driveResult['id']}");
+            } catch (Exception $e) {
+                \Log::error("Failed to upload to Google Drive: " . $e->getMessage());
+                // Fallback to local storage
+                $result['bukti_pembayaran'] = $this->uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran);
+            }
+        } else {
+            // Upload to local storage
+            $result['bukti_pembayaran'] = $this->uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Upload to local storage (fallback)
+     */
+    protected function uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran)
+    {
+        $extension = $file->getClientOriginalExtension();
+        $filename = sprintf(
+            '%s_%s_%s.%s',
+            $mahasiswa->nim,
+            $jenisPembayaran,
+            date('Ymd_His'),
+            $extension
+        );
+
+        return $file->storeAs('pembayaran/bukti', $filename, 'public');
+    }
+
+    /**
+     * Delete bukti pembayaran from Google Drive or local storage
+     */
+    protected function deleteBuktiPembayaran($pembayaran)
+    {
+        // Delete from Google Drive if file_id exists
+        if ($pembayaran->google_drive_file_id && $this->driveService) {
+            try {
+                $this->driveService->deleteFile($pembayaran->google_drive_file_id);
+            } catch (Exception $e) {
+                \Log::error("Failed to delete from Google Drive: " . $e->getMessage());
+            }
+        }
+
+        // Delete from local storage if path exists
+        if ($pembayaran->bukti_pembayaran && !$pembayaran->google_drive_file_id) {
+            Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
+        }
     }
 
     /**
@@ -189,31 +285,19 @@ class PembayaranController extends Controller
             $operator = auth()->user()->operator;
 
             // Handle file upload
-            $buktiPath = null;
+            $uploadResult = null;
             if ($request->hasFile('bukti_pembayaran')) {
-                // Load relations for filename generation
                 $mahasiswa = Mahasiswa::findOrFail($validated['mahasiswa_id']);
-                $semester = Semester::findOrFail($validated['semester_id']);
-
-                // Get file extension
-                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
-
-                // Generate custom filename
-                $filename = $this->generateBuktiFilename(
+                $uploadResult = $this->uploadBuktiPembayaran(
+                    $request->file('bukti_pembayaran'),
                     $mahasiswa,
-                    $semester,
-                    $validated['jenis_pembayaran'],
-                    $extension
+                    $validated['jenis_pembayaran']
                 );
-
-                // Store with custom filename
-                $buktiPath = $request->file('bukti_pembayaran')
-                    ->storeAs('pembayaran/bukti', $filename, 'public');
             }
 
             // Auto-update status based on file upload
             $status = $validated['status'];
-            if ($buktiPath && $status === 'belum_lunas') {
+            if ($uploadResult && $uploadResult['bukti_pembayaran'] && $status === 'belum_lunas') {
                 $status = 'pending'; // Auto change to pending when file is uploaded
             }
 
@@ -227,7 +311,9 @@ class PembayaranController extends Controller
                 'tanggal_jatuh_tempo' => $validated['tanggal_jatuh_tempo'],
                 'tanggal_bayar' => $validated['tanggal_bayar'] ?? null,
                 'status' => $status,
-                'bukti_pembayaran' => $buktiPath,
+                'bukti_pembayaran' => $uploadResult['bukti_pembayaran'] ?? null,
+                'google_drive_file_id' => $uploadResult['google_drive_file_id'] ?? null,
+                'google_drive_link' => $uploadResult['google_drive_link'] ?? null,
                 'keterangan' => $validated['keterangan'] ?? null,
             ]);
 
@@ -240,8 +326,16 @@ class PembayaranController extends Controller
             DB::rollBack();
 
             // Delete uploaded file if transaction failed
-            if (isset($buktiPath) && $buktiPath) {
-                Storage::disk('public')->delete($buktiPath);
+            if (isset($uploadResult) && $uploadResult) {
+                if ($uploadResult['google_drive_file_id'] && $this->driveService) {
+                    try {
+                        $this->driveService->deleteFile($uploadResult['google_drive_file_id']);
+                    } catch (Exception $deleteException) {
+                        \Log::error('Failed to delete Google Drive file after rollback: ' . $deleteException->getMessage());
+                    }
+                } elseif ($uploadResult['bukti_pembayaran']) {
+                    Storage::disk('public')->delete($uploadResult['bukti_pembayaran']);
+                }
             }
 
             return back()->withInput()
@@ -339,28 +433,19 @@ class PembayaranController extends Controller
             // Handle file upload
             if ($request->hasFile('bukti_pembayaran')) {
                 // Delete old file
-                if ($pembayaran->bukti_pembayaran) {
-                    Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
-                }
+                $this->deleteBuktiPembayaran($pembayaran);
 
-                // Load relations for filename generation
+                // Upload new file
                 $mahasiswa = Mahasiswa::findOrFail($validated['mahasiswa_id']);
-                $semester = Semester::findOrFail($validated['semester_id']);
-
-                // Get file extension
-                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
-
-                // Generate custom filename
-                $filename = $this->generateBuktiFilename(
+                $uploadResult = $this->uploadBuktiPembayaran(
+                    $request->file('bukti_pembayaran'),
                     $mahasiswa,
-                    $semester,
-                    $validated['jenis_pembayaran'],
-                    $extension
+                    $validated['jenis_pembayaran']
                 );
 
-                // Store with custom filename
-                $updateData['bukti_pembayaran'] = $request->file('bukti_pembayaran')
-                    ->storeAs('pembayaran/bukti', $filename, 'public');
+                $updateData['bukti_pembayaran'] = $uploadResult['bukti_pembayaran'];
+                $updateData['google_drive_file_id'] = $uploadResult['google_drive_file_id'];
+                $updateData['google_drive_link'] = $uploadResult['google_drive_link'];
 
                 // Auto-update status to pending when file is uploaded and status is belum_lunas
                 if ($validated['status'] === 'belum_lunas') {
@@ -370,8 +455,10 @@ class PembayaranController extends Controller
 
             // Handle remove bukti request
             if ($request->boolean('remove_bukti') && $pembayaran->bukti_pembayaran) {
-                Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
+                $this->deleteBuktiPembayaran($pembayaran);
                 $updateData['bukti_pembayaran'] = null;
+                $updateData['google_drive_file_id'] = null;
+                $updateData['google_drive_link'] = null;
 
                 // Auto-update status to belum_lunas when file is removed and status is pending
                 if ($validated['status'] === 'pending') {
@@ -436,27 +523,19 @@ class PembayaranController extends Controller
             // Handle file upload
             if ($request->hasFile('bukti_pembayaran')) {
                 // Delete old file
-                if ($pembayaran->bukti_pembayaran) {
-                    Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
-                }
+                $this->deleteBuktiPembayaran($pembayaran);
 
-                // Load relations for filename generation
-                $pembayaran->load(['mahasiswa', 'semester']);
-
-                // Get file extension
-                $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
-
-                // Generate custom filename
-                $filename = $this->generateBuktiFilename(
+                // Upload new file
+                $pembayaran->load('mahasiswa');
+                $uploadResult = $this->uploadBuktiPembayaran(
+                    $request->file('bukti_pembayaran'),
                     $pembayaran->mahasiswa,
-                    $pembayaran->semester,
-                    $pembayaran->jenis_pembayaran,
-                    $extension
+                    $pembayaran->jenis_pembayaran
                 );
 
-                // Store with custom filename
-                $updateData['bukti_pembayaran'] = $request->file('bukti_pembayaran')
-                    ->storeAs('pembayaran/bukti', $filename, 'public');
+                $updateData['bukti_pembayaran'] = $uploadResult['bukti_pembayaran'];
+                $updateData['google_drive_file_id'] = $uploadResult['google_drive_file_id'];
+                $updateData['google_drive_link'] = $uploadResult['google_drive_link'];
             }
 
             // Update operator

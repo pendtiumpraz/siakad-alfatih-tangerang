@@ -20,6 +20,8 @@ class Pembayaran extends Model
         'tanggal_bayar',
         'status',
         'bukti_pembayaran',
+        'google_drive_file_id',
+        'google_drive_link',
         'keterangan',
     ];
 
