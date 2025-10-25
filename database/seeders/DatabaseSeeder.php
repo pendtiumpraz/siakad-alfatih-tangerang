@@ -42,8 +42,8 @@ class DatabaseSeeder extends Seeder
             // 7. Seed mata kuliah (depends on kurikulum)
             MataKuliahSeeder::class,
 
-            // 7a. Seed STAI AL-FATIH mata kuliah (depends on kurikulum)
-            StaiAlfatihMataKuliahSeeder::class,
+            // 7a. Seed STAI AL-FATIH S1 mata kuliah (depends on kurikulum)
+            StaiAlfatihMataKuliahS1Seeder::class,
 
             // 8. Seed semester (no dependencies)
             SemesterSeeder::class,
