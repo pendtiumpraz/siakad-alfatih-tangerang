@@ -32,8 +32,8 @@
                         <i class="fas fa-door-open text-3xl text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">{{ $ruangan->nama }}</h2>
-                        <p class="text-emerald-50">{{ $ruangan->kode }}</p>
+                        <h2 class="text-2xl font-bold text-white">{{ $ruangan->nama_ruangan }}</h2>
+                        <p class="text-emerald-50">{{ $ruangan->kode_ruangan }}</p>
                     </div>
                 </div>
                 <div>
@@ -64,7 +64,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-500">Kode Ruangan</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $ruangan->kode }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $ruangan->kode_ruangan }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Kapasitas</p>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500">Nama Ruangan</p>
-                            <p class="text-lg font-semibold text-gray-800">{{ $ruangan->nama }}</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ $ruangan->nama_ruangan }}</p>
                         </div>
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500 mb-2">Fasilitas</p>
