@@ -55,7 +55,8 @@ class StaiAlfatihMataKuliahS1Seeder extends Seeder
                     }
                 }
 
-                $this->command->info("✓ Seeded: {$prodi->nama_prodi} ({count($mataKuliahs)} courses)");
+                $courseCount = count($mataKuliahs);
+                $this->command->info("✓ Seeded: {$prodi->nama_prodi} ({$courseCount} courses)");
             }
 
             DB::commit();
