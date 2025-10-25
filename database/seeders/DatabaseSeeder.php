@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
 
             // 2. Seed program studi (no dependencies)
-            ProgramStudiSeeder::class,
+            // ProgramStudiSeeder::class, // DISABLED - Using STAI AL-FATIH specific seeder
 
             // 2a. Seed STAI AL-FATIH programs (no dependencies)
             StaiAlfatihProgramStudiSeederCorrect::class,
@@ -37,10 +37,10 @@ class DatabaseSeeder extends Seeder
             MahasiswaSeeder::class,
 
             // 6. Seed kurikulum (depends on program_studi)
-            KurikulumSeeder::class,
+            // KurikulumSeeder::class, // DISABLED - Kurikulum created automatically in StaiAlfatihMataKuliahS1Seeder
 
             // 7. Seed mata kuliah (depends on kurikulum)
-            MataKuliahSeeder::class,
+            // MataKuliahSeeder::class, // DISABLED - Using STAI AL-FATIH specific seeder
 
             // 7a. Seed STAI AL-FATIH S1 mata kuliah (depends on kurikulum)
             StaiAlfatihMataKuliahS1Seeder::class,
@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
             RuanganSeeder::class,
 
             // 10. Seed jadwal (depends on semester, mata_kuliah, dosen, ruangan)
-            JadwalSeeder::class,
+            // JadwalSeeder::class, // DISABLED - Uses dummy TI/SI/MI data
 
             // 11. Seed nilai (depends on mahasiswa, mata_kuliah, dosen, semester)
             // NilaiSeeder::class, // Commented - Dosen will input manually
