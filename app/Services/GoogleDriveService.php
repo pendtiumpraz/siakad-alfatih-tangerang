@@ -223,7 +223,7 @@ class GoogleDriveService
             ]);
 
             $content = file_get_contents($filePath);
-            $mimeType = $mimeType ?? mime_content_type($filePath);
+            $mimeType = $mimeType ?? $this->detectMimeType($filePath);
 
             $file = $this->service->files->create($fileMetadata, [
                 'data' => $content,
@@ -348,6 +348,64 @@ class GoogleDriveService
             Log::error("Google Drive: Failed to delete file {$fileId}: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Detect MIME type of a file
+     * Fallback method if fileinfo extension is not available
+     *
+     * @param string $filePath
+     * @return string
+     */
+    protected function detectMimeType(string $filePath): string
+    {
+        // Try using mime_content_type if fileinfo extension is available
+        if (function_exists('mime_content_type')) {
+            try {
+                $mimeType = mime_content_type($filePath);
+                if ($mimeType !== false) {
+                    return $mimeType;
+                }
+            } catch (Exception $e) {
+                Log::warning("mime_content_type failed: " . $e->getMessage());
+            }
+        }
+
+        // Fallback: Detect based on file extension
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        $mimeTypes = [
+            // Images
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'bmp' => 'image/bmp',
+            'webp' => 'image/webp',
+            'svg' => 'image/svg+xml',
+
+            // Documents
+            'pdf' => 'application/pdf',
+            'doc' => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls' => 'application/vnd.ms-excel',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt' => 'application/vnd.ms-powerpoint',
+            'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'txt' => 'text/plain',
+            'csv' => 'text/csv',
+
+            // Archives
+            'zip' => 'application/zip',
+            'rar' => 'application/x-rar-compressed',
+            '7z' => 'application/x-7z-compressed',
+
+            // Others
+            'json' => 'application/json',
+            'xml' => 'application/xml',
+        ];
+
+        return $mimeTypes[$extension] ?? 'application/octet-stream';
     }
 
     /**
