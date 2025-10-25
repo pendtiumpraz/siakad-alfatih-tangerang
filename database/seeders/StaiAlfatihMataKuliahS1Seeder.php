@@ -145,21 +145,21 @@ class StaiAlfatihMataKuliahS1Seeder extends Seeder
 
     private function getHESMataKuliah($kodeProdi)
     {
-        // HES has actual course codes from website
-        $baseCode = str_replace('-', '', substr($kodeProdi, 0, 6));
+        // HES has actual course codes from website, but add suffix to make unique
+        $suffix = str_contains($kodeProdi, '-D') ? 'D' : 'L';
 
         return [
             // Semester 1
-            ['kode_mk' => 'MKB-02-001', 'nama_mk' => 'Pengantar Bisnis Syariah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Pengantar Bisnis Syariah'],
-            ['kode_mk' => 'MKK-02-003', 'nama_mk' => 'Ekonomi Mikro Syariah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Ekonomi Mikro'],
-            ['kode_mk' => 'MPB-02-001', 'nama_mk' => 'Fiqih Ibadah', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Fiqih Ibadah'],
-            ['kode_mk' => 'MPK-02-001', 'nama_mk' => 'Bahasa Arab', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Arab'],
-            ['kode_mk' => 'MKK-02-014', 'nama_mk' => 'Pengantar Ilmu Hukum', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Pengantar Hukum'],
-            ['kode_mk' => 'MKK-02-001', 'nama_mk' => 'Fikih Muamalah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Fiqih Muamalah'],
-            ['kode_mk' => 'MBB-02-001', 'nama_mk' => 'Pancasila Dan Kewarganegaraan', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'PKN'],
+            ['kode_mk' => "MKB-02-001-{$suffix}", 'nama_mk' => 'Pengantar Bisnis Syariah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Pengantar Bisnis Syariah'],
+            ['kode_mk' => "MKK-02-003-{$suffix}", 'nama_mk' => 'Ekonomi Mikro Syariah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Ekonomi Mikro'],
+            ['kode_mk' => "MPB-02-001-{$suffix}", 'nama_mk' => 'Fiqih Ibadah', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Fiqih Ibadah'],
+            ['kode_mk' => "MPK-02-001-{$suffix}", 'nama_mk' => 'Bahasa Arab', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Bahasa Arab'],
+            ['kode_mk' => "MKK-02-014-{$suffix}", 'nama_mk' => 'Pengantar Ilmu Hukum', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Pengantar Hukum'],
+            ['kode_mk' => "MKK-02-001-{$suffix}", 'nama_mk' => 'Fikih Muamalah', 'sks' => 3, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'Fiqih Muamalah'],
+            ['kode_mk' => "MBB-02-001-{$suffix}", 'nama_mk' => 'Pancasila Dan Kewarganegaraan', 'sks' => 2, 'semester' => 1, 'jenis' => 'wajib', 'deskripsi' => 'PKN'],
 
             // Full 51 courses from website data...
-            ['kode_mk' => 'MKB-02-014', 'nama_mk' => 'Tugas Akhir', 'sks' => 6, 'semester' => 8, 'jenis' => 'wajib', 'deskripsi' => 'Skripsi'],
+            ['kode_mk' => "MKB-02-014-{$suffix}", 'nama_mk' => 'Tugas Akhir', 'sks' => 6, 'semester' => 8, 'jenis' => 'wajib', 'deskripsi' => 'Skripsi'],
         ];
     }
 
