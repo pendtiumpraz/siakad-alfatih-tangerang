@@ -104,10 +104,10 @@
                                 {{ ($programStudis->currentPage() - 1) * $programStudis->perPage() + $index + 1 }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#2D5F3F]">
-                                {{ $prodi->kode }}
+                                {{ $prodi->kode_prodi }}
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{ $prodi->nama }}
+                                {{ $prodi->nama_prodi }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">

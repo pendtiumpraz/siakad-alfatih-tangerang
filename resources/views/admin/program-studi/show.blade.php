@@ -33,8 +33,8 @@
                         <i class="fas fa-graduation-cap text-3xl text-white"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-bold text-white">{{ $programStudi->nama }}</h2>
-                        <p class="text-emerald-50">{{ $programStudi->jenjang }} - {{ $programStudi->kode }}</p>
+                        <h2 class="text-2xl font-bold text-white">{{ $programStudi->nama_prodi }}</h2>
+                        <p class="text-emerald-50">{{ $programStudi->jenjang }} - {{ $programStudi->kode_prodi }}</p>
                     </div>
                 </div>
                 <div>
@@ -66,7 +66,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-500">Kode Program Studi</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $programStudi->kode }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $programStudi->kode_prodi }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Jenjang</p>
@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500">Nama Program Studi</p>
-                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $programStudi->nama }}</p>
+                            <p class="text-lg font-semibold text-[#2D5F3F]">{{ $programStudi->nama_prodi }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Status</p>
