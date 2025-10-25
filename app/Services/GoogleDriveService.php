@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\GoogleDriveToken;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Exception;
 
 class GoogleDriveService
@@ -10,12 +12,17 @@ class GoogleDriveService
     protected $client;
     protected $service;
     protected $rootFolderId;
+    protected $authType;
+    protected $userId;
 
-    public function __construct()
+    public function __construct($userId = null)
     {
         if (!config('google-drive.enabled')) {
             throw new Exception('Google Drive integration is not enabled');
         }
+
+        $this->authType = config('google-drive.auth_type', 'service_account');
+        $this->userId = $userId ?? auth()->id();
 
         $this->initializeClient();
         $this->rootFolderId = config('google-drive.root_folder_id');
@@ -26,18 +33,106 @@ class GoogleDriveService
      */
     protected function initializeClient()
     {
-        $credentialsPath = base_path(config('google-drive.credentials_path'));
+        $this->client = new \Google_Client();
+        $this->client->setApplicationName('STAI AL-FATIH SIAKAD');
+        $this->client->addScope(\Google_Service_Drive::DRIVE_FILE);
 
-        if (!file_exists($credentialsPath)) {
-            throw new Exception("Google Drive credentials file not found at: {$credentialsPath}");
+        if ($this->authType === 'oauth') {
+            $this->initializeOAuthClient();
+        } else {
+            $this->initializeServiceAccountClient();
         }
 
-        $this->client = new \Google_Client();
-        $this->client->setAuthConfig($credentialsPath);
-        $this->client->addScope(\Google_Service_Drive::DRIVE_FILE);
-        $this->client->setApplicationName('STAI AL-FATIH SIAKAD');
-
         $this->service = new \Google_Service_Drive($this->client);
+    }
+
+    /**
+     * Initialize OAuth Client
+     */
+    protected function initializeOAuthClient()
+    {
+        $credentialsPath = base_path(config('google-drive.oauth_credentials_path'));
+
+        if (!file_exists($credentialsPath)) {
+            throw new Exception("OAuth credentials file not found at: {$credentialsPath}");
+        }
+
+        $this->client->setAuthConfig($credentialsPath);
+        $this->client->setAccessType('offline');
+        $this->client->setPrompt('consent');
+
+        // Load token from database
+        if ($this->userId) {
+            $tokenRecord = GoogleDriveToken::where('user_id', $this->userId)->first();
+
+            if (!$tokenRecord) {
+                throw new Exception('User has not connected Google Drive. Please connect first.');
+            }
+
+            // Check if token needs refresh
+            if ($tokenRecord->needsRefresh() && $tokenRecord->refresh_token) {
+                $this->refreshToken($tokenRecord);
+            }
+
+            $this->client->setAccessToken([
+                'access_token' => $tokenRecord->access_token,
+                'refresh_token' => $tokenRecord->refresh_token,
+                'expires_in' => $tokenRecord->expires_in,
+                'token_type' => $tokenRecord->token_type,
+            ]);
+        }
+    }
+
+    /**
+     * Initialize Service Account Client
+     */
+    protected function initializeServiceAccountClient()
+    {
+        $credentialsPath = base_path(config('google-drive.service_account_path'));
+
+        if (!file_exists($credentialsPath)) {
+            throw new Exception("Service account credentials file not found at: {$credentialsPath}");
+        }
+
+        $this->client->setAuthConfig($credentialsPath);
+    }
+
+    /**
+     * Refresh OAuth token
+     */
+    protected function refreshToken(GoogleDriveToken $tokenRecord)
+    {
+        try {
+            $this->client->fetchAccessTokenWithRefreshToken($tokenRecord->refresh_token);
+            $newToken = $this->client->getAccessToken();
+
+            $tokenRecord->update([
+                'access_token' => $newToken['access_token'],
+                'expires_in' => $newToken['expires_in'] ?? null,
+                'expires_at' => isset($newToken['expires_in'])
+                    ? Carbon::now()->addSeconds($newToken['expires_in'])
+                    : null,
+            ]);
+
+            Log::info('Google Drive token refreshed for user: ' . $this->userId);
+        } catch (Exception $e) {
+            Log::error('Failed to refresh Google Drive token: ' . $e->getMessage());
+            throw new Exception('Failed to refresh Google Drive token. Please reconnect.');
+        }
+    }
+
+    /**
+     * Check if user has connected Google Drive
+     */
+    public static function isConnected($userId = null): bool
+    {
+        $userId = $userId ?? auth()->id();
+
+        if (config('google-drive.auth_type') !== 'oauth') {
+            return true; // Service account always connected
+        }
+
+        return GoogleDriveToken::where('user_id', $userId)->exists();
     }
 
     /**

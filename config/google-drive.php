@@ -12,7 +12,16 @@ return [
 
     'enabled' => env('GOOGLE_DRIVE_ENABLED', false),
 
-    'credentials_path' => env('GOOGLE_DRIVE_CREDENTIALS_PATH', 'storage/app/google/credentials.json'),
+    'auth_type' => env('GOOGLE_DRIVE_AUTH_TYPE', 'service_account'), // 'oauth' or 'service_account'
+
+    // OAuth Configuration
+    'client_id' => env('GOOGLE_DRIVE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
+    'redirect_uri' => env('GOOGLE_DRIVE_REDIRECT_URI'),
+    'oauth_credentials_path' => env('GOOGLE_DRIVE_OAUTH_CREDENTIALS_PATH', 'storage/app/google/oauth_credentials.json'),
+
+    // Service Account Configuration
+    'service_account_path' => env('GOOGLE_DRIVE_SERVICE_ACCOUNT_PATH', 'storage/app/google/credentials.json'),
 
     'root_folder_id' => env('GOOGLE_DRIVE_ROOT_FOLDER_ID'),
 

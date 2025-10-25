@@ -22,6 +22,7 @@ use App\Http\Controllers\Master\MataKuliahController;
 use App\Http\Controllers\Master\RuanganController;
 use App\Http\Controllers\Master\SemesterController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\GoogleDriveOAuthController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -37,6 +38,14 @@ Route::prefix('spmb')->name('public.spmb.')->group(function() {
     Route::get('/check', [PublicController::class, 'checkRegistration'])->name('check');
     Route::post('/check', [PublicController::class, 'checkRegistrationPost'])->name('check.post');
     Route::get('/result', [PublicController::class, 'showResult'])->name('result');
+});
+
+// Google Drive OAuth Routes (requires authentication)
+Route::middleware('auth')->prefix('oauth/google')->name('oauth.google.')->group(function () {
+    Route::get('/connect', [GoogleDriveOAuthController::class, 'redirect'])->name('connect');
+    Route::get('/callback', [GoogleDriveOAuthController::class, 'callback'])->name('callback');
+    Route::post('/disconnect', [GoogleDriveOAuthController::class, 'disconnect'])->name('disconnect');
+    Route::get('/status', [GoogleDriveOAuthController::class, 'status'])->name('status');
 });
 
 // Authentication Routes
