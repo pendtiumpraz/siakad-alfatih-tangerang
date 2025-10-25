@@ -159,9 +159,18 @@ class MataKuliahSeeder extends Seeder
             }
 
             foreach ($mataKuliahs as $mk) {
-                MataKuliah::create(array_merge($mk, [
-                    'kurikulum_id' => $kurikulum->id,
-                ]));
+                // Make course code unique per kurikulum by appending kurikulum ID
+                $uniqueKodeMk = $mk['kode_mk'] . '-K' . $kurikulum->id;
+
+                // Check if course code already exists to avoid duplicates
+                $exists = MataKuliah::where('kode_mk', $uniqueKodeMk)->exists();
+
+                if (!$exists) {
+                    MataKuliah::create(array_merge($mk, [
+                        'kode_mk' => $uniqueKodeMk,
+                        'kurikulum_id' => $kurikulum->id,
+                    ]));
+                }
             }
         }
     }
