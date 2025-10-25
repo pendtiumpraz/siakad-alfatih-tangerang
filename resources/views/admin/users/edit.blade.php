@@ -63,14 +63,14 @@
 
                     <!-- Nomor HP -->
                     <div>
-                        <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="no_telepon" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nomor HP
                         </label>
                         <input
                             type="text"
-                            id="phone"
+                            id="no_telepon"
                             name="no_telepon"
-                            value="{{ old('no_telepon', $user->phone) }}"
+                            value="{{ old('no_telepon', $user->mahasiswa->no_telepon ?? $user->dosen->no_telepon ?? $user->operator->no_telepon ?? '') }}"
                             placeholder="08xx-xxxx-xxxx"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('no_telepon') border-red-500 @enderror"
                         >
@@ -373,11 +373,14 @@
                             id="nidn"
                             name="nidn"
                             value="{{ old('nidn', $user->dosen->nidn ?? '') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nidn') border-red-500 @enderror"
                         >
+                        @error('nidn')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <!-- Nama Lengkap -->
+                    <!-- Nama Lengkap Dosen -->
                     <div>
                         <label for="dosen_nama_lengkap" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Lengkap <span class="text-red-500">*</span>
@@ -394,19 +397,129 @@
                         @enderror
                     </div>
 
-                    <!-- Gelar -->
+                    <!-- Gelar Depan -->
                     <div>
-                        <label for="gelar" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Gelar
+                        <label for="gelar_depan" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Gelar Depan
                         </label>
                         <input
                             type="text"
-                            id="gelar"
-                            name="gelar"
-                            value="{{ old('gelar', $user->dosen->gelar ?? '') }}"
-                            placeholder="S.Pd.I, M.Pd"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition"
+                            id="gelar_depan"
+                            name="gelar_depan"
+                            value="{{ old('gelar_depan', $user->dosen->gelar_depan ?? '') }}"
+                            placeholder="Dr., Prof."
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('gelar_depan') border-red-500 @enderror"
                         >
+                        @error('gelar_depan')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Gelar Belakang -->
+                    <div>
+                        <label for="gelar_belakang" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Gelar Belakang
+                        </label>
+                        <input
+                            type="text"
+                            id="gelar_belakang"
+                            name="gelar_belakang"
+                            value="{{ old('gelar_belakang', $user->dosen->gelar_belakang ?? '') }}"
+                            placeholder="S.Pd.I, M.Pd"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('gelar_belakang') border-red-500 @enderror"
+                        >
+                        @error('gelar_belakang')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Tempat Lahir -->
+                    <div>
+                        <label for="tempat_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tempat Lahir
+                        </label>
+                        <input
+                            type="text"
+                            id="tempat_lahir"
+                            name="tempat_lahir"
+                            value="{{ old('tempat_lahir', $user->dosen->tempat_lahir ?? '') }}"
+                            placeholder="Jakarta"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tempat_lahir') border-red-500 @enderror"
+                        >
+                        @error('tempat_lahir')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Tanggal Lahir -->
+                    <div>
+                        <label for="tanggal_lahir" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tanggal Lahir
+                        </label>
+                        <input
+                            type="date"
+                            id="tanggal_lahir"
+                            name="tanggal_lahir"
+                            value="{{ old('tanggal_lahir', $user->dosen->tanggal_lahir ?? '') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lahir') border-red-500 @enderror"
+                        >
+                        @error('tanggal_lahir')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Jenis Kelamin -->
+                    <div>
+                        <label for="jenis_kelamin" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Jenis Kelamin
+                        </label>
+                        <select
+                            id="jenis_kelamin"
+                            name="jenis_kelamin"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('jenis_kelamin') border-red-500 @enderror"
+                        >
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="L" {{ old('jenis_kelamin', $user->dosen->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="P" {{ old('jenis_kelamin', $user->dosen->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                        @error('jenis_kelamin')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Alamat -->
+                    <div class="md:col-span-2">
+                        <label for="alamat" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Alamat
+                        </label>
+                        <textarea
+                            id="alamat"
+                            name="alamat"
+                            rows="3"
+                            placeholder="Alamat lengkap"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('alamat') border-red-500 @enderror"
+                        >{{ old('alamat', $user->dosen->alamat ?? '') }}</textarea>
+                        @error('alamat')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Status Dosen -->
+                    <div>
+                        <label for="dosen_status" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Status
+                        </label>
+                        <select
+                            id="dosen_status"
+                            name="dosen_status"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('dosen_status') border-red-500 @enderror"
+                        >
+                            <option value="aktif" {{ old('dosen_status', $user->dosen->status ?? 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="non-aktif" {{ old('dosen_status', $user->dosen->status ?? '') == 'non-aktif' ? 'selected' : '' }}>Non-Aktif</option>
+                        </select>
+                        @error('dosen_status')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
             </div>
