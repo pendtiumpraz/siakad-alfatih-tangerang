@@ -43,7 +43,7 @@
                             <option value="">Pilih Program Studi</option>
                             @foreach($programStudis ?? [] as $prodi)
                                 <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                                    {{ $prodi->jenjang }} - {{ $prodi->nama }} ({{ $prodi->kode }})
+                                    {{ $prodi->jenjang }} - {{ $prodi->nama_prodi }} ({{ $prodi->kode_prodi }})
                                 </option>
                             @endforeach
                         </select>
@@ -57,19 +57,19 @@
 
                     <!-- Nama Kurikulum -->
                     <div class="md:col-span-2">
-                        <label for="nama" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="nama_kurikulum" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nama Kurikulum <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"
-                            name="nama"
-                            id="nama"
-                            value="{{ old('nama') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama') border-red-500 @enderror"
+                            name="nama_kurikulum"
+                            id="nama_kurikulum"
+                            value="{{ old('nama_kurikulum') }}"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_kurikulum') border-red-500 @enderror"
                             placeholder="Contoh: Kurikulum 2024"
                             required
                         >
-                        @error('nama')
+                        @error('nama_kurikulum')
                             <p class="mt-1 text-sm text-red-500">
                                 <i class="fas fa-exclamation-circle mr-1"></i>
                                 {{ $message }}

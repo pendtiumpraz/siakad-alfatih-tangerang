@@ -38,7 +38,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-white">{{ $kurikulum->nama_kurikulum }}</h2>
-                        <p class="text-emerald-50">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
+                        <p class="text-emerald-50">{{ $kurikulum->programStudi->nama_prodi ?? '-' }}</p>
                     </div>
                 </div>
                 <div>
@@ -71,8 +71,8 @@
                         <div class="col-span-2">
                             <p class="text-sm text-gray-500">Program Studi</p>
                             <p class="text-lg font-semibold text-[#2D5F3F]">
-                                {{ $kurikulum->programStudi->nama ?? '-' }}
-                                <span class="text-sm text-gray-600">({{ $kurikulum->programStudi->kode ?? '-' }})</span>
+                                {{ $kurikulum->programStudi->nama_prodi ?? '-' }}
+                                <span class="text-sm text-gray-600">({{ $kurikulum->programStudi->kode_prodi ?? '-' }})</span>
                             </p>
                         </div>
                         <div class="col-span-2">
@@ -197,8 +197,8 @@
                             @foreach($mataKuliahs as $mk)
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-[#F4E5C3] hover:bg-opacity-30 transition border border-gray-200">
                                 <div class="flex-1">
-                                    <p class="font-semibold text-gray-800">{{ $mk->nama }}</p>
-                                    <p class="text-sm text-gray-600">{{ $mk->kode }}</p>
+                                    <p class="font-semibold text-gray-800">{{ $mk->nama_mk }}</p>
+                                    <p class="text-sm text-gray-600">{{ $mk->kode_mk }}</p>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <span class="px-3 py-1 {{ $mk->jenis == 'Wajib' ? 'bg-green-100 text-green-800' : 'bg-[#F4E5C3] text-[#2D5F3F]' }} text-xs font-semibold rounded-full">

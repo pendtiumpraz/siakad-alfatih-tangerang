@@ -29,7 +29,7 @@
                         <option value="">Semua Program Studi</option>
                         @foreach($programStudis ?? [] as $prodi)
                             <option value="{{ $prodi->id }}" {{ request('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                                {{ $prodi->nama }}
+                                {{ $prodi->nama_prodi }}
                             </option>
                         @endforeach
                     </select>
@@ -109,8 +109,8 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
-                                    <p class="font-semibold text-[#2D5F3F]">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
-                                    <p class="text-xs text-gray-500">{{ $kurikulum->programStudi->kode ?? '-' }}</p>
+                                    <p class="font-semibold text-[#2D5F3F]">{{ $kurikulum->programStudi->nama_prodi ?? '-' }}</p>
+                                    <p class="text-xs text-gray-500">{{ $kurikulum->programStudi->kode_prodi ?? '-' }}</p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
