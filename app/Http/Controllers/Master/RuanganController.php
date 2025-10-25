@@ -28,11 +28,32 @@ class RuanganController extends Controller
     }
 
     /**
+     * Get route prefix based on user role
+     */
+    protected function getRoutePrefix()
+    {
+        $user = auth()->user();
+
+        if ($user->isSuperAdmin()) {
+            return 'admin';
+        } elseif ($user->isOperator()) {
+            return 'operator';
+        } elseif ($user->isDosen()) {
+            return 'dosen';
+        }
+
+        return 'admin'; // default
+    }
+
+    /**
      * Display a listing of ruangan with pagination, search, and filters
      */
     public function index(Request $request)
     {
-        $query = Ruangan::query()->withTrashed();
+        // Check if showing trashed items
+        $showTrashed = $request->has('trashed') && $request->trashed == 1;
+
+        $query = $showTrashed ? Ruangan::onlyTrashed() : Ruangan::query();
 
         // Search logic
         if ($request->has('search') && $request->search != '') {
@@ -64,8 +85,20 @@ class RuanganController extends Controller
         // Pagination
         $ruangans = $query->orderBy('kode_ruangan', 'asc')->paginate(15);
 
+        // Calculate statistics (only for non-trashed)
+        $totalRuangan = Ruangan::count();
+        $totalTersedia = Ruangan::where('is_available', true)->count();
+        $totalTidakTersedia = Ruangan::where('is_available', false)->count();
+        $totalKapasitas = Ruangan::sum('kapasitas');
+
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.ruangan.index", compact('ruangans'));
+        return view("{$viewPrefix}.ruangan.index", compact(
+            'ruangans',
+            'totalRuangan',
+            'totalTersedia',
+            'totalTidakTersedia',
+            'totalKapasitas'
+        ));
     }
 
     /**
@@ -73,7 +106,8 @@ class RuanganController extends Controller
      */
     public function create()
     {
-        return view('admin.ruangan.create');
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.ruangan.create");
     }
 
     /**
@@ -102,7 +136,8 @@ class RuanganController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.ruangan.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.ruangan.index")
                 ->with('success', 'Ruangan created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -133,7 +168,8 @@ class RuanganController extends Controller
     {
         $ruangan = Ruangan::withTrashed()->findOrFail($id);
 
-        return view('admin.ruangan.edit', compact('ruangan'));
+        $viewPrefix = $this->getViewPrefix();
+        return view("{$viewPrefix}.ruangan.edit", compact('ruangan'));
     }
 
     /**
@@ -159,7 +195,8 @@ class RuanganController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.ruangan.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.ruangan.index")
                 ->with('success', 'Ruangan updated successfully');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -178,7 +215,8 @@ class RuanganController extends Controller
             $ruangan = Ruangan::findOrFail($id);
             $ruangan->delete();
 
-            return redirect()->route('admin.ruangan.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.ruangan.index")
                 ->with('success', 'Ruangan deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -195,7 +233,8 @@ class RuanganController extends Controller
             $ruangan = Ruangan::withTrashed()->findOrFail($id);
             $ruangan->restore();
 
-            return redirect()->route('admin.ruangan.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.ruangan.index")
                 ->with('success', 'Ruangan restored successfully');
         } catch (\Exception $e) {
             return redirect()->back()
@@ -212,7 +251,8 @@ class RuanganController extends Controller
             $ruangan = Ruangan::withTrashed()->findOrFail($id);
             $ruangan->forceDelete();
 
-            return redirect()->route('admin.ruangan.index')
+            $routePrefix = $this->getRoutePrefix();
+            return redirect()->route("{$routePrefix}.ruangan.index")
                 ->with('success', 'Ruangan permanently deleted successfully');
         } catch (\Exception $e) {
             return redirect()->back()
