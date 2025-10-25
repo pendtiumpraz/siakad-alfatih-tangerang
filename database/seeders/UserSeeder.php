@@ -55,42 +55,50 @@ class UserSeeder extends Seeder
                 'role' => 'dosen',
                 'is_active' => true,
             ],
-            // Mahasiswa 1
+            // Mahasiswa 1 - PAI
             [
                 'username' => 'mhs001',
-                'email' => 'andi.pratama@student.siakad.ac.id',
+                'email' => 'ahmad.fauzi@student.staialfatih.ac.id',
                 'password' => Hash::make('password'),
                 'role' => 'mahasiswa',
                 'is_active' => true,
             ],
-            // Mahasiswa 2
+            // Mahasiswa 2 - PAI
             [
                 'username' => 'mhs002',
-                'email' => 'dewi.lestari@student.siakad.ac.id',
+                'email' => 'fatimah.azzahra@student.staialfatih.ac.id',
                 'password' => Hash::make('password'),
                 'role' => 'mahasiswa',
                 'is_active' => true,
             ],
-            // Mahasiswa 3
+            // Mahasiswa 3 - MPI
             [
                 'username' => 'mhs003',
-                'email' => 'rizky.ramadan@student.siakad.ac.id',
+                'email' => 'muhammad.rizki@student.staialfatih.ac.id',
                 'password' => Hash::make('password'),
                 'role' => 'mahasiswa',
                 'is_active' => true,
             ],
-            // Mahasiswa 4
+            // Mahasiswa 4 - MPI
             [
                 'username' => 'mhs004',
-                'email' => 'maya.sari@student.siakad.ac.id',
+                'email' => 'siti.aisyah@student.staialfatih.ac.id',
                 'password' => Hash::make('password'),
                 'role' => 'mahasiswa',
                 'is_active' => true,
             ],
-            // Mahasiswa 5
+            // Mahasiswa 5 - HES
             [
                 'username' => 'mhs005',
-                'email' => 'fajar.nugraha@student.siakad.ac.id',
+                'email' => 'abdurrahman.wahid@student.staialfatih.ac.id',
+                'password' => Hash::make('password'),
+                'role' => 'mahasiswa',
+                'is_active' => true,
+            ],
+            // Mahasiswa 6 - PGMI
+            [
+                'username' => 'mhs006',
+                'email' => 'nur.halimah@student.staialfatih.ac.id',
                 'password' => Hash::make('password'),
                 'role' => 'mahasiswa',
                 'is_active' => true,
