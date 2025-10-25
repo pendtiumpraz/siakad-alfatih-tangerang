@@ -590,4 +590,24 @@ class PembayaranController extends Controller
             return back()->with('error', 'Gagal memverifikasi pembayaran: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Print kwitansi pembayaran
+     */
+    public function printKwitansi($id)
+    {
+        $pembayaran = Pembayaran::with(['mahasiswa.programStudi', 'semester', 'operator.user'])
+            ->findOrFail($id);
+
+        // Determine which kwitansi template to use based on jenis_pembayaran
+        $template = match($pembayaran->jenis_pembayaran) {
+            'daftar_ulang' => 'kwitansi.daftar_ulang',
+            'spp' => 'kwitansi.spp',
+            'wisuda' => 'kwitansi.wisuda',
+            'lainnya' => 'kwitansi.lainnya',
+            default => 'kwitansi.lainnya',
+        };
+
+        return view($template, compact('pembayaran'));
+    }
 }

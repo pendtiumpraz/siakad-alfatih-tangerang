@@ -145,7 +145,7 @@
                     name="bukti_pembayaran"
                     label="Bukti Pembayaran"
                     accept="image/*,.pdf"
-                    :currentFile="$pembayaran->bukti_pembayaran ?? null"
+                    :currentFile="$pembayaran->google_drive_link ?? $pembayaran->bukti_pembayaran ?? null"
                 />
                 @error('bukti_pembayaran')
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

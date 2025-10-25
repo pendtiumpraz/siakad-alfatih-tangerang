@@ -89,6 +89,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
     Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
     Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
+    Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
@@ -133,6 +134,7 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
     Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
     Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
+    Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
 
     // Master Data (Read-only for Operator)
     Route::get('program-studi', [ProgramStudiController::class, 'index'])->name('program-studi.index');
