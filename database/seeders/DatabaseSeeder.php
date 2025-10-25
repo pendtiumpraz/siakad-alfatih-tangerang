@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             // 2. Seed program studi (no dependencies)
             ProgramStudiSeeder::class,
 
+            // 2a. Seed STAI AL-FATIH programs (no dependencies)
+            StaiAlfatihProgramStudiSeeder::class,
+
             // 3. Seed jalur seleksi (no dependencies) - SPMB
             JalurSeleksiSeeder::class,
 
@@ -38,6 +41,9 @@ class DatabaseSeeder extends Seeder
 
             // 7. Seed mata kuliah (depends on kurikulum)
             MataKuliahSeeder::class,
+
+            // 7a. Seed STAI AL-FATIH mata kuliah (depends on kurikulum)
+            StaiAlfatihMataKuliahSeeder::class,
 
             // 8. Seed semester (no dependencies)
             SemesterSeeder::class,

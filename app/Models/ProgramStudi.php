@@ -16,6 +16,7 @@ class ProgramStudi extends Model
         'jenjang',
         'akreditasi',
         'ketua_prodi_id',
+        'is_active',
     ];
 
     /**
