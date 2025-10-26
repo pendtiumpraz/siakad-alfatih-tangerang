@@ -28,60 +28,64 @@ class PublicController extends Controller
         }
     }
     /**
-     * Upload foto pendaftar to Google Drive or local storage
+     * Upload dokumen pendaftar to Google Drive
+     * Local storage is only temporary - deleted after successful upload
      */
-    protected function uploadFotoPendaftar($file, $pendaftarId)
+    protected function uploadDokumenPendaftar($file, $pendaftarId, $category)
     {
-        $result = [
-            'foto' => null,
-            'google_drive_file_id' => null,
-            'google_drive_link' => null,
-        ];
-
-        if ($this->driveService) {
-            // Upload to Google Drive
-            try {
-                $driveResult = $this->driveService->uploadDokumenSPMB(
-                    $file,
-                    $pendaftarId,
-                    'Foto'
-                );
-
-                $result['google_drive_file_id'] = $driveResult['id'];
-                $result['google_drive_link'] = $driveResult['webViewLink'];
-                $result['foto'] = $driveResult['webViewLink'];
-
-                \Log::info("Uploaded foto pendaftar to Google Drive: {$driveResult['id']}");
-            } catch (Exception $e) {
-                \Log::error("Failed to upload to Google Drive: " . $e->getMessage());
-                // Fallback to local storage
-                $result['foto'] = $file->store('pendaftar/foto', 'public');
-            }
-        } else {
-            // Upload to local storage
-            $result['foto'] = $file->store('pendaftar/foto', 'public');
+        if (!$this->driveService) {
+            throw new Exception('Google Drive tidak aktif. Hubungi administrator untuk mengaktifkan Google Drive terlebih dahulu.');
         }
 
-        return $result;
+        try {
+            // Upload to Google Drive (REQUIRED)
+            $driveResult = $this->driveService->uploadDokumenSPMB(
+                $file,
+                $pendaftarId,
+                $category
+            );
+
+            \Log::info("Uploaded {$category} to Google Drive: {$driveResult['id']}");
+
+            return [
+                'file' => $driveResult['webViewLink'],
+                'google_drive_id' => $driveResult['id'],
+                'google_drive_link' => $driveResult['webViewLink'],
+            ];
+        } catch (Exception $e) {
+            \Log::error("Failed to upload {$category} to Google Drive: " . $e->getMessage());
+            throw new Exception("Gagal upload {$category} ke Google Drive: " . $e->getMessage());
+        }
     }
 
     /**
-     * Delete foto pendaftar from Google Drive or local storage
+     * Delete all dokumen pendaftar from Google Drive
      */
-    protected function deleteFotoPendaftar($pendaftar)
+    protected function deleteDokumenPendaftar($pendaftar)
     {
-        // Delete from Google Drive if file_id exists
-        if ($pendaftar->google_drive_file_id && $this->driveService) {
-            try {
-                $this->driveService->deleteFile($pendaftar->google_drive_file_id);
-            } catch (Exception $e) {
-                \Log::error("Failed to delete from Google Drive: " . $e->getMessage());
-            }
+        if (!$this->driveService) {
+            return;
         }
 
-        // Delete from local storage if path exists
-        if ($pendaftar->foto && !$pendaftar->google_drive_file_id) {
-            Storage::disk('public')->delete($pendaftar->foto);
+        $documents = [
+            'google_drive_file_id' => 'Foto',
+            'ijazah_google_drive_id' => 'Ijazah',
+            'transkrip_google_drive_id' => 'Transkrip',
+            'ktp_google_drive_id' => 'KTP',
+            'kk_google_drive_id' => 'Kartu Keluarga',
+            'akta_google_drive_id' => 'Akta',
+            'sktm_google_drive_id' => 'SKTM',
+        ];
+
+        foreach ($documents as $field => $label) {
+            if ($pendaftar->$field) {
+                try {
+                    $this->driveService->deleteFile($pendaftar->$field);
+                    \Log::info("Deleted {$label} from Google Drive: {$pendaftar->$field}");
+                } catch (Exception $e) {
+                    \Log::error("Failed to delete {$label} from Google Drive: " . $e->getMessage());
+                }
+            }
         }
     }
 
@@ -151,18 +155,54 @@ class PublicController extends Controller
             'program_studi_pilihan_2' => 'nullable|exists:program_studis,id|different:program_studi_pilihan_1',
         ];
 
-        // Only require photo for final submission
+        // Document rules - required for final submission, optional for draft
         if (!$isDraft) {
             $rules['foto'] = 'required|image|mimes:jpg,jpeg,png|max:500';
+            $rules['ijazah'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['transkrip_nilai'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['ktp'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['kartu_keluarga'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['akta_kelahiran'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            // SKTM only required for jalur beasiswa
+            if ($request->input('jalur_seleksi_id')) {
+                $jalur = \App\Models\JalurSeleksi::find($request->input('jalur_seleksi_id'));
+                if ($jalur && stripos($jalur->nama, 'beasiswa') !== false) {
+                    $rules['sktm'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
+                }
+            }
         } else {
             $rules['foto'] = 'nullable|image|mimes:jpg,jpeg,png|max:500';
+            $rules['ijazah'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['transkrip_nilai'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['ktp'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['kartu_keluarga'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['akta_kelahiran'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['sktm'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
         }
 
         $validator = Validator::make($request->all(), $rules, [
-            'foto.required' => 'Foto harus diupload sebelum submit pendaftaran.',
-            'foto.image' => 'File harus berupa gambar.',
+            'foto.required' => 'Foto 4x6 harus diupload sebelum submit pendaftaran.',
+            'foto.image' => 'Foto harus berupa gambar.',
             'foto.mimes' => 'Foto harus berformat JPG, JPEG, atau PNG.',
             'foto.max' => 'Ukuran foto maksimal 500KB.',
+            'ijazah.required' => 'Ijazah/SKL harus diupload.',
+            'ijazah.mimes' => 'Ijazah harus berformat PDF, JPG, JPEG, atau PNG.',
+            'ijazah.max' => 'Ukuran ijazah maksimal 2MB.',
+            'transkrip_nilai.required' => 'Transkrip nilai/raport harus diupload.',
+            'transkrip_nilai.mimes' => 'Transkrip harus berformat PDF, JPG, JPEG, atau PNG.',
+            'transkrip_nilai.max' => 'Ukuran transkrip maksimal 2MB.',
+            'ktp.required' => 'KTP harus diupload.',
+            'ktp.mimes' => 'KTP harus berformat PDF, JPG, JPEG, atau PNG.',
+            'ktp.max' => 'Ukuran KTP maksimal 1MB.',
+            'kartu_keluarga.required' => 'Kartu Keluarga harus diupload.',
+            'kartu_keluarga.mimes' => 'Kartu Keluarga harus berformat PDF, JPG, JPEG, atau PNG.',
+            'kartu_keluarga.max' => 'Ukuran Kartu Keluarga maksimal 1MB.',
+            'akta_kelahiran.required' => 'Akta Kelahiran harus diupload.',
+            'akta_kelahiran.mimes' => 'Akta Kelahiran harus berformat PDF, JPG, JPEG, atau PNG.',
+            'akta_kelahiran.max' => 'Ukuran Akta Kelahiran maksimal 1MB.',
+            'sktm.required' => 'SKTM harus diupload untuk jalur beasiswa.',
+            'sktm.mimes' => 'SKTM harus berformat PDF, JPG, JPEG, atau PNG.',
+            'sktm.max' => 'Ukuran SKTM maksimal 1MB.',
             'nik.size' => 'NIK harus 16 digit.',
             'program_studi_pilihan_2.different' => 'Pilihan 2 harus berbeda dengan Pilihan 1.',
         ]);
@@ -173,43 +213,68 @@ class PublicController extends Controller
                 ->withInput();
         }
 
-        // Handle photo upload
-        $uploadResult = null;
-        if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
+        // Generate temporary ID for new pendaftar
+        $pendaftarId = $request->input('id')
+            ? Pendaftar::find($request->input('id'))->nomor_pendaftaran
+            : 'TEMP-' . date('Ymd') . '-' . rand(1000, 9999);
 
-            // Validate aspect ratio (4x6 approximately 2:3)
-            $dimensions = getimagesize($foto->getPathname());
-            $ratio = $dimensions[0] / $dimensions[1];
-
-            // Allow some tolerance for 2:3 ratio (0.66 to 0.68)
-            if ($ratio < 0.62 || $ratio > 0.72) {
-                return redirect()->back()
-                    ->withErrors(['foto' => 'Foto harus memiliki rasio 4x6 (portrait).'])
-                    ->withInput();
+        // Delete old documents if updating
+        if ($request->input('id')) {
+            $existingPendaftar = Pendaftar::find($request->input('id'));
+            if ($existingPendaftar) {
+                $this->deleteDokumenPendaftar($existingPendaftar);
             }
-
-            // Delete old photo if updating
-            if ($request->input('id')) {
-                $existingPendaftar = Pendaftar::find($request->input('id'));
-                if ($existingPendaftar) {
-                    $this->deleteFotoPendaftar($existingPendaftar);
-                }
-            }
-
-            // Generate temporary ID for new pendaftar (will use nomor_pendaftaran later)
-            $pendaftarId = $request->input('id') ?: 'SPMB' . date('Ymd') . rand(1000, 9999);
-
-            // Upload photo
-            $uploadResult = $this->uploadFotoPendaftar($foto, $pendaftarId);
         }
 
         // Prepare data
-        $data = $request->except(['foto', 'save_as_draft', 'old_foto', 'id']);
-        if ($uploadResult) {
-            $data['foto'] = $uploadResult['foto'];
-            $data['google_drive_file_id'] = $uploadResult['google_drive_file_id'];
-            $data['google_drive_link'] = $uploadResult['google_drive_link'];
+        $data = $request->except([
+            'foto', 'ijazah', 'transkrip_nilai', 'ktp', 'kartu_keluarga', 'akta_kelahiran', 'sktm',
+            'save_as_draft', 'id'
+        ]);
+
+        // Handle all document uploads
+        $documents = [
+            'foto' => 'Foto',
+            'ijazah' => 'Ijazah',
+            'transkrip_nilai' => 'Transkrip',
+            'ktp' => 'KTP',
+            'kartu_keluarga' => 'KK',
+            'akta_kelahiran' => 'Akta',
+            'sktm' => 'SKTM',
+        ];
+
+        foreach ($documents as $field => $category) {
+            if ($request->hasFile($field)) {
+                try {
+                    // Validate foto aspect ratio
+                    if ($field === 'foto') {
+                        $foto = $request->file($field);
+                        $dimensions = getimagesize($foto->getPathname());
+                        $ratio = $dimensions[0] / $dimensions[1];
+                        if ($ratio < 0.62 || $ratio > 0.72) {
+                            return redirect()->back()
+                                ->withErrors(['foto' => 'Foto harus memiliki rasio 4x6 (portrait).'])
+                                ->withInput();
+                        }
+                    }
+
+                    // Upload to Google Drive
+                    $uploadResult = $this->uploadDokumenPendaftar(
+                        $request->file($field),
+                        $pendaftarId,
+                        $category
+                    );
+
+                    // Save to database
+                    $data[$field] = $uploadResult['file'];
+                    $data[$field . '_google_drive_id'] = $uploadResult['google_drive_id'];
+                    $data[$field . '_google_drive_link'] = $uploadResult['google_drive_link'];
+                } catch (Exception $e) {
+                    return redirect()->back()
+                        ->withErrors([$field => $e->getMessage()])
+                        ->withInput();
+                }
+            }
         }
 
         $data['status'] = $isDraft ? 'draft' : 'pending';

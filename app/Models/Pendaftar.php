@@ -38,9 +38,34 @@ class Pendaftar extends Model
         'program_studi_pilihan_2',
         'status',
         'keterangan',
+        // Foto
         'foto',
         'google_drive_file_id',
         'google_drive_link',
+        // Ijazah
+        'ijazah',
+        'ijazah_google_drive_id',
+        'ijazah_google_drive_link',
+        // Transkrip
+        'transkrip_nilai',
+        'transkrip_google_drive_id',
+        'transkrip_google_drive_link',
+        // KTP
+        'ktp',
+        'ktp_google_drive_id',
+        'ktp_google_drive_link',
+        // Kartu Keluarga
+        'kartu_keluarga',
+        'kk_google_drive_id',
+        'kk_google_drive_link',
+        // Akta Kelahiran
+        'akta_kelahiran',
+        'akta_google_drive_id',
+        'akta_google_drive_link',
+        // SKTM
+        'sktm',
+        'sktm_google_drive_id',
+        'sktm_google_drive_link',
     ];
 
     protected $casts = [
