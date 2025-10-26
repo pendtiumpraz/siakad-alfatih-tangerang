@@ -213,18 +213,37 @@ class GoogleDriveService
     public function uploadFile(string $filePath, string $fileName, string $folderId, ?string $mimeType = null): array
     {
         try {
+            // Validate file path
+            if (empty($filePath)) {
+                throw new Exception("File path is empty");
+            }
+
             if (!file_exists($filePath)) {
                 throw new Exception("File not found: {$filePath}");
             }
+
+            $fileSize = filesize($filePath);
+            if ($fileSize === false || $fileSize === 0) {
+                throw new Exception("File is empty or unreadable: {$filePath}");
+            }
+
+            Log::info("Google Drive: Uploading file '{$fileName}' ({$fileSize} bytes) to folder {$folderId}");
 
             $fileMetadata = new \Google_Service_Drive_DriveFile([
                 'name' => $fileName,
                 'parents' => [$folderId]
             ]);
 
+            // Read file content
             $content = file_get_contents($filePath);
-            $mimeType = $mimeType ?? $this->detectMimeType($filePath);
+            if ($content === false) {
+                throw new Exception("Failed to read file content: {$filePath}");
+            }
 
+            $mimeType = $mimeType ?? $this->detectMimeType($filePath);
+            Log::info("Google Drive: MIME type detected: {$mimeType}");
+
+            // Upload to Google Drive
             $file = $this->service->files->create($fileMetadata, [
                 'data' => $content,
                 'mimeType' => $mimeType,
@@ -233,7 +252,7 @@ class GoogleDriveService
                 'supportsAllDrives' => true
             ]);
 
-            Log::info("Google Drive: Uploaded file '{$fileName}' with ID: {$file->id}");
+            Log::info("Google Drive: ✅ Successfully uploaded '{$fileName}' with ID: {$file->id}");
 
             return [
                 'id' => $file->id,
@@ -241,7 +260,9 @@ class GoogleDriveService
                 'webContentLink' => $file->webContentLink ?? null,
             ];
         } catch (Exception $e) {
-            Log::error("Google Drive: Failed to upload file '{$fileName}': " . $e->getMessage());
+            Log::error("Google Drive: ❌ Failed to upload '{$fileName}': " . $e->getMessage());
+            Log::error("Google Drive: File path was: {$filePath}");
+            Log::error("Google Drive: Folder ID was: {$folderId}");
             throw $e;
         }
     }
