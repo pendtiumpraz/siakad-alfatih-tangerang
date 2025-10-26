@@ -86,12 +86,13 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('semester', SemesterController::class);
 
     // Payment Management (Admin has full access)
-    Route::resource('pembayaran', PembayaranController::class);
+    // Custom routes harus didefinisikan SEBELUM resource routes
     Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
     Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
     Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
     Route::post('pembayaran/{id}/restore', [PembayaranController::class, 'restore'])->name('pembayaran.restore');
     Route::delete('pembayaran/{id}/force', [PembayaranController::class, 'forceDelete'])->name('pembayaran.force-delete');
+    Route::resource('pembayaran', PembayaranController::class);
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
@@ -133,12 +134,13 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     Route::get('/dashboard', [OperatorDashboardController::class, 'index'])->name('dashboard');
 
     // Payment Management
-    Route::resource('pembayaran', PembayaranController::class);
+    // Custom routes harus didefinisikan SEBELUM resource routes
     Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
     Route::post('pembayaran/{id}/verify', [PembayaranController::class, 'verify'])->name('pembayaran.verify');
     Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
     Route::post('pembayaran/{id}/restore', [PembayaranController::class, 'restore'])->name('pembayaran.restore');
     Route::delete('pembayaran/{id}/force', [PembayaranController::class, 'forceDelete'])->name('pembayaran.force-delete');
+    Route::resource('pembayaran', PembayaranController::class);
 
     // Master Data (Read-only for Operator)
     Route::get('program-studi', [ProgramStudiController::class, 'index'])->name('program-studi.index');
