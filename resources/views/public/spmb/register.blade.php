@@ -701,9 +701,13 @@
                     // Show loading overlay for final submission (not draft)
                     if (!event.submitter?.textContent.includes('Draft')) {
                         this.isUploading = true;
-                        // DON'T clear localStorage yet - wait until redirect success
-                        // If there's error and page reloads, user data will still be there
-                        // localStorage will be cleared on result page load
+
+                        // CLEAR localStorage immediately when submitting
+                        // If page reloads during upload (timeout), no data to restore
+                        // This prevents the annoying "restore alert" during submit
+                        this.clearLocalStorage();
+                        console.log('🗑️ Cleared localStorage before submit to prevent restore on timeout reload');
+
                         // Allow form to submit naturally
                         // Loading will be shown until page redirects or reloads
                     } else {
