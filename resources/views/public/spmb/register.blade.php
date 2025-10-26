@@ -104,9 +104,10 @@
                             <h3 class="text-sm font-medium text-blue-800">💡 Informasi Penting</h3>
                             <div class="mt-2 text-sm text-blue-700">
                                 <ul class="list-disc list-inside space-y-1">
-                                    <li><strong>Auto-Save Lokal:</strong> Data otomatis tersimpan di browser Anda setiap 30 detik (tidak hilang meski error atau browser tertutup)</li>
-                                    <li><strong>Simpan Draft ke Database:</strong> Tombol "Simpan Draft" ada di <strong>halaman terakhir (Step 8)</strong> untuk menyimpan ke server (bisa dilanjutkan kapan saja dengan email)</li>
-                                    <li><strong>Aman & Fleksibel:</strong> Isi form dengan santai, data Anda aman tersimpan! 🛡️</li>
+                                    <li><strong>Auto-Save Data:</strong> Data form otomatis tersimpan di browser setiap 30 detik (tidak hilang meski error atau browser tertutup)</li>
+                                    <li><strong>File Upload:</strong> ⚠️ File yang sudah dipilih <strong>TIDAK tersimpan otomatis</strong> karena alasan keamanan browser. <strong>Upload sekali jalan saat Submit!</strong></li>
+                                    <li><strong>Simpan Draft:</strong> Tombol "Simpan Draft" ada di <strong>Step 8</strong> untuk menyimpan ke server (lanjut nanti via email)</li>
+                                    <li><strong>Tips:</strong> Pastikan koneksi internet stabil saat upload dokumen! 🛡️</li>
                                 </ul>
                             </div>
                         </div>
@@ -685,9 +686,9 @@
                     // Show loading overlay for final submission (not draft)
                     if (!event.submitter?.textContent.includes('Draft')) {
                         this.isUploading = true;
-                        // Clear localStorage on successful submission
-                        // Will be cleared when page redirects
-                        this.clearLocalStorage();
+                        // DON'T clear localStorage yet - wait until redirect success
+                        // If there's error and page reloads, user data will still be there
+                        // localStorage will be cleared on result page load
                         // Allow form to submit naturally
                         // Loading will be shown until page redirects or reloads
                     } else {

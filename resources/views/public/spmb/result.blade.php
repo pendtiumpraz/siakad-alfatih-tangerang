@@ -298,4 +298,20 @@
             </div>
         @endif
     </div>
+
+    @push('scripts')
+    <script>
+        // Clear localStorage SPMB draft on successful registration
+        // This page only loads after successful form submission
+        try {
+            const savedDraft = localStorage.getItem('spmb_draft');
+            if (savedDraft) {
+                localStorage.removeItem('spmb_draft');
+                console.log('✅ Cleared localStorage SPMB draft after successful registration');
+            }
+        } catch (e) {
+            console.error('Failed to clear localStorage:', e);
+        }
+    </script>
+    @endpush
 </x-layouts.public>
