@@ -585,6 +585,8 @@
                 },
 
                 init() {
+                    console.log('🔧 Initializing registration form...');
+
                     // Try to restore from localStorage if no draft from server
                     if (!draft || Object.keys(draft).length === 0) {
                         this.restoreFromLocalStorage();
@@ -598,9 +600,21 @@
                     }
 
                     // Save on page unload (before leaving page)
-                    window.addEventListener('beforeunload', () => {
-                        this.saveToLocalStorage();
+                    window.addEventListener('beforeunload', (e) => {
+                        if (this.isUploading) {
+                            console.warn('⚠️ Page unloading while upload in progress!');
+                            // Don't save if we're uploading (already cleared)
+                        } else {
+                            this.saveToLocalStorage();
+                        }
                     });
+
+                    // Detect page reload/navigation
+                    window.addEventListener('pagehide', () => {
+                        console.log('🔄 Page is being hidden/reloaded');
+                    });
+
+                    console.log('✅ Form initialized');
                 },
 
                 saveToLocalStorage() {
@@ -698,19 +712,31 @@
                 },
 
                 handleSubmit(event) {
+                    console.log('====== FORM SUBMIT STARTED ======');
+                    console.log('Submitter:', event.submitter?.textContent);
+                    console.log('Current step:', this.currentStep);
+                    console.log('Form data:', this.formData);
+
                     // Show loading overlay for final submission (not draft)
                     if (!event.submitter?.textContent.includes('Draft')) {
+                        console.log('🚀 Final submission - showing loading overlay');
                         this.isUploading = true;
+
+                        // Check if files are attached
+                        const form = event.target;
+                        const fotoFile = form.querySelector('input[name="foto"]')?.files[0];
+                        console.log('Foto file:', fotoFile ? `${fotoFile.name} (${fotoFile.size} bytes)` : 'NOT ATTACHED');
 
                         // CLEAR localStorage immediately when submitting
                         // If page reloads during upload (timeout), no data to restore
                         // This prevents the annoying "restore alert" during submit
                         this.clearLocalStorage();
-                        console.log('🗑️ Cleared localStorage before submit to prevent restore on timeout reload');
+                        console.log('🗑️ Cleared localStorage before submit');
 
                         // Allow form to submit naturally
-                        // Loading will be shown until page redirects or reloads
+                        console.log('✅ Form will submit now...');
                     } else {
+                        console.log('💾 Draft save - saving to localStorage');
                         // Save to localStorage when saving draft
                         this.saveToLocalStorage();
                     }

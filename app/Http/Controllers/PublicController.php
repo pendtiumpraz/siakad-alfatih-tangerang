@@ -148,8 +148,14 @@ class PublicController extends Controller
         set_time_limit(300); // 5 minutes for uploading multiple documents
         ini_set('memory_limit', '256M'); // Increase memory limit
 
+        \Log::info("====== SPMB REGISTRATION STARTED ======");
+        \Log::info("Request method: " . $request->method());
+        \Log::info("Has files: " . ($request->hasFile('foto') ? 'YES' : 'NO'));
+        \Log::info("Google Drive service: " . ($this->driveService ? 'ACTIVE' : 'NOT ACTIVE'));
+
         // Determine if this is a draft save or final submission
         $isDraft = $request->input('save_as_draft', false);
+        \Log::info("Is draft: " . ($isDraft ? 'YES' : 'NO'));
 
         // Build validation rules
         $rules = [
@@ -233,10 +239,14 @@ class PublicController extends Controller
         ]);
 
         if ($validator->fails()) {
+            \Log::error("====== VALIDATION FAILED ======");
+            \Log::error("Errors: " . json_encode($validator->errors()->toArray()));
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
+
+        \Log::info("✅ Validation passed");
 
         // Generate temporary ID for new pendaftar
         $pendaftarId = $request->input('id')
@@ -246,23 +256,31 @@ class PublicController extends Controller
         // Pre-create folders in Google Drive to avoid timeout during upload
         if ($this->driveService && !$isDraft) {
             try {
-                \Log::info("Pre-creating Google Drive folders for pendaftar: {$pendaftarId}");
+                \Log::info("📁 Pre-creating Google Drive folders for pendaftar: {$pendaftarId}");
 
                 // Create SPMB folder if not exists
                 $spmbFolder = $this->driveService->findFolder(config('google-drive.folders.spmb'))
                     ?? $this->driveService->createFolder(config('google-drive.folders.spmb'));
 
+                \Log::info("📁 SPMB folder ID: {$spmbFolder}");
+
                 // Create pendaftar subfolder
-                $this->driveService->findFolder($pendaftarId, $spmbFolder)
+                $pendaftarFolder = $this->driveService->findFolder($pendaftarId, $spmbFolder)
                     ?? $this->driveService->createFolder($pendaftarId, $spmbFolder);
 
-                \Log::info("Google Drive folders ready for pendaftar: {$pendaftarId}");
+                \Log::info("✅ Google Drive folders ready - Pendaftar folder ID: {$pendaftarFolder}");
             } catch (Exception $e) {
-                \Log::error("Failed to pre-create Google Drive folders: " . $e->getMessage());
+                \Log::error("❌ Failed to pre-create Google Drive folders: " . $e->getMessage());
+                \Log::error("Exception trace: " . $e->getTraceAsString());
                 return redirect()->back()
                     ->withErrors(['_error' => 'Gagal menyiapkan folder Google Drive: ' . $e->getMessage()])
                     ->withInput();
             }
+        } elseif (!$this->driveService && !$isDraft) {
+            \Log::error("❌ Google Drive service is NULL - cannot upload documents");
+            return redirect()->back()
+                ->withErrors(['_error' => 'Google Drive tidak aktif. Hubungi administrator untuk mengaktifkan Google Drive terlebih dahulu.'])
+                ->withInput();
         }
 
         // Delete old documents if updating
