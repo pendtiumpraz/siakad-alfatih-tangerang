@@ -1,6 +1,16 @@
 <x-layouts.public>
     <x-slot name="title">Status Pendaftaran</x-slot>
 
+    @php
+        // Load SPMB settings once at the top
+        $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
+        $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
+        $spmbWa = \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890');
+        $bankName = \App\Models\SystemSetting::get('bank_name', 'BCA');
+        $bankAccountNumber = \App\Models\SystemSetting::get('bank_account_number', '1234567890');
+        $bankAccountName = \App\Models\SystemSetting::get('bank_account_name', 'STAI AL-FATIH');
+    @endphp
+
     @push('styles')
     <style>
         @media print {
@@ -363,7 +373,7 @@
                 <!-- Footer Info -->
                 <div class="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-500 print-hide">
                     <p>Kartu pendaftaran ini dicetak pada {{ now()->format('d F Y, H:i') }} WIB</p>
-                    <p class="mt-1">Untuk informasi lebih lanjut hubungi: (021) 1234-5678 atau email ke info@staialfatih.ac.id</p>
+                    <p class="mt-1">Untuk informasi lebih lanjut hubungi: {{ $spmbPhone }} atau email ke {{ $spmbEmail }}</p>
                 </div>
             </div>
         </div>
@@ -418,15 +428,15 @@
                                     <div class="space-y-2 text-sm text-blue-900">
                                         <div class="flex justify-between">
                                             <span class="font-medium">Bank:</span>
-                                            <span class="font-bold">BCA</span>
+                                            <span class="font-bold">{{ $bankName }}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="font-medium">No. Rekening:</span>
-                                            <span class="font-bold">1234567890</span>
+                                            <span class="font-bold">{{ $bankAccountNumber }}</span>
                                         </div>
                                         <div class="flex justify-between">
                                             <span class="font-medium">Atas Nama:</span>
-                                            <span class="font-bold">STAI AL-FATIH</span>
+                                            <span class="font-bold">{{ $bankAccountName }}</span>
                                         </div>
                                         <div class="flex justify-between border-t border-blue-300 pt-2 mt-2">
                                             <span class="font-medium">Jumlah Transfer:</span>
@@ -435,17 +445,116 @@
                                     </div>
                                 </div>
 
+                                <!-- Contact Help Section -->
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                                    <h4 class="font-semibold text-green-900 mb-3 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Butuh Bantuan?
+                                    </h4>
+                                    <p class="text-sm text-green-800 mb-3">Hubungi kami jika ada pertanyaan seputar pembayaran:</p>
+                                    <div class="flex gap-2">
+                                        <a href="https://wa.me/{{ $spmbWa }}?text=Halo,%20saya%20{{ $pendaftar->nama }}%20dengan%20nomor%20pendaftaran%20{{ $pendaftar->nomor_pendaftaran }}.%20Saya%20ingin%20bertanya%20tentang%20pembayaran%20pendaftaran."
+                                           target="_blank"
+                                           class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center text-sm">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path>
+                                            </svg>
+                                            WhatsApp Admin
+                                        </a>
+                                        <a href="mailto:{{ $spmbEmail }}?subject=Pertanyaan Pembayaran - {{ $pendaftar->nomor_pendaftaran }}"
+                                           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center text-sm">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                            </svg>
+                                            Email
+                                        </a>
+                                    </div>
+                                </div>
+
                                 <!-- Upload Bukti -->
-                                <div class="mb-4">
+                                <div class="mb-4" x-data="{
+                                    fileName: '',
+                                    fileSize: '',
+                                    fileType: '',
+                                    previewUrl: null,
+                                    handleFileChange(event) {
+                                        const file = event.target.files[0];
+                                        if (file) {
+                                            this.fileName = file.name;
+                                            this.fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                                            this.fileType = file.type;
+
+                                            // Generate preview for images
+                                            if (file.type.startsWith('image/')) {
+                                                const reader = new FileReader();
+                                                reader.onload = (e) => {
+                                                    this.previewUrl = e.target.result;
+                                                };
+                                                reader.readAsDataURL(file);
+                                            } else {
+                                                this.previewUrl = null;
+                                            }
+                                        }
+                                    }
+                                }">
                                     <label class="block text-sm font-semibold text-gray-700 mb-2">
                                         Bukti Pembayaran <span class="text-red-500">*</span>
                                     </label>
+
+                                    <!-- File Input (Hidden) -->
                                     <input type="file"
                                            name="bukti_pembayaran"
+                                           id="bukti_pembayaran"
                                            accept="image/*,.pdf"
                                            required
-                                           class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-islamic-green">
-                                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, atau PDF (Maks. 2MB)</p>
+                                           @change="handleFileChange($event)"
+                                           class="hidden">
+
+                                    <!-- Custom Upload Area -->
+                                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-islamic-green transition cursor-pointer"
+                                         @click="$el.previousElementSibling.click()">
+
+                                        <!-- Preview Image (if image selected) -->
+                                        <div x-show="previewUrl" class="mb-4">
+                                            <img :src="previewUrl" alt="Preview" class="max-h-48 mx-auto rounded-lg shadow-md">
+                                        </div>
+
+                                        <!-- Upload Icon -->
+                                        <div x-show="!fileName" class="mb-4">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                            </svg>
+                                            <p class="mt-2 text-sm text-gray-600">
+                                                <span class="font-semibold text-islamic-green">Klik untuk upload</span> atau drag and drop
+                                            </p>
+                                            <p class="text-xs text-gray-500 mt-1">JPG, PNG, atau PDF (Maks. 2MB)</p>
+                                        </div>
+
+                                        <!-- File Info (if file selected) -->
+                                        <div x-show="fileName" class="space-y-2">
+                                            <div class="flex items-center justify-center space-x-2">
+                                                <!-- File Icon -->
+                                                <svg class="w-8 h-8 text-islamic-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                </svg>
+                                                <div class="text-left">
+                                                    <p class="text-sm font-semibold text-gray-900" x-text="fileName"></p>
+                                                    <p class="text-xs text-gray-500" x-text="fileSize"></p>
+                                                </div>
+                                            </div>
+                                            <button type="button"
+                                                    @click.stop="fileName = ''; fileSize = ''; previewUrl = null; $el.parentElement.parentElement.querySelector('input[type=file]').value = ''"
+                                                    class="text-xs text-red-600 hover:text-red-800 font-medium">
+                                                Hapus & Pilih File Lain
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    @error('bukti_pembayaran')
+                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
                                 <!-- Metode Pembayaran -->
@@ -522,7 +631,7 @@
                     </div>
                     <div class="flex items-start">
                         <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">2</div>
-                        <p>Upload bukti pembayaran melalui sistem atau kirim ke WhatsApp admin</p>
+                        <p>Upload bukti pembayaran melalui sistem (formulir di atas)</p>
                     </div>
                     <div class="flex items-start">
                         <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">3</div>

@@ -67,6 +67,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::post('users/{id}/restore', [SuperAdminController::class, 'restore'])->name('users.restore');
     Route::delete('users/{id}/force-delete', [SuperAdminController::class, 'forceDelete'])->name('users.force-delete');
 
+    // System Settings
+    Route::get('settings', [SuperAdminController::class, 'settings'])->name('settings.index');
+    Route::put('settings', [SuperAdminController::class, 'updateSettings'])->name('settings.update');
+
     // Role & Permission Management
     Route::get('permissions', [RolePermissionController::class, 'index'])->name('permissions.index');
     Route::put('permissions', [RolePermissionController::class, 'update'])->name('permissions.update');

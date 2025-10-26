@@ -8,6 +8,7 @@ use App\Models\Mahasiswa;
 use App\Models\Dosen;
 use App\Models\Operator;
 use App\Models\ProgramStudi;
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -402,5 +403,79 @@ class SuperAdminController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User permanently deleted.');
+    }
+
+    /**
+     * Show system settings page
+     */
+    public function settings()
+    {
+        // Get all settings grouped by category
+        $spmbSettings = SystemSetting::where('group', 'spmb')->get();
+        $paymentSettings = SystemSetting::where('group', 'payment')->get();
+        $pricingSettings = SystemSetting::where('group', 'pricing')->get();
+        $generalSettings = SystemSetting::where('group', 'general')->get();
+
+        return view('admin.settings.index', compact(
+            'spmbSettings',
+            'paymentSettings',
+            'pricingSettings',
+            'generalSettings'
+        ));
+    }
+
+    /**
+     * Update system settings
+     */
+    public function updateSettings(Request $request)
+    {
+        $validated = $request->validate([
+            // SPMB Settings
+            'spmb_email' => 'required|email',
+            'spmb_phone' => 'required|string|max:20',
+            'spmb_whatsapp' => 'required|string|max:20',
+
+            // Payment Settings
+            'bank_name' => 'required|string|max:100',
+            'bank_account_number' => 'required|string|max:50',
+            'bank_account_name' => 'required|string|max:255',
+
+            // Pricing Settings
+            'biaya_uang_gedung' => 'required|numeric|min:0',
+            'biaya_spp_semester' => 'required|numeric|min:0',
+            'biaya_wisuda' => 'required|numeric|min:0',
+            'biaya_daftar_ulang' => 'required|numeric|min:0',
+
+            // General Settings
+            'institution_name' => 'required|string|max:255',
+            'institution_address' => 'nullable|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Update all settings
+            foreach ($validated as $key => $value) {
+                $setting = SystemSetting::where('key', $key)->first();
+
+                if ($setting) {
+                    $setting->update(['value' => $value]);
+                }
+            }
+
+            // Clear settings cache
+            SystemSetting::clearCache();
+
+            DB::commit();
+
+            return redirect()->route('admin.settings.index')
+                ->with('success', 'Pengaturan berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withInput()
+                ->with('error', 'Gagal memperbarui pengaturan: ' . $e->getMessage());
+        }
     }
 }
