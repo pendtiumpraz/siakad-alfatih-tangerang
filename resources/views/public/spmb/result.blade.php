@@ -95,6 +95,22 @@
             </div>
         @endif
 
+        <!-- Error Message -->
+        @if(session('error'))
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 no-print rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700 font-semibold">{{ session('error') }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <!-- Registration Card -->
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden print-card">
             <!-- Header -->
@@ -351,6 +367,137 @@
                 </div>
             </div>
         </div>
+
+        <!-- Upload Bukti Pembayaran Section -->
+        @if($pendaftar->status === 'pending')
+            @php
+                $hasPendingPayment = $pendaftar->pembayaranPendaftarans()->where('status', 'pending')->exists();
+                $hasVerifiedPayment = $pendaftar->pembayaranPendaftarans()->where('status', 'verified')->exists();
+            @endphp
+
+            @if(!$hasVerifiedPayment)
+                <div class="mt-8 bg-white rounded-2xl shadow-2xl overflow-hidden no-print" x-data="{ uploading: false }">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-islamic-green to-green-600 px-6 py-4">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Upload Bukti Pembayaran
+                        </h3>
+                        <p class="text-islamic-gold text-sm mt-1">Biaya Pendaftaran: <span class="font-bold">Rp {{ number_format($pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0, 0, ',', '.') }}</span></p>
+                    </div>
+
+                    <div class="p-6">
+                        @if($hasPendingPayment)
+                            <!-- Already Uploaded -->
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-6 h-6 text-yellow-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="font-semibold text-yellow-800">Bukti Pembayaran Sedang Diverifikasi</h4>
+                                        <p class="text-sm text-yellow-700 mt-1">Bukti pembayaran Anda sudah diterima dan sedang dalam proses verifikasi oleh admin. Mohon tunggu maksimal 2x24 jam.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <!-- Upload Form -->
+                            <form action="{{ route('public.spmb.upload-payment', $pendaftar->id) }}" method="POST" enctype="multipart/form-data" @submit="uploading = true">
+                                @csrf
+
+                                <!-- Informasi Rekening -->
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                                    <h4 class="font-semibold text-blue-900 mb-3 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                        </svg>
+                                        Informasi Transfer
+                                    </h4>
+                                    <div class="space-y-2 text-sm text-blue-900">
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Bank:</span>
+                                            <span class="font-bold">BCA</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">No. Rekening:</span>
+                                            <span class="font-bold">1234567890</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Atas Nama:</span>
+                                            <span class="font-bold">STAI AL-FATIH</span>
+                                        </div>
+                                        <div class="flex justify-between border-t border-blue-300 pt-2 mt-2">
+                                            <span class="font-medium">Jumlah Transfer:</span>
+                                            <span class="font-bold text-lg text-islamic-green">Rp {{ number_format($pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0, 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Bukti -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Bukti Pembayaran <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="file"
+                                           name="bukti_pembayaran"
+                                           accept="image/*,.pdf"
+                                           required
+                                           class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-islamic-green">
+                                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, atau PDF (Maks. 2MB)</p>
+                                </div>
+
+                                <!-- Metode Pembayaran -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Metode Pembayaran <span class="text-red-500">*</span>
+                                    </label>
+                                    <select name="metode_pembayaran" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-islamic-green">
+                                        <option value="">-- Pilih Metode --</option>
+                                        <option value="transfer">Transfer Bank</option>
+                                        <option value="va">Virtual Account</option>
+                                        <option value="tunai">Tunai</option>
+                                    </select>
+                                </div>
+
+                                <!-- Nomor Referensi (Optional) -->
+                                <div class="mb-6">
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                        Nomor Referensi / Transaksi (Opsional)
+                                    </label>
+                                    <input type="text"
+                                           name="nomor_referensi"
+                                           placeholder="Contoh: TRX123456789"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-islamic-green">
+                                    <p class="text-xs text-gray-500 mt-1">Nomor referensi dari bank (jika ada)</p>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit"
+                                        :disabled="uploading"
+                                        :class="uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-islamic-green hover:bg-green-700'"
+                                        class="w-full text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center">
+                                    <span x-show="!uploading">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                        </svg>
+                                        Upload Bukti Pembayaran
+                                    </span>
+                                    <span x-show="uploading">
+                                        <svg class="animate-spin h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Sedang Upload...
+                                    </span>
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            @endif
+        @endif
 
         <!-- Action Buttons (No Print) -->
         <div class="mt-6 flex flex-col sm:flex-row gap-4 justify-center no-print">

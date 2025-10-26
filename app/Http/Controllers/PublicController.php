@@ -470,4 +470,60 @@ class PublicController extends Controller
 
         return view('public.spmb.result', compact('pendaftar'));
     }
+
+    /**
+     * Upload bukti pembayaran
+     */
+    public function uploadPayment(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'metode_pembayaran' => 'required|string',
+            'nomor_referensi' => 'nullable|string|max:100',
+        ]);
+
+        $pendaftar = Pendaftar::findOrFail($id);
+
+        // Cek apakah sudah ada pembayaran yang verified
+        if ($pendaftar->pembayaranPendaftarans()->where('status', 'verified')->exists()) {
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Pembayaran Anda sudah diverifikasi.');
+        }
+
+        // Cek apakah sudah ada pembayaran pending
+        if ($pendaftar->pembayaranPendaftarans()->where('status', 'pending')->exists()) {
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Anda sudah upload bukti pembayaran sebelumnya. Mohon tunggu verifikasi admin.');
+        }
+
+        try {
+            $file = $request->file('bukti_pembayaran');
+            $fileName = 'pembayaran_' . $pendaftar->nomor_pendaftaran . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Upload ke Google Drive
+            $driveService = new \App\Services\GoogleDriveService();
+            $uploadResult = $driveService->uploadPembayaran($file, $pendaftar->nomor_pendaftaran, 'pembayaran_pendaftaran');
+
+            // Simpan ke database
+            \App\Models\PembayaranPendaftaran::create([
+                'pendaftar_id' => $pendaftar->id,
+                'jalur_seleksi_id' => $pendaftar->jalur_seleksi_id,
+                'jumlah' => $pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0,
+                'metode_pembayaran' => $request->metode_pembayaran,
+                'nomor_referensi' => $request->nomor_referensi,
+                'bukti_pembayaran' => $uploadResult['webViewLink'],
+                'status' => 'pending',
+                'keterangan' => 'Upload oleh pendaftar via sistem',
+            ]);
+
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('success', 'Bukti pembayaran berhasil diupload! Mohon tunggu verifikasi dari admin maksimal 2x24 jam.');
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to upload payment proof: ' . $e->getMessage());
+
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Gagal upload bukti pembayaran. Silakan coba lagi atau hubungi admin.');
+        }
+    }
 }
