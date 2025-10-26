@@ -144,8 +144,17 @@
                                     @if(request('trashed'))
                                         <form action="{{ route('admin.kurikulum.restore', $kurikulum->id) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="text-green-600 hover:text-green-800 transition" title="Restore">
+                                            <button type="submit" class="text-[#D4AF37] hover:text-[#b8941f] transition" title="Restore">
                                                 <i class="fas fa-undo"></i>
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('admin.kurikulum.force-delete', $kurikulum->id) }}" method="POST" class="inline"
+                                            x-data
+                                            @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus permanen kurikulum ini?')) $el.submit()">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-800 transition" title="Hapus Permanen">
+                                                <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
                                     @else
