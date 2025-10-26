@@ -491,8 +491,40 @@ class PembayaranController extends Controller
 
         $pembayaran->delete();
 
-        return redirect()->route('operator.pembayaran.index')
-            ->with('success', 'Payment deleted successfully.');
+        $viewPrefix = $this->getViewPrefix();
+        return redirect()->route($viewPrefix . '.pembayaran.index')
+            ->with('success', 'Pembayaran berhasil dihapus (soft delete).');
+    }
+
+    /**
+     * Restore a soft deleted payment
+     */
+    public function restore($id)
+    {
+        $pembayaran = Pembayaran::withTrashed()->findOrFail($id);
+
+        $pembayaran->restore();
+
+        $viewPrefix = $this->getViewPrefix();
+        return redirect()->route($viewPrefix . '.pembayaran.index')
+            ->with('success', 'Pembayaran berhasil dipulihkan.');
+    }
+
+    /**
+     * Permanently delete a payment (force delete)
+     */
+    public function forceDelete($id)
+    {
+        $pembayaran = Pembayaran::withTrashed()->findOrFail($id);
+
+        // Delete bukti pembayaran files before force delete
+        $this->deleteBuktiPembayaran($pembayaran);
+
+        $pembayaran->forceDelete();
+
+        $viewPrefix = $this->getViewPrefix();
+        return redirect()->route($viewPrefix . '.pembayaran.index')
+            ->with('success', 'Pembayaran berhasil dihapus permanen.');
     }
 
     /**
