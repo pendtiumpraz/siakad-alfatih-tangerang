@@ -90,6 +90,27 @@ class PublicController extends Controller
     }
 
     /**
+     * Rollback uploaded files on error
+     */
+    protected function rollbackUploadedFiles(array $fileIds)
+    {
+        if (!$this->driveService || empty($fileIds)) {
+            return;
+        }
+
+        \Log::warning("Rolling back " . count($fileIds) . " uploaded files...");
+
+        foreach ($fileIds as $fileId) {
+            try {
+                $this->driveService->deleteFile($fileId);
+                \Log::info("Rolled back file: {$fileId}");
+            } catch (Exception $e) {
+                \Log::error("Failed to rollback file {$fileId}: " . $e->getMessage());
+            }
+        }
+    }
+
+    /**
      * Show SPMB landing page with info jalur seleksi
      */
     public function showSPMB()
@@ -123,6 +144,10 @@ class PublicController extends Controller
      */
     public function storeRegistration(Request $request)
     {
+        // Increase execution time for large file uploads to Google Drive
+        set_time_limit(300); // 5 minutes for uploading multiple documents
+        ini_set('memory_limit', '256M'); // Increase memory limit
+
         // Determine if this is a draft save or final submission
         $isDraft = $request->input('save_as_draft', false);
 
@@ -218,6 +243,28 @@ class PublicController extends Controller
             ? Pendaftar::find($request->input('id'))->nomor_pendaftaran
             : 'TEMP-' . date('Ymd') . '-' . rand(1000, 9999);
 
+        // Pre-create folders in Google Drive to avoid timeout during upload
+        if ($this->driveService && !$isDraft) {
+            try {
+                \Log::info("Pre-creating Google Drive folders for pendaftar: {$pendaftarId}");
+
+                // Create SPMB folder if not exists
+                $spmbFolder = $this->driveService->findFolder(config('google-drive.folders.spmb'))
+                    ?? $this->driveService->createFolder(config('google-drive.folders.spmb'));
+
+                // Create pendaftar subfolder
+                $this->driveService->findFolder($pendaftarId, $spmbFolder)
+                    ?? $this->driveService->createFolder($pendaftarId, $spmbFolder);
+
+                \Log::info("Google Drive folders ready for pendaftar: {$pendaftarId}");
+            } catch (Exception $e) {
+                \Log::error("Failed to pre-create Google Drive folders: " . $e->getMessage());
+                return redirect()->back()
+                    ->withErrors(['_error' => 'Gagal menyiapkan folder Google Drive: ' . $e->getMessage()])
+                    ->withInput();
+            }
+        }
+
         // Delete old documents if updating
         if ($request->input('id')) {
             $existingPendaftar = Pendaftar::find($request->input('id'));
@@ -232,7 +279,7 @@ class PublicController extends Controller
             'save_as_draft', 'id'
         ]);
 
-        // Handle all document uploads
+        // Handle all document uploads with rollback on failure
         $documents = [
             'foto' => 'Foto',
             'ijazah' => 'Ijazah',
@@ -243,6 +290,8 @@ class PublicController extends Controller
             'sktm' => 'SKTM',
         ];
 
+        $uploadedFiles = []; // Track uploaded files for rollback
+
         foreach ($documents as $field => $category) {
             if ($request->hasFile($field)) {
                 try {
@@ -252,11 +301,15 @@ class PublicController extends Controller
                         $dimensions = getimagesize($foto->getPathname());
                         $ratio = $dimensions[0] / $dimensions[1];
                         if ($ratio < 0.62 || $ratio > 0.72) {
+                            // Rollback uploaded files
+                            $this->rollbackUploadedFiles($uploadedFiles);
                             return redirect()->back()
                                 ->withErrors(['foto' => 'Foto harus memiliki rasio 4x6 (portrait).'])
                                 ->withInput();
                         }
                     }
+
+                    \Log::info("Starting upload for {$category}...");
 
                     // Upload to Google Drive
                     $uploadResult = $this->uploadDokumenPendaftar(
@@ -265,13 +318,24 @@ class PublicController extends Controller
                         $category
                     );
 
+                    // Track uploaded file for potential rollback
+                    $uploadedFiles[] = $uploadResult['google_drive_id'];
+
                     // Save to database
                     $data[$field] = $uploadResult['file'];
                     $data[$field . '_google_drive_id'] = $uploadResult['google_drive_id'];
                     $data[$field . '_google_drive_link'] = $uploadResult['google_drive_link'];
+
+                    \Log::info("Successfully uploaded {$category}: {$uploadResult['google_drive_id']}");
+
                 } catch (Exception $e) {
+                    \Log::error("Failed to upload {$category}: " . $e->getMessage());
+
+                    // Rollback all uploaded files
+                    $this->rollbackUploadedFiles($uploadedFiles);
+
                     return redirect()->back()
-                        ->withErrors([$field => $e->getMessage()])
+                        ->withErrors([$field => "Gagal upload {$category}: " . $e->getMessage()])
                         ->withInput();
                 }
             }

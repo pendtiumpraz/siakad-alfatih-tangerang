@@ -10,6 +10,26 @@
             </div>
 
             <div class="p-8" x-data="registrationForm(@json($draft))">
+                <!-- Loading Overlay -->
+                <div x-show="isUploading"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center"
+                     style="display: none;">
+                    <div class="bg-white rounded-lg p-8 max-w-md mx-4">
+                        <div class="text-center">
+                            <svg class="animate-spin h-16 w-16 mx-auto text-islamic-green mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <h3 class="text-xl font-bold text-islamic-green mb-2">Sedang Mengupload Dokumen...</h3>
+                            <p class="text-gray-600 mb-4">Mohon tunggu, jangan tutup browser ini.</p>
+                            <p class="text-sm text-gray-500">Proses upload memerlukan waktu beberapa menit tergantung ukuran file dan koneksi internet Anda.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Progress Bar -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-2">
@@ -59,7 +79,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('public.spmb.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('public.spmb.store') }}" method="POST" enctype="multipart/form-data" @submit="handleSubmit">
                     @csrf
                     <input type="hidden" name="id" value="{{ $draft->id ?? '' }}">
                     <input type="hidden" name="old_foto" value="{{ $draft->foto ?? '' }}">
@@ -495,6 +515,7 @@
                 currentStep: 1,
                 agreedToTerms: false,
                 photoPreview: null,
+                isUploading: false,
                 formData: {
                     jalur_seleksi_id: draft?.jalur_seleksi_id || '',
                     nama: draft?.nama || '',
@@ -545,6 +566,15 @@
                             this.photoPreview = e.target.result;
                         };
                         reader.readAsDataURL(file);
+                    }
+                },
+
+                handleSubmit(event) {
+                    // Show loading overlay for final submission (not draft)
+                    if (!event.submitter?.textContent.includes('Draft')) {
+                        this.isUploading = true;
+                        // Allow form to submit naturally
+                        // Loading will be shown until page redirects or reloads
                     }
                 },
 

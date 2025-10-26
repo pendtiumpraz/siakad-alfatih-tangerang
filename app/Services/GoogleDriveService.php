@@ -175,7 +175,7 @@ class GoogleDriveService
      * @param string|null $parentId
      * @return string|null Folder ID or null
      */
-    protected function findFolder(string $folderName, ?string $parentId = null): ?string
+    public function findFolder(string $folderName, ?string $parentId = null): ?string
     {
         try {
             $query = "mimeType='application/vnd.google-apps.folder' and name='{$folderName}' and trashed=false";
