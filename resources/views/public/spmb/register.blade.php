@@ -629,16 +629,31 @@
                             const hoursSince = (new Date() - savedTime) / (1000 * 60 * 60);
 
                             if (hoursSince < 24) {
-                                this.formData = { ...this.formData, ...data.formData };
-                                this.currentStep = data.currentStep || 1;
-                                this.lastSaved = new Date(data.timestamp).toLocaleTimeString('id-ID');
+                                // Ask user if they want to restore
+                                const savedDate = new Date(data.timestamp).toLocaleString('id-ID');
+                                const wantsRestore = confirm(
+                                    `📋 Data pendaftaran ditemukan!\n\n` +
+                                    `Terakhir disimpan: ${savedDate}\n` +
+                                    `Step: ${data.currentStep} dari 8\n\n` +
+                                    `Lanjutkan dari sesi terakhir?\n\n` +
+                                    `✅ OK = Lanjutkan\n` +
+                                    `❌ Batal = Mulai dari awal`
+                                );
 
-                                // Show notification
-                                alert('Data pendaftaran Anda dipulihkan dari sesi terakhir.');
-                                console.log('Restored from localStorage, saved at:', data.timestamp);
+                                if (wantsRestore) {
+                                    this.formData = { ...this.formData, ...data.formData };
+                                    this.currentStep = data.currentStep || 1;
+                                    this.lastSaved = new Date(data.timestamp).toLocaleTimeString('id-ID');
+                                    console.log('✅ Restored from localStorage, saved at:', data.timestamp);
+                                } else {
+                                    // User chose to start fresh - clear localStorage
+                                    localStorage.removeItem('spmb_draft');
+                                    console.log('🆕 Starting fresh - localStorage cleared');
+                                }
                             } else {
-                                // Clear old data
+                                // Clear old data (>24 hours)
                                 localStorage.removeItem('spmb_draft');
+                                console.log('🧹 Cleared old localStorage data (>24 hours)');
                             }
                         }
                     } catch (e) {
