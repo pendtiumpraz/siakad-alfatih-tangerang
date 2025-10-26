@@ -4,235 +4,51 @@
     @push('styles')
     <style>
         @media print {
-            /* Hide non-printable elements */
+            /* Hide non-essential elements */
             .no-print {
                 display: none !important;
             }
 
-            /* Reset page margins and sizing - VERY COMPACT */
+            /* Hide sections that aren't essential for print */
+            .print-hide {
+                display: none !important;
+            }
+
             @page {
                 size: A4;
-                margin: 8mm 10mm !important;
+                margin: 15mm;
             }
 
             body {
-                margin: 0 !important;
-                padding: 0 !important;
-                font-size: 10px !important;
-                line-height: 1.4 !important;
+                font-size: 14px;
+                line-height: 1.6;
             }
 
-            /* Remove all extra margins and padding */
-            * {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-
-            /* Compact the card */
             .print-card {
                 box-shadow: none !important;
             }
 
-            /* Balanced spacing - compact but readable */
-            .mb-8 {
-                margin-bottom: 0.5rem !important;
-            }
-
-            .mb-6 {
-                margin-bottom: 0.4rem !important;
-            }
-
-            .mb-4, .mb-3 {
-                margin-bottom: 0.3rem !important;
-            }
-
-            .mb-2, .mb-1 {
-                margin-bottom: 0.15rem !important;
-            }
-
-            .mt-8, .mt-6 {
-                margin-top: 0.4rem !important;
-            }
-
-            .mt-4 {
-                margin-top: 0.3rem !important;
-            }
-
-            .mt-2, .mt-1 {
-                margin-top: 0.15rem !important;
-            }
-
-            .p-8, .p-6 {
-                padding: 0.5rem !important;
-            }
-
-            .p-4 {
-                padding: 0.4rem !important;
-            }
-
-            .py-6 {
-                padding-top: 0.4rem !important;
-                padding-bottom: 0.4rem !important;
-            }
-
-            .py-4 {
-                padding-top: 0.3rem !important;
-                padding-bottom: 0.3rem !important;
-            }
-
-            .px-8 {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
-
-            .px-6, .px-4 {
-                padding-left: 0.4rem !important;
-                padding-right: 0.4rem !important;
-            }
-
-            .border-b {
-                border-bottom-width: 1px !important;
-            }
-
-            .pb-8, .pb-6 {
-                padding-bottom: 0.3rem !important;
-            }
-
-            .pb-4, .pb-2 {
-                padding-bottom: 0.2rem !important;
-            }
-
-            .pt-6, .pt-4 {
-                padding-top: 0.3rem !important;
-            }
-
-            /* Readable heading sizes */
+            /* Normal readable heading sizes */
             h1 {
-                font-size: 16px !important;
-                margin-bottom: 0.3rem !important;
-                font-weight: bold !important;
+                font-size: 20px;
+                margin-bottom: 0.5rem;
             }
 
             h2 {
-                font-size: 12px !important;
-                margin-bottom: 0.25rem !important;
-                font-weight: bold !important;
-            }
-
-            h3 {
-                font-size: 11px !important;
+                font-size: 16px;
+                margin-bottom: 0.5rem;
             }
 
             .text-3xl {
-                font-size: 18px !important;
-                line-height: 1.3 !important;
+                font-size: 24px;
             }
 
             .text-2xl {
-                font-size: 14px !important;
+                font-size: 18px;
             }
 
             .text-xl {
-                font-size: 12px !important;
-            }
-
-            .text-lg {
-                font-size: 11px !important;
-            }
-
-            .text-sm {
-                font-size: 9px !important;
-            }
-
-            .text-xs {
-                font-size: 8px !important;
-            }
-
-            /* Minimal grid spacing */
-            .gap-6, .gap-4 {
-                gap: 0.2rem !important;
-            }
-
-            .space-y-4 > * + * {
-                margin-top: 0.2rem !important;
-            }
-
-            .space-y-3 > * + * {
-                margin-top: 0.15rem !important;
-            }
-
-            /* Much smaller photo */
-            img {
-                max-width: 60px !important;
-                max-height: 90px !important;
-            }
-
-            .w-32 {
-                width: 60px !important;
-            }
-
-            .h-48 {
-                height: 90px !important;
-            }
-
-            .w-16, .h-16 {
-                width: 30px !important;
-                height: 30px !important;
-            }
-
-            .mr-4 {
-                margin-right: 0.3rem !important;
-            }
-
-            .mr-2 {
-                margin-right: 0.2rem !important;
-            }
-
-            /* Compact borders */
-            .border-4 {
-                border-width: 2px !important;
-            }
-
-            /* Prevent page breaks */
-            .mb-8, .print-card {
-                page-break-inside: avoid !important;
-            }
-
-            /* Compact container */
-            .max-w-4xl {
-                max-width: 100% !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-            }
-
-            .container {
-                padding: 0 !important;
-            }
-
-            /* Remove rounded corners for print */
-            .rounded-2xl, .rounded-xl, .rounded-lg {
-                border-radius: 0 !important;
-            }
-
-            /* Compact SVG icons */
-            svg {
-                width: 12px !important;
-                height: 12px !important;
-            }
-
-            .w-6, .h-6 {
-                width: 12px !important;
-                height: 12px !important;
-            }
-
-            .w-5, .h-5 {
-                width: 10px !important;
-                height: 10px !important;
-            }
-
-            /* Compact background colors */
-            .bg-islamic-cream, .bg-gray-50 {
-                background-color: #f9f9f9 !important;
+                font-size: 16px;
             }
 
             /* Show print-only elements */
@@ -323,7 +139,7 @@
                         </div>
                     </div>
                     @if($pendaftar->foto_url)
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0 print-hide">
                             <div class="text-center">
                                 <div class="relative">
                                     <img id="pendaftar-foto"
@@ -389,15 +205,15 @@
                             <span class="text-gray-600 font-medium">Tempat, Tanggal Lahir:</span>
                             <p class="text-gray-900">{{ $pendaftar->tempat_lahir }}, {{ $pendaftar->tanggal_lahir->format('d F Y') }}</p>
                         </div>
-                        <div>
+                        <div class="print-hide">
                             <span class="text-gray-600 font-medium">Agama:</span>
                             <p class="text-gray-900">{{ $pendaftar->agama }}</p>
                         </div>
-                        <div>
+                        <div class="print-hide">
                             <span class="text-gray-600 font-medium">Email:</span>
                             <p class="text-gray-900">{{ $pendaftar->email }}</p>
                         </div>
-                        <div>
+                        <div class="print-hide">
                             <span class="text-gray-600 font-medium">No. Telepon:</span>
                             <p class="text-gray-900">{{ $pendaftar->phone }}</p>
                         </div>
@@ -405,7 +221,7 @@
                 </div>
 
                 <!-- Data Alamat -->
-                <div class="mb-8">
+                <div class="mb-8 print-hide">
                     <h2 class="text-xl font-bold text-islamic-green mb-4 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
@@ -424,7 +240,7 @@
                 </div>
 
                 <!-- Data Orang Tua -->
-                <div class="mb-8">
+                <div class="mb-8 print-hide">
                     <h2 class="text-xl font-bold text-islamic-green mb-4 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -456,7 +272,7 @@
                 </div>
 
                 <!-- Data Pendidikan -->
-                <div class="mb-8">
+                <div class="mb-8 print-hide">
                     <h2 class="text-xl font-bold text-islamic-green mb-4 flex items-center">
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -507,7 +323,7 @@
 
                 <!-- Keterangan (if any) -->
                 @if($pendaftar->keterangan)
-                    <div class="mb-8">
+                    <div class="mb-8 print-hide">
                         <h2 class="text-xl font-bold text-islamic-green mb-4">Keterangan</h2>
                         <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
                             <p class="text-gray-700 text-sm">{{ $pendaftar->keterangan }}</p>
@@ -516,7 +332,7 @@
                 @endif
 
                 <!-- Footer Info -->
-                <div class="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-500">
+                <div class="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-500 print-hide">
                     <p>Kartu pendaftaran ini dicetak pada {{ now()->format('d F Y, H:i') }} WIB</p>
                     <p class="mt-1">Untuk informasi lebih lanjut hubungi: (021) 1234-5678 atau email ke info@staialfatih.ac.id</p>
                 </div>
