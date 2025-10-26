@@ -252,6 +252,9 @@ class GoogleDriveService
                 'supportsAllDrives' => true
             ]);
 
+            // Make file publicly accessible for embedding
+            $this->makeFilePublic($file->id);
+
             Log::info("Google Drive: ✅ Successfully uploaded '{$fileName}' with ID: {$file->id}");
 
             return [
@@ -351,6 +354,29 @@ class GoogleDriveService
         $tempPath = $file->getRealPath();
 
         return $this->uploadFile($tempPath, $fileName, $pendaftarFolder, $file->getMimeType());
+    }
+
+    /**
+     * Make file publicly accessible
+     *
+     * @param string $fileId
+     * @return bool
+     */
+    public function makeFilePublic(string $fileId): bool
+    {
+        try {
+            $permission = new \Google_Service_Drive_Permission([
+                'type' => 'anyone',
+                'role' => 'reader',
+            ]);
+
+            $this->service->permissions->create($fileId, $permission);
+            Log::info("Google Drive: Set file {$fileId} to publicly accessible");
+            return true;
+        } catch (Exception $e) {
+            Log::error("Google Drive: Failed to set public permission for {$fileId}: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
