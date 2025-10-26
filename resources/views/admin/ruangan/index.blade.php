@@ -89,7 +89,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($ruangans ?? [] as $index => $ruangan)
-                        <tr class="hover:bg-[#F4E5C3] hover:bg-opacity-30 transition">
+                        <tr class="{{ $ruangan->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[#F4E5C3] hover:bg-opacity-30' }} transition">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($ruangans->currentPage() - 1) * $ruangans->perPage() + $index + 1 }}
                             </td>

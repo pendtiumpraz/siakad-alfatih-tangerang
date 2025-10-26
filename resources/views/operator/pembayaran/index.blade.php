@@ -97,7 +97,7 @@
     <x-islamic-card title="Daftar Pembayaran">
         <x-data-table :headers="['NIM', 'Nama', 'Jenis', 'Nominal', 'Jatuh Tempo', 'Tgl Bayar', 'Status', 'Bukti', 'Aksi']">
             @forelse($pembayarans ?? [] as $pembayaran)
-            <tr class="hover:bg-green-50 transition-colors">
+            <tr class="{{ $pembayaran->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-green-50' }} transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {{ $pembayaran->mahasiswa->nim ?? '-' }}
                 </td>

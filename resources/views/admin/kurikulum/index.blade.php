@@ -103,7 +103,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($kurikulums ?? [] as $index => $kurikulum)
-                        <tr class="hover:bg-[#F4E5C3] hover:bg-opacity-30 transition {{ $kurikulum->is_active ? 'border-l-4 border-[#D4AF37]' : '' }}">
+                        <tr class="{{ $kurikulum->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[#F4E5C3] hover:bg-opacity-30' }} transition {{ $kurikulum->is_active && !$kurikulum->trashed() ? 'border-l-4 border-[#D4AF37]' : '' }}">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($kurikulums->currentPage() - 1) * $kurikulums->perPage() + $index + 1 }}
                             </td>

@@ -99,7 +99,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($programStudis ?? [] as $index => $prodi)
-                        <tr class="hover:bg-[#F4E5C3] hover:bg-opacity-30 transition">
+                        <tr class="{{ $prodi->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[#F4E5C3] hover:bg-opacity-30' }} transition">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($programStudis->currentPage() - 1) * $programStudis->perPage() + $index + 1 }}
                             </td>
