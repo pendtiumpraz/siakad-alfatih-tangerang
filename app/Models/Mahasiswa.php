@@ -26,22 +26,75 @@ class Mahasiswa extends Model
         'angkatan',
         'semester_aktif',
         'status',
+        'tanggal_lulus',
+        'tanggal_dropout',
+        'semester_terakhir',
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
+        'tanggal_lulus' => 'date',
+        'tanggal_dropout' => 'date',
         'angkatan' => 'integer',
         'semester_aktif' => 'integer',
+        'semester_terakhir' => 'integer',
     ];
 
     /**
-     * Boot method to auto-calculate semester_aktif
+     * Boot method to auto-calculate semester_aktif and handle alumni status
      */
     protected static function booted()
     {
         static::saving(function ($mahasiswa) {
-            if ($mahasiswa->angkatan) {
+            // Handle status changes to lulus/dropout
+            if ($mahasiswa->isDirty('status')) {
+                $newStatus = $mahasiswa->status;
+                $oldStatus = $mahasiswa->getOriginal('status');
+
+                // When status changes to "lulus"
+                if ($newStatus === 'lulus' && $oldStatus !== 'lulus') {
+                    $mahasiswa->tanggal_lulus = now();
+                    $mahasiswa->tanggal_dropout = null; // Clear dropout date if exists
+                    $mahasiswa->semester_terakhir = static::calculateSemesterAktif($mahasiswa->angkatan);
+
+                    // Disable user account
+                    if ($mahasiswa->user) {
+                        $mahasiswa->user->update(['is_active' => false]);
+                    }
+                }
+
+                // When status changes to "dropout"
+                elseif ($newStatus === 'dropout' && $oldStatus !== 'dropout') {
+                    $mahasiswa->tanggal_dropout = now();
+                    $mahasiswa->tanggal_lulus = null; // Clear graduation date if exists
+                    $mahasiswa->semester_terakhir = static::calculateSemesterAktif($mahasiswa->angkatan);
+
+                    // Disable user account
+                    if ($mahasiswa->user) {
+                        $mahasiswa->user->update(['is_active' => false]);
+                    }
+                }
+
+                // When status changes back to "aktif" or "cuti" from lulus/dropout
+                elseif (in_array($newStatus, ['aktif', 'cuti']) && in_array($oldStatus, ['lulus', 'dropout'])) {
+                    $mahasiswa->tanggal_lulus = null;
+                    $mahasiswa->tanggal_dropout = null;
+                    $mahasiswa->semester_terakhir = null;
+
+                    // Re-enable user account
+                    if ($mahasiswa->user) {
+                        $mahasiswa->user->update(['is_active' => true]);
+                    }
+                }
+            }
+
+            // Auto-calculate semester_aktif for active/cuti status
+            if ($mahasiswa->angkatan && in_array($mahasiswa->status, ['aktif', 'cuti'])) {
                 $mahasiswa->semester_aktif = static::calculateSemesterAktif($mahasiswa->angkatan);
+            }
+            // For lulus/dropout, keep semester_aktif at semester_terakhir
+            elseif (in_array($mahasiswa->status, ['lulus', 'dropout']) && $mahasiswa->semester_terakhir) {
+                $mahasiswa->semester_aktif = $mahasiswa->semester_terakhir;
             }
         });
     }

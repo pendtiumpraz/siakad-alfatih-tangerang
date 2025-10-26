@@ -249,8 +249,38 @@
                             <label class="text-sm text-gray-600">
                                 <i class="fas fa-check-circle mr-1 text-[#D4AF37]"></i>Status Akademik
                             </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->mahasiswa->status ?? 'Aktif' }}</p>
+                            <p class="font-semibold text-[#2D5F3F]">{{ ucfirst($user->mahasiswa->status ?? 'Aktif') }}</p>
                         </div>
+
+                        @if($user->mahasiswa->status === 'lulus')
+                            <div>
+                                <label class="text-sm text-gray-600">
+                                    <i class="fas fa-calendar-check mr-1 text-[#D4AF37]"></i>Tanggal Lulus
+                                </label>
+                                <p class="font-semibold text-green-600">{{ $user->mahasiswa->tanggal_lulus ? $user->mahasiswa->tanggal_lulus->format('d F Y') : '-' }}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">
+                                    <i class="fas fa-layer-group mr-1 text-[#D4AF37]"></i>Lulus Semester
+                                </label>
+                                <p class="font-semibold text-green-600">{{ $user->mahasiswa->semester_terakhir ?? '-' }}</p>
+                            </div>
+                        @endif
+
+                        @if($user->mahasiswa->status === 'dropout')
+                            <div>
+                                <label class="text-sm text-gray-600">
+                                    <i class="fas fa-calendar-times mr-1 text-[#D4AF37]"></i>Tanggal Dropout
+                                </label>
+                                <p class="font-semibold text-red-600">{{ $user->mahasiswa->tanggal_dropout ? $user->mahasiswa->tanggal_dropout->format('d F Y') : '-' }}</p>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">
+                                    <i class="fas fa-layer-group mr-1 text-[#D4AF37]"></i>Dropout di Semester
+                                </label>
+                                <p class="font-semibold text-red-600">{{ $user->mahasiswa->semester_terakhir ?? '-' }}</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endif
