@@ -131,8 +131,8 @@
                         @enderror
                     </div>
 
-                    <!-- Is Active -->
-                    <div>
+                    <!-- Is Active (Hidden for mahasiswa - auto-managed by status) -->
+                    <div x-show="selectedRole !== 'mahasiswa'">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Status Akun
                         </label>
@@ -143,6 +143,7 @@
                                 <span class="ml-3 text-sm font-medium text-gray-700">Aktif</span>
                             </label>
                         </div>
+                        <p class="mt-1 text-xs text-gray-500">Status akun untuk mahasiswa dikelola otomatis berdasarkan status akademik</p>
                     </div>
                 </div>
             </div>
@@ -346,6 +347,7 @@
                         <select
                             id="mahasiswa_status"
                             name="mahasiswa_status"
+                            x-model="mahasiswaStatus"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('mahasiswa_status') border-red-500 @enderror"
                         >
                             <option value="aktif" {{ old('mahasiswa_status', $user->mahasiswa->status ?? 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
@@ -356,6 +358,60 @@
                         @error('mahasiswa_status')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                            Status "Lulus" dan "Dropout" akan otomatis menonaktifkan akun login
+                        </p>
+                    </div>
+
+                    <!-- Tanggal Lulus (Conditional) -->
+                    <div x-show="mahasiswaStatus === 'lulus'" x-transition>
+                        <label for="tanggal_lulus" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tanggal Lulus
+                        </label>
+                        <div class="flex gap-2">
+                            <input
+                                type="date"
+                                id="tanggal_lulus"
+                                name="tanggal_lulus"
+                                value="{{ old('tanggal_lulus', $user->mahasiswa->tanggal_lulus ? $user->mahasiswa->tanggal_lulus->format('Y-m-d') : '') }}"
+                                x-bind:disabled="useCurrentDateLulus"
+                                class="flex-1 px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lulus') border-red-500 @enderror"
+                            >
+                            <label class="flex items-center px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                                <input type="checkbox" x-model="useCurrentDateLulus" class="mr-2">
+                                <span class="text-sm font-medium text-gray-700">Hari Ini</span>
+                            </label>
+                        </div>
+                        @error('tanggal_lulus')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Centang "Hari Ini" untuk menggunakan tanggal saat ini</p>
+                    </div>
+
+                    <!-- Tanggal Dropout (Conditional) -->
+                    <div x-show="mahasiswaStatus === 'dropout'" x-transition>
+                        <label for="tanggal_dropout" class="block text-sm font-semibold text-gray-700 mb-2">
+                            Tanggal Dropout
+                        </label>
+                        <div class="flex gap-2">
+                            <input
+                                type="date"
+                                id="tanggal_dropout"
+                                name="tanggal_dropout"
+                                value="{{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ? $user->mahasiswa->tanggal_dropout->format('Y-m-d') : '') }}"
+                                x-bind:disabled="useCurrentDateDropout"
+                                class="flex-1 px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_dropout') border-red-500 @enderror"
+                            >
+                            <label class="flex items-center px-4 py-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition">
+                                <input type="checkbox" x-model="useCurrentDateDropout" class="mr-2">
+                                <span class="text-sm font-medium text-gray-700">Hari Ini</span>
+                            </label>
+                        </div>
+                        @error('tanggal_dropout')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Centang "Hari Ini" untuk menggunakan tanggal saat ini</p>
                     </div>
                 </div>
             </div>
@@ -490,44 +546,10 @@
     function userForm() {
         return {
             selectedRole: '{{ old('role', $user->role) }}',
-            calculateSemester() {
-                const angkatan = document.getElementById('angkatan')?.value;
-                const semesterField = document.getElementById('semester_aktif');
-
-                if (angkatan && semesterField) {
-                    const currentYear = new Date().getFullYear();
-                    const currentMonth = new Date().getMonth() + 1;
-
-                    // Determine if we're in odd (ganjil) or even (genap) semester
-                    // Odd semester: Aug-Dec (month 8-12), Even semester: Jan-Jul (month 1-7)
-                    const isOddSemester = currentMonth >= 8;
-
-                    // Calculate years since enrollment
-                    const yearsSince = currentYear - parseInt(angkatan);
-
-                    // Calculate semester: (years * 2) + current semester type
-                    const calculatedSemester = (yearsSince * 2) + (isOddSemester ? 1 : 2);
-
-                    // Only auto-fill if field is empty or has placeholder
-                    if (!semesterField.value || semesterField.value == '') {
-                        semesterField.value = Math.max(1, Math.min(14, calculatedSemester));
-                    }
-                }
-            }
+            mahasiswaStatus: '{{ old('mahasiswa_status', $user->mahasiswa->status ?? 'aktif') }}',
+            useCurrentDateLulus: {{ old('tanggal_lulus', $user->mahasiswa->tanggal_lulus ?? null) ? 'false' : 'true' }},
+            useCurrentDateDropout: {{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ?? null) ? 'false' : 'true' }}
         }
     }
-
-    // Add event listener for angkatan field
-    document.addEventListener('DOMContentLoaded', function() {
-        const angkatanField = document.getElementById('angkatan');
-        if (angkatanField) {
-            angkatanField.addEventListener('blur', function() {
-                const app = Alpine.$data(document.querySelector('[x-data]'));
-                if (app && app.selectedRole === 'mahasiswa') {
-                    app.calculateSemester();
-                }
-            });
-        }
-    });
 </script>
 @endsection

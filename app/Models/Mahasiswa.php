@@ -53,7 +53,10 @@ class Mahasiswa extends Model
 
                 // When status changes to "lulus"
                 if ($newStatus === 'lulus' && $oldStatus !== 'lulus') {
-                    $mahasiswa->tanggal_lulus = now();
+                    // Use manual date if provided, otherwise use now()
+                    if (!$mahasiswa->tanggal_lulus) {
+                        $mahasiswa->tanggal_lulus = now();
+                    }
                     $mahasiswa->tanggal_dropout = null; // Clear dropout date if exists
                     $mahasiswa->semester_terakhir = static::calculateSemesterAktif($mahasiswa->angkatan);
 
@@ -65,7 +68,10 @@ class Mahasiswa extends Model
 
                 // When status changes to "dropout"
                 elseif ($newStatus === 'dropout' && $oldStatus !== 'dropout') {
-                    $mahasiswa->tanggal_dropout = now();
+                    // Use manual date if provided, otherwise use now()
+                    if (!$mahasiswa->tanggal_dropout) {
+                        $mahasiswa->tanggal_dropout = now();
+                    }
                     $mahasiswa->tanggal_lulus = null; // Clear graduation date if exists
                     $mahasiswa->semester_terakhir = static::calculateSemesterAktif($mahasiswa->angkatan);
 

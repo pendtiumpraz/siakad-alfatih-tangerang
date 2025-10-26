@@ -100,6 +100,8 @@ class SuperAdminController extends Controller
             'angkatan' => ['required_if:role,mahasiswa', 'nullable', 'integer', 'min:2000', 'max:' . (date('Y') + 1)],
             'semester_aktif' => ['nullable', 'integer', 'min:1', 'max:14'],
             'mahasiswa_status' => ['nullable', 'in:aktif,cuti,lulus,dropout'],
+            'tanggal_lulus' => ['nullable', 'date', 'required_if:mahasiswa_status,lulus'],
+            'tanggal_dropout' => ['nullable', 'date', 'required_if:mahasiswa_status,dropout'],
 
             // Dosen fields
             'nidn' => ['required_if:role,dosen', 'nullable', 'string', 'max:255', 'unique:dosens,nidn'],
@@ -217,6 +219,8 @@ class SuperAdminController extends Controller
             'angkatan' => ['required_if:role,mahasiswa', 'nullable', 'integer', 'min:2000', 'max:' . (date('Y') + 1)],
             'semester_aktif' => ['nullable', 'integer', 'min:1', 'max:14'],
             'mahasiswa_status' => ['nullable', 'in:aktif,cuti,lulus,dropout'],
+            'tanggal_lulus' => ['nullable', 'date', 'required_if:mahasiswa_status,lulus'],
+            'tanggal_dropout' => ['nullable', 'date', 'required_if:mahasiswa_status,dropout'],
 
             // Dosen fields
             'nidn' => ['required_if:role,dosen', 'nullable', 'string', 'max:255', Rule::unique('dosens')->ignore($user->dosen->id ?? null)],
