@@ -3,10 +3,12 @@
 ## Masalah
 Foto dari Google Drive tidak bisa tampil, hanya muncul icon saja.
 
-## Penyebab
-File di Google Drive masih **private**, jadi browser tidak bisa load gambarnya.
+## Penyebab (SUDAH DIPERBAIKI)
+~~File di Google Drive masih **private**~~ ❌ (Bukan ini masalahnya)
 
-## Solusi (Jalankan Di Server Production)
+**Masalah sebenarnya:** CORS Error - Google Drive block request dari domain lain
+
+## Solusi (SUDAH DITERAPKAN)
 
 ### 1. Pull perubahan terbaru
 ```bash
@@ -14,20 +16,14 @@ cd /path/ke/siakad-app
 git pull origin main
 ```
 
-### 2. Jalankan command untuk membuat semua file jadi public
-```bash
-php artisan gdrive:make-public --model=pendaftar
-```
+### 2. ~~Jalankan command~~ **TIDAK PERLU LAGI!**
 
-**Output yang benar:**
-```
-🔧 Making Google Drive files publicly accessible...
-Processing SPMB Pendaftar records...
-Found X pendaftar(s) with Google Drive files.
+Command `gdrive:make-public` **tidak diperlukan** karena masalahnya bukan permission.
 
-✅ Processed Y file(s)
-✅ Done!
-```
+**Fix yang diterapkan:**
+- Ganti URL format dari `/uc?export=view` ke `/thumbnail?id=X&sz=w400`
+- Thumbnail API tidak kena CORS block
+- Remove `crossorigin="anonymous"` attribute
 
 ### 3. Test hasilnya
 1. Buka halaman result SPMB
@@ -52,13 +48,24 @@ Found X pendaftar(s) with Google Drive files.
 
 ## Upload Baru (Setelah Deploy)
 
-Semua upload baru otomatis langsung **public**, jadi foto langsung bisa tampil tanpa harus run command lagi.
+Semua upload (baru maupun lama) sekarang pakai **thumbnail API** yang tidak kena CORS, jadi langsung bisa tampil.
 
 ## Kalau Masih Tidak Tampil?
 
-Coba manual di Google Drive:
+### Cek 1: Pastikan file sudah di-share
+File harus "Anyone with the link can view":
 1. Buka Google Drive folder SPMB
 2. Klik kanan pada file foto
 3. Pilih "Share" / "Bagikan"
 4. Pilih "Anyone with the link can view"
-5. Copy link dan coba paste di browser
+
+### Cek 2: Test URL thumbnail langsung
+Copy URL ini dan ganti `FILE_ID_NYA`:
+```
+https://drive.google.com/thumbnail?id=FILE_ID_NYA&sz=w400
+```
+
+Paste di browser. Kalau foto muncul = sukses!
+
+### Cek 3: Browser console
+Buka halaman result → F12 → Console → lihat error apa yang muncul.
