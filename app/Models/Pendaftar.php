@@ -88,18 +88,34 @@ class Pendaftar extends Model
     }
 
     /**
-     * Generate unique registration number
+     * Generate unique registration number with random suffix for security
+     * Format: REG{YEAR}{RANDOM_6_CHARS} e.g., REG2025A1B2C3
      */
     public static function generateNomorPendaftaran(): string
     {
         $year = date('Y');
-        $lastNumber = static::whereYear('created_at', $year)
-            ->orderBy('id', 'desc')
-            ->first();
+        $maxAttempts = 10;
+        $attempt = 0;
 
-        $nextNumber = $lastNumber ? ((int) substr($lastNumber->nomor_pendaftaran, -5)) + 1 : 1;
+        do {
+            // Generate random 6-character alphanumeric string (uppercase)
+            $randomSuffix = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6));
+            $nomorPendaftaran = 'REG' . $year . $randomSuffix;
 
-        return 'REG' . $year . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+            // Check if this number already exists
+            $exists = static::where('nomor_pendaftaran', $nomorPendaftaran)->exists();
+
+            $attempt++;
+
+            // If unique, return it
+            if (!$exists) {
+                return $nomorPendaftaran;
+            }
+
+        } while ($attempt < $maxAttempts);
+
+        // Fallback: if random fails after max attempts, use timestamp-based
+        return 'REG' . $year . strtoupper(substr(md5(microtime(true) . rand()), 0, 6));
     }
 
     /**
