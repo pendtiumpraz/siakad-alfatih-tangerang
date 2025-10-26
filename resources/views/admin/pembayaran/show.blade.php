@@ -63,24 +63,13 @@
 
             <!-- Bukti Pembayaran -->
             <x-islamic-card title="Bukti Pembayaran">
-                @if($pembayaran->google_drive_link || $pembayaran->bukti_pembayaran)
+                @if($pembayaran->bukti_pembayaran)
                     @php
-                        // Prioritas pakai Google Drive link
-                        if ($pembayaran->google_drive_link) {
-                            $fileUrl = $pembayaran->google_drive_link;
-                            $fileName = 'Bukti Pembayaran (Google Drive)';
-                            $isImage = false; // Google Drive link tidak bisa preview langsung
-                        } else {
-                            // Cek apakah bukti_pembayaran sudah berupa full URL
-                            if (filter_var($pembayaran->bukti_pembayaran, FILTER_VALIDATE_URL)) {
-                                $fileUrl = $pembayaran->bukti_pembayaran;
-                            } else {
-                                $fileUrl = \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran);
-                            }
-                            $fileName = basename($pembayaran->bukti_pembayaran);
-                            $fileExtension = strtolower(pathinfo($pembayaran->bukti_pembayaran, PATHINFO_EXTENSION));
-                            $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                        }
+                        // bukti_pembayaran is always a full Google Drive URL
+                        $fileUrl = $pembayaran->bukti_pembayaran;
+                        $fileName = basename($pembayaran->bukti_pembayaran);
+                        // Google Drive links cannot be previewed directly as images
+                        $isImage = false;
                     @endphp
 
                     @if($isImage)

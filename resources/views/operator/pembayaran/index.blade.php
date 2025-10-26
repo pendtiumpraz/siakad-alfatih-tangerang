@@ -120,13 +120,17 @@
                     <x-status-badge :status="$pembayaran->status" type="payment" />
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                    @if($pembayaran->google_drive_link || $pembayaran->bukti_pembayaran)
-                        <a href="{{ $pembayaran->google_drive_link ?? \Illuminate\Support\Facades\Storage::url($pembayaran->bukti_pembayaran) }}" target="_blank" class="text-green-600 hover:text-green-800 flex items-center justify-center gap-1" title="Lihat Bukti">
+                    @if($pembayaran->bukti_pembayaran)
+                        @php
+                            // Bukti pembayaran is always a full URL (Google Drive)
+                            $buktiUrl = $pembayaran->bukti_pembayaran;
+                        @endphp
+                        <a href="{{ $buktiUrl }}" target="_blank" class="text-green-600 hover:text-green-800 flex items-center justify-center gap-1" title="Lihat Bukti">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
-                            @if($pembayaran->google_drive_link)
+                            @if(str_contains($buktiUrl, 'drive.google.com'))
                                 <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24" title="Google Drive">
                                     <path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.011.024 1.793 3.099 3.959 6.833l3.938 6.78-2.258 3.905c-1.242 2.148-2.25 3.919-2.241 3.936.013.024 1.653.042 3.646.042H19l2.24-3.878c1.232-2.133 2.231-3.906 2.22-3.942-.013-.036-1.802-3.138-3.975-6.894zm-2.555 5.894c-1.425-2.479-2.613-4.521-2.638-4.537-.038-.023-1.715 2.851-5.088 8.721l-1.067 1.859 2.255 3.904c1.241 2.148 2.259 3.893 2.263 3.879.004-.014 1.212-2.063 2.683-4.553l2.675-4.527z"/>
                                 </svg>
