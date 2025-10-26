@@ -92,7 +92,8 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
     Route::post('pembayaran/{id}/restore', [PembayaranController::class, 'restore'])->name('pembayaran.restore');
     Route::delete('pembayaran/{id}/force', [PembayaranController::class, 'forceDelete'])->name('pembayaran.force-delete');
-    Route::resource('pembayaran', PembayaranController::class);
+    Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
+    Route::delete('pembayaran/{pembayaran}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
@@ -140,7 +141,8 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     Route::get('pembayaran/{id}/kwitansi', [PembayaranController::class, 'printKwitansi'])->name('pembayaran.kwitansi');
     Route::post('pembayaran/{id}/restore', [PembayaranController::class, 'restore'])->name('pembayaran.restore');
     Route::delete('pembayaran/{id}/force', [PembayaranController::class, 'forceDelete'])->name('pembayaran.force-delete');
-    Route::resource('pembayaran', PembayaranController::class);
+    Route::resource('pembayaran', PembayaranController::class)->except(['destroy']);
+    Route::delete('pembayaran/{pembayaran}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
 
     // Master Data (Read-only for Operator)
     Route::get('program-studi', [ProgramStudiController::class, 'index'])->name('program-studi.index');
