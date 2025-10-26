@@ -54,7 +54,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <!-- Foto 4x6 -->
-            @if($pendaftar->google_drive_link)
+            @if($pendaftar->google_drive_link || $pendaftar->google_drive_file_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@
             @endif
 
             <!-- Ijazah/SKL -->
-            @if($pendaftar->ijazah_google_drive_link)
+            @if($pendaftar->ijazah_google_drive_link || $pendaftar->ijazah_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@
             @endif
 
             <!-- Transkrip Nilai -->
-            @if($pendaftar->transkrip_google_drive_link)
+            @if($pendaftar->transkrip_google_drive_link || $pendaftar->transkrip_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@
             @endif
 
             <!-- KTP -->
-            @if($pendaftar->ktp_google_drive_link)
+            @if($pendaftar->ktp_google_drive_link || $pendaftar->ktp_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +142,7 @@
             @endif
 
             <!-- Kartu Keluarga -->
-            @if($pendaftar->kk_google_drive_link)
+            @if($pendaftar->kk_google_drive_link || $pendaftar->kk_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +164,7 @@
             @endif
 
             <!-- Akta Kelahiran -->
-            @if($pendaftar->akta_google_drive_link)
+            @if($pendaftar->akta_google_drive_link || $pendaftar->akta_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,7 +186,7 @@
             @endif
 
             <!-- SKTM (Optional) -->
-            @if($pendaftar->sktm_google_drive_link)
+            @if($pendaftar->sktm_google_drive_link || $pendaftar->sktm_google_drive_id)
             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
                 <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
                     <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
