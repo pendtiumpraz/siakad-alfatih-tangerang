@@ -38,6 +38,7 @@ Route::prefix('spmb')->name('public.spmb.')->group(function() {
     Route::get('/check', [PublicController::class, 'checkRegistration'])->name('check');
     Route::post('/check', [PublicController::class, 'checkRegistrationPost'])->name('check.post');
     Route::get('/result', [PublicController::class, 'showResult'])->name('result');
+    Route::get('/download-pdf/{nomor_pendaftaran}', [PublicController::class, 'downloadPDF'])->name('download-pdf');
     Route::post('/upload-payment/{id}', [PublicController::class, 'uploadPayment'])->name('upload-payment');
 });
 

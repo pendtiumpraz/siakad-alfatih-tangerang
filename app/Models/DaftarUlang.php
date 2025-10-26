@@ -4,28 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DaftarUlang extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'pendaftar_id',
-        'nim',
-        'biaya_daftar_ulang',
-        'pembayaran_status',
-        'bukti_pembayaran',
-        'verified_by',
-        'verified_at',
-        'berkas_uploaded',
         'status',
-        'completed_at',
+        'nim_sementara',
+        'biaya_daftar_ulang',
+        'metode_pembayaran',
+        'nomor_referensi',
+        'bukti_pembayaran',
+        'dokumen_tambahan',
         'keterangan',
+        'tanggal_verifikasi',
+        'verified_by',
+        'mahasiswa_user_id',
     ];
 
     protected $casts = [
         'biaya_daftar_ulang' => 'decimal:2',
-        'verified_at' => 'datetime',
-        'completed_at' => 'datetime',
-        'berkas_uploaded' => 'array',
+        'dokumen_tambahan' => 'array',
+        'tanggal_verifikasi' => 'datetime',
     ];
 
     /**
@@ -45,11 +48,11 @@ class DaftarUlang extends Model
     }
 
     /**
-     * Scope to filter by pembayaran status
+     * Get the mahasiswa user (created after verification)
      */
-    public function scopeByPembayaranStatus($query, $status)
+    public function mahasiswaUser(): BelongsTo
     {
-        return $query->where('pembayaran_status', $status);
+        return $this->belongsTo(User::class, 'mahasiswa_user_id');
     }
 
     /**
@@ -61,15 +64,7 @@ class DaftarUlang extends Model
     }
 
     /**
-     * Scope to get completed re-registrations
-     */
-    public function scopeCompleted($query)
-    {
-        return $query->where('status', 'completed');
-    }
-
-    /**
-     * Scope to get pending re-registrations
+     * Scope to get pending daftar ulang
      */
     public function scopePending($query)
     {
@@ -77,30 +72,34 @@ class DaftarUlang extends Model
     }
 
     /**
-     * Check if all required documents are uploaded
+     * Scope to get verified daftar ulang
      */
-    public function hasAllRequiredDocuments(): bool
+    public function scopeVerified($query)
     {
-        $requiredDocuments = ['ijazah', 'foto', 'ktp', 'kk'];
-        $uploadedDocuments = array_keys($this->berkas_uploaded ?? []);
-
-        foreach ($requiredDocuments as $doc) {
-            if (!in_array($doc, $uploadedDocuments)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $query->where('status', 'verified');
     }
 
     /**
-     * Get missing documents
+     * Check if payment proof is uploaded
      */
-    public function getMissingDocuments(): array
+    public function hasPaymentProof(): bool
     {
-        $requiredDocuments = ['ijazah', 'foto', 'ktp', 'kk'];
-        $uploadedDocuments = array_keys($this->berkas_uploaded ?? []);
+        return !empty($this->bukti_pembayaran);
+    }
 
-        return array_diff($requiredDocuments, $uploadedDocuments);
+    /**
+     * Check if verified
+     */
+    public function isVerified(): bool
+    {
+        return $this->status === 'verified';
+    }
+
+    /**
+     * Check if user account has been created
+     */
+    public function hasUserAccount(): bool
+    {
+        return !empty($this->mahasiswa_user_id);
     }
 }

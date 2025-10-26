@@ -530,4 +530,29 @@ class PublicController extends Controller
                 ->with('error', 'Gagal upload bukti pembayaran. Silakan coba lagi atau hubungi admin.');
         }
     }
+
+    /**
+     * Download registration card as PDF
+     */
+    public function downloadPDF($nomorPendaftaran)
+    {
+        $pendaftar = Pendaftar::where('nomor_pendaftaran', $nomorPendaftaran)
+            ->with(['jalurSeleksi', 'programStudiPilihan1', 'programStudiPilihan2'])
+            ->firstOrFail();
+
+        // Load SPMB settings for PDF
+        $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
+        $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
+
+        // Create PDF from view
+        $pdf = \PDF::loadView('public.spmb.pdf', compact('pendaftar', 'spmbPhone', 'spmbEmail'));
+
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+
+        // Download with filename
+        $filename = 'Kartu_Pendaftaran_' . $pendaftar->nomor_pendaftaran . '.pdf';
+
+        return $pdf->download($filename);
+    }
 }
