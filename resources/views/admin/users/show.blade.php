@@ -288,39 +288,15 @@
                         </div>
                         <div>
                             <label class="text-sm text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-1 text-[#D4AF37]"></i>Tempat Lahir
+                                <i class="fas fa-envelope mr-1 text-[#D4AF37]"></i>Email Dosen
                             </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->tempat_lahir ?? '-' }}</p>
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-600">
-                                <i class="fas fa-birthday-cake mr-1 text-[#D4AF37]"></i>Tanggal Lahir
-                            </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->tanggal_lahir ? \Carbon\Carbon::parse($user->dosen->tanggal_lahir)->format('d F Y') : '-' }}</p>
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-600">
-                                <i class="fas fa-venus-mars mr-1 text-[#D4AF37]"></i>Jenis Kelamin
-                            </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->jenis_kelamin == 'L' ? 'Laki-laki' : ($user->dosen->jenis_kelamin == 'P' ? 'Perempuan' : '-') }}</p>
+                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->email_dosen ?? '-' }}</p>
                         </div>
                         <div>
                             <label class="text-sm text-gray-600">
                                 <i class="fas fa-phone mr-1 text-[#D4AF37]"></i>Nomor Telepon
                             </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->no_telepon ?? '-' }}</p>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="text-sm text-gray-600">
-                                <i class="fas fa-map-marked-alt mr-1 text-[#D4AF37]"></i>Alamat
-                            </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->alamat ?? '-' }}</p>
-                        </div>
-                        <div>
-                            <label class="text-sm text-gray-600">
-                                <i class="fas fa-check-circle mr-1 text-[#D4AF37]"></i>Status Dosen
-                            </label>
-                            <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->status ?? 'Aktif' }}</p>
                         </div>
                     </div>
                 </div>
