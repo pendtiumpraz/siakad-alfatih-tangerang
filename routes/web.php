@@ -260,3 +260,8 @@ Route::middleware(['auth', 'role:super_admin,operator,dosen'])->prefix('master')
 });
 
 require __DIR__.'/auth.php';
+
+// Debug routes (only enable in development)
+if (file_exists(__DIR__.'/web-debug.php')) {
+    require __DIR__.'/web-debug.php';
+}
