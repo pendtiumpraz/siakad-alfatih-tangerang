@@ -33,11 +33,24 @@
                 <!-- Progress Bar -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-semibold text-gray-600">Step <span x-text="currentStep"></span> of 8</span>
+                        <div>
+                            <span class="text-sm font-semibold text-gray-600">Step <span x-text="currentStep"></span> of 8</span>
+                            <!-- Auto-save indicator -->
+                            <span x-show="lastSaved" class="ml-3 text-xs text-green-600">
+                                <svg class="inline w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Auto-saved <span x-text="lastSaved"></span>
+                            </span>
+                        </div>
                         <span class="text-sm font-semibold text-islamic-green" x-text="Math.round((currentStep / 8) * 100) + '%'"></span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-islamic-green h-2 rounded-full transition-all duration-300" :style="`width: ${(currentStep / 8) * 100}%`"></div>
+                    </div>
+                    <!-- Info about auto-save -->
+                    <div class="mt-2 text-xs text-gray-500 italic">
+                        💡 Data Anda otomatis tersimpan di browser setiap 30 detik dan saat ganti step. Jangan khawatir kehilangan data!
                     </div>
                 </div>
 
@@ -78,6 +91,27 @@
                         </div>
                     </div>
                 @endif
+
+                <!-- Info Banner: Save Draft Feature -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">Informasi Penting</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li><strong>Auto-Save:</strong> Data Anda otomatis tersimpan di browser setiap 30 detik</li>
+                                    <li><strong>Simpan Draft:</strong> Klik tombol "Simpan Draft" untuk menyimpan ke database (bisa dilanjutkan kapan saja)</li>
+                                    <li><strong>Aman:</strong> Jika terjadi error atau browser tertutup, data tetap tersimpan</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <form action="{{ route('public.spmb.store') }}" method="POST" enctype="multipart/form-data" @submit="handleSubmit">
                     @csrf
@@ -516,6 +550,8 @@
                 agreedToTerms: false,
                 photoPreview: null,
                 isUploading: false,
+                autoSaveEnabled: true,
+                lastSaved: null,
                 formData: {
                     jalur_seleksi_id: draft?.jalur_seleksi_id || '',
                     nama: draft?.nama || '',
@@ -544,9 +580,81 @@
                     program_studi_pilihan_2: draft?.program_studi_pilihan_2 || '',
                 },
 
+                init() {
+                    // Try to restore from localStorage if no draft from server
+                    if (!draft || Object.keys(draft).length === 0) {
+                        this.restoreFromLocalStorage();
+                    }
+
+                    // Auto-save to localStorage every 30 seconds
+                    if (this.autoSaveEnabled) {
+                        setInterval(() => {
+                            this.saveToLocalStorage();
+                        }, 30000); // 30 seconds
+                    }
+
+                    // Save on page unload (before leaving page)
+                    window.addEventListener('beforeunload', () => {
+                        this.saveToLocalStorage();
+                    });
+                },
+
+                saveToLocalStorage() {
+                    try {
+                        const dataToSave = {
+                            formData: this.formData,
+                            currentStep: this.currentStep,
+                            timestamp: new Date().toISOString()
+                        };
+                        localStorage.setItem('spmb_draft', JSON.stringify(dataToSave));
+                        this.lastSaved = new Date().toLocaleTimeString('id-ID');
+                        console.log('Auto-saved to localStorage at', this.lastSaved);
+                    } catch (e) {
+                        console.error('Failed to save to localStorage:', e);
+                    }
+                },
+
+                restoreFromLocalStorage() {
+                    try {
+                        const saved = localStorage.getItem('spmb_draft');
+                        if (saved) {
+                            const data = JSON.parse(saved);
+
+                            // Only restore if saved within last 24 hours
+                            const savedTime = new Date(data.timestamp);
+                            const hoursSince = (new Date() - savedTime) / (1000 * 60 * 60);
+
+                            if (hoursSince < 24) {
+                                this.formData = { ...this.formData, ...data.formData };
+                                this.currentStep = data.currentStep || 1;
+                                this.lastSaved = new Date(data.timestamp).toLocaleTimeString('id-ID');
+
+                                // Show notification
+                                alert('Data pendaftaran Anda dipulihkan dari sesi terakhir.');
+                                console.log('Restored from localStorage, saved at:', data.timestamp);
+                            } else {
+                                // Clear old data
+                                localStorage.removeItem('spmb_draft');
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Failed to restore from localStorage:', e);
+                    }
+                },
+
+                clearLocalStorage() {
+                    try {
+                        localStorage.removeItem('spmb_draft');
+                        console.log('Cleared localStorage draft');
+                    } catch (e) {
+                        console.error('Failed to clear localStorage:', e);
+                    }
+                },
+
                 nextStep() {
                     if (this.currentStep < 8) {
                         this.currentStep++;
+                        this.saveToLocalStorage(); // Auto-save when changing step
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
                 },
@@ -554,6 +662,7 @@
                 prevStep() {
                     if (this.currentStep > 1) {
                         this.currentStep--;
+                        this.saveToLocalStorage(); // Auto-save when changing step
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
                 },
@@ -573,8 +682,14 @@
                     // Show loading overlay for final submission (not draft)
                     if (!event.submitter?.textContent.includes('Draft')) {
                         this.isUploading = true;
+                        // Clear localStorage on successful submission
+                        // Will be cleared when page redirects
+                        this.clearLocalStorage();
                         // Allow form to submit naturally
                         // Loading will be shown until page redirects or reloads
+                    } else {
+                        // Save to localStorage when saving draft
+                        this.saveToLocalStorage();
                     }
                 },
 
