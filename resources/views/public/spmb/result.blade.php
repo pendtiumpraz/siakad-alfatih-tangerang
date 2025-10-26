@@ -1,6 +1,109 @@
 <x-layouts.public>
     <x-slot name="title">Status Pendaftaran</x-slot>
 
+    @push('styles')
+    <style>
+        @media print {
+            /* Hide non-printable elements */
+            .no-print {
+                display: none !important;
+            }
+
+            /* Reset page margins and sizing */
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-size: 11px !important;
+            }
+
+            /* Compact the card */
+            .print-card {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Reduce spacing */
+            .mb-8 {
+                margin-bottom: 1rem !important;
+            }
+
+            .mb-6 {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .mb-4 {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .p-8 {
+                padding: 1rem !important;
+            }
+
+            .py-6 {
+                padding-top: 0.75rem !important;
+                padding-bottom: 0.75rem !important;
+            }
+
+            .px-8 {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            /* Reduce heading sizes */
+            h1 {
+                font-size: 18px !important;
+            }
+
+            h2 {
+                font-size: 14px !important;
+            }
+
+            .text-3xl {
+                font-size: 20px !important;
+            }
+
+            .text-2xl {
+                font-size: 16px !important;
+            }
+
+            .text-xl {
+                font-size: 14px !important;
+            }
+
+            /* Compact grid */
+            .gap-6 {
+                gap: 0.5rem !important;
+            }
+
+            .gap-4 {
+                gap: 0.25rem !important;
+            }
+
+            /* Smaller photo */
+            img {
+                max-width: 80px !important;
+                max-height: 120px !important;
+            }
+
+            /* Prevent page breaks inside sections */
+            .mb-8 {
+                page-break-inside: avoid;
+            }
+
+            /* Fit everything on one page */
+            .max-w-4xl {
+                max-width: 100% !important;
+            }
+        }
+    </style>
+    @endpush
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Success Message -->
         @if(session('success'))
@@ -75,10 +178,21 @@
                             <div class="text-xs text-gray-500 mt-2">Simpan nomor ini untuk keperluan administrasi</div>
                         </div>
                     </div>
-                    @if($pendaftar->foto)
+                    @if($pendaftar->google_drive_link || $pendaftar->foto)
                         <div class="flex-shrink-0">
                             <div class="text-center">
-                                <img src="{{ Storage::url($pendaftar->foto) }}"
+                                @php
+                                    // Use Google Drive link if available, otherwise use local storage
+                                    $fotoUrl = $pendaftar->google_drive_link ?? $pendaftar->foto;
+                                    // Convert Google Drive view link to preview link for better display
+                                    if (str_contains($fotoUrl, 'drive.google.com')) {
+                                        $fotoUrl = str_replace('/view?usp=drivesdk', '/preview', $fotoUrl);
+                                    } elseif (!str_starts_with($fotoUrl, 'http')) {
+                                        // Local storage file
+                                        $fotoUrl = Storage::url($fotoUrl);
+                                    }
+                                @endphp
+                                <img src="{{ $fotoUrl }}"
                                      alt="Foto {{ $pendaftar->nama }}"
                                      class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto">
                                 <div class="text-xs text-gray-500 mt-2">Pas Foto 4x6</div>
