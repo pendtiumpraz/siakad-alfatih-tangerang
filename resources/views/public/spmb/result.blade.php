@@ -9,96 +9,201 @@
                 display: none !important;
             }
 
-            /* Reset page margins and sizing */
+            /* Reset page margins and sizing - VERY COMPACT */
             @page {
                 size: A4;
-                margin: 10mm;
+                margin: 8mm 10mm !important;
             }
 
             body {
-                margin: 0;
-                padding: 0;
-                font-size: 11px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 9px !important;
+                line-height: 1.3 !important;
+            }
+
+            /* Remove all extra margins and padding */
+            * {
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
             /* Compact the card */
             .print-card {
                 box-shadow: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
             }
 
-            /* Reduce spacing */
+            /* VERY minimal spacing */
             .mb-8 {
-                margin-bottom: 1rem !important;
+                margin-bottom: 0.4rem !important;
             }
 
             .mb-6 {
-                margin-bottom: 0.75rem !important;
+                margin-bottom: 0.3rem !important;
             }
 
-            .mb-4 {
-                margin-bottom: 0.5rem !important;
+            .mb-4, .mb-3, .mb-2, .mb-1 {
+                margin-bottom: 0.2rem !important;
             }
 
-            .p-8 {
-                padding: 1rem !important;
+            .mt-8, .mt-6, .mt-4 {
+                margin-top: 0.3rem !important;
             }
 
-            .py-6 {
-                padding-top: 0.75rem !important;
-                padding-bottom: 0.75rem !important;
+            .mt-2, .mt-1 {
+                margin-top: 0.1rem !important;
             }
 
-            .px-8 {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
+            .p-8, .p-6, .p-4 {
+                padding: 0.4rem !important;
             }
 
-            /* Reduce heading sizes */
+            .py-6, .py-4 {
+                padding-top: 0.3rem !important;
+                padding-bottom: 0.3rem !important;
+            }
+
+            .px-8, .px-6, .px-4 {
+                padding-left: 0.4rem !important;
+                padding-right: 0.4rem !important;
+            }
+
+            .border-b {
+                border-bottom-width: 1px !important;
+            }
+
+            .pb-8, .pb-6, .pb-4, .pb-2 {
+                padding-bottom: 0.2rem !important;
+            }
+
+            .pt-6, .pt-4 {
+                padding-top: 0.2rem !important;
+            }
+
+            /* Very small heading sizes */
             h1 {
-                font-size: 18px !important;
+                font-size: 14px !important;
+                margin-bottom: 0.2rem !important;
             }
 
             h2 {
-                font-size: 14px !important;
+                font-size: 11px !important;
+                margin-bottom: 0.2rem !important;
+            }
+
+            h3 {
+                font-size: 10px !important;
             }
 
             .text-3xl {
-                font-size: 20px !important;
-            }
-
-            .text-2xl {
                 font-size: 16px !important;
             }
 
+            .text-2xl {
+                font-size: 13px !important;
+            }
+
             .text-xl {
-                font-size: 14px !important;
+                font-size: 11px !important;
             }
 
-            /* Compact grid */
-            .gap-6 {
-                gap: 0.5rem !important;
+            .text-lg {
+                font-size: 10px !important;
             }
 
-            .gap-4 {
-                gap: 0.25rem !important;
+            .text-sm {
+                font-size: 8px !important;
             }
 
-            /* Smaller photo */
+            .text-xs {
+                font-size: 7px !important;
+            }
+
+            /* Minimal grid spacing */
+            .gap-6, .gap-4 {
+                gap: 0.2rem !important;
+            }
+
+            .space-y-4 > * + * {
+                margin-top: 0.2rem !important;
+            }
+
+            .space-y-3 > * + * {
+                margin-top: 0.15rem !important;
+            }
+
+            /* Much smaller photo */
             img {
-                max-width: 80px !important;
-                max-height: 120px !important;
+                max-width: 60px !important;
+                max-height: 90px !important;
             }
 
-            /* Prevent page breaks inside sections */
-            .mb-8 {
-                page-break-inside: avoid;
+            .w-32 {
+                width: 60px !important;
             }
 
-            /* Fit everything on one page */
+            .h-48 {
+                height: 90px !important;
+            }
+
+            .w-16, .h-16 {
+                width: 30px !important;
+                height: 30px !important;
+            }
+
+            .mr-4 {
+                margin-right: 0.3rem !important;
+            }
+
+            .mr-2 {
+                margin-right: 0.2rem !important;
+            }
+
+            /* Compact borders */
+            .border-4 {
+                border-width: 2px !important;
+            }
+
+            /* Prevent page breaks */
+            .mb-8, .print-card {
+                page-break-inside: avoid !important;
+            }
+
+            /* Compact container */
             .max-w-4xl {
                 max-width: 100% !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .container {
+                padding: 0 !important;
+            }
+
+            /* Remove rounded corners for print */
+            .rounded-2xl, .rounded-xl, .rounded-lg {
+                border-radius: 0 !important;
+            }
+
+            /* Compact SVG icons */
+            svg {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            .w-6, .h-6 {
+                width: 12px !important;
+                height: 12px !important;
+            }
+
+            .w-5, .h-5 {
+                width: 10px !important;
+                height: 10px !important;
+            }
+
+            /* Compact background colors */
+            .bg-islamic-cream, .bg-gray-50 {
+                background-color: #f9f9f9 !important;
             }
         }
     </style>
