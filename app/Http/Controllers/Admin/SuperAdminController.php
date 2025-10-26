@@ -122,18 +122,28 @@ class SuperAdminController extends Controller
 
         try {
             // Create user
-            $user = User::create([
+            $userCreateData = [
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role'],
-                'is_active' => $validated['is_active'] ?? true,
-            ]);
+            ];
+
+            // Only set is_active for non-mahasiswa roles
+            // Mahasiswa is_active will be auto-managed by status akademik
+            if ($validated['role'] !== 'mahasiswa') {
+                $userCreateData['is_active'] = $validated['is_active'] ?? true;
+            } else {
+                // For mahasiswa, set initial is_active based on status
+                $userCreateData['is_active'] = !in_array($validated['mahasiswa_status'] ?? 'aktif', ['lulus', 'dropout']);
+            }
+
+            $user = User::create($userCreateData);
 
             // Create related record based on role
             switch ($validated['role']) {
                 case 'mahasiswa':
-                    Mahasiswa::create([
+                    $mahasiswaData = [
                         'user_id' => $user->id,
                         'program_studi_id' => $validated['program_studi_id'],
                         'nim' => $validated['nim'],
@@ -146,7 +156,17 @@ class SuperAdminController extends Controller
                         'angkatan' => $validated['angkatan'] ?? date('Y'),
                         // semester_aktif akan auto-calculated by Model
                         'status' => $validated['mahasiswa_status'] ?? 'aktif',
-                    ]);
+                    ];
+
+                    // Add manual dates if provided
+                    if (isset($validated['tanggal_lulus'])) {
+                        $mahasiswaData['tanggal_lulus'] = $validated['tanggal_lulus'];
+                    }
+                    if (isset($validated['tanggal_dropout'])) {
+                        $mahasiswaData['tanggal_dropout'] = $validated['tanggal_dropout'];
+                    }
+
+                    Mahasiswa::create($mahasiswaData);
                     break;
 
                 case 'dosen':
@@ -240,13 +260,20 @@ class SuperAdminController extends Controller
         DB::beginTransaction();
 
         try {
-            // Update user
-            $user->update([
+            // Update user basic info
+            $userUpdateData = [
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'role' => $validated['role'],
-                'is_active' => $validated['is_active'] ?? true,
-            ]);
+            ];
+
+            // Only update is_active for non-mahasiswa roles
+            // Mahasiswa is_active is auto-managed by status akademik
+            if ($validated['role'] !== 'mahasiswa') {
+                $userUpdateData['is_active'] = $validated['is_active'] ?? true;
+            }
+
+            $user->update($userUpdateData);
 
             // Update password if provided
             if (!empty($validated['password'])) {
@@ -256,21 +283,31 @@ class SuperAdminController extends Controller
             // Update or create related record based on role
             switch ($validated['role']) {
                 case 'mahasiswa':
+                    $mahasiswaData = [
+                        'program_studi_id' => $validated['program_studi_id'],
+                        'nim' => $validated['nim'],
+                        'nama_lengkap' => $validated['mahasiswa_nama_lengkap'],
+                        'tempat_lahir' => $validated['tempat_lahir'] ?? null,
+                        'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
+                        'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
+                        'alamat' => $validated['alamat'] ?? null,
+                        'no_telepon' => $validated['no_telepon'] ?? null,
+                        'angkatan' => $validated['angkatan'] ?? date('Y'),
+                        // semester_aktif akan auto-calculated by Model
+                        'status' => $validated['mahasiswa_status'] ?? 'aktif',
+                    ];
+
+                    // Add manual dates if provided
+                    if (isset($validated['tanggal_lulus'])) {
+                        $mahasiswaData['tanggal_lulus'] = $validated['tanggal_lulus'];
+                    }
+                    if (isset($validated['tanggal_dropout'])) {
+                        $mahasiswaData['tanggal_dropout'] = $validated['tanggal_dropout'];
+                    }
+
                     $user->mahasiswa()->updateOrCreate(
                         ['user_id' => $user->id],
-                        [
-                            'program_studi_id' => $validated['program_studi_id'],
-                            'nim' => $validated['nim'],
-                            'nama_lengkap' => $validated['mahasiswa_nama_lengkap'],
-                            'tempat_lahir' => $validated['tempat_lahir'] ?? null,
-                            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-                            'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
-                            'alamat' => $validated['alamat'] ?? null,
-                            'no_telepon' => $validated['no_telepon'] ?? null,
-                            'angkatan' => $validated['angkatan'] ?? date('Y'),
-                            // semester_aktif akan auto-calculated by Model
-                            'status' => $validated['mahasiswa_status'] ?? 'aktif',
-                        ]
+                        $mahasiswaData
                     );
                     break;
 
