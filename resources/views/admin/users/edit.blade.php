@@ -254,12 +254,17 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Semester Aktif
                         </label>
-                        <div class="w-full px-4 py-2 border-2 border-gray-300 bg-gray-50 rounded-lg text-gray-700 font-semibold">
-                            {{ $user->mahasiswa ? \App\Models\Mahasiswa::calculateSemesterAktif($user->mahasiswa->angkatan) : '-' }}
+                        <div class="w-full px-4 py-2 border-2 border-gray-300 bg-gray-50 rounded-lg text-gray-700 font-semibold" x-text="calculatedSemester()">
+                            -
                         </div>
                         <p class="mt-1 text-xs text-gray-500">
                             <i class="fas fa-info-circle text-blue-500"></i>
-                            Otomatis dihitung berdasarkan angkatan dan tanggal hari ini
+                            <span x-show="mahasiswaStatus === 'lulus' || mahasiswaStatus === 'dropout'">
+                                Dihitung dari angkatan s/d tanggal <span x-text="mahasiswaStatus === 'lulus' ? 'lulus' : 'dropout'"></span>
+                            </span>
+                            <span x-show="mahasiswaStatus === 'aktif' || mahasiswaStatus === 'cuti'">
+                                Dihitung dari angkatan s/d hari ini
+                            </span>
                         </p>
                     </div>
 
@@ -548,7 +553,60 @@
             selectedRole: '{{ old('role', $user->role) }}',
             mahasiswaStatus: '{{ old('mahasiswa_status', $user->mahasiswa->status ?? 'aktif') }}',
             useCurrentDateLulus: {{ old('tanggal_lulus', $user->mahasiswa->tanggal_lulus ?? null) ? 'false' : 'true' }},
-            useCurrentDateDropout: {{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ?? null) ? 'false' : 'true' }}
+            useCurrentDateDropout: {{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ?? null) ? 'false' : 'true' }},
+
+            calculatedSemester() {
+                const angkatanInput = document.getElementById('angkatan');
+                if (!angkatanInput || !angkatanInput.value) return '-';
+
+                const angkatan = parseInt(angkatanInput.value);
+                let referenceDate = new Date();
+
+                // Untuk status lulus/dropout, gunakan tanggal yang dipilih
+                if (this.mahasiswaStatus === 'lulus') {
+                    if (this.useCurrentDateLulus) {
+                        referenceDate = new Date(); // Hari ini
+                    } else {
+                        const tanggalLulusInput = document.getElementById('tanggal_lulus');
+                        if (tanggalLulusInput && tanggalLulusInput.value) {
+                            referenceDate = new Date(tanggalLulusInput.value);
+                        }
+                    }
+                } else if (this.mahasiswaStatus === 'dropout') {
+                    if (this.useCurrentDateDropout) {
+                        referenceDate = new Date(); // Hari ini
+                    } else {
+                        const tanggalDropoutInput = document.getElementById('tanggal_dropout');
+                        if (tanggalDropoutInput && tanggalDropoutInput.value) {
+                            referenceDate = new Date(tanggalDropoutInput.value);
+                        }
+                    }
+                }
+                // Untuk aktif/cuti, gunakan hari ini (default)
+
+                const year = referenceDate.getFullYear();
+                const month = referenceDate.getMonth() + 1; // JavaScript months are 0-indexed
+
+                // Hitung selisih tahun
+                const yearDiff = year - angkatan;
+
+                let semester;
+                if (month >= 8) {
+                    // Semester ganjil (Agustus-Desember)
+                    semester = (yearDiff * 2) + 1;
+                } else if (month >= 2) {
+                    // Semester genap (Februari-Juli)
+                    semester = (yearDiff * 2);
+                } else {
+                    // Januari masih semester ganjil tahun sebelumnya
+                    semester = ((yearDiff - 1) * 2) + 1;
+                }
+
+                // Maksimal 14 semester
+                semester = Math.min(Math.max(semester, 1), 14);
+
+                return semester;
+            }
         }
     }
 </script>
