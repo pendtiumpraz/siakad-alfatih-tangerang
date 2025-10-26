@@ -361,19 +361,59 @@ class PublicController extends Controller
 
         $data['status'] = $isDraft ? 'draft' : 'pending';
 
-        // Create or update pendaftar
-        if ($request->input('id')) {
-            $pendaftar = Pendaftar::findOrFail($request->input('id'));
-            $pendaftar->update($data);
-        } else {
-            $pendaftar = Pendaftar::create($data);
+        \Log::info("📝 Saving pendaftar to database...");
+
+        // Create or update pendaftar with error handling
+        try {
+            if ($request->input('id')) {
+                $pendaftar = Pendaftar::findOrFail($request->input('id'));
+                $pendaftar->update($data);
+                \Log::info("✅ Updated pendaftar: " . $pendaftar->nomor_pendaftaran);
+            } else {
+                $pendaftar = Pendaftar::create($data);
+                \Log::info("✅ Created pendaftar: " . $pendaftar->nomor_pendaftaran);
+            }
+
+        } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+            \Log::error("❌ Duplicate entry error: " . $e->getMessage());
+
+            // Rollback uploaded files
+            $this->rollbackUploadedFiles($uploadedFiles);
+
+            // Check which field is duplicate
+            if (strpos($e->getMessage(), 'email') !== false) {
+                return redirect()->back()
+                    ->withErrors(['email' => 'Email sudah terdaftar. Gunakan email lain atau cek status pendaftaran Anda.'])
+                    ->withInput();
+            } elseif (strpos($e->getMessage(), 'nik') !== false) {
+                return redirect()->back()
+                    ->withErrors(['nik' => 'NIK sudah terdaftar. Gunakan NIK lain atau cek status pendaftaran Anda.'])
+                    ->withInput();
+            } else {
+                return redirect()->back()
+                    ->withErrors(['_error' => 'Data sudah terdaftar sebelumnya. Silakan cek status pendaftaran Anda.'])
+                    ->withInput();
+            }
+
+        } catch (Exception $e) {
+            \Log::error("❌ Failed to save pendaftar: " . $e->getMessage());
+            \Log::error("Exception trace: " . $e->getTraceAsString());
+
+            // Rollback uploaded files
+            $this->rollbackUploadedFiles($uploadedFiles);
+
+            return redirect()->back()
+                ->withErrors(['_error' => 'Gagal menyimpan pendaftaran: ' . $e->getMessage()])
+                ->withInput();
         }
 
         if ($isDraft) {
+            \Log::info("📤 Redirecting with draft success");
             return redirect()->back()
                 ->with('success', 'Pendaftaran berhasil disimpan sebagai draft. Anda dapat melanjutkan nanti menggunakan email: ' . $pendaftar->email);
         }
 
+        \Log::info("📤 Redirecting to result page: " . $pendaftar->nomor_pendaftaran);
         return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
             ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $pendaftar->nomor_pendaftaran);
     }
