@@ -306,51 +306,91 @@
                         </div>
                     </div>
 
-                    <!-- Step 7: Upload Foto -->
+                    <!-- Step 7: Upload Dokumen -->
                     <div x-show="currentStep === 7" x-transition>
-                        <h2 class="text-2xl font-bold text-islamic-green mb-6">Upload Foto</h2>
+                        <h2 class="text-2xl font-bold text-islamic-green mb-6">Upload Dokumen Pendaftaran</h2>
 
                         <div class="space-y-6">
+                            <!-- Info Alert -->
                             <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
                                 <div class="flex">
                                     <div class="flex-shrink-0">
                                         <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1 a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800">Persyaratan Foto:</h3>
+                                        <h3 class="text-sm font-medium text-blue-800">Informasi Upload:</h3>
                                         <div class="mt-2 text-sm text-blue-700">
                                             <ul class="list-disc list-inside space-y-1">
-                                                <li>Format: JPG, JPEG, atau PNG</li>
-                                                <li>Ukuran maksimal: 500KB</li>
-                                                <li>Rasio: 4x6 (portrait)</li>
-                                                <li>Pas foto berwarna dengan latar belakang merah/biru</li>
+                                                <li>Semua dokumen akan diupload ke Google Drive</li>
+                                                <li>Pastikan scan dokumen jelas dan terbaca</li>
+                                                <li>SKTM hanya wajib untuk jalur beasiswa</li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Pas Foto <span class="text-red-500">*</span></label>
+                            <!-- 1. Pas Foto -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">1. Pas Foto 4x6 <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">JPG/PNG, Max: 500KB, Rasio 4x6, Latar merah/biru</p>
                                 <input type="file" name="foto" accept="image/jpeg,image/jpg,image/png"
                                        @change="previewPhoto($event)"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-transparent">
-                            </div>
-
-                            <!-- Photo Preview -->
-                            <div x-show="photoPreview" class="text-center">
-                                <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
-                                <img :src="photoPreview" alt="Photo preview" class="max-w-xs mx-auto border-2 border-gray-300 rounded-lg">
-                            </div>
-
-                            @if($draft && $draft->foto)
-                                <div class="text-center">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Foto Tersimpan:</p>
-                                    <img src="{{ Storage::url($draft->foto) }}" alt="Saved photo" class="max-w-xs mx-auto border-2 border-gray-300 rounded-lg">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                                <div x-show="photoPreview" class="mt-3 text-center">
+                                    <img :src="photoPreview" alt="Preview" class="max-w-xs mx-auto border-2 border-gray-300 rounded">
                                 </div>
-                            @endif
+                            </div>
+
+                            <!-- 2. Ijazah -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">2. Ijazah / SKL <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 2MB</p>
+                                <input type="file" name="ijazah" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 3. Transkrip -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">3. Transkrip Nilai / Raport <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 2MB</p>
+                                <input type="file" name="transkrip_nilai" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 4. KTP -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">4. KTP <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
+                                <input type="file" name="ktp" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 5. Kartu Keluarga -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">5. Kartu Keluarga <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
+                                <input type="file" name="kartu_keluarga" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 6. Akta -->
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <label class="block font-semibold text-gray-800 mb-2">6. Akta Kelahiran <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
+                                <input type="file" name="akta_kelahiran" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 7. SKTM -->
+                            <div class="border border-dashed rounded-lg p-4 bg-yellow-50">
+                                <label class="block font-semibold text-gray-800 mb-2">7. SKTM <span class="text-xs text-gray-500">(Opsional - Jalur Beasiswa)</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
+                                <input type="file" name="sktm" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
                         </div>
                     </div>
 

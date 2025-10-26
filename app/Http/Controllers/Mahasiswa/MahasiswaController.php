@@ -8,12 +8,29 @@ use App\Models\Jadwal;
 use App\Models\Khs;
 use App\Models\Pembayaran;
 use App\Models\Semester;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class MahasiswaController extends Controller
 {
+    protected $driveService;
+
+    public function __construct()
+    {
+        // Initialize Google Drive service if enabled
+        if (config('google-drive.enabled')) {
+            try {
+                $this->driveService = new GoogleDriveService();
+            } catch (Exception $e) {
+                \Log::warning('Google Drive service initialization failed: ' . $e->getMessage());
+                $this->driveService = null;
+            }
+        }
+    }
+
     /**
      * Get the authenticated mahasiswa instance.
      */
@@ -32,6 +49,63 @@ class MahasiswaController extends Controller
         }
 
         return $mahasiswa;
+    }
+
+    /**
+     * Upload bukti pembayaran to Google Drive ONLY
+     * Local storage is NOT used - files must go to Google Drive
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param Mahasiswa $mahasiswa
+     * @param string $jenisPembayaran
+     * @return array ['bukti_pembayaran' => path, 'google_drive_file_id' => id, 'google_drive_link' => link]
+     * @throws Exception if Google Drive is not available or upload fails
+     */
+    protected function uploadBuktiPembayaran($file, $mahasiswa, $jenisPembayaran)
+    {
+        if (!$this->driveService) {
+            throw new Exception('Google Drive tidak aktif. Hubungi administrator untuk mengaktifkan Google Drive terlebih dahulu.');
+        }
+
+        try {
+            // Upload to Google Drive (REQUIRED)
+            $driveResult = $this->driveService->uploadPembayaran(
+                $file,
+                $mahasiswa->nim,
+                $jenisPembayaran
+            );
+
+            \Log::info("Mahasiswa uploaded bukti pembayaran to Google Drive: {$driveResult['id']}");
+
+            return [
+                'bukti_pembayaran' => $driveResult['webViewLink'],
+                'google_drive_file_id' => $driveResult['id'],
+                'google_drive_link' => $driveResult['webViewLink'],
+            ];
+        } catch (Exception $e) {
+            \Log::error("Failed to upload bukti pembayaran to Google Drive: " . $e->getMessage());
+            throw new Exception("Gagal upload bukti pembayaran ke Google Drive: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete bukti pembayaran from Google Drive ONLY
+     */
+    protected function deleteBuktiPembayaran($pembayaran)
+    {
+        if (!$this->driveService) {
+            return;
+        }
+
+        // Delete from Google Drive if file_id exists
+        if ($pembayaran->google_drive_file_id) {
+            try {
+                $this->driveService->deleteFile($pembayaran->google_drive_file_id);
+                \Log::info("Deleted mahasiswa bukti pembayaran from Google Drive: {$pembayaran->google_drive_file_id}");
+            } catch (Exception $e) {
+                \Log::error("Failed to delete bukti pembayaran from Google Drive: " . $e->getMessage());
+            }
+        }
     }
 
     /**
@@ -459,7 +533,7 @@ class MahasiswaController extends Controller
     }
 
     /**
-     * Upload bukti pembayaran by mahasiswa.
+     * Upload bukti pembayaran by mahasiswa to Google Drive ONLY.
      */
     public function uploadBukti(Request $request, $id)
     {
@@ -482,32 +556,21 @@ class MahasiswaController extends Controller
         try {
             \DB::beginTransaction();
 
-            // Delete old file if exists
-            if ($pembayaran->bukti_pembayaran && Storage::disk('public')->exists($pembayaran->bukti_pembayaran)) {
-                Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
-            }
+            // Delete old file from Google Drive if exists
+            $this->deleteBuktiPembayaran($pembayaran);
 
-            // Generate custom filename
-            $extension = $request->file('bukti_pembayaran')->getClientOriginalExtension();
-            $semester = Semester::find($pembayaran->semester_id);
-
-            $filename = sprintf(
-                'bukti_bayar_%s_%s_%s_%s_%s.%s',
-                str_replace(' ', '_', strtolower($pembayaran->jenis_pembayaran)),
-                $semester ? $semester->tahun_akademik : date('Y'),
-                $semester ? strtolower($semester->jenis) : 'reguler',
-                \Str::slug($mahasiswa->nama_lengkap),
-                date('Ymd_His'),
-                $extension
+            // Upload to Google Drive
+            $uploadResult = $this->uploadBuktiPembayaran(
+                $request->file('bukti_pembayaran'),
+                $mahasiswa,
+                $pembayaran->jenis_pembayaran
             );
-
-            // Store the file
-            $buktiPath = $request->file('bukti_pembayaran')
-                ->storeAs('pembayaran/bukti', $filename, 'public');
 
             // Update pembayaran record
             $pembayaran->update([
-                'bukti_pembayaran' => $buktiPath,
+                'bukti_pembayaran' => $uploadResult['bukti_pembayaran'],
+                'google_drive_file_id' => $uploadResult['google_drive_file_id'],
+                'google_drive_link' => $uploadResult['google_drive_link'],
                 'status' => 'pending', // Change status to pending when bukti uploaded
             ]);
 
@@ -516,20 +579,25 @@ class MahasiswaController extends Controller
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Bukti pembayaran berhasil diupload. Menunggu verifikasi dari operator.',
+                    'message' => 'Bukti pembayaran berhasil diupload ke Google Drive. Menunggu verifikasi dari operator.',
                     'data' => $pembayaran
                 ]);
             }
 
             return redirect()->route('mahasiswa.pembayaran.index')
-                ->with('success', 'Bukti pembayaran berhasil diupload. Menunggu verifikasi dari operator.');
+                ->with('success', 'Bukti pembayaran berhasil diupload ke Google Drive. Menunggu verifikasi dari operator.');
 
         } catch (\Exception $e) {
             \DB::rollBack();
 
-            // Delete uploaded file if transaction fails
-            if (isset($buktiPath) && Storage::disk('public')->exists($buktiPath)) {
-                Storage::disk('public')->delete($buktiPath);
+            // Delete uploaded file from Google Drive if transaction fails
+            if (isset($uploadResult) && $uploadResult && $uploadResult['google_drive_file_id'] && $this->driveService) {
+                try {
+                    $this->driveService->deleteFile($uploadResult['google_drive_file_id']);
+                    \Log::info('Deleted Google Drive file after rollback: ' . $uploadResult['google_drive_file_id']);
+                } catch (Exception $deleteException) {
+                    \Log::error('Failed to delete Google Drive file after rollback: ' . $deleteException->getMessage());
+                }
             }
 
             if ($request->expectsJson()) {
@@ -540,7 +608,7 @@ class MahasiswaController extends Controller
             }
 
             return redirect()->route('mahasiswa.pembayaran.index')
-                ->with('error', 'Gagal mengupload bukti pembayaran. Silakan coba lagi.');
+                ->with('error', 'Gagal mengupload bukti pembayaran: ' . $e->getMessage());
         }
     }
 }

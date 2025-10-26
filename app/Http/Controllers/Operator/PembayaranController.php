@@ -47,82 +47,59 @@ class PembayaranController extends Controller
     }
 
     /**
-     * Upload bukti pembayaran to Google Drive or local storage
+     * Upload bukti pembayaran to Google Drive ONLY
+     * Local storage is NOT used - files must go to Google Drive
      *
      * @param \Illuminate\Http\UploadedFile $file
      * @param Mahasiswa $mahasiswa
      * @param string $jenisPembayaran
-     * @return array ['bukti_path' => path, 'google_drive_file_id' => id, 'google_drive_link' => link]
+     * @return array ['bukti_pembayaran' => path, 'google_drive_file_id' => id, 'google_drive_link' => link]
+     * @throws Exception if Google Drive is not available or upload fails
      */
     protected function uploadBuktiPembayaran($file, $mahasiswa, $jenisPembayaran)
     {
-        $result = [
-            'bukti_pembayaran' => null,
-            'google_drive_file_id' => null,
-            'google_drive_link' => null,
-        ];
-
-        if ($this->driveService) {
-            // Upload to Google Drive
-            try {
-                $driveResult = $this->driveService->uploadPembayaran(
-                    $file,
-                    $mahasiswa->nim,
-                    $jenisPembayaran
-                );
-
-                $result['google_drive_file_id'] = $driveResult['id'];
-                $result['google_drive_link'] = $driveResult['webViewLink'];
-                $result['bukti_pembayaran'] = $driveResult['webViewLink']; // For backward compatibility
-
-                \Log::info("Uploaded bukti pembayaran to Google Drive: {$driveResult['id']}");
-            } catch (Exception $e) {
-                \Log::error("Failed to upload to Google Drive: " . $e->getMessage());
-                // Fallback to local storage
-                $result['bukti_pembayaran'] = $this->uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran);
-            }
-        } else {
-            // Upload to local storage
-            $result['bukti_pembayaran'] = $this->uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran);
+        if (!$this->driveService) {
+            throw new Exception('Google Drive tidak aktif. Hubungi administrator untuk mengaktifkan Google Drive terlebih dahulu.');
         }
 
-        return $result;
+        try {
+            // Upload to Google Drive (REQUIRED)
+            $driveResult = $this->driveService->uploadPembayaran(
+                $file,
+                $mahasiswa->nim,
+                $jenisPembayaran
+            );
+
+            \Log::info("Uploaded bukti pembayaran to Google Drive: {$driveResult['id']}");
+
+            return [
+                'bukti_pembayaran' => $driveResult['webViewLink'],
+                'google_drive_file_id' => $driveResult['id'],
+                'google_drive_link' => $driveResult['webViewLink'],
+            ];
+        } catch (Exception $e) {
+            \Log::error("Failed to upload bukti pembayaran to Google Drive: " . $e->getMessage());
+            throw new Exception("Gagal upload bukti pembayaran ke Google Drive: " . $e->getMessage());
+        }
     }
 
     /**
-     * Upload to local storage (fallback)
-     */
-    protected function uploadToLocalStorage($file, $mahasiswa, $jenisPembayaran)
-    {
-        $extension = $file->getClientOriginalExtension();
-        $filename = sprintf(
-            '%s_%s_%s.%s',
-            $mahasiswa->nim,
-            $jenisPembayaran,
-            date('Ymd_His'),
-            $extension
-        );
-
-        return $file->storeAs('pembayaran/bukti', $filename, 'public');
-    }
-
-    /**
-     * Delete bukti pembayaran from Google Drive or local storage
+     * Delete bukti pembayaran from Google Drive ONLY
      */
     protected function deleteBuktiPembayaran($pembayaran)
     {
-        // Delete from Google Drive if file_id exists
-        if ($pembayaran->google_drive_file_id && $this->driveService) {
-            try {
-                $this->driveService->deleteFile($pembayaran->google_drive_file_id);
-            } catch (Exception $e) {
-                \Log::error("Failed to delete from Google Drive: " . $e->getMessage());
-            }
+        if (!$this->driveService) {
+            return;
         }
 
-        // Delete from local storage if path exists
-        if ($pembayaran->bukti_pembayaran && !$pembayaran->google_drive_file_id) {
-            Storage::disk('public')->delete($pembayaran->bukti_pembayaran);
+        // Delete from Google Drive if file_id exists
+        if ($pembayaran->google_drive_file_id) {
+            try {
+                $this->driveService->deleteFile($pembayaran->google_drive_file_id);
+                \Log::info("Deleted bukti pembayaran from Google Drive: {$pembayaran->google_drive_file_id}");
+            } catch (Exception $e) {
+                \Log::error("Failed to delete bukti pembayaran from Google Drive: " . $e->getMessage());
+            }
         }
     }
 
@@ -325,16 +302,13 @@ class PembayaranController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // Delete uploaded file if transaction failed
-            if (isset($uploadResult) && $uploadResult) {
-                if ($uploadResult['google_drive_file_id'] && $this->driveService) {
-                    try {
-                        $this->driveService->deleteFile($uploadResult['google_drive_file_id']);
-                    } catch (Exception $deleteException) {
-                        \Log::error('Failed to delete Google Drive file after rollback: ' . $deleteException->getMessage());
-                    }
-                } elseif ($uploadResult['bukti_pembayaran']) {
-                    Storage::disk('public')->delete($uploadResult['bukti_pembayaran']);
+            // Delete uploaded file from Google Drive if transaction failed
+            if (isset($uploadResult) && $uploadResult && $uploadResult['google_drive_file_id'] && $this->driveService) {
+                try {
+                    $this->driveService->deleteFile($uploadResult['google_drive_file_id']);
+                    \Log::info('Deleted Google Drive file after rollback: ' . $uploadResult['google_drive_file_id']);
+                } catch (Exception $deleteException) {
+                    \Log::error('Failed to delete Google Drive file after rollback: ' . $deleteException->getMessage());
                 }
             }
 
