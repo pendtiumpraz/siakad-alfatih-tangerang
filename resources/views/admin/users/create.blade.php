@@ -249,25 +249,18 @@
                         @enderror
                     </div>
 
-                    <!-- Semester Aktif -->
+                    <!-- Semester Aktif (Auto-calculated, Read-only) -->
                     <div>
-                        <label for="semester_aktif" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Semester Aktif
                         </label>
-                        <input
-                            type="number"
-                            id="semester_aktif"
-                            name="semester_aktif"
-                            value="{{ old('semester_aktif') }}"
-                            min="1"
-                            max="14"
-                            placeholder="Auto-calculated"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('semester_aktif') border-red-500 @enderror"
-                        >
-                        @error('semester_aktif')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-1 text-xs text-gray-500">Otomatis dihitung dari angkatan, bisa diubah manual</p>
+                        <div class="w-full px-4 py-2 border-2 border-gray-300 bg-gray-50 rounded-lg text-gray-700 font-semibold">
+                            Otomatis dihitung dari angkatan
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                            Otomatis dihitung berdasarkan angkatan dan tanggal hari ini
+                        </p>
                     </div>
 
                     <!-- Tempat Lahir -->
@@ -493,45 +486,8 @@
 <script>
     function userForm() {
         return {
-            selectedRole: '{{ old('role') }}',
-            calculateSemester() {
-                const angkatan = document.getElementById('angkatan')?.value;
-                const semesterField = document.getElementById('semester_aktif');
-
-                if (angkatan && semesterField) {
-                    const currentYear = new Date().getFullYear();
-                    const currentMonth = new Date().getMonth() + 1;
-
-                    // Determine if we're in odd (ganjil) or even (genap) semester
-                    // Odd semester: Aug-Dec (month 8-12), Even semester: Jan-Jul (month 1-7)
-                    const isOddSemester = currentMonth >= 8;
-
-                    // Calculate years since enrollment
-                    const yearsSince = currentYear - parseInt(angkatan);
-
-                    // Calculate semester: (years * 2) + current semester type
-                    const calculatedSemester = (yearsSince * 2) + (isOddSemester ? 1 : 2);
-
-                    // Only auto-fill if field is empty or has placeholder
-                    if (!semesterField.value || semesterField.value == '') {
-                        semesterField.value = Math.max(1, Math.min(14, calculatedSemester));
-                    }
-                }
-            }
+            selectedRole: '{{ old('role') }}'
         }
     }
-
-    // Add event listener for angkatan field
-    document.addEventListener('DOMContentLoaded', function() {
-        const angkatanField = document.getElementById('angkatan');
-        if (angkatanField) {
-            angkatanField.addEventListener('blur', function() {
-                const app = Alpine.$data(document.querySelector('[x-data]'));
-                if (app && app.selectedRole === 'mahasiswa') {
-                    app.calculateSemester();
-                }
-            });
-        }
-    });
 </script>
 @endsection

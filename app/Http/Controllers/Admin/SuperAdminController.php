@@ -138,7 +138,7 @@ class SuperAdminController extends Controller
                         'alamat' => $validated['alamat'] ?? null,
                         'no_telepon' => $validated['no_telepon'] ?? null,
                         'angkatan' => $validated['angkatan'] ?? date('Y'),
-                        'semester_aktif' => $validated['semester_aktif'] ?? 1,
+                        // semester_aktif akan auto-calculated by Model
                         'status' => $validated['mahasiswa_status'] ?? 'aktif',
                     ]);
                     break;
@@ -260,7 +260,7 @@ class SuperAdminController extends Controller
                             'alamat' => $validated['alamat'] ?? null,
                             'no_telepon' => $validated['no_telepon'] ?? null,
                             'angkatan' => $validated['angkatan'] ?? date('Y'),
-                            'semester_aktif' => $validated['semester_aktif'] ?? 1,
+                            // semester_aktif akan auto-calculated by Model
                             'status' => $validated['mahasiswa_status'] ?? 'aktif',
                         ]
                     );

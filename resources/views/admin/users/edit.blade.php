@@ -248,25 +248,18 @@
                         @enderror
                     </div>
 
-                    <!-- Semester Aktif -->
+                    <!-- Semester Aktif (Auto-calculated, Read-only) -->
                     <div>
-                        <label for="semester_aktif" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
                             Semester Aktif
                         </label>
-                        <input
-                            type="number"
-                            id="semester_aktif"
-                            name="semester_aktif"
-                            value="{{ old('semester_aktif', $user->mahasiswa->semester_aktif ?? '') }}"
-                            min="1"
-                            max="14"
-                            placeholder="Auto-calculated"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('semester_aktif') border-red-500 @enderror"
-                        >
-                        @error('semester_aktif')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-1 text-xs text-gray-500">Otomatis dihitung dari angkatan, bisa diubah manual</p>
+                        <div class="w-full px-4 py-2 border-2 border-gray-300 bg-gray-50 rounded-lg text-gray-700 font-semibold">
+                            {{ $user->mahasiswa ? \App\Models\Mahasiswa::calculateSemesterAktif($user->mahasiswa->angkatan) : '-' }}
+                        </div>
+                        <p class="mt-1 text-xs text-gray-500">
+                            <i class="fas fa-info-circle text-blue-500"></i>
+                            Otomatis dihitung berdasarkan angkatan dan tanggal hari ini
+                        </p>
                     </div>
 
                     <!-- Tempat Lahir -->
