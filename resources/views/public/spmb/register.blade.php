@@ -101,12 +101,12 @@
                             </svg>
                         </div>
                         <div class="ml-3">
-                            <h3 class="text-sm font-medium text-blue-800">Informasi Penting</h3>
+                            <h3 class="text-sm font-medium text-blue-800">💡 Informasi Penting</h3>
                             <div class="mt-2 text-sm text-blue-700">
                                 <ul class="list-disc list-inside space-y-1">
-                                    <li><strong>Auto-Save:</strong> Data Anda otomatis tersimpan di browser setiap 30 detik</li>
-                                    <li><strong>Simpan Draft:</strong> Klik tombol "Simpan Draft" untuk menyimpan ke database (bisa dilanjutkan kapan saja)</li>
-                                    <li><strong>Aman:</strong> Jika terjadi error atau browser tertutup, data tetap tersimpan</li>
+                                    <li><strong>Auto-Save Lokal:</strong> Data otomatis tersimpan di browser Anda setiap 30 detik (tidak hilang meski error atau browser tertutup)</li>
+                                    <li><strong>Simpan Draft ke Database:</strong> Tombol "Simpan Draft" ada di <strong>halaman terakhir (Step 8)</strong> untuk menyimpan ke server (bisa dilanjutkan kapan saja dengan email)</li>
+                                    <li><strong>Aman & Fleksibel:</strong> Isi form dengan santai, data Anda aman tersimpan! 🛡️</li>
                                 </ul>
                             </div>
                         </div>
@@ -516,24 +516,27 @@
                         </button>
 
                         <div class="flex gap-3 ml-auto">
-                            <button type="button" @click="saveDraft"
-                                    x-show="currentStep < 8"
-                                    class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition">
-                                Simpan Draft
-                            </button>
-
+                            <!-- Tombol Next: tampil step 1-7 -->
                             <button type="button" @click="nextStep"
                                     x-show="currentStep < 8"
                                     class="px-6 py-2 bg-islamic-green hover:bg-islamic-green-light text-white font-semibold rounded-lg transition">
                                 Selanjutnya
                             </button>
 
+                            <!-- Tombol Simpan Draft: hanya tampil di step 8 -->
+                            <button type="button" @click="saveDraft"
+                                    x-show="currentStep === 8"
+                                    class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition">
+                                💾 Simpan Draft
+                            </button>
+
+                            <!-- Tombol Submit: tampil di step 8 -->
                             <button type="submit"
                                     x-show="currentStep === 8"
                                     :disabled="!agreedToTerms"
                                     :class="agreedToTerms ? 'bg-islamic-gold hover:bg-yellow-500' : 'bg-gray-300 cursor-not-allowed'"
                                     class="px-8 py-2 text-islamic-green font-bold rounded-lg transition">
-                                Submit Pendaftaran
+                                ✅ Submit Pendaftaran
                             </button>
                         </div>
                     </div>
