@@ -48,6 +48,168 @@
         </div>
     @endif
 
+    <!-- Documents Section -->
+    <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Dokumen Pendaftaran</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Foto 4x6 -->
+            @if($pendaftar->google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Foto 4x6
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- Ijazah/SKL -->
+            @if($pendaftar->ijazah_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Ijazah/SKL
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->ijazah_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->ijazah_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- Transkrip Nilai -->
+            @if($pendaftar->transkrip_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    Transkrip Nilai
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->transkrip_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->transkrip_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- KTP -->
+            @if($pendaftar->ktp_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                    </svg>
+                    KTP
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->ktp_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->ktp_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- Kartu Keluarga -->
+            @if($pendaftar->kk_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    Kartu Keluarga
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->kk_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->kk_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- Akta Kelahiran -->
+            @if($pendaftar->akta_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Akta Kelahiran
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->akta_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->akta_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+            <!-- SKTM (Optional) -->
+            @if($pendaftar->sktm_google_drive_link)
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                <h4 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    SKTM
+                </h4>
+                <div class="mb-3">
+                    <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->sktm_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
+                </div>
+                <a href="{{ $pendaftar->sktm_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-semibold">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Lihat di Google Drive
+                </a>
+            </div>
+            @endif
+
+        </div>
+    </div>
+
     <!-- Personal Information -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Data Pribadi</h3>
