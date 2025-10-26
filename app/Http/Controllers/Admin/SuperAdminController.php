@@ -150,13 +150,8 @@ class SuperAdminController extends Controller
                         'nama_lengkap' => $validated['dosen_nama_lengkap'],
                         'gelar_depan' => $validated['gelar_depan'] ?? null,
                         'gelar_belakang' => $validated['gelar_belakang'] ?? null,
-                        'tempat_lahir' => $validated['tempat_lahir'] ?? null,
-                        'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-                        'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
-                        'alamat' => $validated['alamat'] ?? null,
+                        'email_dosen' => $validated['email'] ?? null,
                         'no_telepon' => $validated['no_telepon'] ?? null,
-                        'email' => $validated['email'],
-                        'status' => $validated['dosen_status'] ?? 'aktif',
                     ]);
                     break;
 
@@ -279,13 +274,8 @@ class SuperAdminController extends Controller
                             'nama_lengkap' => $validated['dosen_nama_lengkap'],
                             'gelar_depan' => $validated['gelar_depan'] ?? null,
                             'gelar_belakang' => $validated['gelar_belakang'] ?? null,
-                            'tempat_lahir' => $validated['tempat_lahir'] ?? null,
-                            'tanggal_lahir' => $validated['tanggal_lahir'] ?? null,
-                            'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
-                            'alamat' => $validated['alamat'] ?? null,
+                            'email_dosen' => $validated['email'] ?? null,
                             'no_telepon' => $validated['no_telepon'] ?? null,
-                            'email' => $validated['email'],
-                            'status' => $validated['dosen_status'] ?? 'aktif',
                         ]
                     );
                     break;
