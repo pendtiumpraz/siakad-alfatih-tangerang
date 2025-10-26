@@ -5,6 +5,24 @@
 
     RewriteEngine On
 
+    # Increase PHP timeout for large file uploads (Google Drive)
+    # Only works if Apache allows .htaccess to override php.ini settings
+    <IfModule mod_php7.c>
+        php_value max_execution_time 300
+        php_value max_input_time 300
+        php_value memory_limit 256M
+        php_value post_max_size 20M
+        php_value upload_max_filesize 10M
+    </IfModule>
+
+    <IfModule mod_php8.c>
+        php_value max_execution_time 300
+        php_value max_input_time 300
+        php_value memory_limit 256M
+        php_value post_max_size 20M
+        php_value upload_max_filesize 10M
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
