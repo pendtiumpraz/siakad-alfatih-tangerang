@@ -349,9 +349,10 @@
     </div>
 
     <!-- Payment Information -->
-    @if($pendaftar->pembayaranPendaftarans && $pendaftar->pembayaranPendaftarans->count() > 0)
-        <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Riwayat Pembayaran</h3>
+    <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200 pb-2">Informasi Pembayaran</h3>
+
+        @if($pendaftar->pembayaranPendaftarans && $pendaftar->pembayaranPendaftarans->count() > 0)
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-gray-50">
@@ -373,16 +374,16 @@
                                     <x-status-badge :status="$pembayaran->status" type="payment" />
                                 </td>
                                 <td class="px-4 py-3 text-sm">
-                                    @if($pembayaran->bukti_bayar)
-                                        <a href="{{ Storage::url($pembayaran->bukti_bayar) }}" target="_blank" class="text-blue-600 hover:text-blue-800">
-                                            <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    @if($pembayaran->bukti_pembayaran)
+                                        <a href="{{ Storage::url($pembayaran->bukti_pembayaran) }}" target="_blank" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
-                                            Lihat
+                                            Lihat Bukti
                                         </a>
                                     @else
-                                        <span class="text-gray-400">-</span>
+                                        <span class="text-gray-400 text-xs">Belum upload</span>
                                     @endif
                                 </td>
                             </tr>
@@ -390,8 +391,26 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-    @endif
+        @else
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-yellow-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h4 class="font-semibold text-yellow-800 mb-1">Belum Ada Pembayaran</h4>
+                        <p class="text-sm text-yellow-700">
+                            Pendaftar belum melakukan pembayaran biaya pendaftaran sebesar
+                            <strong>Rp {{ number_format($pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0, 0, ',', '.') }}</strong>
+                        </p>
+                        <p class="text-xs text-yellow-600 mt-2">
+                            💡 Instruksikan pendaftar untuk melakukan pembayaran dan upload bukti transfer.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 </div>
 
 <!-- Verify Modal -->
