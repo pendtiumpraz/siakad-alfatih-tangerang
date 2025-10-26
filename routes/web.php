@@ -73,19 +73,15 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Master Data Management (Admin has full access)
     Route::resource('program-studi', ProgramStudiController::class);
     Route::post('program-studi/{id}/restore', [ProgramStudiController::class, 'restore'])->name('program-studi.restore');
-    Route::delete('program-studi/{id}/force', [ProgramStudiController::class, 'forceDelete'])->name('program-studi.force-delete');
 
     Route::resource('kurikulum', KurikulumController::class);
     Route::post('kurikulum/{id}/restore', [KurikulumController::class, 'restore'])->name('kurikulum.restore');
-    Route::delete('kurikulum/{id}/force', [KurikulumController::class, 'forceDelete'])->name('kurikulum.force-delete');
 
     Route::resource('mata-kuliah', MataKuliahController::class);
     Route::post('mata-kuliah/{id}/restore', [MataKuliahController::class, 'restore'])->name('mata-kuliah.restore');
-    Route::delete('mata-kuliah/{id}/force', [MataKuliahController::class, 'forceDelete'])->name('mata-kuliah.force-delete');
 
     Route::resource('ruangan', RuanganController::class);
     Route::post('ruangan/{id}/restore', [RuanganController::class, 'restore'])->name('ruangan.restore');
-    Route::delete('ruangan/{id}/force', [RuanganController::class, 'forceDelete'])->name('ruangan.force-delete');
 
     Route::resource('semester', SemesterController::class);
 
