@@ -51,6 +51,20 @@
                 font-size: 16px;
             }
 
+            /* Photo size for print */
+            .w-32 {
+                width: 100px;
+            }
+
+            .h-48 {
+                height: 130px;
+            }
+
+            img {
+                max-width: 100px;
+                max-height: 130px;
+            }
+
             /* Show print-only elements */
             .print-only {
                 display: block !important;
@@ -139,7 +153,7 @@
                         </div>
                     </div>
                     @if($pendaftar->foto_url)
-                        <div class="flex-shrink-0 print-hide">
+                        <div class="flex-shrink-0">
                             <div class="text-center">
                                 <div class="relative">
                                     <img id="pendaftar-foto"
