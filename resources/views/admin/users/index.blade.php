@@ -33,20 +33,25 @@
                 </select>
             </div>
 
-            <!-- Status Filter -->
-            <div class="w-full md:w-48">
-                <select name="is_active" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition">
-                    <option value="">Semua Status</option>
-                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active</option>
-                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
-                </select>
+            <!-- Alumni Filter -->
+            <div class="w-full md:w-48 flex items-center">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="show_alumni" value="1" {{ request('show_alumni') ? 'checked' : '' }} class="rounded border-gray-300 text-[#2D5F3F] shadow-sm focus:ring-[#D4AF37]">
+                    <span class="ml-2 text-sm font-medium text-gray-700">
+                        <i class="fas fa-graduation-cap mr-1 text-[#D4AF37]"></i>
+                        Tampilkan Alumni
+                    </span>
+                </label>
             </div>
 
             <!-- Include Deleted Filter -->
             <div class="w-full md:w-48 flex items-center">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="include_deleted" value="1" {{ request('include_deleted') ? 'checked' : '' }} class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
-                    <span class="ml-2 text-sm text-gray-700">Tampilkan terhapus</span>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="include_deleted" value="1" {{ request('include_deleted') ? 'checked' : '' }} class="rounded border-gray-300 text-red-600 shadow-sm focus:ring-red-500">
+                    <span class="ml-2 text-sm font-medium text-gray-700">
+                        <i class="fas fa-trash-restore mr-1 text-red-500"></i>
+                        Tampilkan Terhapus
+                    </span>
                 </label>
             </div>
 

@@ -27,9 +27,13 @@ class SuperAdminController extends Controller
             $query->where('role', $request->role);
         }
 
-        // Filter by status
-        if ($request->filled('is_active')) {
-            $query->where('is_active', $request->is_active);
+        // Alumni filter (show inactive users - lulus/dropout mahasiswa)
+        if ($request->boolean('show_alumni')) {
+            // Show only inactive users (alumni)
+            $query->where('is_active', false);
+        } else {
+            // Default: show only active users
+            $query->where('is_active', true);
         }
 
         // Search by username or email
