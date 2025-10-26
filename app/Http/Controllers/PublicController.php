@@ -298,21 +298,25 @@ class PublicController extends Controller
         ]);
 
         // Handle all document uploads with rollback on failure
+        // Map form field names to database field names
         $documents = [
-            'foto' => 'Foto',
-            'ijazah' => 'Ijazah',
-            'transkrip_nilai' => 'Transkrip',
-            'ktp' => 'KTP',
-            'kartu_keluarga' => 'KK',
-            'akta_kelahiran' => 'Akta',
-            'sktm' => 'SKTM',
+            'foto' => ['category' => 'Foto', 'db_field' => 'google_drive'],
+            'ijazah' => ['category' => 'Ijazah', 'db_field' => 'ijazah_google_drive'],
+            'transkrip_nilai' => ['category' => 'Transkrip', 'db_field' => 'transkrip_google_drive'],
+            'ktp' => ['category' => 'KTP', 'db_field' => 'ktp_google_drive'],
+            'kartu_keluarga' => ['category' => 'KK', 'db_field' => 'kk_google_drive'],
+            'akta_kelahiran' => ['category' => 'Akta', 'db_field' => 'akta_google_drive'],
+            'sktm' => ['category' => 'SKTM', 'db_field' => 'sktm_google_drive'],
         ];
 
         $uploadedFiles = []; // Track uploaded files for rollback
 
-        foreach ($documents as $field => $category) {
+        foreach ($documents as $field => $config) {
             if ($request->hasFile($field)) {
                 try {
+                    $category = $config['category'];
+                    $dbField = $config['db_field'];
+
                     // Validate foto aspect ratio
                     if ($field === 'foto') {
                         $foto = $request->file($field);
@@ -339,12 +343,12 @@ class PublicController extends Controller
                     // Track uploaded file for potential rollback
                     $uploadedFiles[] = $uploadResult['google_drive_id'];
 
-                    // Save to database
+                    // Save to database with correct field names
                     $data[$field] = $uploadResult['file'];
-                    $data[$field . '_google_drive_id'] = $uploadResult['google_drive_id'];
-                    $data[$field . '_google_drive_link'] = $uploadResult['google_drive_link'];
+                    $data[$dbField . '_file_id'] = $uploadResult['google_drive_id'];
+                    $data[$dbField . '_link'] = $uploadResult['google_drive_link'];
 
-                    \Log::info("Successfully uploaded {$category}: {$uploadResult['google_drive_id']}");
+                    \Log::info("Successfully uploaded {$category}: {$uploadResult['google_drive_id']} → {$dbField}_file_id");
 
                 } catch (Exception $e) {
                     \Log::error("Failed to upload {$category}: " . $e->getMessage());
