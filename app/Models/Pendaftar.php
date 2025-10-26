@@ -113,11 +113,12 @@ class Pendaftar extends Model
             return null;
         }
 
-        // Convert Google Drive link to embeddable format
+        // Convert Google Drive link to thumbnail format (avoids CORS issues)
         if (str_contains($url, 'drive.google.com')) {
             preg_match('/\/d\/([^\/]+)/', $url, $matches);
             if (isset($matches[1])) {
-                return "https://drive.google.com/uc?export=view&id={$matches[1]}";
+                // Use thumbnail API - more reliable for embedding, no CORS issues
+                return "https://drive.google.com/thumbnail?id={$matches[1]}&sz=w400";
             }
         }
 

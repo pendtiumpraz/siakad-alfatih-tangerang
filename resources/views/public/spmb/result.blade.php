@@ -145,8 +145,7 @@
                                     <img id="pendaftar-foto"
                                          src="{{ $pendaftar->foto_url }}"
                                          alt="Foto {{ $pendaftar->nama }}"
-                                         class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto"
-                                         crossorigin="anonymous">
+                                         class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto">
                                     <!-- Fallback: Link to view in Google Drive if image fails -->
                                     <div id="foto-fallback" style="display:none;" class="w-32 h-48 flex flex-col items-center justify-center border-4 border-islamic-green rounded-lg bg-gray-50 mx-auto">
                                         <svg class="w-12 h-12 text-islamic-green mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
