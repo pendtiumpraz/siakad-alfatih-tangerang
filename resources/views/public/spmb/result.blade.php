@@ -178,23 +178,18 @@
                             <div class="text-xs text-gray-500 mt-2">Simpan nomor ini untuk keperluan administrasi</div>
                         </div>
                     </div>
-                    @if($pendaftar->google_drive_link || $pendaftar->foto)
+                    @if($pendaftar->foto_url)
                         <div class="flex-shrink-0">
                             <div class="text-center">
-                                @php
-                                    // Use Google Drive link if available, otherwise use local storage
-                                    $fotoUrl = $pendaftar->google_drive_link ?? $pendaftar->foto;
-                                    // Convert Google Drive view link to preview link for better display
-                                    if (str_contains($fotoUrl, 'drive.google.com')) {
-                                        $fotoUrl = str_replace('/view?usp=drivesdk', '/preview', $fotoUrl);
-                                    } elseif (!str_starts_with($fotoUrl, 'http')) {
-                                        // Local storage file
-                                        $fotoUrl = Storage::url($fotoUrl);
-                                    }
-                                @endphp
-                                <img src="{{ $fotoUrl }}"
+                                <img src="{{ $pendaftar->foto_url }}"
                                      alt="Foto {{ $pendaftar->nama }}"
-                                     class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto">
+                                     class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div style="display:none;" class="w-32 h-48 flex items-center justify-center border-4 border-gray-300 rounded-lg bg-gray-100 mx-auto">
+                                    <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
                                 <div class="text-xs text-gray-500 mt-2">Pas Foto 4x6</div>
                             </div>
                         </div>

@@ -103,6 +103,33 @@ class Pendaftar extends Model
     }
 
     /**
+     * Get embeddable photo URL
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        $url = $this->google_drive_link ?? $this->foto;
+
+        if (!$url) {
+            return null;
+        }
+
+        // Convert Google Drive link to embeddable format
+        if (str_contains($url, 'drive.google.com')) {
+            preg_match('/\/d\/([^\/]+)/', $url, $matches);
+            if (isset($matches[1])) {
+                return "https://drive.google.com/uc?export=view&id={$matches[1]}";
+            }
+        }
+
+        // Local storage file
+        if (!str_starts_with($url, 'http')) {
+            return \Storage::url($url);
+        }
+
+        return $url;
+    }
+
+    /**
      * Get the jalur seleksi
      */
     public function jalurSeleksi(): BelongsTo
