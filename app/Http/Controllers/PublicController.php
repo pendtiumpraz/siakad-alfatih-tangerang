@@ -555,4 +555,61 @@ class PublicController extends Controller
 
         return $pdf->download($filename);
     }
+
+    /**
+     * Submit daftar ulang
+     */
+    public function submitDaftarUlang(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'metode_pembayaran' => 'required|string',
+            'nomor_referensi' => 'nullable|string|max:100',
+        ]);
+
+        $pendaftar = Pendaftar::findOrFail($id);
+
+        // Check if status is accepted
+        if ($pendaftar->status !== 'accepted') {
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Anda harus diterima terlebih dahulu sebelum bisa daftar ulang.');
+        }
+
+        // Check if already submitted
+        if ($pendaftar->daftarUlang) {
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Anda sudah submit daftar ulang sebelumnya.');
+        }
+
+        try {
+            $file = $request->file('bukti_pembayaran');
+
+            // Upload to Google Drive
+            $driveService = new \App\Services\GoogleDriveService();
+            $uploadResult = $driveService->uploadPembayaran($file, $pendaftar->nomor_pendaftaran, 'daftar_ulang');
+
+            // Get biaya daftar ulang from settings
+            $biayaDaftarUlang = \App\Models\SystemSetting::get('biaya_daftar_ulang', 500000);
+
+            // Create daftar ulang record
+            \App\Models\DaftarUlang::create([
+                'pendaftar_id' => $pendaftar->id,
+                'status' => 'pending',
+                'nim_sementara' => $pendaftar->nomor_pendaftaran, // Use registration number as temporary NIM
+                'biaya_daftar_ulang' => $biayaDaftarUlang,
+                'metode_pembayaran' => $request->metode_pembayaran,
+                'nomor_referensi' => $request->nomor_referensi,
+                'bukti_pembayaran' => $uploadResult['webViewLink'],
+            ]);
+
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('success', 'Daftar ulang berhasil disubmit! Mohon tunggu verifikasi dari admin maksimal 1x24 jam.');
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to submit daftar ulang: ' . $e->getMessage());
+
+            return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
+                ->with('error', 'Gagal submit daftar ulang. Silakan coba lagi atau hubungi admin.');
+        }
+    }
 }

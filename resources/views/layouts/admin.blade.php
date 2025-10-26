@@ -216,6 +216,12 @@
                     <span class="ml-3">SPMB</span>
                 </a>
 
+                <!-- Daftar Ulang -->
+                <a href="{{ route('admin.daftar-ulang.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.daftar-ulang.*') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-check w-5"></i>
+                    <span class="ml-3">Daftar Ulang</span>
+                </a>
+
                 <!-- Pengurus -->
                 <a href="{{ route('admin.pengurus.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.pengurus.*') ? 'active' : '' }}">
                     <i class="fas fa-user-tie w-5"></i>

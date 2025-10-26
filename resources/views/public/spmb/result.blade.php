@@ -657,10 +657,246 @@
                 <p class="text-blue-700 text-sm">Pendaftaran Anda telah diverifikasi. Silakan tunggu jadwal ujian/seleksi yang akan diumumkan melalui email atau website resmi.</p>
             </div>
         @elseif($pendaftar->status === 'accepted')
+            @php
+                $daftarUlang = $pendaftar->daftarUlang;
+                $biayaDaftarUlang = \App\Models\SystemSetting::get('biaya_daftar_ulang', 500000);
+            @endphp
+
+            <!-- Notification Box -->
             <div class="mt-8 bg-green-50 border-l-4 border-green-500 p-6 rounded-lg no-print">
-                <h3 class="text-lg font-bold text-green-800 mb-2">Selamat! Anda Diterima</h3>
-                <p class="text-green-700 text-sm">Anda diterima di STAI AL-FATIH. Silakan lakukan daftar ulang sesuai jadwal yang telah ditentukan. Informasi lebih lanjut akan dikirimkan melalui email.</p>
+                <h3 class="text-lg font-bold text-green-800 mb-2 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Selamat! Anda Diterima
+                </h3>
+                <p class="text-green-700 text-sm mb-3">Anda diterima di STAI AL-FATIH. Silakan lakukan daftar ulang untuk melanjutkan proses pendaftaran.</p>
+
+                @if(!$daftarUlang)
+                    <div class="bg-white p-4 rounded-lg mt-4 border border-green-200">
+                        <h4 class="font-semibold text-green-900 mb-2">Langkah Selanjutnya:</h4>
+                        <ol class="list-decimal list-inside text-sm text-green-800 space-y-1">
+                            <li>Download kartu pendaftaran sebagai bukti diterima</li>
+                            <li>Bayar biaya daftar ulang sebesar <strong>Rp {{ number_format($biayaDaftarUlang, 0, ',', '.') }}</strong></li>
+                            <li>Klik tombol "Daftar Ulang" di bawah dan upload bukti pembayaran</li>
+                            <li>Tunggu verifikasi dari admin (1x24 jam)</li>
+                            <li>Setelah diverifikasi, Anda akan mendapatkan akun untuk login ke sistem</li>
+                        </ol>
+                    </div>
+                @endif
             </div>
+
+            <!-- Daftar Ulang Section -->
+            @if($daftarUlang)
+                <!-- Already Submitted -->
+                <div class="mt-8 bg-white rounded-2xl shadow-2xl overflow-hidden no-print">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Status Daftar Ulang
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        @if($daftarUlang->status === 'pending')
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-6 h-6 text-yellow-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="font-semibold text-yellow-800">Sedang Diverifikasi</h4>
+                                        <p class="text-sm text-yellow-700 mt-1">Daftar ulang Anda sedang dalam proses verifikasi oleh admin. Mohon tunggu maksimal 1x24 jam.</p>
+                                        <p class="text-xs text-yellow-600 mt-2"><strong>NIM Sementara:</strong> {{ $daftarUlang->nim_sementara }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($daftarUlang->status === 'verified')
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-green-800">Daftar Ulang Terverifikasi!</h4>
+                                        <p class="text-sm text-green-700 mt-1">Selamat! Anda sudah resmi menjadi mahasiswa STAI AL-FATIH.</p>
+
+                                        <div class="mt-3 p-3 bg-white rounded-lg border border-green-200">
+                                            <p class="text-sm font-semibold text-green-900">Informasi Login:</p>
+                                            <div class="grid grid-cols-2 gap-2 mt-2 text-sm">
+                                                <div>
+                                                    <span class="text-gray-600">NIM Sementara:</span>
+                                                    <p class="font-bold text-green-900">{{ $daftarUlang->nim_sementara }}</p>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-600">Username:</span>
+                                                    <p class="font-bold text-green-900">{{ $daftarUlang->nim_sementara }}</p>
+                                                </div>
+                                            </div>
+                                            <p class="text-xs text-gray-600 mt-2">Password telah dikirim ke email Anda. Silakan login untuk mengakses sistem akademik.</p>
+                                        </div>
+
+                                        <a href="{{ route('login') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                            </svg>
+                                            Login Sekarang
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($daftarUlang->status === 'rejected')
+                            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+                                <div class="flex items-center">
+                                    <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    <div>
+                                        <h4 class="font-semibold text-red-800">Daftar Ulang Ditolak</h4>
+                                        <p class="text-sm text-red-700 mt-1">{{ $daftarUlang->keterangan ?? 'Mohon maaf, daftar ulang Anda ditolak. Silakan hubungi admin untuk informasi lebih lanjut.' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @else
+                <!-- Daftar Ulang Form -->
+                <div class="mt-8 bg-white rounded-2xl shadow-2xl overflow-hidden no-print" x-data="{ uploading: false }">
+                    <div class="bg-gradient-to-r from-islamic-green to-green-600 px-6 py-4">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Form Daftar Ulang
+                        </h3>
+                        <p class="text-islamic-gold text-sm mt-1">Biaya Daftar Ulang: <span class="font-bold">Rp {{ number_format($biayaDaftarUlang, 0, ',', '.') }}</span></p>
+                    </div>
+
+                    <form action="{{ route('public.spmb.submit-daftar-ulang', $pendaftar->id) }}" method="POST" enctype="multipart/form-data" @submit="uploading = true" class="p-6">
+                        @csrf
+
+                        <!-- Bank Info -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold text-blue-900 mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                </svg>
+                                Informasi Transfer Daftar Ulang
+                            </h4>
+                            <div class="space-y-2 text-sm text-blue-900">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Bank:</span>
+                                    <span class="font-bold">{{ $bankName }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-medium">No. Rekening:</span>
+                                    <span class="font-bold">{{ $bankAccountNumber }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Atas Nama:</span>
+                                    <span class="font-bold">{{ $bankAccountName }}</span>
+                                </div>
+                                <div class="flex justify-between border-t border-blue-300 pt-2 mt-2">
+                                    <span class="font-medium">Jumlah Transfer:</span>
+                                    <span class="font-bold text-lg text-islamic-green">Rp {{ number_format($biayaDaftarUlang, 0, ',', '.') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Bukti -->
+                        <div class="mb-4" x-data="{
+                            fileName: '',
+                            fileSize: '',
+                            previewUrl: null,
+                            handleFileChange(event) {
+                                const file = event.target.files[0];
+                                if (file) {
+                                    this.fileName = file.name;
+                                    this.fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                                    if (file.type.startsWith('image/')) {
+                                        const reader = new FileReader();
+                                        reader.onload = (e) => { this.previewUrl = e.target.result; };
+                                        reader.readAsDataURL(file);
+                                    } else {
+                                        this.previewUrl = null;
+                                    }
+                                }
+                            }
+                        }">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Bukti Pembayaran Daftar Ulang <span class="text-red-500">*</span>
+                            </label>
+                            <input type="file" name="bukti_pembayaran" accept="image/*,.pdf" required @change="handleFileChange($event)" class="hidden" id="bukti-daftar-ulang">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-islamic-green transition cursor-pointer" @click="$el.previousElementSibling.click()">
+                                <div x-show="previewUrl" class="mb-4">
+                                    <img :src="previewUrl" alt="Preview" class="max-h-48 mx-auto rounded-lg shadow-md">
+                                </div>
+                                <div x-show="!fileName" class="mb-4">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm text-gray-600"><span class="font-semibold text-islamic-green">Klik untuk upload</span></p>
+                                    <p class="text-xs text-gray-500 mt-1">JPG, PNG, atau PDF (Maks. 2MB)</p>
+                                </div>
+                                <div x-show="fileName" class="space-y-2">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <svg class="w-8 h-8 text-islamic-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <div class="text-left">
+                                            <p class="text-sm font-semibold text-gray-900" x-text="fileName"></p>
+                                            <p class="text-xs text-gray-500" x-text="fileSize"></p>
+                                        </div>
+                                    </div>
+                                    <button type="button" @click.stop="fileName = ''; fileSize = ''; previewUrl = null; document.getElementById('bukti-daftar-ulang').value = ''" class="text-xs text-red-600 hover:text-red-800 font-medium">
+                                        Hapus & Pilih File Lain
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Metode Pembayaran -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Metode Pembayaran <span class="text-red-500">*</span>
+                            </label>
+                            <select name="metode_pembayaran" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-islamic-green">
+                                <option value="">-- Pilih Metode --</option>
+                                <option value="transfer">Transfer Bank</option>
+                                <option value="va">Virtual Account</option>
+                                <option value="tunai">Tunai</option>
+                            </select>
+                        </div>
+
+                        <!-- Nomor Referensi -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Nomor Referensi / Transaksi (Opsional)
+                            </label>
+                            <input type="text" name="nomor_referensi" placeholder="Contoh: TRX123456789" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-islamic-green">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" :disabled="uploading" :class="uploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-islamic-green hover:bg-green-700'" class="w-full text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center">
+                            <span x-show="!uploading">
+                                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Submit Daftar Ulang
+                            </span>
+                            <span x-show="uploading">
+                                <svg class="animate-spin h-5 w-5 inline mr-2" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Sedang Submit...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            @endif
         @elseif($pendaftar->status === 'rejected')
             <div class="mt-8 bg-red-50 border-l-4 border-red-500 p-6 rounded-lg no-print">
                 <h3 class="text-lg font-bold text-red-800 mb-2">Informasi Seleksi</h3>

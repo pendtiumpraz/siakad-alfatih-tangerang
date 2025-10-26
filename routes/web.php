@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\NimRangeController;
 use App\Http\Controllers\Admin\SPMBController as AdminSPMBController;
+use App\Http\Controllers\Admin\DaftarUlangController;
 use App\Http\Controllers\Operator\OperatorDashboardController;
 use App\Http\Controllers\Operator\PembayaranController;
 use App\Http\Controllers\Operator\SPMBController as OperatorSPMBController;
@@ -40,6 +41,7 @@ Route::prefix('spmb')->name('public.spmb.')->group(function() {
     Route::get('/result', [PublicController::class, 'showResult'])->name('result');
     Route::get('/download-pdf/{nomor_pendaftaran}', [PublicController::class, 'downloadPDF'])->name('download-pdf');
     Route::post('/upload-payment/{id}', [PublicController::class, 'uploadPayment'])->name('upload-payment');
+    Route::post('/submit-daftar-ulang/{id}', [PublicController::class, 'submitDaftarUlang'])->name('submit-daftar-ulang');
 });
 
 // Google Drive OAuth Routes (requires authentication)
@@ -117,6 +119,14 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/{id}/accept', [AdminSPMBController::class, 'accept'])->name('accept');
         Route::post('/bulk-verify', [AdminSPMBController::class, 'bulkVerify'])->name('bulk-verify');
         Route::post('/bulk-reject', [AdminSPMBController::class, 'bulkReject'])->name('bulk-reject');
+    });
+
+    // Daftar Ulang Management
+    Route::prefix('daftar-ulang')->name('daftar-ulang.')->group(function() {
+        Route::get('/', [DaftarUlangController::class, 'index'])->name('index');
+        Route::get('/{id}', [DaftarUlangController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [DaftarUlangController::class, 'verify'])->name('verify');
+        Route::post('/{id}/reject', [DaftarUlangController::class, 'reject'])->name('reject');
     });
 
     // Pengurus Management (Dosen Wali & Ketua Prodi)
