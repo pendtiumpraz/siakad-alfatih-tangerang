@@ -9,7 +9,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\MahasiswaAccountCreated;
 
 class DaftarUlangController extends Controller
 {
@@ -112,14 +114,19 @@ class DaftarUlangController extends Controller
 
             DB::commit();
 
-            // TODO: Send email with login credentials
-            // Email content should include:
-            // - Username: {nim_sementara}
-            // - Password: {password}
-            // - Login URL
+            // Send email with login credentials
+            try {
+                Mail::to($daftarUlang->pendaftar->email)
+                    ->send(new MahasiswaAccountCreated($daftarUlang, $daftarUlang->nim_sementara, $password));
+
+                $emailStatus = " Email dengan informasi login telah dikirim ke {$daftarUlang->pendaftar->email}";
+            } catch (\Exception $emailError) {
+                \Log::error('Failed to send email: ' . $emailError->getMessage());
+                $emailStatus = " (Email gagal dikirim, mohon informasikan secara manual)";
+            }
 
             return redirect()->route('admin.daftar-ulang.index')
-                ->with('success', "Daftar ulang berhasil diverifikasi! Akun mahasiswa telah dibuat dengan username: {$daftarUlang->nim_sementara} dan password: {$password}");
+                ->with('success', "Daftar ulang berhasil diverifikasi! Akun mahasiswa telah dibuat dengan username: {$daftarUlang->nim_sementara} dan password: {$password}.{$emailStatus}");
 
         } catch (\Exception $e) {
             DB::rollBack();
