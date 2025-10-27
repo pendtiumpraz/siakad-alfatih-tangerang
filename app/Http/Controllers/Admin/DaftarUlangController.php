@@ -86,21 +86,11 @@ class DaftarUlangController extends Controller
                 'tempat_lahir' => $daftarUlang->pendaftar->tempat_lahir,
                 'tanggal_lahir' => $daftarUlang->pendaftar->tanggal_lahir,
                 'jenis_kelamin' => $daftarUlang->pendaftar->jenis_kelamin,
-                'agama' => $daftarUlang->pendaftar->agama,
                 'alamat' => $daftarUlang->pendaftar->alamat,
                 'no_telepon' => $daftarUlang->pendaftar->phone,
-                'email' => $daftarUlang->pendaftar->email,
-                'jurusan_id' => $daftarUlang->pendaftar->program_studi_pilihan_1, // Use program studi pilihan 1
+                'program_studi_id' => $daftarUlang->pendaftar->program_studi_pilihan_1, // Use program studi pilihan 1
                 'angkatan' => date('Y'),
                 'status' => 'aktif',
-                // Copy document URLs
-                'google_drive_file_id' => $daftarUlang->pendaftar->google_drive_file_id,
-                'ijazah_google_drive_id' => $daftarUlang->pendaftar->ijazah_google_drive_id,
-                'transkrip_google_drive_id' => $daftarUlang->pendaftar->transkrip_google_drive_id,
-                'ktp_google_drive_id' => $daftarUlang->pendaftar->ktp_google_drive_id,
-                'kk_google_drive_id' => $daftarUlang->pendaftar->kk_google_drive_id,
-                'akta_google_drive_id' => $daftarUlang->pendaftar->akta_google_drive_id,
-                'sktm_google_drive_id' => $daftarUlang->pendaftar->sktm_google_drive_id,
             ]);
 
             // Update daftar ulang status
