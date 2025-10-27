@@ -1,209 +1,182 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Manajemen Daftar Ulang</h1>
+<div class="space-y-6">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Manajemen Daftar Ulang</h1>
+            <p class="text-gray-600 mt-1">Kelola data daftar ulang mahasiswa baru</p>
+        </div>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <!-- Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Daftar Ulang</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow-md border-l-4 border-blue-500 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase">Total Daftar Ulang</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">{{ $stats['total'] }}</p>
+                </div>
+                <div class="bg-blue-100 rounded-full p-3">
+                    <i class="fas fa-clipboard-list text-blue-600 text-2xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Menunggu Verifikasi</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['pending'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+        <div class="bg-white rounded-lg shadow-md border-l-4 border-yellow-500 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase">Menunggu Verifikasi</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">{{ $stats['pending'] }}</p>
+                </div>
+                <div class="bg-yellow-100 rounded-full p-3">
+                    <i class="fas fa-clock text-yellow-600 text-2xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Terverifikasi</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['verified'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-check-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+        <div class="bg-white rounded-lg shadow-md border-l-4 border-green-500 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase">Terverifikasi</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">{{ $stats['verified'] }}</p>
+                </div>
+                <div class="bg-green-100 rounded-full p-3">
+                    <i class="fas fa-check-circle text-green-600 text-2xl"></i>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-danger shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Ditolak</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['rejected'] }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-times-circle fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+        <div class="bg-white rounded-lg shadow-md border-l-4 border-red-500 p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-600 uppercase">Ditolak</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2">{{ $stats['rejected'] }}</p>
+                </div>
+                <div class="bg-red-100 rounded-full p-3">
+                    <i class="fas fa-times-circle text-red-600 text-2xl"></i>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Filter -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Filter</h6>
+    <div class="bg-white rounded-lg shadow-md border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">Filter</h2>
         </div>
-        <div class="card-body">
-            <form method="GET" action="{{ route('admin.daftar-ulang.index') }}">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control">
-                                <option value="">Semua Status</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>Verified</option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-filter"></i> Filter
-                                </button>
-                                <a href="{{ route('admin.daftar-ulang.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-redo"></i> Reset
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+        <div class="p-6">
+            <form method="GET" action="{{ route('admin.daftar-ulang.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="verified" {{ request('status') == 'verified' ? 'selected' : '' }}>Verified</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    </select>
+                </div>
+
+                <div class="flex items-end space-x-2">
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                        <i class="fas fa-filter mr-2"></i>Filter
+                    </button>
+                    <a href="{{ route('admin.daftar-ulang.index') }}" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold">
+                        <i class="fas fa-redo mr-2"></i>Reset
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Table -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan Daftar Ulang</h6>
+    <div class="bg-white rounded-lg shadow-md border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">Daftar Pengajuan Daftar Ulang</h2>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>No</th>
-                            <th>NIM Sementara</th>
-                            <th>Nama Lengkap</th>
-                            <th>Jurusan</th>
-                            <th>Biaya</th>
-                            <th>Metode</th>
-                            <th>Status</th>
-                            <th>Tanggal Submit</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($daftarUlangs as $index => $daftarUlang)
-                            <tr>
-                                <td>{{ $daftarUlangs->firstItem() + $index }}</td>
-                                <td>
-                                    <strong>{{ $daftarUlang->nim_sementara }}</strong>
-                                </td>
-                                <td>{{ $daftarUlang->pendaftar->nama_lengkap }}</td>
-                                <td>{{ $daftarUlang->pendaftar->jurusan->nama ?? '-' }}</td>
-                                <td>Rp {{ number_format($daftarUlang->biaya_daftar_ulang, 0, ',', '.') }}</td>
-                                <td>
-                                    <span class="badge badge-info">
-                                        {{ strtoupper($daftarUlang->metode_pembayaran) }}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM Sementara</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jurusan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Biaya</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Metode</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Submit</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($daftarUlangs as $index => $daftarUlang)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $daftarUlangs->firstItem() + $index }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="font-semibold text-gray-900">{{ $daftarUlang->nim_sementara }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $daftarUlang->pendaftar->nama_lengkap }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $daftarUlang->pendaftar->jurusan->nama ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                Rp {{ number_format($daftarUlang->biaya_daftar_ulang, 0, ',', '.') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    {{ strtoupper($daftarUlang->metode_pembayaran) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($daftarUlang->status == 'pending')
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-clock mr-1"></i> Pending
                                     </span>
-                                </td>
-                                <td>
-                                    @if($daftarUlang->status == 'pending')
-                                        <span class="badge badge-warning">
-                                            <i class="fas fa-clock"></i> Pending
-                                        </span>
-                                    @elseif($daftarUlang->status == 'verified')
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-check-circle"></i> Verified
-                                        </span>
-                                    @else
-                                        <span class="badge badge-danger">
-                                            <i class="fas fa-times-circle"></i> Rejected
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>{{ $daftarUlang->created_at->format('d/m/Y H:i') }}</td>
-                                <td>
-                                    <a href="{{ route('admin.daftar-ulang.show', $daftarUlang->id) }}"
-                                       class="btn btn-sm btn-info"
-                                       title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center py-4">
-                                    <i class="fas fa-inbox fa-3x text-gray-300 mb-3 d-block"></i>
-                                    Belum ada data daftar ulang
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                @elseif($daftarUlang->status == 'verified')
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Verified
+                                    </span>
+                                @else
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        <i class="fas fa-times-circle mr-1"></i> Rejected
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ $daftarUlang->created_at->format('d/m/Y H:i') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ route('admin.daftar-ulang.show', $daftarUlang->id) }}"
+                                   class="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-eye mr-1"></i> Detail
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center text-gray-400">
+                                    <i class="fas fa-inbox text-6xl mb-4"></i>
+                                    <p class="text-lg font-medium">Belum ada data daftar ulang</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-            <div class="mt-3">
+        @if($daftarUlangs->hasPages())
+            <div class="px-6 py-4 border-t border-gray-200">
                 {{ $daftarUlangs->links() }}
             </div>
-        </div>
+        @endif
     </div>
 </div>
 @endsection
