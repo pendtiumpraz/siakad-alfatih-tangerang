@@ -109,6 +109,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('nim-ranges', NimRangeController::class);
     Route::post('nim-ranges/bulk-create', [NimRangeController::class, 'bulkCreate'])->name('nim-ranges.bulk-create');
 
+    // Jalur Seleksi Management
+    Route::resource('jalur-seleksi', \App\Http\Controllers\Admin\JalurSeleksiController::class);
+
     // SPMB Management
     Route::prefix('spmb')->name('spmb.')->group(function() {
         Route::get('/', [AdminSPMBController::class, 'index'])->name('index');

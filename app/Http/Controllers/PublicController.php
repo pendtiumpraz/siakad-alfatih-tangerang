@@ -117,7 +117,12 @@ class PublicController extends Controller
     {
         $jalurSeleksis = JalurSeleksi::active()->get();
 
-        return view('public.spmb.index', compact('jalurSeleksis'));
+        // Load SPMB contact settings
+        $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
+        $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
+        $spmbWhatsapp = \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890');
+
+        return view('public.spmb.index', compact('jalurSeleksis', 'spmbPhone', 'spmbEmail', 'spmbWhatsapp'));
     }
 
     /**
