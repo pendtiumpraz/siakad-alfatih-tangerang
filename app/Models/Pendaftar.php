@@ -171,6 +171,14 @@ class Pendaftar extends Model
     }
 
     /**
+     * Get jurusan (alias for program studi pilihan 1)
+     */
+    public function jurusan(): BelongsTo
+    {
+        return $this->belongsTo(ProgramStudi::class, 'program_studi_pilihan_1');
+    }
+
+    /**
      * Get pembayaran pendaftaran records
      */
     public function pembayaranPendaftarans(): HasMany
