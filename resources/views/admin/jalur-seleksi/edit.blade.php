@@ -59,7 +59,7 @@
                 <!-- Kuota -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Kuota (Opsional)</label>
-                    <input type="number" name="kuota" value="{{ old('kuota', $jalurSeleksi->kuota) }}" min="0"
+                    <input type="number" name="kuota_total" value="{{ old('kuota_total', $jalurSeleksi->kuota_total) }}" min="0"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                            placeholder="Kosongkan untuk unlimited">
                     <p class="text-gray-500 text-xs mt-1">Kosongkan jika tidak ada batasan kuota</p>

@@ -44,7 +44,7 @@
                                 <span class="text-sm font-bold text-green-600">Rp {{ number_format($jalur->biaya_pendaftaran, 0, ',', '.') }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $jalur->kuota ?? 'Unlimited' }}
+                                {{ $jalur->kuota_total ?? 'Unlimited' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 <div>{{ $jalur->tanggal_mulai?->format('d/m/Y') ?? '-' }}</div>
