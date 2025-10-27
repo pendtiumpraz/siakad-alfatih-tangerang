@@ -562,9 +562,29 @@ class PublicController extends Controller
                 if ($imageContent) {
                     // Convert to base64
                     $base64 = base64_encode($imageContent);
-                    // Detect image type
-                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
-                    $mimeType = $finfo->buffer($imageContent);
+
+                    // Detect image type (fallback if fileinfo not available)
+                    $mimeType = 'image/jpeg'; // Default
+
+                    if (class_exists('finfo')) {
+                        try {
+                            $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                            $mimeType = $finfo->buffer($imageContent);
+                        } catch (\Exception $e) {
+                            \Log::warning('finfo detection failed, using default: ' . $e->getMessage());
+                        }
+                    } else {
+                        // Fallback: detect from image content signature
+                        $signature = substr($imageContent, 0, 4);
+                        if ($signature === "\xFF\xD8\xFF") {
+                            $mimeType = 'image/jpeg';
+                        } elseif ($signature === "\x89PNG") {
+                            $mimeType = 'image/png';
+                        } elseif (substr($signature, 0, 3) === 'GIF') {
+                            $mimeType = 'image/gif';
+                        }
+                    }
+
                     // Create data URI
                     $fotoBase64 = "data:{$mimeType};base64,{$base64}";
                 }
