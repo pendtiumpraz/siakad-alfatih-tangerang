@@ -402,58 +402,101 @@
                         <i class="fas fa-user-graduate mr-3"></i>SPMB (Seleksi Penerimaan Mahasiswa Baru)
                     </h2>
 
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+                        <p class="text-sm text-gray-700">
+                            <strong>SPMB</strong> adalah sistem penerimaan mahasiswa baru yang mengelola proses dari pendaftaran online hingga mahasiswa aktif bisa login ke SIAKAD.
+                        </p>
+                    </div>
+
+                    <!-- URL Public -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 mb-6">
+                        <h3 class="font-bold text-gray-800 mb-4 text-lg flex items-center">
+                            <i class="fas fa-link mr-2 text-indigo-600"></i>URL Publik SPMB
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-indigo-200">
+                                <p class="text-xs text-gray-600 mb-1">Landing Page SPMB:</p>
+                                <code class="text-sm text-indigo-700 font-mono">{{ url('/spmb') }}</code>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-indigo-200">
+                                <p class="text-xs text-gray-600 mb-1">Form Pendaftaran:</p>
+                                <code class="text-sm text-indigo-700 font-mono">{{ url('/spmb/register') }}</code>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-indigo-200">
+                                <p class="text-xs text-gray-600 mb-1">Cek Status Pendaftaran:</p>
+                                <code class="text-sm text-indigo-700 font-mono">{{ url('/spmb/check') }}</code>
+                            </div>
+                            <div class="bg-white p-3 rounded border border-indigo-200">
+                                <p class="text-xs text-gray-600 mb-1">Halaman Result (Upload & Daftar Ulang):</p>
+                                <code class="text-sm text-indigo-700 font-mono">{{ url('/spmb/result?nomor_pendaftaran=REG2025XXXXXX') }}</code>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Flow Diagram -->
                     <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-6 mb-6">
                         <h3 class="font-bold text-gray-800 mb-4 text-center text-xl">
-                            <i class="fas fa-project-diagram mr-2"></i>Alur SPMB Lengkap
+                            <i class="fas fa-project-diagram mr-2"></i>Alur SPMB Lengkap (8 Tahap)
                         </h3>
 
                         <div class="space-y-3">
+                            <!-- Step 1-2 -->
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-blue-300">
-                                    <p class="text-sm font-semibold text-blue-700">Pendaftaran Online</p>
+                                    <p class="text-sm font-semibold text-blue-700">1. Pendaftaran Online</p>
                                     <p class="text-xs text-gray-500">Status: pending</p>
+                                    <p class="text-xs text-blue-600 mt-1">/spmb/register</p>
                                 </div>
                                 <i class="fas fa-arrow-right text-gray-400 mx-4"></i>
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-yellow-300">
-                                    <p class="text-sm font-semibold text-yellow-700">Upload Bukti Bayar</p>
-                                    <p class="text-xs text-gray-500">Status: pending</p>
+                                    <p class="text-sm font-semibold text-yellow-700">2. Upload Bukti Bayar</p>
+                                    <p class="text-xs text-gray-500">Mahasiswa</p>
+                                    <p class="text-xs text-yellow-600 mt-1">/spmb/result</p>
                                 </div>
                             </div>
 
+                            <!-- Step 3-4 -->
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-orange-300">
-                                    <p class="text-sm font-semibold text-orange-700">Verifikasi Bayar</p>
-                                    <p class="text-xs text-gray-500">Status: paid</p>
+                                    <p class="text-sm font-semibold text-orange-700">3. Verifikasi Pembayaran</p>
+                                    <p class="text-xs text-gray-500">Admin/Operator</p>
+                                    <p class="text-xs text-orange-600 mt-1">Status: paid</p>
                                 </div>
                                 <i class="fas fa-arrow-right text-gray-400 mx-4"></i>
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-purple-300">
-                                    <p class="text-sm font-semibold text-purple-700">Verifikasi Dokumen</p>
-                                    <p class="text-xs text-gray-500">Status: verified</p>
+                                    <p class="text-sm font-semibold text-purple-700">4. Verifikasi Dokumen</p>
+                                    <p class="text-xs text-gray-500">Admin</p>
+                                    <p class="text-xs text-purple-600 mt-1">Status: verified</p>
                                 </div>
                             </div>
 
+                            <!-- Step 5-6 -->
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-green-300">
-                                    <p class="text-sm font-semibold text-green-700">Seleksi</p>
-                                    <p class="text-xs text-gray-500">Status: accepted/rejected</p>
+                                <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-pink-300">
+                                    <p class="text-sm font-semibold text-pink-700">5. Accept/Reject</p>
+                                    <p class="text-xs text-gray-500">Admin</p>
+                                    <p class="text-xs text-pink-600 mt-1">Status: accepted</p>
                                 </div>
                                 <i class="fas fa-arrow-right text-gray-400 mx-4"></i>
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-teal-300">
-                                    <p class="text-sm font-semibold text-teal-700">Daftar Ulang</p>
-                                    <p class="text-xs text-gray-500">Upload bukti bayar</p>
+                                    <p class="text-sm font-semibold text-teal-700">6. Daftar Ulang</p>
+                                    <p class="text-xs text-gray-500">Mahasiswa upload</p>
+                                    <p class="text-xs text-teal-600 mt-1">/spmb/result</p>
                                 </div>
                             </div>
 
+                            <!-- Step 7-8 -->
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 w-48 bg-white rounded-lg p-3 shadow text-center border-2 border-indigo-300">
-                                    <p class="text-sm font-semibold text-indigo-700">Verifikasi Daftar Ulang</p>
-                                    <p class="text-xs text-gray-500">Approve daftar ulang</p>
+                                    <p class="text-sm font-semibold text-indigo-700">7. Verifikasi Daftar Ulang</p>
+                                    <p class="text-xs text-gray-500">Admin → Email otomatis</p>
+                                    <p class="text-xs text-indigo-600 mt-1">/admin/daftar-ulang</p>
                                 </div>
                                 <i class="fas fa-arrow-right text-gray-400 mx-4"></i>
                                 <div class="flex-shrink-0 w-48 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white rounded-lg p-3 shadow text-center">
-                                    <p class="text-sm font-semibold">Aktivasi Mahasiswa</p>
-                                    <p class="text-xs">Status: completed</p>
+                                    <p class="text-sm font-semibold">8. Mahasiswa Login</p>
+                                    <p class="text-xs">Username: NIM Sementara</p>
+                                    <p class="text-xs mt-1">/login</p>
                                 </div>
                             </div>
                         </div>
@@ -509,33 +552,138 @@
                         </ol>
                     </div>
 
-                    <!-- Tutorial Aktivasi Mahasiswa -->
+                    <!-- Tutorial Seleksi -->
                     <h3 class="text-2xl font-bold text-[#2D5F3F] mb-4">
-                        <i class="fas fa-user-check mr-2"></i>Tutorial Aktivasi Mahasiswa
+                        <i class="fas fa-user-check mr-2"></i>Tutorial Seleksi (Accept/Reject)
                     </h3>
 
-                    <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
+                    <div class="bg-white border-2 border-gray-200 rounded-lg p-6 mb-6">
+                        <ol class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">1</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800">Akses SPMB</h5>
+                                    <p class="text-sm text-gray-600">Sidebar → SPMB → Tab "Verified" (yang sudah verified pembayaran & dokumen)</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">2</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800">Klik Detail Pendaftar</h5>
+                                    <p class="text-sm text-gray-600">Review semua data: biodata, dokumen, pembayaran</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">3</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800">Accept atau Reject</h5>
+                                    <p class="text-sm text-gray-600 mb-2">Klik salah satu tombol:</p>
+                                    <div class="flex space-x-2">
+                                        <button class="px-3 py-1 bg-green-500 text-white rounded text-xs">✓ Terima (Accept)</button>
+                                        <button class="px-3 py-1 bg-red-500 text-white rounded text-xs">✗ Tolak (Reject)</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">4</span>
+                                <div>
+                                    <h5 class="font-bold text-gray-800">Status Update Otomatis</h5>
+                                    <p class="text-sm text-gray-600">Status berubah menjadi "accepted" atau "rejected", mahasiswa bisa lihat di halaman result</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Tutorial Daftar Ulang -->
+                    <h3 class="text-2xl font-bold text-[#2D5F3F] mb-4">
+                        <i class="fas fa-clipboard-check mr-2"></i>Tutorial Daftar Ulang
+                    </h3>
+
+                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-lg p-6 mb-6">
                         <h4 class="font-bold text-gray-800 mb-3">
-                            <i class="fas fa-magic mr-2"></i>Proses Otomatis Saat Aktivasi:
+                            <i class="fas fa-info-circle mr-2"></i>Apa itu Daftar Ulang?
+                        </h4>
+                        <p class="text-sm text-gray-700 mb-4">
+                            Daftar ulang adalah proses konfirmasi mahasiswa yang sudah <strong>diterima (accepted)</strong> untuk melanjutkan sebagai mahasiswa aktif. Mahasiswa harus bayar biaya daftar ulang dan upload bukti pembayaran.
+                        </p>
+
+                        <h4 class="font-bold text-gray-800 mb-3 mt-4">
+                            <i class="fas fa-user mr-2"></i>Dari Sisi Mahasiswa:
+                        </h4>
+                        <ol class="text-sm text-gray-700 space-y-2 list-decimal list-inside">
+                            <li>Mahasiswa yang <strong>diterima</strong> akan melihat form daftar ulang di halaman result</li>
+                            <li>URL: <code class="bg-white px-2 py-1 rounded">{{ url('/spmb/result?nomor_pendaftaran=REG2025XXXXXX') }}</code></li>
+                            <li>Mahasiswa download kartu pendaftaran sebagai bukti diterima (tombol "Download PDF")</li>
+                            <li>Mahasiswa bayar biaya daftar ulang (nominal ada di halaman)</li>
+                            <li>Mahasiswa upload bukti pembayaran lewat form daftar ulang</li>
+                            <li>Status menjadi <strong>"Sedang Diverifikasi"</strong>, NIM sementara = Nomor Pendaftaran</li>
+                        </ol>
+
+                        <h4 class="font-bold text-gray-800 mb-3 mt-6">
+                            <i class="fas fa-user-shield mr-2"></i>Dari Sisi Admin (Verifikasi):
+                        </h4>
+                        <ol class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold mr-3 text-sm">1</span>
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">Akses Menu Daftar Ulang</h5>
+                                    <p class="text-sm text-gray-600">Sidebar → <strong>"Daftar Ulang"</strong> → Lihat list yang status "Pending"</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold mr-3 text-sm">2</span>
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">Klik Detail</h5>
+                                    <p class="text-sm text-gray-600">Review data mahasiswa dan lihat bukti pembayaran daftar ulang</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold mr-3 text-sm">3</span>
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">Verifikasi & Buat Akun</h5>
+                                    <p class="text-sm text-gray-600 mb-2">Klik tombol hijau <strong>"Verifikasi & Buat Akun"</strong></p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold mr-3 text-sm">4</span>
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">Otomatis!</h5>
+                                    <p class="text-sm text-gray-600">Sistem otomatis:</p>
+                                    <ul class="text-sm text-gray-600 mt-2 space-y-1 list-disc list-inside ml-4">
+                                        <li>✅ Buat User account (role: mahasiswa)</li>
+                                        <li>✅ Buat record Mahasiswa</li>
+                                        <li>✅ Username = NIM Sementara (nomor pendaftaran)</li>
+                                        <li>✅ Password di-generate otomatis (8 karakter)</li>
+                                        <li>✅ Email dengan username & password terkirim ke mahasiswa</li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold mr-3 text-sm">5</span>
+                                <div>
+                                    <h5 class="font-semibold text-gray-800">Mahasiswa Bisa Login!</h5>
+                                    <p class="text-sm text-gray-600">Mahasiswa cek email dan login ke <code class="bg-white px-2 py-1 rounded">{{ url('/login') }}</code> dengan:</p>
+                                    <div class="mt-2 p-3 bg-white rounded border border-teal-300">
+                                        <p class="text-xs text-gray-600">Username: <strong class="text-teal-700">REG2025XXXXXX</strong> (NIM Sementara)</p>
+                                        <p class="text-xs text-gray-600 mt-1">Password: <strong class="text-teal-700">XXXXXXXX</strong> (dari email)</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- Important Notes -->
+                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg mb-6">
+                        <h4 class="font-bold text-gray-800 mb-3 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-2 text-yellow-600"></i>Catatan Penting
                         </h4>
                         <ul class="space-y-2 text-sm text-gray-700">
-                            <li>✅ Generate NIM otomatis (format: YYYYPPSSSS)</li>
-                            <li>✅ Create User account (role: mahasiswa, username: NIM)</li>
-                            <li>✅ Create record Mahasiswa</li>
-                            <li>✅ Set password default: "password"</li>
-                            <li>✅ Status pendaftaran: "completed"</li>
-                            <li>✅ Email notifikasi terkirim ke mahasiswa</li>
+                            <li><strong>NIM Sementara</strong>: Mahasiswa login pakai nomor pendaftaran (REG2025XXXXXX) sampai mendapat NIM permanen di semester 2</li>
+                            <li><strong>Email Otomatis</strong>: Pastikan email sudah dikonfigurasi dengan benar (lihat <code>SETUP-EMAIL-GMAIL.md</code>)</li>
+                            <li><strong>Password</strong>: Admin akan melihat password di success message, tapi lebih baik mahasiswa dapat dari email</li>
+                            <li><strong>Status Pembayaran</strong>: Bisa verifikasi langsung dari SPMB detail page (bagian Informasi Pembayaran)</li>
+                            <li><strong>Reject</strong>: Jika ditolak, beri keterangan yang jelas agar mahasiswa tahu alasannya</li>
                         </ul>
-
-                        <div class="mt-4 p-4 bg-white rounded border-l-4 border-green-500">
-                            <p class="text-sm"><strong>Langkah:</strong></p>
-                            <ol class="text-sm text-gray-600 mt-2 space-y-1">
-                                <li>1. SPMB → Pilih pendaftar dengan status daftar ulang "verified"</li>
-                                <li>2. Klik tombol <strong class="text-[#2D5F3F]">"Aktivasi sebagai Mahasiswa"</strong></li>
-                                <li>3. Konfirmasi → Sistem otomatis proses semua</li>
-                                <li>4. Selesai! Mahasiswa bisa login dengan NIM</li>
-                            </ol>
-                        </div>
                     </div>
 
                     <!-- NIM Range Configuration -->
