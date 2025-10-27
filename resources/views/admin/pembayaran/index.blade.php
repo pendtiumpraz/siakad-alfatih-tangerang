@@ -192,16 +192,11 @@
         </x-data-table>
 
         <!-- Pagination -->
-        <div class="mt-6 flex items-center justify-between">
-            <p class="text-sm text-gray-600">Menampilkan 1-10 dari 247 data</p>
-            <div class="flex space-x-2">
-                <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 transition-colors">Previous</button>
-                <button class="px-3 py-1 bg-green-600 text-white rounded">1</button>
-                <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 transition-colors">2</button>
-                <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 transition-colors">3</button>
-                <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 transition-colors">Next</button>
+        @if($pembayarans->hasPages())
+            <div class="mt-6">
+                {{ $pembayarans->appends(request()->query())->links() }}
             </div>
-        </div>
+        @endif
     </x-islamic-card>
 </div>
 @endsection
