@@ -135,7 +135,7 @@
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Nama Lengkap:</span>
-                                    <span class="text-gray-900">{{ $daftarUlang->pendaftar->nama_lengkap }}</span>
+                                    <span class="text-gray-900">{{ $daftarUlang->pendaftar->nama }}</span>
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Tempat/Tgl Lahir:</span>
@@ -174,7 +174,7 @@
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Jalur:</span>
-                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ strtoupper($daftarUlang->pendaftar->jalur_pendaftaran) }}</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">{{ $daftarUlang->pendaftar->jalurSeleksi->nama ?? '-' }}</span>
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Angkatan:</span>
@@ -200,21 +200,21 @@
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             @php
                                 $documents = [
-                                    ['name' => 'Ijazah', 'field' => 'ijazah_google_drive_id'],
-                                    ['name' => 'Transkrip Nilai', 'field' => 'transkrip_google_drive_id'],
-                                    ['name' => 'KTP', 'field' => 'ktp_google_drive_id'],
-                                    ['name' => 'Kartu Keluarga', 'field' => 'kk_google_drive_id'],
-                                    ['name' => 'Akta Kelahiran', 'field' => 'akta_google_drive_id'],
-                                    ['name' => 'SKTM', 'field' => 'sktm_google_drive_id'],
+                                    ['name' => 'Ijazah', 'id_field' => 'ijazah_google_drive_id', 'link_field' => 'ijazah_google_drive_link'],
+                                    ['name' => 'Transkrip Nilai', 'id_field' => 'transkrip_google_drive_id', 'link_field' => 'transkrip_google_drive_link'],
+                                    ['name' => 'KTP', 'id_field' => 'ktp_google_drive_id', 'link_field' => 'ktp_google_drive_link'],
+                                    ['name' => 'Kartu Keluarga', 'id_field' => 'kk_google_drive_id', 'link_field' => 'kk_google_drive_link'],
+                                    ['name' => 'Akta Kelahiran', 'id_field' => 'akta_google_drive_id', 'link_field' => 'akta_google_drive_link'],
+                                    ['name' => 'SKTM', 'id_field' => 'sktm_google_drive_id', 'link_field' => 'sktm_google_drive_link'],
                                 ];
                             @endphp
 
                             @foreach($documents as $doc)
-                                @if($daftarUlang->pendaftar->{$doc['field']})
+                                @if($daftarUlang->pendaftar->{$doc['id_field']} && $daftarUlang->pendaftar->{$doc['link_field']})
                                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
                                         <i class="fas fa-file-pdf text-4xl text-red-500 mb-2"></i>
                                         <p class="text-sm font-semibold text-gray-800 mb-2">{{ $doc['name'] }}</p>
-                                        <a href="{{ $daftarUlang->pendaftar->{$doc['field']} }}"
+                                        <a href="{{ $daftarUlang->pendaftar->{$doc['link_field']} }}"
                                            target="_blank"
                                            class="inline-block px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
                                             <i class="fas fa-external-link-alt mr-1"></i>Lihat

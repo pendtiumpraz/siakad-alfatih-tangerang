@@ -119,6 +119,14 @@ class Pendaftar extends Model
     }
 
     /**
+     * Accessor for no_telepon (alias for phone field)
+     */
+    public function getNoTeleponAttribute(): ?string
+    {
+        return $this->attributes['phone'] ?? null;
+    }
+
+    /**
      * Get embeddable photo URL
      */
     public function getFotoUrlAttribute(): ?string

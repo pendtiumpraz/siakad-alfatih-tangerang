@@ -44,7 +44,7 @@ class DaftarUlangController extends Controller
      */
     public function show($id)
     {
-        $daftarUlang = DaftarUlang::with(['pendaftar.jurusan', 'verifier', 'mahasiswaUser'])
+        $daftarUlang = DaftarUlang::with(['pendaftar.jurusan', 'pendaftar.jalurSeleksi', 'verifier', 'mahasiswaUser'])
             ->findOrFail($id);
 
         return view('admin.daftar-ulang.show', compact('daftarUlang'));
@@ -71,7 +71,7 @@ class DaftarUlangController extends Controller
             // Create user account for mahasiswa
             $password = Str::random(8);
             $user = User::create([
-                'name' => $daftarUlang->pendaftar->nama_lengkap,
+                'name' => $daftarUlang->pendaftar->nama,
                 'email' => $daftarUlang->pendaftar->email,
                 'username' => $daftarUlang->nim_sementara,
                 'password' => Hash::make($password),
@@ -82,15 +82,15 @@ class DaftarUlangController extends Controller
             $mahasiswa = Mahasiswa::create([
                 'user_id' => $user->id,
                 'nim' => $daftarUlang->nim_sementara, // Temporary NIM
-                'nama_lengkap' => $daftarUlang->pendaftar->nama_lengkap,
+                'nama_lengkap' => $daftarUlang->pendaftar->nama,
                 'tempat_lahir' => $daftarUlang->pendaftar->tempat_lahir,
                 'tanggal_lahir' => $daftarUlang->pendaftar->tanggal_lahir,
                 'jenis_kelamin' => $daftarUlang->pendaftar->jenis_kelamin,
                 'agama' => $daftarUlang->pendaftar->agama,
                 'alamat' => $daftarUlang->pendaftar->alamat,
-                'no_telepon' => $daftarUlang->pendaftar->no_telepon,
+                'no_telepon' => $daftarUlang->pendaftar->phone,
                 'email' => $daftarUlang->pendaftar->email,
-                'jurusan_id' => $daftarUlang->pendaftar->jurusan_id,
+                'jurusan_id' => $daftarUlang->pendaftar->program_studi_pilihan_1, // Use program studi pilihan 1
                 'angkatan' => date('Y'),
                 'status' => 'aktif',
                 // Copy document URLs

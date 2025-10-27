@@ -263,7 +263,7 @@
                 <div class="data-row">
                     <div class="data-cell">
                         <div class="data-label">Nama Lengkap:</div>
-                        <div class="data-value">{{ $pendaftar->nama_lengkap }}</div>
+                        <div class="data-value">{{ $pendaftar->nama }}</div>
                     </div>
                     <div class="data-cell">
                         <div class="data-label">NIK:</div>
@@ -290,7 +290,7 @@
                 <div class="data-row">
                     <div class="data-cell">
                         <div class="data-label">Jalur Pendaftaran:</div>
-                        <div class="data-value">{{ strtoupper($pendaftar->jalur_pendaftaran ?? '-') }}</div>
+                        <div class="data-value">{{ $pendaftar->jalurSeleksi->nama ?? '-' }}</div>
                     </div>
                     <div class="data-cell">
                         <div class="data-label">Program Studi:</div>

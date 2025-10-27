@@ -546,7 +546,7 @@ class PublicController extends Controller
     public function downloadPDF($nomorPendaftaran)
     {
         $pendaftar = Pendaftar::where('nomor_pendaftaran', $nomorPendaftaran)
-            ->with(['jurusan'])
+            ->with(['jurusan', 'jalurSeleksi'])
             ->firstOrFail();
 
         // Load SPMB settings for PDF
