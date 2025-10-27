@@ -21,6 +21,10 @@ class GoogleDriveOAuthController extends Controller
 
             return redirect($authUrl);
         } catch (Exception $e) {
+            \Log::error('Google Drive OAuth redirect error: ' . $e->getMessage());
+            \Log::error('Credentials path: ' . config('google-drive.oauth_credentials_path'));
+            \Log::error('Redirect URI: ' . config('google-drive.redirect_uri'));
+
             return back()->with('error', 'Failed to initialize Google Drive connection: ' . $e->getMessage());
         }
     }
@@ -31,9 +35,12 @@ class GoogleDriveOAuthController extends Controller
     public function callback(Request $request)
     {
         // Determine redirect route
-        $redirectRoute = auth()->check()
-            ? auth()->user()->role . '.dashboard'
-            : 'login';
+        if (auth()->check()) {
+            $role = auth()->user()->role === 'super_admin' ? 'admin' : auth()->user()->role;
+            $redirectRoute = $role . '.dashboard';
+        } else {
+            $redirectRoute = 'login';
+        }
 
         if ($request->has('error')) {
             return redirect()->route($redirectRoute)
