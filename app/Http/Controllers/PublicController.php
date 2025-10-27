@@ -417,9 +417,18 @@ class PublicController extends Controller
                 ->with('success', 'Pendaftaran berhasil disimpan sebagai draft. Anda dapat melanjutkan nanti menggunakan email: ' . $pendaftar->email);
         }
 
-        \Log::info("📤 Redirecting to result page: " . $pendaftar->nomor_pendaftaran);
-        return redirect()->route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran])
-            ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $pendaftar->nomor_pendaftaran);
+        // Final submission - redirect to result page
+        \Log::info("📤 Redirecting to result page");
+        \Log::info("Pendaftar ID: " . $pendaftar->id);
+        \Log::info("Nomor Pendaftaran: " . $pendaftar->nomor_pendaftaran);
+        \Log::info("Status: " . $pendaftar->status);
+
+        $resultUrl = route('public.spmb.result', ['nomor_pendaftaran' => $pendaftar->nomor_pendaftaran]);
+        \Log::info("Result URL: " . $resultUrl);
+
+        return redirect($resultUrl)
+            ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $pendaftar->nomor_pendaftaran)
+            ->with('pendaftar_id', $pendaftar->id);
     }
 
     /**
