@@ -185,6 +185,9 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
         Route::post('/{id}/verify', [OperatorSPMBController::class, 'verify'])->name('verify');
     });
 
+    // Jalur Seleksi Management
+    Route::resource('jalur-seleksi', \App\Http\Controllers\Admin\JalurSeleksiController::class);
+
     // Documentation
     Route::get('/docs', [OperatorDashboardController::class, 'docs'])->name('docs');
 });
