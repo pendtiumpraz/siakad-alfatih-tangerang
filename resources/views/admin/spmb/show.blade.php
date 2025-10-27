@@ -152,7 +152,7 @@
                 <div class="mb-3">
                     <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->kk_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
                 </div>
-                <a href="{{ $pendaftar->kk_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-semibold">
+                <a href="{{ $pendaftar->kk_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 rounded-lg transition text-sm font-semibold" style="background-color: #4F46E5; color: #FFFFFF;">
                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -174,7 +174,7 @@
                 <div class="mb-3">
                     <iframe src="{{ str_replace('/view?usp=drivesdk', '/preview', $pendaftar->akta_google_drive_link) }}" class="w-full h-48 rounded border border-gray-300"></iframe>
                 </div>
-                <a href="{{ $pendaftar->akta_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition text-sm font-semibold">
+                <a href="{{ $pendaftar->akta_google_drive_link }}" target="_blank" class="block w-full text-center px-4 py-2 rounded-lg transition text-sm font-semibold" style="background-color: #EC4899; color: #FFFFFF;">
                     <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
