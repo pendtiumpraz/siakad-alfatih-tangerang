@@ -30,13 +30,18 @@ class GoogleDriveOAuthController extends Controller
      */
     public function callback(Request $request)
     {
+        // Determine redirect route
+        $redirectRoute = auth()->check()
+            ? auth()->user()->role . '.dashboard'
+            : 'login';
+
         if ($request->has('error')) {
-            return redirect()->route('admin.settings.index')
+            return redirect()->route($redirectRoute)
                 ->with('error', 'Google Drive connection was denied or failed.');
         }
 
         if (!$request->has('code')) {
-            return redirect()->route('admin.settings.index')
+            return redirect()->route($redirectRoute)
                 ->with('error', 'No authorization code received from Google.');
         }
 
@@ -65,13 +70,14 @@ class GoogleDriveOAuthController extends Controller
                 ]
             );
 
-            return redirect()->route(auth()->user()->role . '.dashboard')
+            return redirect()->route($redirectRoute)
                 ->with('success', 'Google Drive connected successfully! You can now upload files to Google Drive.');
 
         } catch (Exception $e) {
             \Log::error('Google Drive OAuth callback error: ' . $e->getMessage());
+            \Log::error('Token response: ' . json_encode($token ?? []));
 
-            return redirect()->route(auth()->user()->role . '.dashboard')
+            return redirect()->route($redirectRoute)
                 ->with('error', 'Failed to connect Google Drive: ' . $e->getMessage());
         }
     }
