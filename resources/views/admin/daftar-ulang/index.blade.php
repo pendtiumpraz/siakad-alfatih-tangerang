@@ -120,7 +120,7 @@
                                 <span class="font-semibold text-gray-900">{{ $daftarUlang->nim_sementara }}</span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $daftarUlang->pendaftar->nama_lengkap }}
+                                {{ $daftarUlang->pendaftar->nama }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ $daftarUlang->pendaftar->jurusan->nama_prodi ?? '-' }}

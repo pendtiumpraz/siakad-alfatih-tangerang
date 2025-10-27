@@ -210,7 +210,7 @@
                             @endphp
 
                             @foreach($documents as $doc)
-                                @if($daftarUlang->pendaftar->{$doc['id_field']} && $daftarUlang->pendaftar->{$doc['link_field']})
+                                @if($daftarUlang->pendaftar->{$doc['link_field']})
                                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
                                         <i class="fas fa-file-pdf text-4xl text-red-500 mb-2"></i>
                                         <p class="text-sm font-semibold text-gray-800 mb-2">{{ $doc['name'] }}</p>
