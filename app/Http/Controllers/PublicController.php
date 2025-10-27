@@ -537,15 +537,35 @@ class PublicController extends Controller
     public function downloadPDF($nomorPendaftaran)
     {
         $pendaftar = Pendaftar::where('nomor_pendaftaran', $nomorPendaftaran)
-            ->with(['jalurSeleksi', 'programStudiPilihan1', 'programStudiPilihan2'])
+            ->with(['jurusan'])
             ->firstOrFail();
 
         // Load SPMB settings for PDF
         $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
         $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
 
+        // Convert foto to base64 for PDF (DomPDF can't load external images)
+        $fotoBase64 = null;
+        if ($pendaftar->foto_url) {
+            try {
+                // Download image from Google Drive
+                $imageContent = @file_get_contents($pendaftar->foto_url);
+                if ($imageContent) {
+                    // Convert to base64
+                    $base64 = base64_encode($imageContent);
+                    // Detect image type
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($imageContent);
+                    // Create data URI
+                    $fotoBase64 = "data:{$mimeType};base64,{$base64}";
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Failed to load photo for PDF: ' . $e->getMessage());
+            }
+        }
+
         // Create PDF from view
-        $pdf = \PDF::loadView('public.spmb.pdf', compact('pendaftar', 'spmbPhone', 'spmbEmail'));
+        $pdf = \PDF::loadView('public.spmb.pdf', compact('pendaftar', 'spmbPhone', 'spmbEmail', 'fotoBase64'));
 
         // Set paper size and orientation
         $pdf->setPaper('A4', 'portrait');

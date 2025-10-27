@@ -248,9 +248,9 @@
                     </div>
                 </div>
             </div>
-            @if($pendaftar->foto_url)
+            @if($fotoBase64 ?? $pendaftar->foto_url)
                 <div class="photo-box">
-                    <img src="{{ $pendaftar->foto_url }}" alt="Foto" class="photo">
+                    <img src="{{ $fotoBase64 ?? $pendaftar->foto_url }}" alt="Foto" class="photo">
                     <div class="photo-label">Pas Foto 4x6</div>
                 </div>
             @endif
@@ -263,11 +263,11 @@
                 <div class="data-row">
                     <div class="data-cell">
                         <div class="data-label">Nama Lengkap:</div>
-                        <div class="data-value">{{ $pendaftar->nama }}</div>
+                        <div class="data-value">{{ $pendaftar->nama_lengkap }}</div>
                     </div>
                     <div class="data-cell">
                         <div class="data-label">NIK:</div>
-                        <div class="data-value">{{ $pendaftar->nik }}</div>
+                        <div class="data-value">{{ $pendaftar->nik ?? '-' }}</div>
                     </div>
                 </div>
                 <div class="data-row">
@@ -285,25 +285,27 @@
 
         <!-- Jalur & Program Studi -->
         <div class="section">
-            <div class="section-title">Jalur Seleksi & Program Studi</div>
+            <div class="section-title">Program Studi</div>
             <div class="data-grid">
                 <div class="data-row">
                     <div class="data-cell">
-                        <div class="data-label">Jalur Seleksi:</div>
-                        <div class="data-value">{{ $pendaftar->jalurSeleksi->nama ?? '-' }}</div>
+                        <div class="data-label">Jalur Pendaftaran:</div>
+                        <div class="data-value">{{ strtoupper($pendaftar->jalur_pendaftaran ?? '-') }}</div>
+                    </div>
+                    <div class="data-cell">
+                        <div class="data-label">Program Studi:</div>
+                        <div class="data-value">{{ $pendaftar->jurusan->nama ?? '-' }}</div>
                     </div>
                 </div>
                 <div class="data-row">
                     <div class="data-cell">
-                        <div class="data-label">Program Studi Pilihan 1:</div>
-                        <div class="data-value">{{ $pendaftar->programStudiPilihan1->nama_prodi ?? '-' }} ({{ $pendaftar->programStudiPilihan1->jenjang ?? '-' }})</div>
+                        <div class="data-label">Email:</div>
+                        <div class="data-value">{{ $pendaftar->email }}</div>
                     </div>
-                    @if($pendaftar->program_studi_pilihan_2)
-                        <div class="data-cell">
-                            <div class="data-label">Program Studi Pilihan 2:</div>
-                            <div class="data-value">{{ $pendaftar->programStudiPilihan2->nama_prodi ?? '-' }} ({{ $pendaftar->programStudiPilihan2->jenjang ?? '-' }})</div>
-                        </div>
-                    @endif
+                    <div class="data-cell">
+                        <div class="data-label">No. Telepon:</div>
+                        <div class="data-value">{{ $pendaftar->no_telepon }}</div>
+                    </div>
                 </div>
             </div>
         </div>
