@@ -294,7 +294,7 @@
                     </div>
                     <div class="data-cell">
                         <div class="data-label">Program Studi:</div>
-                        <div class="data-value">{{ $pendaftar->jurusan->nama ?? '-' }}</div>
+                        <div class="data-value">{{ $pendaftar->jurusan->nama_prodi ?? '-' }}</div>
                     </div>
                 </div>
                 <div class="data-row">

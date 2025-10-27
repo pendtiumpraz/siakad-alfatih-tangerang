@@ -123,7 +123,7 @@
                                 {{ $daftarUlang->pendaftar->nama_lengkap }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ $daftarUlang->pendaftar->jurusan->nama ?? '-' }}
+                                {{ $daftarUlang->pendaftar->jurusan->nama_prodi ?? '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 Rp {{ number_format($daftarUlang->biaya_daftar_ulang, 0, ',', '.') }}

@@ -170,7 +170,7 @@
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Jurusan:</span>
-                                    <span class="font-bold text-gray-900">{{ $daftarUlang->pendaftar->jurusan->nama ?? '-' }}</span>
+                                    <span class="font-bold text-gray-900">{{ $daftarUlang->pendaftar->jurusan->nama_prodi ?? '-' }}</span>
                                 </div>
                                 <div>
                                     <span class="text-gray-600 block">Jalur:</span>
