@@ -68,7 +68,7 @@
                 <!-- Tanggal Mulai -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Mulai <span class="text-red-600">*</span></label>
-                    <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $jalurSeleksi->tanggal_mulai->format('Y-m-d')) }}" required
+                    <input type="date" name="tanggal_mulai" value="{{ old('tanggal_mulai', $jalurSeleksi->tanggal_mulai?->format('Y-m-d')) }}" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 @error('tanggal_mulai') border-red-500 @enderror">
                     @error('tanggal_mulai')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -78,7 +78,7 @@
                 <!-- Tanggal Selesai -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Selesai <span class="text-red-600">*</span></label>
-                    <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $jalurSeleksi->tanggal_selesai->format('Y-m-d')) }}" required
+                    <input type="date" name="tanggal_selesai" value="{{ old('tanggal_selesai', $jalurSeleksi->tanggal_selesai?->format('Y-m-d')) }}" required
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 @error('tanggal_selesai') border-red-500 @enderror">
                     @error('tanggal_selesai')
                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>

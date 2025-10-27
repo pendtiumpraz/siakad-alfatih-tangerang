@@ -47,8 +47,8 @@
                                 {{ $jalur->kuota ?? 'Unlimited' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <div>{{ $jalur->tanggal_mulai->format('d/m/Y') }}</div>
-                                <div class="text-gray-500">s/d {{ $jalur->tanggal_selesai->format('d/m/Y') }}</div>
+                                <div>{{ $jalur->tanggal_mulai?->format('d/m/Y') ?? '-' }}</div>
+                                <div class="text-gray-500">s/d {{ $jalur->tanggal_selesai?->format('d/m/Y') ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($jalur->is_active)
