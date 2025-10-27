@@ -197,6 +197,10 @@
                             <i class="fas fa-calendar-alt w-4"></i>
                             <span class="ml-3">Semester</span>
                         </a>
+                        <a href="{{ route('admin.jalur-seleksi.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.jalur-seleksi.*') ? 'active' : '' }}">
+                            <i class="fas fa-route w-4"></i>
+                            <span class="ml-3">Jalur Seleksi</span>
+                        </a>
                         <a href="{{ route('admin.nim-ranges.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.nim-ranges.*') ? 'active' : '' }}">
                             <i class="fas fa-id-card w-4"></i>
                             <span class="ml-3">NIM Range</span>
@@ -214,12 +218,6 @@
                 <a href="{{ route('admin.spmb.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.spmb.*') ? 'active' : '' }}">
                     <i class="fas fa-user-graduate w-5"></i>
                     <span class="ml-3">SPMB</span>
-                </a>
-
-                <!-- Jalur Seleksi -->
-                <a href="{{ route('admin.jalur-seleksi.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.jalur-seleksi.*') ? 'active' : '' }}">
-                    <i class="fas fa-route w-5"></i>
-                    <span class="ml-3">Jalur Seleksi</span>
                 </a>
 
                 <!-- Daftar Ulang -->
@@ -243,12 +241,6 @@
                     <span class="ml-3">Dokumentasi</span>
                 </a>
             </nav>
-
-            <!-- Islamic Decoration at Bottom -->
-            <div class="absolute bottom-0 left-0 right-0 p-4 text-center">
-                <div class="islamic-divider mb-4"></div>
-                <p class="text-emerald-50 text-xs italic">"Tuntutlah ilmu dari buaian hingga liang lahat"</p>
-            </div>
         </aside>
 
         <!-- Main Content Area -->
