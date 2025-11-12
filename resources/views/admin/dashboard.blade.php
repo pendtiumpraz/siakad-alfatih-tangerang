@@ -44,7 +44,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <h3 class="text-lg font-semibold text-[#2D5F3F] mb-2">Semester Aktif</h3>
-                <p class="text-2xl font-bold text-[#2D5F3F]">{{ $activeSemester?->nama ?? 'Belum ada semester aktif' }}</p>
+                <p class="text-2xl font-bold text-[#2D5F3F]">{{ $activeSemester?->nama_semester ?? 'Belum ada semester aktif' }}</p>
                 <p class="text-sm text-[#2D5F3F] mt-1">
                     <i class="fas fa-calendar-alt mr-1"></i>
                     Periode: {{ $activeSemester?->tanggal_mulai?->format('d M Y') ?? '-' }} - {{ $activeSemester?->tanggal_selesai?->format('d M Y') ?? '-' }}
