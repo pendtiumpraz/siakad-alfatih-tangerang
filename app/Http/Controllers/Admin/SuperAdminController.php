@@ -364,6 +364,8 @@ class SuperAdminController extends Controller
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
             'program_studi_ids' => ['nullable', 'array'],
             'program_studi_ids.*' => ['exists:program_studis,id'],
+            'mata_kuliah_ids' => ['nullable', 'array'],
+            'mata_kuliah_ids.*' => ['exists:mata_kuliahs,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
@@ -438,28 +440,36 @@ class SuperAdminController extends Controller
                     
                     // Sync program studi to dosen (only if table exists)
                     try {
-                        if (isset($validated['program_studi_ids'])) {
+                        if (isset($validated['program_studi_ids']) && is_array($validated['program_studi_ids'])) {
+                            \Log::info('Syncing program studis for dosen: ' . $dosen->id, $validated['program_studi_ids']);
                             $dosen->programStudis()->sync($validated['program_studi_ids']);
+                            \Log::info('Successfully synced ' . count($validated['program_studi_ids']) . ' program studis');
                         } else {
                             // If no program studi selected, detach all
+                            \Log::info('No program studi ids provided, detaching all for dosen: ' . $dosen->id);
                             $dosen->programStudis()->detach();
                         }
                     } catch (\Exception $e) {
-                        // Ignore if dosen_program_studi table doesn't exist yet
-                        \Log::warning('Failed to sync program studi for dosen: ' . $e->getMessage());
+                        // Log the error
+                        \Log::error('Failed to sync program studi for dosen: ' . $e->getMessage());
+                        \Log::error($e->getTraceAsString());
                     }
                     
                     // Sync mata kuliah to dosen (only if table exists)
                     try {
-                        if (isset($validated['mata_kuliah_ids'])) {
+                        if (isset($validated['mata_kuliah_ids']) && is_array($validated['mata_kuliah_ids'])) {
+                            \Log::info('Syncing mata kuliahs for dosen: ' . $dosen->id, $validated['mata_kuliah_ids']);
                             $dosen->mataKuliahs()->sync($validated['mata_kuliah_ids']);
+                            \Log::info('Successfully synced ' . count($validated['mata_kuliah_ids']) . ' mata kuliahs');
                         } else {
                             // If no mata kuliah selected, detach all
+                            \Log::info('No mata kuliah ids provided, detaching all for dosen: ' . $dosen->id);
                             $dosen->mataKuliahs()->detach();
                         }
                     } catch (\Exception $e) {
-                        // Ignore if dosen_mata_kuliah table doesn't exist yet
-                        \Log::warning('Failed to sync mata kuliah for dosen: ' . $e->getMessage());
+                        // Log the error
+                        \Log::error('Failed to sync mata kuliah for dosen: ' . $e->getMessage());
+                        \Log::error($e->getTraceAsString());
                     }
                     break;
 
