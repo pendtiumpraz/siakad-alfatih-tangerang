@@ -66,17 +66,17 @@ class SuperAdminController extends Controller
      */
     public function create()
     {
-        $programStudis = ProgramStudi::all();
+        // Eager load kurikulums and mataKuliahs for each program studi
+        $programStudis = ProgramStudi::with(['kurikulums.mataKuliahs' => function($query) {
+            $query->orderBy('semester')->orderBy('kode_mk');
+        }])->get();
         
         // Load ALL mata kuliah grouped by program studi for dynamic filtering
         $mataKuliahsByProdi = [];
         foreach ($programStudis as $prodi) {
             $kurikulum = $prodi->kurikulums->first();
-            if ($kurikulum) {
-                $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs()
-                    ->orderBy('semester')
-                    ->orderBy('kode_mk')
-                    ->get();
+            if ($kurikulum && $kurikulum->mataKuliahs) {
+                $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs;
             } else {
                 $mataKuliahsByProdi[$prodi->id] = collect();
             }
@@ -299,19 +299,17 @@ class SuperAdminController extends Controller
                 }
             }
 
-            $programStudis = ProgramStudi::all();
-
-            return view('admin.users.edit', compact('user', 'programStudis'));
+            // Eager load kurikulums and mataKuliahs for each program studi
+            $programStudis = ProgramStudi::with(['kurikulums.mataKuliahs' => function($query) {
+                $query->orderBy('semester')->orderBy('kode_mk');
+            }])->get();
             
             // Load ALL mata kuliah grouped by program studi for dynamic filtering
             $mataKuliahsByProdi = [];
             foreach ($programStudis as $prodi) {
                 $kurikulum = $prodi->kurikulums->first();
-                if ($kurikulum) {
-                    $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs()
-                        ->orderBy('semester')
-                        ->orderBy('kode_mk')
-                        ->get();
+                if ($kurikulum && $kurikulum->mataKuliahs) {
+                    $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs;
                 } else {
                     $mataKuliahsByProdi[$prodi->id] = collect();
                 }
