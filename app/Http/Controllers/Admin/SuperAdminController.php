@@ -225,24 +225,35 @@ class SuperAdminController extends Controller
      */
     public function edit($id)
     {
-        // Load user first
-        $user = User::with(['mahasiswa', 'dosen', 'operator'])
-            ->withTrashed()
-            ->findOrFail($id);
-        
-        // Try to load programStudis if dosen exists and table exists
-        if ($user->dosen) {
-            try {
-                $user->dosen->load('programStudis');
-            } catch (\Exception $e) {
-                // Ignore if dosen_program_studi table doesn't exist yet
-                \Log::info('Could not load programStudis for dosen: ' . $e->getMessage());
+        try {
+            // Load user first
+            $user = User::with(['mahasiswa', 'dosen', 'operator'])
+                ->withTrashed()
+                ->findOrFail($id);
+            
+            // Try to load programStudis if dosen exists and table exists
+            if ($user->dosen) {
+                try {
+                    // Check if table exists and method exists before loading relation
+                    if (\Schema::hasTable('dosen_program_studi') && method_exists($user->dosen, 'programStudis')) {
+                        $user->dosen->load('programStudis');
+                    }
+                } catch (\Exception $e) {
+                    // Ignore if relation fails to load
+                    \Log::warning('Could not load programStudis for dosen: ' . $e->getMessage());
+                }
             }
+
+            $programStudis = ProgramStudi::all();
+
+            return view('admin.users.edit', compact('user', 'programStudis'));
+            
+        } catch (\Exception $e) {
+            \Log::error('Error in user edit: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            return back()->with('error', 'Terjadi kesalahan saat membuka halaman edit: ' . $e->getMessage());
         }
-
-        $programStudis = ProgramStudi::all();
-
-        return view('admin.users.edit', compact('user', 'programStudis'));
     }
 
     /**
