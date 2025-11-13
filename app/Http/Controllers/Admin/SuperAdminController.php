@@ -67,8 +67,22 @@ class SuperAdminController extends Controller
     public function create()
     {
         $programStudis = ProgramStudi::all();
+        
+        // Load ALL mata kuliah grouped by program studi for dynamic filtering
+        $mataKuliahsByProdi = [];
+        foreach ($programStudis as $prodi) {
+            $kurikulum = $prodi->kurikulums->first();
+            if ($kurikulum) {
+                $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs()
+                    ->orderBy('semester')
+                    ->orderBy('kode_mk')
+                    ->get();
+            } else {
+                $mataKuliahsByProdi[$prodi->id] = collect();
+            }
+        }
 
-        return view('admin.users.create', compact('programStudis'));
+        return view('admin.users.create', compact('programStudis', 'mataKuliahsByProdi'));
     }
 
     /**

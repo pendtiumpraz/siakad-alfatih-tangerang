@@ -419,7 +419,16 @@
             </div>
 
             <!-- Dosen Fields -->
-            <div x-show="selectedRole === 'dosen'" x-transition>
+            <div x-show="selectedRole === 'dosen'" x-transition x-data="{ 
+                selectedProdiIds: {{ json_encode(old('program_studi_ids', [])) }},
+                toggleProdi(prodiId) {
+                    if (this.selectedProdiIds.includes(prodiId)) {
+                        this.selectedProdiIds = this.selectedProdiIds.filter(id => id !== prodiId);
+                    } else {
+                        this.selectedProdiIds.push(prodiId);
+                    }
+                }
+            }">
                 <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
                     <i class="fas fa-chalkboard-teacher mr-2"></i>
                     Informasi Dosen
