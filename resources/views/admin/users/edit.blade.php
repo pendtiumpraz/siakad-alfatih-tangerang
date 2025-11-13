@@ -503,8 +503,28 @@
                     </div>
 
                     <!-- Program Studi Assignment (Checkbox) - with Alpine.js tracking -->
+                    @php
+                        // Pre-calculate checked IDs BEFORE Alpine.js uses it
+                        $checkedProdiIds = [];
+                        
+                        // Priority 1: old input
+                        if (old('program_studi_ids')) {
+                            $checkedProdiIds = old('program_studi_ids');
+                        }
+                        // Priority 2: existing assignment
+                        elseif ($user->dosen) {
+                            try {
+                                if ($user->dosen->relationLoaded('programStudis')) {
+                                    $checkedProdiIds = $user->dosen->programStudis->pluck('id')->toArray();
+                                }
+                            } catch (\Throwable $e) {
+                                // Stay empty
+                            }
+                        }
+                    @endphp
+                    
                     <div class="md:col-span-2" x-data="{ 
-                        selectedProdiIds: {{ json_encode($checkedProdiIds ?? []) }},
+                        selectedProdiIds: {{ json_encode($checkedProdiIds) }},
                         toggleProdi(prodiId) {
                             if (this.selectedProdiIds.includes(prodiId)) {
                                 this.selectedProdiIds = this.selectedProdiIds.filter(id => id !== prodiId);
@@ -518,25 +538,6 @@
                         </label>
                         <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50 @error('program_studi_ids') border-red-500 @enderror">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                @php
-                                    // Pre-calculate checked IDs outside loop for safety
-                                    $checkedProdiIds = [];
-                                    
-                                    // Priority 1: old input
-                                    if (old('program_studi_ids')) {
-                                        $checkedProdiIds = old('program_studi_ids');
-                                    }
-                                    // Priority 2: existing assignment
-                                    elseif ($user->dosen) {
-                                        try {
-                                            if ($user->dosen->relationLoaded('programStudis')) {
-                                                $checkedProdiIds = $user->dosen->programStudis->pluck('id')->toArray();
-                                            }
-                                        } catch (\Throwable $e) {
-                                            // Stay empty
-                                        }
-                                    }
-                                @endphp
                                 
                                 @foreach($programStudis as $prodi)
                                     <label class="flex items-start space-x-3 p-2 hover:bg-white rounded cursor-pointer transition">
