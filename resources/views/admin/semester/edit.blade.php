@@ -84,7 +84,7 @@
                             Tanggal Mulai <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai', $semester->tanggal_mulai) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('tanggal_mulai') border-red-500 @enderror" required>
+                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai', $semester->tanggal_mulai?->format('Y-m-d')) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('tanggal_mulai') border-red-500 @enderror" required>
                             <i class="fas fa-calendar-alt absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                         </div>
                         @error('tanggal_mulai')
@@ -98,7 +98,7 @@
                             Tanggal Selesai <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ old('tanggal_selesai', $semester->tanggal_selesai) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('tanggal_selesai') border-red-500 @enderror" required>
+                            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ old('tanggal_selesai', $semester->tanggal_selesai?->format('Y-m-d')) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('tanggal_selesai') border-red-500 @enderror" required>
                             <i class="fas fa-calendar-check absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                         </div>
                         @error('tanggal_selesai')
