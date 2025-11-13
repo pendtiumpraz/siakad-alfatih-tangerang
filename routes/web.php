@@ -92,6 +92,11 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::post('ruangan/{id}/restore', [RuanganController::class, 'restore'])->name('ruangan.restore');
 
     Route::resource('semester', SemesterController::class);
+    Route::post('semester/{id}/generate-khs', [SemesterController::class, 'generateKhs'])->name('semester.generate-khs');
+    
+    // KHS Management
+    Route::get('khs', [\App\Http\Controllers\Admin\KhsController::class, 'index'])->name('khs.index');
+    Route::get('khs/{id}', [\App\Http\Controllers\Admin\KhsController::class, 'show'])->name('khs.show');
 
     // Payment Management (Admin has full access)
     // Custom routes harus didefinisikan SEBELUM resource routes
