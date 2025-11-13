@@ -509,32 +509,33 @@
                         </label>
                         <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50 @error('program_studi_ids') border-red-500 @enderror">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                @foreach($programStudis as $prodi)
-                                    @php
-                                        $isChecked = false;
-                                        
-                                        // Priority 1: Check old input (validation failed)
-                                        if (old('program_studi_ids')) {
-                                            $isChecked = in_array($prodi->id, old('program_studi_ids'));
-                                        }
-                                        // Priority 2: Check existing dosen assignment
-                                        elseif (isset($user->dosen)) {
-                                            try {
-                                                // Check if relation exists and is loaded
-                                                if ($user->dosen->relationLoaded('programStudis')) {
-                                                    $isChecked = $user->dosen->programStudis->contains('id', $prodi->id);
-                                                }
-                                            } catch (\Throwable $e) {
-                                                // Silently ignore any errors
+                                @php
+                                    // Pre-calculate checked IDs outside loop for safety
+                                    $checkedProdiIds = [];
+                                    
+                                    // Priority 1: old input
+                                    if (old('program_studi_ids')) {
+                                        $checkedProdiIds = old('program_studi_ids');
+                                    }
+                                    // Priority 2: existing assignment
+                                    elseif ($user->dosen) {
+                                        try {
+                                            if ($user->dosen->relationLoaded('programStudis')) {
+                                                $checkedProdiIds = $user->dosen->programStudis->pluck('id')->toArray();
                                             }
+                                        } catch (\Throwable $e) {
+                                            // Stay empty
                                         }
-                                    @endphp
+                                    }
+                                @endphp
+                                
+                                @foreach($programStudis as $prodi)
                                     <label class="flex items-start space-x-3 p-2 hover:bg-white rounded cursor-pointer transition">
                                         <input
                                             type="checkbox"
                                             name="program_studi_ids[]"
                                             value="{{ $prodi->id }}"
-                                            {{ $isChecked ? 'checked' : '' }}
+                                            {{ in_array($prodi->id, $checkedProdiIds) ? 'checked' : '' }}
                                             class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
                                         >
                                         <span class="text-sm text-gray-700">
@@ -604,9 +605,9 @@
     function userForm() {
         return {
             selectedRole: '{{ old('role', $user->role) }}',
-            mahasiswaStatus: '{{ old('mahasiswa_status', $user->mahasiswa->status ?? 'aktif') }}',
-            useCurrentDateLulus: {{ old('tanggal_lulus', $user->mahasiswa->tanggal_lulus ?? null) ? 'false' : 'true' }},
-            useCurrentDateDropout: {{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ?? null) ? 'false' : 'true' }},
+            mahasiswaStatus: '{{ old('mahasiswa_status', optional($user->mahasiswa)->status ?? 'aktif') }}',
+            useCurrentDateLulus: {{ old('tanggal_lulus', optional($user->mahasiswa)->tanggal_lulus ?? null) ? 'false' : 'true' }},
+            useCurrentDateDropout: {{ old('tanggal_dropout', optional($user->mahasiswa)->tanggal_dropout ?? null) ? 'false' : 'true' }},
 
             calculatedSemester() {
                 const angkatanInput = document.getElementById('angkatan');
