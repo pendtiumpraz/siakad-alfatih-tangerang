@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-admin.page-header title="Master Data Semester" />
+    <x-operator.page-header title="Master Data Semester" />
 
     <!-- Filter & Search Section -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">

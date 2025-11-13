@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-admin.page-header title="Detail Mata Kuliah" />
+    <x-operator.page-header title="Detail Mata Kuliah" />
 
     <!-- Action Buttons -->
     <div class="flex flex-col sm:flex-row gap-4 justify-between">

@@ -3,7 +3,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
-    <x-admin.page-header title="Master Data Mata Kuliah" />
+    <x-operator.page-header title="Master Data Mata Kuliah" />
 
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
