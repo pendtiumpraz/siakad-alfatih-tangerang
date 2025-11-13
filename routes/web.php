@@ -258,9 +258,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('nilai', [MahasiswaController::class, 'nilai'])->name('nilai.index');
     Route::get('nilai/{semester_id}', [MahasiswaController::class, 'nilaiDetail'])->name('nilai.detail');
 
-    Route::get('khs', [MahasiswaController::class, 'khs'])->name('khs.index');
-    Route::get('khs/{id}', [MahasiswaController::class, 'khsDetail'])->name('khs.detail');
-    Route::get('khs/{id}/export', [MahasiswaController::class, 'khsExport'])->name('khs.export');
+    Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
+    Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
 
     Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
     Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.detail');

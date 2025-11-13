@@ -1,738 +1,221 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'KHS Semester 5')
-
 @section('content')
 <div class="space-y-6">
-    <!-- Page Title -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800">Kartu Hasil Studi</h1>
-            <p class="text-gray-600 mt-1">Semester 5 - Genap 2024/2025</p>
-        </div>
-        <div class="flex space-x-3">
-            <a href="{{ route('mahasiswa.khs.index') }}"
-               class="text-gray-600 hover:text-gray-800 px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2 border-2 border-gray-300 hover:border-gray-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                </svg>
-                <span>Kembali</span>
-            </a>
-            <a href="{{ route('mahasiswa.khs.export', $khs->semester_id) }}"
-               target="_blank"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <span>Download PDF</span>
-            </a>
-            <button
-                onclick="window.print()"
-                class="bg-[#D4AF37] hover:bg-[#c49d2f] text-white px-6 py-3 rounded-lg font-semibold transition flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                </svg>
-                <span>Print KHS</span>
-            </button>
-        </div>
+    <!-- Page Header -->
+    <x-mahasiswa.page-header title="Detail Kartu Hasil Studi" />
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-between">
+        <a href="{{ route('mahasiswa.khs.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Kembali
+        </a>
+        <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-print mr-2"></i>
+            Print KHS
+        </button>
     </div>
 
-    <div class="islamic-divider"></div>
-
-    <!-- Official KHS Document -->
-    <div class="card-islamic p-8" id="khs-document">
+    <!-- Main KHS Card -->
+    <div class="bg-white rounded-lg shadow-md border-2 border-[#D4AF37] overflow-hidden">
         <!-- Header -->
-        <div class="text-center mb-6 pb-6 border-b-2 border-[#D4AF37]">
-            <div class="flex items-center justify-center space-x-4 mb-4">
-                <svg class="w-16 h-16 text-[#D4AF37]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                </svg>
+        <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] px-6 py-8">
+            <div class="text-center text-white">
+                <h1 class="text-3xl font-bold mb-2">KARTU HASIL STUDI (KHS)</h1>
+                <p class="text-emerald-100">STAI Al-Fatih Tangerang</p>
+                <p class="text-emerald-100 text-sm">Semester {{ $khs->semester->tahun_akademik }}</p>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <!-- Mahasiswa Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-[#4A7C59]">STAI AL-FATIH</h2>
-                    <p class="text-sm text-gray-600">Sekolah Tinggi Agama Islam Al-Fatih</p>
+                    <h3 class="text-lg font-semibold text-[#2D5F3F] border-b-2 border-[#D4AF37] pb-2 mb-4">
+                        <i class="fas fa-user-graduate mr-2"></i>
+                        Data Mahasiswa
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="flex">
+                            <span class="w-32 text-sm text-gray-600">NIM</span>
+                            <span class="text-sm font-semibold">: {{ $khs->mahasiswa->nim }}</span>
+                        </div>
+                        <div class="flex">
+                            <span class="w-32 text-sm text-gray-600">Nama</span>
+                            <span class="text-sm font-semibold">: {{ $khs->mahasiswa->nama_lengkap }}</span>
+                        </div>
+                        <div class="flex">
+                            <span class="w-32 text-sm text-gray-600">Program Studi</span>
+                            <span class="text-sm font-semibold">: {{ $khs->mahasiswa->programStudi->nama_prodi }}</span>
+                        </div>
+                        <div class="flex">
+                            <span class="w-32 text-sm text-gray-600">Angkatan</span>
+                            <span class="text-sm font-semibold">: {{ $khs->mahasiswa->angkatan }}</span>
+                        </div>
+                        @if($khs->mahasiswa->dosenPa)
+                        <div class="flex">
+                            <span class="w-32 text-sm text-gray-600">Dosen PA</span>
+                            <span class="text-sm font-semibold">: {{ $khs->mahasiswa->dosenPa->nama_lengkap }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Prestasi -->
+                <div>
+                    <h3 class="text-lg font-semibold text-[#2D5F3F] border-b-2 border-[#D4AF37] pb-2 mb-4">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        Prestasi Akademik
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                            <p class="text-sm text-blue-600 mb-1">Indeks Prestasi (IP)</p>
+                            @php
+                                $ipColor = $khs->ip >= 3.5 ? 'text-green-600' : ($khs->ip >= 3.0 ? 'text-blue-600' : ($khs->ip >= 2.5 ? 'text-yellow-600' : 'text-red-600'));
+                            @endphp
+                            <p class="text-4xl font-bold {{ $ipColor }}">{{ number_format($khs->ip, 2) }}</p>
+                            <p class="text-xs text-blue-600 mt-1">Semester ini</p>
+                        </div>
+
+                        <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+                            <p class="text-sm text-green-600 mb-1">Indeks Prestasi Kumulatif (IPK)</p>
+                            @php
+                                $ipkColor = $khs->ipk >= 3.5 ? 'text-green-600' : ($khs->ipk >= 3.0 ? 'text-blue-600' : ($khs->ipk >= 2.5 ? 'text-yellow-600' : 'text-red-600'));
+                            @endphp
+                            <p class="text-4xl font-bold {{ $ipkColor }}">{{ number_format($khs->ipk, 2) }}</p>
+                            <p class="text-xs text-green-600 mt-1">Kumulatif</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                                <p class="text-xs text-purple-600">SKS Semester</p>
+                                <p class="text-2xl font-bold text-purple-700">{{ $khs->total_sks_semester }}</p>
+                            </div>
+                            <div class="bg-indigo-50 rounded-lg p-3 border border-indigo-200">
+                                <p class="text-xs text-indigo-600">SKS Kumulatif</p>
+                                <p class="text-2xl font-bold text-indigo-700">{{ $khs->total_sks_kumulatif }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800 mt-4">KARTU HASIL STUDI (KHS)</h3>
-            <p class="text-gray-600 mt-2">{{ $khs->semester->nama_semester ?? 'Semester' }} Tahun Akademik {{ $khs->semester->tahun_akademik ?? '-' }}</p>
-        </div>
 
-        <!-- Student Identity -->
-        <div class="grid grid-cols-2 gap-6 mb-6 pb-6 border-b border-gray-300">
-            <div class="space-y-2">
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">NIM</span>
-                    <span class="text-sm">: <strong>{{ $mahasiswa->nim }}</strong></span>
-                </div>
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">Nama</span>
-                    <span class="text-sm">: <strong>{{ $mahasiswa->nama_lengkap }}</strong></span>
-                </div>
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">Program Studi</span>
-                    <span class="text-sm">: <strong>{{ $mahasiswa->programStudi->nama_prodi ?? '-' }}</strong></span>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">Semester</span>
-                    <span class="text-sm">: <strong>{{ $mahasiswa->semester_aktif }}</strong></span>
-                </div>
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">Tahun Akademik</span>
-                    <span class="text-sm">: <strong>{{ $khs->semester->tahun_akademik ?? '-' }} {{ $khs->semester->jenis ?? '-' }}</strong></span>
-                </div>
-                <div class="flex">
-                    <span class="w-40 text-sm text-gray-600">Status</span>
-                    <span class="text-sm">: <strong class="text-green-600">{{ ucfirst($mahasiswa->status) }}</strong></span>
-                </div>
-            </div>
-        </div>
+            <div class="islamic-divider my-6"></div>
 
-        <!-- Grades Table -->
-        <div class="mb-6">
-            <table class="w-full border-collapse border-2 border-gray-300">
-                <thead>
-                    <tr class="bg-gradient-to-r from-[#4A7C59] to-[#5a9c6f] text-white">
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">No</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-left">Kode MK</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-left">Mata Kuliah</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">SKS</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">Nilai</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">Grade</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">Bobot</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">SKS x Bobot</th>
-                        <th class="border border-gray-300 px-3 py-2 text-sm font-semibold text-center">Ket</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $totalSks = 0;
-                        $totalBobot = 0;
-                    @endphp
-                    @forelse($nilais as $index => $nilai)
-                    @php
-                        $bobot = 0;
-                        switch($nilai->grade) {
-                            case 'A': $bobot = 4.0; break;
-                            case 'A-': $bobot = 3.7; break;
-                            case 'B+': $bobot = 3.3; break;
-                            case 'B': $bobot = 3.0; break;
-                            case 'B-': $bobot = 2.7; break;
-                            case 'C+': $bobot = 2.3; break;
-                            case 'C': $bobot = 2.0; break;
-                            case 'C-': $bobot = 1.7; break;
-                            case 'D': $bobot = 1.0; break;
-                            case 'E': $bobot = 0.0; break;
-                        }
-                        $sks = $nilai->mataKuliah->sks ?? 0;
-                        $sksBobot = $bobot * $sks;
-                        $totalSks += $sks;
-                        $totalBobot += $sksBobot;
+            <!-- Nilai Table -->
+            <h3 class="text-lg font-semibold text-[#2D5F3F] border-b-2 border-[#D4AF37] pb-2 mb-4">
+                <i class="fas fa-list-alt mr-2"></i>
+                Detail Nilai Semester {{ $khs->semester->tahun_akademik }}
+            </h3>
 
-                        // Grade color mapping
-                        $gradeColor = 'text-gray-600';
-                        switch($nilai->grade) {
-                            case 'A': $gradeColor = 'text-green-700'; break;
-                            case 'A-': $gradeColor = 'text-green-600'; break;
-                            case 'B+': $gradeColor = 'text-green-500'; break;
-                            case 'B': $gradeColor = 'text-blue-600'; break;
-                            case 'B-': $gradeColor = 'text-blue-500'; break;
-                            case 'C+': $gradeColor = 'text-yellow-600'; break;
-                            case 'C': $gradeColor = 'text-yellow-500'; break;
-                            case 'C-': $gradeColor = 'text-yellow-400'; break;
-                            case 'D': $gradeColor = 'text-red-500'; break;
-                            case 'E': $gradeColor = 'text-red-600'; break;
-                        }
-                    @endphp
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ $index + 1 }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">{{ $nilai->mataKuliah->kode_mk ?? '-' }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm">{{ $nilai->mataKuliah->nama_mk ?? '-' }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">{{ $sks }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($nilai->nilai_akhir ?? 0, 2) }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="font-bold {{ $gradeColor }}">{{ $nilai->grade ?? '-' }}</span></td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($bobot, 1) }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center font-semibold">{{ number_format($sksBobot, 1) }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center"><span class="text-{{ $nilai->status == 'lulus' ? 'green' : 'red' }}-600 text-xs">{{ $nilai->status == 'lulus' ? 'L' : 'TL' }}</span></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="9" class="border border-gray-300 px-3 py-2 text-sm text-center" style="padding: 20px; color: #999;">
-                            Tidak ada data nilai
-                        </td>
-                    </tr>
-                    @endforelse
-                    @if($nilais->count() > 0)
-                    <tr class="bg-gray-100 font-bold">
-                        <td colspan="3" class="border border-gray-300 px-3 py-2 text-sm text-right">JUMLAH</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ $totalSks }}</td>
-                        <td colspan="3" class="border border-gray-300 px-3 py-2 text-sm text-center">-</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">{{ number_format($totalBobot, 1) }}</td>
-                        <td class="border border-gray-300 px-3 py-2 text-sm text-center">-</td>
-                    </tr>
+            @if($khs->mahasiswa->nilais->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">No</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Kode</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Mata Kuliah</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">SKS</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Nilai</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Bobot</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Mutu (B×K)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @php
+                                $khsService = app(\App\Services\KhsGeneratorService::class);
+                                $totalBobotXSks = 0;
+                            @endphp
+                            @foreach($khs->mahasiswa->nilais as $index => $nilai)
+                                @php
+                                    $bobot = $khsService->getBobot($nilai->nilai_huruf ?? 'E');
+                                    $bobotXSks = $bobot * ($nilai->mataKuliah->sks ?? 0);
+                                    $totalBobotXSks += $bobotXSks;
+                                    $nilaiColor = match($nilai->nilai_huruf) {
+                                        'A', 'A-' => 'bg-green-100 text-green-800',
+                                        'B+', 'B', 'B-' => 'bg-blue-100 text-blue-800',
+                                        'C+', 'C' => 'bg-yellow-100 text-yellow-800',
+                                        'D' => 'bg-orange-100 text-orange-800',
+                                        'E' => 'bg-red-100 text-red-800',
+                                        default => 'bg-gray-100 text-gray-800',
+                                    };
+                                @endphp
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3 text-sm font-semibold text-[#2D5F3F]">{{ $nilai->mataKuliah->kode_mk }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-900">{{ $nilai->mataKuliah->nama_mk }}</td>
+                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ $nilai->mataKuliah->sks }}</td>
+                                    <td class="px-4 py-3 text-center">
+                                        <span class="px-3 py-1 {{ $nilaiColor }} text-sm font-bold rounded-full">
+                                            {{ $nilai->nilai_huruf ?? '-' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobot, 2) }}</td>
+                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobotXSks, 2) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                        <tfoot class="bg-gray-50 font-semibold">
+                            <tr>
+                                <td colspan="3" class="px-4 py-3 text-right text-sm">Total:</td>
+                                <td class="px-4 py-3 text-center text-sm">{{ $khs->total_sks_semester }}</td>
+                                <td colspan="2"></td>
+                                <td class="px-4 py-3 text-center text-sm">{{ number_format($totalBobotXSks, 2) }}</td>
+                            </tr>
+                            <tr class="bg-[#2D5F3F] text-white">
+                                <td colspan="6" class="px-4 py-3 text-right text-sm">Indeks Prestasi (IP):</td>
+                                <td class="px-4 py-3 text-center text-xl font-bold">{{ number_format($khs->ip, 2) }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            @else
+                <div class="text-center py-8">
+                    <p class="text-gray-500">Tidak ada data nilai untuk semester ini</p>
+                </div>
+            @endif
+
+            <!-- Signatures Section (if enabled) -->
+            @if($khs->semester->khs_show_ketua_prodi_signature || $khs->semester->khs_show_dosen_pa_signature)
+            <div class="mt-8 grid grid-cols-2 gap-8">
+                @if($khs->semester->khs_show_dosen_pa_signature && $khs->mahasiswa->dosenPa)
+                <div class="text-center">
+                    <p class="text-sm text-gray-600 mb-16">Dosen Pembimbing Akademik</p>
+                    <p class="font-semibold border-t-2 border-gray-800 inline-block px-8 pt-2">
+                        {{ $khs->mahasiswa->dosenPa->nama_lengkap }}
+                    </p>
+                    @if($khs->mahasiswa->dosenPa->nidn)
+                    <p class="text-xs text-gray-500">NIDN: {{ $khs->mahasiswa->dosenPa->nidn }}</p>
                     @endif
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Summary Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="card-islamic p-6 border-2 border-[#F4E5C3]">
-                <h4 class="font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#D4AF37]">Prestasi Semester Ini</h4>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total SKS Semester</span>
-                        <span class="font-bold text-gray-800 text-lg">{{ $khs->total_sks ?? 0 }} SKS</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total SKS Lulus</span>
-                        <span class="font-bold text-green-600 text-lg">{{ $khs->total_sks_lulus ?? 0 }} SKS</span>
-                    </div>
-                    <div class="flex justify-between items-center p-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E5C3] rounded-lg">
-                        <span class="text-sm text-gray-700 font-semibold">IP Semester</span>
-                        <span class="font-bold text-white text-3xl">{{ number_format($khs->ip_semester ?? 0, 2) }}</span>
-                    </div>
                 </div>
-            </div>
+                @endif
 
-            <div class="card-islamic p-6 border-2 border-[#F4E5C3]">
-                <h4 class="font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#D4AF37]">Prestasi Kumulatif</h4>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total SKS Tempuh</span>
-                        <span class="font-bold text-gray-800 text-lg">{{ $khs->total_sks ?? 0 }} SKS</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-gray-600">Total SKS Lulus</span>
-                        <span class="font-bold text-green-600 text-lg">{{ $khs->total_sks_lulus ?? 0 }} SKS</span>
-                    </div>
-                    <div class="flex justify-between items-center p-3 bg-gradient-to-r from-[#4A7C59] to-[#5a9c6f] rounded-lg">
-                        <span class="text-sm text-white font-semibold">IPK</span>
-                        <span class="font-bold text-white text-3xl">{{ number_format($khs->ip_kumulatif ?? 0, 2) }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Semester -->
-        <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="font-bold text-gray-800">Status Semester:</p>
-                    <p class="text-sm text-gray-600 mt-1">Berdasarkan IP Semester {{ number_format($khs->ip_semester ?? 0, 2) }}, mahasiswa dinyatakan:</p>
-                </div>
-                <span class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg font-bold text-xl">
-                    LULUS
-                </span>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="mt-8 pt-6 border-t-2 border-[#D4AF37]">
-            <div class="flex justify-between items-end">
+                @if($khs->semester->khs_show_ketua_prodi_signature)
                 <div class="text-center">
-                    <p class="text-xs text-gray-600 mb-16">Mengetahui,</p>
-                    <p class="font-bold text-gray-800 border-t-2 border-gray-800 pt-2">Ketua Program Studi</p>
+                    <p class="text-sm text-gray-600 mb-16">Ketua Program Studi</p>
+                    <p class="font-semibold border-t-2 border-gray-800 inline-block px-8 pt-2">
+                        ___________________________
+                    </p>
+                    <p class="text-xs text-gray-500">NIDN: _______________</p>
                 </div>
-                <div class="text-center p-6 rounded-lg">
-                    <svg class="w-12 h-12 text-[#D4AF37] mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                    </svg>
-                    <p class="text-[#4A7C59] font-bold">STAI AL-FATIH</p>
-                    <p class="text-xs text-gray-600">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-600 mb-1">Jakarta, {{ date('d F Y') }}</p>
-                    <p class="text-xs text-gray-600 mb-16">Dosen Wali</p>
-                    <p class="font-bold text-gray-800 border-t-2 border-gray-800 pt-2">Dr. H. Abdullah, M.Pd.I</p>
-                </div>
+                @endif
             </div>
-        </div>
-
-        <!-- Keterangan -->
-        <div class="mt-6 text-xs text-gray-600 space-y-1">
-            <p><strong>Keterangan:</strong></p>
-            <p>L = Lulus | TL = Tidak Lulus | K = Kosong</p>
-            <p>Grade: A (85-100) | A- (80-84) | B+ (75-79) | B (70-74) | B- (65-69) | C+ (60-64) | C (55-59) | C- (50-54) | D (45-49) | E (0-44)</p>
+            @endif
         </div>
     </div>
 </div>
 
+<!-- Print Styles -->
 <style>
-    @media print {
-        /* Hide non-printable elements */
-        aside, .sidebar, header[class], nav, button, .no-print, .islamic-divider,
-        .space-y-6 > .flex.items-center.justify-between:first-of-type {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        /* Force full width without sidebar */
-        body, html {
-            background: white !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            overflow: visible !important;
-        }
-
-        main {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
-
-        /* Page setup - PORTRAIT orientation with optimized margins */
-        @page {
-            size: A4 portrait;
-            margin: 0.8cm 1cm;
-        }
-
-        /* Body setup with readable font */
-        body {
-            font-size: 10pt !important;
-            line-height: 1.3 !important;
-            color: #000 !important;
-        }
-
-        /* Main wrapper - clean and compact */
-        #khs-document {
-            box-shadow: none !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-            padding: 0.4cm !important;
-        }
-
-        .space-y-6, main, .container, .max-w-7xl {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        /* Header - Compact single line */
-        .text-center.mb-6 {
-            margin-bottom: 0.3cm !important;
-            padding-bottom: 0.2cm !important;
-            border-bottom: 2px solid #000 !important;
-        }
-
-        .text-center.mb-6 .flex {
-            display: none !important; /* Hide decorative SVG */
-        }
-
-        h2.text-3xl {
-            font-size: 14pt !important;
-            margin: 0 0 2px 0 !important;
-            font-weight: bold !important;
-        }
-
-        h3.text-2xl {
-            font-size: 12pt !important;
-            margin: 4px 0 2px 0 !important;
-            font-weight: bold !important;
-        }
-
-        p.text-sm, p.text-gray-600 {
-            font-size: 9pt !important;
-            margin: 2px 0 !important;
-        }
-
-        /* Student info - 2 columns compact */
-        .grid.grid-cols-2.gap-6 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 0.3cm !important;
-            margin: 0.2cm 0 !important;
-            padding: 0.2cm 0 !important;
-            border-bottom: 1px solid #999 !important;
-        }
-
-        .grid.grid-cols-2 .space-y-2 {
-            margin: 0 !important;
-        }
-
-        .grid.grid-cols-2 .flex {
-            margin: 2px 0 !important;
-        }
-
-        .grid.grid-cols-2 .flex .w-40 {
-            width: 120px !important;
-            font-size: 9pt !important;
-        }
-
-        .grid.grid-cols-2 .flex span {
-            font-size: 9pt !important;
-        }
-
-        /* Table - Optimized columns */
-        table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            margin: 0.2cm 0 !important;
-            font-size: 9pt !important;
-        }
-
-        thead {
-            background: #e5e7eb !important;
-        }
-
-        th {
-            padding: 3px 4px !important;
-            font-size: 8pt !important;
-            font-weight: bold !important;
-            border: 1px solid #666 !important;
-            text-align: center !important;
-        }
-
-        td {
-            padding: 2px 4px !important;
-            font-size: 9pt !important;
-            border: 1px solid #999 !important;
-        }
-
-        /* Narrow columns for numbers */
-        th:nth-child(1), td:nth-child(1) { width: 25px !important; } /* No */
-        th:nth-child(2), td:nth-child(2) { width: 60px !important; } /* Kode */
-        th:nth-child(4), td:nth-child(4) { width: 35px !important; } /* SKS */
-        th:nth-child(5), td:nth-child(5) { width: 40px !important; } /* Nilai */
-        th:nth-child(6), td:nth-child(6) { width: 40px !important; } /* Grade */
-        th:nth-child(7), td:nth-child(7) { width: 45px !important; } /* Bobot */
-        th:nth-child(8), td:nth-child(8) { width: 60px !important; } /* SKSxBobot */
-        th:nth-child(9), td:nth-child(9) { width: 30px !important; } /* Ket */
-
-        tr.bg-gray-100 td {
-            background: #f3f4f6 !important;
-            font-weight: bold !important;
-        }
-
-        /* Summary cards - Inline grid */
-        .grid.grid-cols-1.md\\:grid-cols-2.gap-6 {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 0.3cm !important;
-            margin: 0.2cm 0 !important;
-        }
-
-        .card-islamic {
-            padding: 0.2cm !important;
-            border: 1px solid #999 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            background: white !important;
-        }
-
-        .card-islamic h4 {
-            font-size: 10pt !important;
-            margin: 0 0 4px 0 !important;
-            padding: 0 0 3px 0 !important;
-            border-bottom: 1px solid #999 !important;
-        }
-
-        .card-islamic .space-y-3 > div {
-            margin: 3px 0 !important;
-            padding: 2px !important;
-        }
-
-        .card-islamic .text-sm {
-            font-size: 8pt !important;
-        }
-
-        .card-islamic .text-lg, .card-islamic .text-3xl {
-            font-size: 11pt !important;
-        }
-
-        /* Status semester - Compact */
-        .bg-green-50 {
-            background: white !important;
-            border: 1px solid #999 !important;
-            border-radius: 0 !important;
-            padding: 0.2cm !important;
-            margin: 0.2cm 0 !important;
-        }
-
-        .bg-green-50 p {
-            font-size: 9pt !important;
-            margin: 2px 0 !important;
-        }
-
-        .bg-green-600 {
-            background: white !important;
-            color: #000 !important;
-            border: 1px solid #000 !important;
-            padding: 4px 8px !important;
-            font-size: 10pt !important;
-        }
-
-        /* Footer - Simplified */
-        .mt-8.pt-6 {
-            margin-top: 0.3cm !important;
-            padding-top: 0.2cm !important;
-            border-top: 1px solid #999 !important;
-        }
-
-        .mt-8.pt-6 .flex {
-            display: flex !important;
-            justify-content: space-between !important;
-        }
-
-        .mt-8.pt-6 .text-center {
-            font-size: 9pt !important;
-            margin: 0 !important;
-        }
-
-        .mt-8.pt-6 .text-xs {
-            font-size: 7pt !important;
-            margin-bottom: 30px !important;
-        }
-
-        .mt-8.pt-6 .font-bold {
-            font-size: 9pt !important;
-            border-top: 1px solid #000 !important;
-            padding-top: 2px !important;
-        }
-
-
-        /* Keterangan */
-        .mt-6.text-xs {
-            margin-top: 0.2cm !important;
-            font-size: 7pt !important;
-            line-height: 1.2 !important;
-        }
-
-        .mt-6.text-xs p {
-            margin: 1px 0 !important;
-            font-size: 7pt !important;
-        }
-
-        /* Remove all decorative gradients and colors */
-        .bg-gradient-to-r, .bg-gradient-to-br {
-            background: white !important;
-        }
-
-        .shadow, .shadow-md, .shadow-lg {
-            box-shadow: none !important;
-        }
-
-        svg {
-            width: 16px !important;
-            height: 16px !important;
-        }
-
-        /* Prevent page breaks in critical sections */
-        table, .grid {
-            page-break-inside: avoid !important;
-        }
-
-        thead {
-            display: table-header-group !important;
-        }
-
-        tr {
-            page-break-inside: avoid !important;
-        }
+@media print {
+    .no-print {
+        display: none !important;
     }
+    body {
+        background: white;
+    }
+}
 </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
-function printWithWarning() {
-    alert('📌 PENTING: Sebelum print, pastikan setting ukuran di Print Dialog diatur ke 80% agar pas 1 lembar!\n\nCara setting:\n1. Di Print Dialog, cari "Scale" atau "Ukuran"\n2. Ubah dari 100% menjadi 80%\n3. Klik Print');
-    window.print();
-}
-
-function downloadPDF() {
-    const element = document.getElementById('khs-document');
-    const nim = '{{ auth()->user()->nim ?? "202301010001" }}';
-    const semester = '5';
-    const filename = `KHS_${nim}_Semester${semester}.pdf`;
-
-    // Show loading
-    const btn = event.target.closest('button');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<svg class="animate-spin h-5 w-5 inline" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating PDF...';
-    btn.disabled = true;
-
-    // Add temporary print class
-    document.body.classList.add('generating-pdf');
-
-    // Create temporary style element for print styles
-    const printStyles = document.createElement('style');
-    printStyles.id = 'temp-print-styles';
-    printStyles.textContent = `
-        body.generating-pdf {
-            background: white !important;
-            font-size: 10pt !important;
-            line-height: 1.3 !important;
-            color: #000 !important;
-        }
-        body.generating-pdf .sidebar,
-        body.generating-pdf header,
-        body.generating-pdf button,
-        body.generating-pdf a,
-        body.generating-pdf nav,
-        body.generating-pdf .islamic-divider {
-            display: none !important;
-        }
-        body.generating-pdf #khs-document {
-            box-shadow: none !important;
-            border: 1px solid #333 !important;
-            margin: 0 !important;
-            padding: 0.12cm !important;
-        }
-        body.generating-pdf .text-center.mb-6 {
-            margin-bottom: 0.12cm !important;
-            padding-bottom: 0.06cm !important;
-            border-bottom: 2px solid #000 !important;
-        }
-        body.generating-pdf .text-center.mb-6 .flex {
-            display: none !important;
-        }
-        body.generating-pdf h2.text-3xl {
-            font-size: 14pt !important;
-            margin: 0 0 2px 0 !important;
-        }
-        body.generating-pdf h3.text-2xl {
-            font-size: 12pt !important;
-            margin: 4px 0 2px 0 !important;
-        }
-        body.generating-pdf p.text-sm, body.generating-pdf p.text-gray-600 {
-            font-size: 9pt !important;
-            margin: 2px 0 !important;
-        }
-        body.generating-pdf .grid.grid-cols-2 {
-            gap: 0.12cm !important;
-            margin: 0.06cm 0 !important;
-            padding: 0.06cm 0 !important;
-            border-bottom: 1px solid #999 !important;
-        }
-        body.generating-pdf .grid.grid-cols-2 .flex {
-            margin: 0.5px 0 !important;
-        }
-        body.generating-pdf .grid.grid-cols-2 .flex .w-40 {
-            width: 120px !important;
-            font-size: 9pt !important;
-        }
-        body.generating-pdf .grid.grid-cols-2 .flex span {
-            font-size: 9pt !important;
-        }
-        body.generating-pdf table {
-            width: 100% !important;
-            font-size: 9pt !important;
-            margin: 0.06cm 0 !important;
-        }
-        body.generating-pdf th {
-            padding: 1px 2px !important;
-            font-size: 7pt !important;
-            border: 1px solid #666 !important;
-        }
-        body.generating-pdf td {
-            padding: 1px 2px !important;
-            font-size: 9pt !important;
-            border: 1px solid #999 !important;
-        }
-        body.generating-pdf td span.font-bold,
-        body.generating-pdf td span {
-            padding: 1px 3px !important;
-            font-size: 8pt !important;
-        }
-        body.generating-pdf .card-islamic {
-            padding: 0.08cm !important;
-            border: 1px solid #999 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            background: white !important;
-        }
-        body.generating-pdf .card-islamic h4 {
-            font-size: 8pt !important;
-            margin: 0 0 1px 0 !important;
-            padding: 0 0 0.5px 0 !important;
-            border-bottom: 1px solid #999 !important;
-        }
-        body.generating-pdf .card-islamic .space-y-3 {
-            margin: 0 !important;
-        }
-        body.generating-pdf .card-islamic .space-y-3 > div {
-            margin: 0.5px 0 !important;
-            padding: 1.5px !important;
-            border-radius: 0 !important;
-            background: white !important;
-            border: 1px solid #ddd !important;
-        }
-        body.generating-pdf .card-islamic .text-sm {
-            font-size: 7pt !important;
-        }
-        body.generating-pdf .card-islamic .text-lg {
-            font-size: 9pt !important;
-        }
-        body.generating-pdf .card-islamic .text-3xl {
-            font-size: 10pt !important;
-        }
-        body.generating-pdf .card-islamic .p-3 {
-            padding: 3px !important;
-        }
-        body.generating-pdf .bg-green-50 {
-            background: white !important;
-            border: 1px solid #999 !important;
-            padding: 0.06cm !important;
-            margin: 0.06cm 0 !important;
-        }
-        body.generating-pdf .mt-8.pt-6.border-t-2 {
-            margin-top: 0.12cm !important;
-            padding-top: 0.06cm !important;
-            border-top: 1px solid #999 !important;
-        }
-        body.generating-pdf .mt-8.pt-6.border-t-4 {
-            display: none !important;
-        }
-        body.generating-pdf .mt-8.pt-6 .text-center {
-            font-size: 9pt !important;
-        }
-        body.generating-pdf .bg-gradient-to-r, body.generating-pdf .bg-gradient-to-br {
-            background: white !important;
-        }
-        body.generating-pdf svg {
-            width: 16px !important;
-            height: 16px !important;
-        }
-    `;
-    document.head.appendChild(printStyles);
-
-    // Configure PDF options
-    const opt = {
-        margin: [8, 8, 8, 8],
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-            scale: 2,
-            useCORS: true,
-            letterRendering: true,
-            logging: false,
-            backgroundColor: '#ffffff'
-        },
-        jsPDF: {
-            unit: 'mm',
-            format: 'a4',
-            orientation: 'portrait'
-        }
-    };
-
-    // Wait for styles to apply
-    setTimeout(() => {
-        html2pdf().set(opt).from(element).save().then(() => {
-            // Cleanup
-            document.body.classList.remove('generating-pdf');
-            document.getElementById('temp-print-styles').remove();
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        }).catch((error) => {
-            console.error('Error generating PDF:', error);
-            alert('Gagal generate PDF. Silakan coba lagi.');
-            document.body.classList.remove('generating-pdf');
-            document.getElementById('temp-print-styles').remove();
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-        });
-    }, 200);
-}
-</script>
 @endsection
