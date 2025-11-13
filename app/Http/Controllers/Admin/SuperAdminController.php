@@ -114,11 +114,15 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
-            'program_studi_ids' => ['nullable', 'array'],
+            'program_studi_ids' => ['required_if:role,dosen', 'array', 'min:1'],
             'program_studi_ids.*' => ['exists:program_studis,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
+        ], [
+            // Custom error messages
+            'program_studi_ids.required_if' => 'Program studi wajib dipilih minimal 1 untuk dosen.',
+            'program_studi_ids.min' => 'Pilih minimal 1 program studi untuk dosen.',
         ]);
 
         DB::beginTransaction();
@@ -273,11 +277,15 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
-            'program_studi_ids' => ['nullable', 'array'],
+            'program_studi_ids' => ['required_if:role,dosen', 'array', 'min:1'],
             'program_studi_ids.*' => ['exists:program_studis,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
+        ], [
+            // Custom error messages
+            'program_studi_ids.required_if' => 'Program studi wajib dipilih minimal 1 untuk dosen.',
+            'program_studi_ids.min' => 'Pilih minimal 1 program studi untuk dosen.',
         ]);
 
         DB::beginTransaction();
