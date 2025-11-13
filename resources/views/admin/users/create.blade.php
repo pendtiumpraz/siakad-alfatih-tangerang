@@ -182,7 +182,7 @@
                             id="mahasiswa_nama_lengkap"
                             name="mahasiswa_nama_lengkap"
                             value="{{ old('mahasiswa_nama_lengkap') }}"
-                            required
+                            x-bind:required="selectedRole === 'mahasiswa'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('mahasiswa_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('mahasiswa_nama_lengkap')
@@ -200,7 +200,7 @@
                             id="nim"
                             name="nim"
                             value="{{ old('nim') }}"
-                            required
+                            x-bind:required="selectedRole === 'mahasiswa'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nim') border-red-500 @enderror"
                         >
                         @error('nim')
@@ -216,7 +216,7 @@
                         <select
                             id="program_studi_id"
                             name="program_studi_id"
-                            required
+                            x-bind:required="selectedRole === 'mahasiswa'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('program_studi_id') border-red-500 @enderror"
                         >
                             <option value="">Pilih Program Studi</option>
@@ -242,7 +242,7 @@
                             name="angkatan"
                             value="{{ old('angkatan') }}"
                             placeholder="2024"
-                            required
+                            x-bind:required="selectedRole === 'mahasiswa'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('angkatan') border-red-500 @enderror"
                         >
                         @error('angkatan')
@@ -312,7 +312,7 @@
                         <select
                             id="jenis_kelamin"
                             name="jenis_kelamin"
-                            required
+                            x-bind:required="selectedRole === 'mahasiswa'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('jenis_kelamin') border-red-500 @enderror"
                         >
                             <option value="">Pilih Jenis Kelamin</option>
@@ -436,7 +436,7 @@
                             id="nidn"
                             name="nidn"
                             value="{{ old('nidn') }}"
-                            required
+                            x-bind:required="selectedRole === 'dosen'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nidn') border-red-500 @enderror"
                         >
                         @error('nidn')
@@ -454,7 +454,7 @@
                             id="dosen_nama_lengkap"
                             name="dosen_nama_lengkap"
                             value="{{ old('dosen_nama_lengkap') }}"
-                            required
+                            x-bind:required="selectedRole === 'dosen'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('dosen_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('dosen_nama_lengkap')
@@ -551,7 +551,7 @@
                             id="operator_nama_lengkap"
                             name="operator_nama_lengkap"
                             value="{{ old('operator_nama_lengkap') }}"
-                            required
+                            x-bind:required="selectedRole === 'operator'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('operator_nama_lengkap') border-red-500 @enderror"
                         >
                         @error('operator_nama_lengkap')
