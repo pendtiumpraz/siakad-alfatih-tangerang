@@ -237,28 +237,29 @@ class SuperAdminController extends Controller
     public function edit($id)
     {
         try {
-            // Load user first without programStudis relation
-            $user = User::with(['mahasiswa', 'dosen', 'operator'])
+            // Load user first without any dosen relations
+            $user = User::with(['mahasiswa', 'operator'])
                 ->withTrashed()
                 ->findOrFail($id);
             
-            // Try to load programStudis if dosen exists and table exists
-            if ($user->dosen) {
+            // Load dosen separately to avoid relation errors
+            if ($user->role === 'dosen') {
                 try {
-                    // Triple safety check
-                    if (\Schema::hasTable('dosen_program_studi') && 
-                        method_exists($user->dosen, 'programStudis') &&
-                        \DB::table('dosen_program_studi')->exists()) {
-                        
-                        $user->dosen->load('programStudis');
-                        \Log::info("Successfully loaded programStudis for dosen: {$user->dosen->id}");
-                    } else {
-                        \Log::info("Skipping programStudis load - table or relation not available");
+                    $user->load('dosen');
+                    
+                    // Only try to load programStudis if table exists
+                    if ($user->dosen && \Schema::hasTable('dosen_program_studi')) {
+                        try {
+                            $user->dosen->load('programStudis');
+                            \Log::info("Successfully loaded programStudis for dosen: {$user->dosen->id}");
+                        } catch (\Throwable $e) {
+                            \Log::warning('Could not load programStudis: ' . $e->getMessage());
+                            // Set empty collection to prevent view errors
+                            $user->dosen->setRelation('programStudis', collect());
+                        }
                     }
                 } catch (\Throwable $e) {
-                    // Catch any error including fatal errors
-                    \Log::warning('Could not load programStudis for dosen: ' . $e->getMessage());
-                    // Continue without programStudis relation
+                    \Log::warning('Could not load dosen: ' . $e->getMessage());
                 }
             }
 
