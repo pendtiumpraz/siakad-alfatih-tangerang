@@ -12,18 +12,17 @@ class Khs extends Model
     protected $fillable = [
         'mahasiswa_id',
         'semester_id',
-        'total_sks',
-        'total_sks_lulus',
-        'ip_semester',
-        'ip_kumulatif',
-        'status_semester',
+        'ip',
+        'ipk',
+        'total_sks_semester',
+        'total_sks_kumulatif',
     ];
 
     protected $casts = [
-        'total_sks' => 'integer',
-        'total_sks_lulus' => 'integer',
-        'ip_semester' => 'decimal:2',
-        'ip_kumulatif' => 'decimal:2',
+        'ip' => 'decimal:2',
+        'ipk' => 'decimal:2',
+        'total_sks_semester' => 'integer',
+        'total_sks_kumulatif' => 'integer',
     ];
 
     /**
