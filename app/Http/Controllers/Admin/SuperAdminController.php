@@ -225,16 +225,19 @@ class SuperAdminController extends Controller
      */
     public function edit($id)
     {
-        // Try to load with programStudis, but handle if table doesn't exist yet
-        try {
-            $user = User::with(['mahasiswa', 'dosen.programStudis', 'operator'])
-                ->withTrashed()
-                ->findOrFail($id);
-        } catch (\Exception $e) {
-            // Fallback if dosen_program_studi table doesn't exist yet
-            $user = User::with(['mahasiswa', 'dosen', 'operator'])
-                ->withTrashed()
-                ->findOrFail($id);
+        // Load user first
+        $user = User::with(['mahasiswa', 'dosen', 'operator'])
+            ->withTrashed()
+            ->findOrFail($id);
+        
+        // Try to load programStudis if dosen exists and table exists
+        if ($user->dosen) {
+            try {
+                $user->dosen->load('programStudis');
+            } catch (\Exception $e) {
+                // Ignore if dosen_program_studi table doesn't exist yet
+                \Log::info('Could not load programStudis for dosen: ' . $e->getMessage());
+            }
         }
 
         $programStudis = ProgramStudi::all();
@@ -277,15 +280,11 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
-            'program_studi_ids' => ['required_if:role,dosen', 'array', 'min:1'],
+            'program_studi_ids' => ['nullable', 'array'],
             'program_studi_ids.*' => ['exists:program_studis,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
-        ], [
-            // Custom error messages
-            'program_studi_ids.required_if' => 'Program studi wajib dipilih minimal 1 untuk dosen.',
-            'program_studi_ids.min' => 'Pilih minimal 1 program studi untuk dosen.',
         ]);
 
         DB::beginTransaction();
