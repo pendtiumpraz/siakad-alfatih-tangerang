@@ -147,7 +147,7 @@
                                 Tanggal Generate KHS
                             </label>
                             <div class="relative">
-                                <input type="date" name="khs_generate_date" id="khs_generate_date" value="{{ old('khs_generate_date', $semester->khs_generate_date) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition">
+                                <input type="date" name="khs_generate_date" id="khs_generate_date" value="{{ old('khs_generate_date', $semester->khs_generate_date?->format('Y-m-d')) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition">
                                 <i class="fas fa-calendar-alt absolute right-3 top-3 text-gray-400 pointer-events-none"></i>
                             </div>
                             <p class="mt-1 text-xs text-gray-500">
