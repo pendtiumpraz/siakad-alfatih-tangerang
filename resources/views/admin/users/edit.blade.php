@@ -518,8 +518,15 @@
                                     $isSelected = false;
                                     if (old('program_studi_ids')) {
                                         $isSelected = in_array($prodi->id, old('program_studi_ids'));
-                                    } elseif (isset($user->dosen) && $user->dosen->programStudis) {
-                                        $isSelected = $user->dosen->programStudis->contains($prodi->id);
+                                    } elseif (isset($user->dosen) && method_exists($user->dosen, 'programStudis')) {
+                                        try {
+                                            $programStudisCollection = $user->dosen->programStudis;
+                                            if ($programStudisCollection) {
+                                                $isSelected = $programStudisCollection->contains($prodi->id);
+                                            }
+                                        } catch (\Exception $e) {
+                                            // Ignore if programStudis relation doesn't exist yet
+                                        }
                                     }
                                 @endphp
                                 <option value="{{ $prodi->id }}" {{ $isSelected ? 'selected' : '' }}>

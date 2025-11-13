@@ -183,9 +183,14 @@ class SuperAdminController extends Controller
                         'no_telepon' => $validated['no_telepon'] ?? null,
                     ]);
                     
-                    // Attach program studi to dosen
-                    if (!empty($validated['program_studi_ids'])) {
-                        $dosen->programStudis()->attach($validated['program_studi_ids']);
+                    // Attach program studi to dosen (only if table exists)
+                    try {
+                        if (!empty($validated['program_studi_ids'])) {
+                            $dosen->programStudis()->attach($validated['program_studi_ids']);
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore if dosen_program_studi table doesn't exist yet
+                        \Log::warning('Failed to attach program studi for dosen: ' . $e->getMessage());
                     }
                     break;
 
@@ -216,9 +221,17 @@ class SuperAdminController extends Controller
      */
     public function edit($id)
     {
-        $user = User::with(['mahasiswa', 'dosen.programStudis', 'operator'])
-            ->withTrashed()
-            ->findOrFail($id);
+        // Try to load with programStudis, but handle if table doesn't exist yet
+        try {
+            $user = User::with(['mahasiswa', 'dosen.programStudis', 'operator'])
+                ->withTrashed()
+                ->findOrFail($id);
+        } catch (\Exception $e) {
+            // Fallback if dosen_program_studi table doesn't exist yet
+            $user = User::with(['mahasiswa', 'dosen', 'operator'])
+                ->withTrashed()
+                ->findOrFail($id);
+        }
 
         $programStudis = ProgramStudi::all();
 
@@ -334,12 +347,17 @@ class SuperAdminController extends Controller
                         ]
                     );
                     
-                    // Sync program studi to dosen
-                    if (isset($validated['program_studi_ids'])) {
-                        $dosen->programStudis()->sync($validated['program_studi_ids']);
-                    } else {
-                        // If no program studi selected, detach all
-                        $dosen->programStudis()->detach();
+                    // Sync program studi to dosen (only if table exists)
+                    try {
+                        if (isset($validated['program_studi_ids'])) {
+                            $dosen->programStudis()->sync($validated['program_studi_ids']);
+                        } else {
+                            // If no program studi selected, detach all
+                            $dosen->programStudis()->detach();
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore if dosen_program_studi table doesn't exist yet
+                        \Log::warning('Failed to sync program studi for dosen: ' . $e->getMessage());
                     }
                     break;
 
