@@ -69,4 +69,15 @@ class Dosen extends Model
         return $this->belongsToMany(ProgramStudi::class, 'dosen_program_studi')
             ->withTimestamps();
     }
+
+    public function mataKuliahs()
+    {
+        return $this->belongsToMany(MataKuliah::class, 'dosen_mata_kuliah')
+            ->withTimestamps();
+    }
+
+    public function mahasiswas()
+    {
+        return $this->hasMany(Mahasiswa::class, 'dosen_wali_id');
+    }
 }

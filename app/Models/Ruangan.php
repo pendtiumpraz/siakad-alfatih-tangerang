@@ -14,6 +14,7 @@ class Ruangan extends Model
         'kode_ruangan',
         'nama_ruangan',
         'kapasitas',
+        'jenis', // offline or online
         'fasilitas',
         'is_available',
     ];
