@@ -21,14 +21,22 @@ class KHSController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        // Get all mahasiswa that this dosen teaches
-        $mahasiswas = Mahasiswa::whereHas('nilais', function ($query) use ($dosen) {
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Get all mahasiswa from assigned program studi that this dosen teaches
+        $mahasiswas = Mahasiswa::whereIn('program_studi_id', $prodiIds)
+            ->whereHas('nilais', function ($query) use ($dosen) {
                 $query->where('dosen_id', $dosen->id);
             })
             ->orderBy('nama_lengkap')
@@ -37,11 +45,14 @@ class KHSController extends Controller
         // Get all semesters
         $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
 
-        // Get all KHS for mahasiswa that this dosen teaches with filters
-        $query = Khs::whereHas('mahasiswa.nilais', function ($query) use ($dosen) {
-                $query->where('dosen_id', $dosen->id);
+        // Get all KHS for mahasiswa from assigned program studi that this dosen teaches
+        $query = Khs::whereHas('mahasiswa', function ($query) use ($prodiIds, $dosen) {
+                $query->whereIn('program_studi_id', $prodiIds)
+                    ->whereHas('nilais', function ($q) use ($dosen) {
+                        $q->where('dosen_id', $dosen->id);
+                    });
             })
-            ->with(['mahasiswa', 'semester']);
+            ->with(['mahasiswa.programStudi', 'semester']);
 
         // Apply filters
         if ($request->filled('mahasiswa_id')) {
@@ -63,15 +74,26 @@ class KHSController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        $khs = Khs::with(['mahasiswa', 'semester'])->findOrFail($id);
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
 
-        // Verify dosen has access to this mahasiswa
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        $khs = Khs::with(['mahasiswa.programStudi', 'semester'])->findOrFail($id);
+
+        // Verify mahasiswa is from assigned program studi and dosen has taught them
+        if (!in_array($khs->mahasiswa->program_studi_id, $prodiIds)) {
+            abort(403, 'Mahasiswa tidak termasuk dalam program studi Anda');
+        }
+
         $hasAccess = Nilai::where('mahasiswa_id', $khs->mahasiswa_id)
             ->where('dosen_id', $dosen->id)
             ->exists();
@@ -95,16 +117,29 @@ class KHSController extends Controller
     public function generate(Request $request)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
+        }
+
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
         }
 
         $validated = $request->validate([
             'mahasiswa_id' => 'required|exists:mahasiswas,id',
             'semester_id' => 'required|exists:semesters,id',
         ]);
+
+        // Verify mahasiswa is from assigned program studi
+        $mahasiswa = Mahasiswa::findOrFail($validated['mahasiswa_id']);
+        if (!in_array($mahasiswa->program_studi_id, $prodiIds)) {
+            abort(403, 'Mahasiswa tidak termasuk dalam program studi Anda');
+        }
 
         // Verify dosen has taught this mahasiswa
         $hasAccess = Nilai::where('mahasiswa_id', $validated['mahasiswa_id'])

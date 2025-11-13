@@ -20,10 +20,7 @@ class Jadwal extends Model
         'kelas',
     ];
 
-    protected $casts = [
-        'jam_mulai' => 'datetime:H:i',
-        'jam_selesai' => 'datetime:H:i',
-    ];
+
 
     /**
      * Relationships

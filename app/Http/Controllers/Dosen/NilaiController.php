@@ -21,19 +21,29 @@ class NilaiController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        // Get filter data
-        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
-        $programStudis = \App\Models\ProgramStudi::orderBy('nama_prodi')->get();
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
 
-        // Get mata kuliah from jadwal with filters
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Get filter data - only assigned program studi
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
+        $programStudis = \App\Models\ProgramStudi::whereIn('id', $prodiIds)->orderBy('nama_prodi')->get();
+
+        // Get mata kuliah from jadwal with filters - only from assigned program studi
         $query = Jadwal::where('dosen_id', $dosen->id)
             ->with(['mataKuliah.kurikulum.programStudi', 'semester'])
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
             ->select('mata_kuliah_id', 'semester_id')
             ->distinct();
 
@@ -72,15 +82,25 @@ class NilaiController extends Controller
     public function mahasiswa($mataKuliahId)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        // Verify dosen teaches this mata kuliah
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Verify dosen teaches this mata kuliah and it's from assigned program studi
         $jadwal = Jadwal::where('dosen_id', $dosen->id)
             ->where('mata_kuliah_id', $mataKuliahId)
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
             ->firstOrFail();
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
@@ -100,20 +120,35 @@ class NilaiController extends Controller
     public function create($mataKuliahId)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        // Verify dosen teaches this mata kuliah
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Verify dosen teaches this mata kuliah and it's from assigned program studi
         $jadwal = Jadwal::where('dosen_id', $dosen->id)
             ->where('mata_kuliah_id', $mataKuliahId)
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
             ->firstOrFail();
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
         $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
-        $mahasiswas = Mahasiswa::where('status', 'aktif')->orderBy('nama_lengkap')->get();
+        
+        // Only show mahasiswa from assigned program studi
+        $mahasiswas = Mahasiswa::where('status', 'aktif')
+            ->whereIn('program_studi_id', $prodiIds)
+            ->orderBy('nama_lengkap')
+            ->get();
 
         return view('dosen.nilai.create', compact('mataKuliah', 'mahasiswas', 'semesters', 'dosen'));
     }

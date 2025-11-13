@@ -51,4 +51,10 @@ class ProgramStudi extends Model
     {
         return $this->hasMany(NimRange::class);
     }
+
+    public function dosens()
+    {
+        return $this->belongsToMany(Dosen::class, 'dosen_program_studi')
+            ->withTimestamps();
+    }
 }

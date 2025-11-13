@@ -63,4 +63,10 @@ class Dosen extends Model
     {
         return $this->hasOne(ProgramStudi::class, 'ketua_prodi_id');
     }
+
+    public function programStudis()
+    {
+        return $this->belongsToMany(ProgramStudi::class, 'dosen_program_studi')
+            ->withTimestamps();
+    }
 }

@@ -21,18 +21,28 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
         // Get filter data
         $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
 
-        // Build query with filters
+        // Build query with filters - only show jadwal for assigned program studi
         $query = Jadwal::where('dosen_id', $dosen->id)
-            ->with(['mataKuliah', 'ruangan', 'semester']);
+            ->with(['mataKuliah.kurikulum.programStudi', 'ruangan', 'semester'])
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            });
 
         // Filter by semester
         if ($request->filled('semester_id')) {
@@ -58,14 +68,30 @@ class JadwalController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        $mataKuliahs = MataKuliah::orderBy('nama_mk')->get();
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Only show mata kuliah from assigned program studi
+        $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
+            ->with('kurikulum.programStudi')
+            ->orderBy('nama_mk')
+            ->get();
+
+        // Only show ruangan that are used by assigned program studi (or all available if no specific assignment)
         $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
+        
         $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
 
         $hariOptions = [
@@ -93,10 +119,17 @@ class JadwalController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
+        }
+
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
         }
 
         $validated = $request->validate([
@@ -108,6 +141,18 @@ class JadwalController extends Controller
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10',
         ]);
+
+        // Verify mata kuliah is from assigned program studi
+        $mataKuliah = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
+            ->find($validated['mata_kuliah_id']);
+
+        if (!$mataKuliah) {
+            throw ValidationException::withMessages([
+                'mata_kuliah_id' => ['Mata kuliah tidak termasuk dalam program studi Anda']
+            ]);
+        }
 
         // Validate time slots (must be within operational hours)
         $jamMulai = strtotime($validated['jam_mulai']);
@@ -173,15 +218,34 @@ class JadwalController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        $jadwal = Jadwal::where('dosen_id', $dosen->id)->findOrFail($id);
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
 
-        $mataKuliahs = MataKuliah::orderBy('nama_mk')->get();
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Verify jadwal belongs to dosen and is from assigned program studi
+        $jadwal = Jadwal::where('dosen_id', $dosen->id)
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
+            ->findOrFail($id);
+
+        // Only show mata kuliah from assigned program studi
+        $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
+            ->with('kurikulum.programStudi')
+            ->orderBy('nama_mk')
+            ->get();
+            
         $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
         $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
 
@@ -211,13 +275,25 @@ class JadwalController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->first();
+        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
         }
 
-        $jadwal = Jadwal::where('dosen_id', $dosen->id)->findOrFail($id);
+        // Get program studi IDs assigned to dosen
+        $prodiIds = $dosen->programStudis->pluck('id')->toArray();
+
+        if (empty($prodiIds)) {
+            abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
+        }
+
+        // Verify jadwal belongs to dosen and is from assigned program studi
+        $jadwal = Jadwal::where('dosen_id', $dosen->id)
+            ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
+                $q->whereIn('program_studi_id', $prodiIds);
+            })
+            ->findOrFail($id);
 
         $validated = $request->validate([
             'semester_id' => 'required|exists:semesters,id',

@@ -98,7 +98,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jam Mulai <span class="text-red-500">*</span>
                     </label>
-                    <input type="time" name="jam_mulai" required value="{{ old('jam_mulai', substr($jadwal->jam_mulai, 0, 5)) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <input type="time" name="jam_mulai" required value="{{ old('jam_mulai', $jadwal->jam_mulai) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     @error('jam_mulai')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -109,7 +109,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Jam Selesai <span class="text-red-500">*</span>
                     </label>
-                    <input type="time" name="jam_selesai" required value="{{ old('jam_selesai', substr($jadwal->jam_selesai, 0, 5)) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <input type="time" name="jam_selesai" required value="{{ old('jam_selesai', $jadwal->jam_selesai) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     @error('jam_selesai')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

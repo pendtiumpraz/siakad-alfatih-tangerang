@@ -114,6 +114,8 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
+            'program_studi_ids' => ['nullable', 'array'],
+            'program_studi_ids.*' => ['exists:program_studis,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
@@ -171,7 +173,7 @@ class SuperAdminController extends Controller
                     break;
 
                 case 'dosen':
-                    Dosen::create([
+                    $dosen = Dosen::create([
                         'user_id' => $user->id,
                         'nidn' => $validated['nidn'],
                         'nama_lengkap' => $validated['dosen_nama_lengkap'],
@@ -180,6 +182,11 @@ class SuperAdminController extends Controller
                         'email_dosen' => $validated['email'] ?? null,
                         'no_telepon' => $validated['no_telepon'] ?? null,
                     ]);
+                    
+                    // Attach program studi to dosen
+                    if (!empty($validated['program_studi_ids'])) {
+                        $dosen->programStudis()->attach($validated['program_studi_ids']);
+                    }
                     break;
 
                 case 'operator':
@@ -209,7 +216,7 @@ class SuperAdminController extends Controller
      */
     public function edit($id)
     {
-        $user = User::with(['mahasiswa', 'dosen', 'operator'])
+        $user = User::with(['mahasiswa', 'dosen.programStudis', 'operator'])
             ->withTrashed()
             ->findOrFail($id);
 
@@ -253,6 +260,8 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
+            'program_studi_ids' => ['nullable', 'array'],
+            'program_studi_ids.*' => ['exists:program_studis,id'],
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
@@ -313,7 +322,7 @@ class SuperAdminController extends Controller
                     break;
 
                 case 'dosen':
-                    $user->dosen()->updateOrCreate(
+                    $dosen = $user->dosen()->updateOrCreate(
                         ['user_id' => $user->id],
                         [
                             'nidn' => $validated['nidn'],
@@ -324,6 +333,14 @@ class SuperAdminController extends Controller
                             'no_telepon' => $validated['no_telepon'] ?? null,
                         ]
                     );
+                    
+                    // Sync program studi to dosen
+                    if (isset($validated['program_studi_ids'])) {
+                        $dosen->programStudis()->sync($validated['program_studi_ids']);
+                    } else {
+                        // If no program studi selected, detach all
+                        $dosen->programStudis()->detach();
+                    }
                     break;
 
                 case 'operator':
