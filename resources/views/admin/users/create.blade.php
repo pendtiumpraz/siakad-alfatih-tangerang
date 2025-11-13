@@ -521,6 +521,7 @@
                                             name="program_studi_ids[]"
                                             value="{{ $prodi->id }}"
                                             {{ (is_array(old('program_studi_ids')) && in_array($prodi->id, old('program_studi_ids'))) ? 'checked' : '' }}
+                                            @change="toggleProdi({{ $prodi->id }})"
                                             class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
                                         >
                                         <span class="text-sm text-gray-700">
