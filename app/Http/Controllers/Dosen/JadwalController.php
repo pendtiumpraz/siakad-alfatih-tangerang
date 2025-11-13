@@ -164,24 +164,50 @@ class JadwalController extends Controller
             ]);
         }
 
-        // Check ruangan availability (no conflict same day/time)
-        $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
-            ->where('semester_id', $validated['semester_id'])
-            ->where('hari', $validated['hari'])
-            ->where(function ($query) use ($validated) {
-                $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
-                    ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
-                    ->orWhere(function ($q) use ($validated) {
-                        $q->where('jam_mulai', '<=', $validated['jam_mulai'])
-                          ->where('jam_selesai', '>=', $validated['jam_selesai']);
-                    });
-            })
-            ->exists();
+        // Check ruangan availability based on room type
+        $ruangan = Ruangan::find($validated['ruangan_id']);
+        
+        if ($ruangan->jenis === 'offline') {
+            // Offline room: no overlap at all
+            $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
+                ->where('semester_id', $validated['semester_id'])
+                ->where('hari', $validated['hari'])
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhere(function ($q) use ($validated) {
+                            $q->where('jam_mulai', '<=', $validated['jam_mulai'])
+                              ->where('jam_selesai', '>=', $validated['jam_selesai']);
+                        });
+                })
+                ->exists();
 
-        if ($ruanganConflict) {
-            throw ValidationException::withMessages([
-                'ruangan_id' => ['Ruangan tidak tersedia pada hari dan waktu yang dipilih']
-            ]);
+            if ($ruanganConflict) {
+                throw ValidationException::withMessages([
+                    'ruangan_id' => ['Ruangan offline tidak tersedia pada hari dan waktu yang dipilih']
+                ]);
+            }
+        } else {
+            // Online room: can overlap except same mata_kuliah
+            $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
+                ->where('mata_kuliah_id', $validated['mata_kuliah_id']) // Same course not allowed
+                ->where('semester_id', $validated['semester_id'])
+                ->where('hari', $validated['hari'])
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhere(function ($q) use ($validated) {
+                            $q->where('jam_mulai', '<=', $validated['jam_mulai'])
+                              ->where('jam_selesai', '>=', $validated['jam_selesai']);
+                        });
+                })
+                ->exists();
+
+            if ($ruanganConflict) {
+                throw ValidationException::withMessages([
+                    'ruangan_id' => ['Mata kuliah yang sama sudah dijadwalkan di ruangan online ini pada waktu yang sama']
+                ]);
+            }
         }
 
         // Check dosen schedule (no conflict)
@@ -315,25 +341,52 @@ class JadwalController extends Controller
             ]);
         }
 
-        // Check ruangan availability (no conflict same day/time, excluding current jadwal)
-        $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
-            ->where('semester_id', $validated['semester_id'])
-            ->where('hari', $validated['hari'])
-            ->where('id', '!=', $id)
-            ->where(function ($query) use ($validated) {
-                $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
-                    ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
-                    ->orWhere(function ($q) use ($validated) {
-                        $q->where('jam_mulai', '<=', $validated['jam_mulai'])
-                          ->where('jam_selesai', '>=', $validated['jam_selesai']);
-                    });
-            })
-            ->exists();
+        // Check ruangan availability based on room type (excluding current jadwal)
+        $ruangan = Ruangan::find($validated['ruangan_id']);
+        
+        if ($ruangan->jenis === 'offline') {
+            // Offline room: no overlap at all
+            $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
+                ->where('semester_id', $validated['semester_id'])
+                ->where('hari', $validated['hari'])
+                ->where('id', '!=', $id)
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhere(function ($q) use ($validated) {
+                            $q->where('jam_mulai', '<=', $validated['jam_mulai'])
+                              ->where('jam_selesai', '>=', $validated['jam_selesai']);
+                        });
+                })
+                ->exists();
 
-        if ($ruanganConflict) {
-            throw ValidationException::withMessages([
-                'ruangan_id' => ['Ruangan tidak tersedia pada hari dan waktu yang dipilih']
-            ]);
+            if ($ruanganConflict) {
+                throw ValidationException::withMessages([
+                    'ruangan_id' => ['Ruangan offline tidak tersedia pada hari dan waktu yang dipilih']
+                ]);
+            }
+        } else {
+            // Online room: can overlap except same mata_kuliah
+            $ruanganConflict = Jadwal::where('ruangan_id', $validated['ruangan_id'])
+                ->where('mata_kuliah_id', $validated['mata_kuliah_id']) // Same course not allowed
+                ->where('semester_id', $validated['semester_id'])
+                ->where('hari', $validated['hari'])
+                ->where('id', '!=', $id)
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('jam_mulai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhereBetween('jam_selesai', [$validated['jam_mulai'], $validated['jam_selesai']])
+                        ->orWhere(function ($q) use ($validated) {
+                            $q->where('jam_mulai', '<=', $validated['jam_mulai'])
+                              ->where('jam_selesai', '>=', $validated['jam_selesai']);
+                        });
+                })
+                ->exists();
+
+            if ($ruanganConflict) {
+                throw ValidationException::withMessages([
+                    'ruangan_id' => ['Mata kuliah yang sama sudah dijadwalkan di ruangan online ini pada waktu yang sama']
+                ]);
+            }
         }
 
         // Check dosen schedule (no conflict, excluding current jadwal)
