@@ -181,14 +181,18 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 Auto Generate KHS
                             </label>
-                            <label class="flex items-center cursor-pointer">
+                            <label class="flex items-center cursor-pointer group">
                                 <div class="relative">
                                     <input type="checkbox" name="khs_auto_generate" value="1" x-model="khsAutoGenerate" class="sr-only" {{ old('khs_auto_generate', $semester->khs_auto_generate ?? false) ? 'checked' : '' }}>
-                                    <div class="w-14 h-8 bg-gray-300 rounded-full shadow-inner transition" :class="khsAutoGenerate ? 'bg-blue-500' : 'bg-gray-300'"></div>
-                                    <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow transition-transform" :class="khsAutoGenerate ? 'transform translate-x-6' : ''"></div>
+                                    <div class="w-14 h-8 rounded-full shadow-inner transition-all duration-300" :class="khsAutoGenerate ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gray-300 group-hover:bg-gray-400'"></div>
+                                    <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 transform" :class="khsAutoGenerate ? 'translate-x-6' : 'translate-x-0'">
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <i class="fas text-xs transition-all duration-300" :class="khsAutoGenerate ? 'fa-check text-green-600' : 'fa-times text-gray-400'"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="ml-3">
-                                    <span class="text-sm font-medium" :class="khsAutoGenerate ? 'text-blue-700' : 'text-gray-700'" x-text="khsAutoGenerate ? 'Diaktifkan' : 'Dinonaktifkan'"></span>
+                                    <span class="text-sm font-semibold transition-colors" :class="khsAutoGenerate ? 'text-green-700' : 'text-gray-600'" x-text="khsAutoGenerate ? 'Aktif' : 'Tidak Aktif'"></span>
                                     <p class="text-xs text-gray-500">Generate otomatis saat tanggal generate tiba</p>
                                 </div>
                             </label>
