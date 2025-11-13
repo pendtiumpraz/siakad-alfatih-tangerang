@@ -669,7 +669,6 @@
                             Pilih mata kuliah yang akan diampu oleh dosen. Dosen hanya bisa membuat jadwal dan menilai mahasiswa untuk mata kuliah yang di-assign.
                         </p>
                     </div>
-                    @endif
 
                 </div>
             </div>
