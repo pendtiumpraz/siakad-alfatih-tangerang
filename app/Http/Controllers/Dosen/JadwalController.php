@@ -264,13 +264,25 @@ class JadwalController extends Controller
             })
             ->findOrFail($id);
 
-        // Only show mata kuliah from assigned program studi
-        $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
-                $q->whereIn('program_studi_id', $prodiIds);
-            })
-            ->with('kurikulum.programStudi')
-            ->orderBy('nama_mk')
-            ->get();
+        // Only show mata kuliah that are assigned to dosen (for edit)
+        // If no mata kuliah assigned yet, show all from assigned program studi
+        if ($dosen->mataKuliahs()->exists()) {
+            $mataKuliahs = $dosen->mataKuliahs()
+                ->whereHas('kurikulum', function($q) use ($prodiIds) {
+                    $q->whereIn('program_studi_id', $prodiIds);
+                })
+                ->with('kurikulum.programStudi')
+                ->orderBy('nama_mk')
+                ->get();
+        } else {
+            // Fallback: show all from assigned program studi
+            $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
+                    $q->whereIn('program_studi_id', $prodiIds);
+                })
+                ->with('kurikulum.programStudi')
+                ->orderBy('nama_mk')
+                ->get();
+        }
             
         $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
         $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();

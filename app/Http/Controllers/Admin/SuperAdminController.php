@@ -207,6 +207,16 @@ class SuperAdminController extends Controller
                         // Ignore if dosen_program_studi table doesn't exist yet
                         \Log::warning('Failed to attach program studi for dosen: ' . $e->getMessage());
                     }
+                    
+                    // Attach mata kuliah to dosen (only if table exists)
+                    try {
+                        if (!empty($validated['mata_kuliah_ids'])) {
+                            $dosen->mataKuliahs()->attach($validated['mata_kuliah_ids']);
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore if dosen_mata_kuliah table doesn't exist yet
+                        \Log::warning('Failed to attach mata kuliah for dosen: ' . $e->getMessage());
+                    }
                     break;
 
                 case 'operator':
@@ -256,6 +266,18 @@ class SuperAdminController extends Controller
                             \Log::warning('Could not load programStudis: ' . $e->getMessage());
                             // Set empty collection to prevent view errors
                             $user->dosen->setRelation('programStudis', collect());
+                        }
+                    }
+                    
+                    // Try to load mataKuliahs if table exists
+                    if ($user->dosen && \Schema::hasTable('dosen_mata_kuliah')) {
+                        try {
+                            $user->dosen->load('mataKuliahs');
+                            \Log::info("Successfully loaded mataKuliahs for dosen: {$user->dosen->id}");
+                        } catch (\Throwable $e) {
+                            \Log::warning('Could not load mataKuliahs: ' . $e->getMessage());
+                            // Set empty collection to prevent view errors
+                            $user->dosen->setRelation('mataKuliahs', collect());
                         }
                     }
                 } catch (\Throwable $e) {
@@ -397,6 +419,19 @@ class SuperAdminController extends Controller
                     } catch (\Exception $e) {
                         // Ignore if dosen_program_studi table doesn't exist yet
                         \Log::warning('Failed to sync program studi for dosen: ' . $e->getMessage());
+                    }
+                    
+                    // Sync mata kuliah to dosen (only if table exists)
+                    try {
+                        if (isset($validated['mata_kuliah_ids'])) {
+                            $dosen->mataKuliahs()->sync($validated['mata_kuliah_ids']);
+                        } else {
+                            // If no mata kuliah selected, detach all
+                            $dosen->mataKuliahs()->detach();
+                        }
+                    } catch (\Exception $e) {
+                        // Ignore if dosen_mata_kuliah table doesn't exist yet
+                        \Log::warning('Failed to sync mata kuliah for dosen: ' . $e->getMessage());
                     }
                     break;
 
