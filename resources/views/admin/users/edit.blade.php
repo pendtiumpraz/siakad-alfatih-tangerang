@@ -70,7 +70,7 @@
                             type="text"
                             id="no_telepon"
                             name="no_telepon"
-                            value="{{ old('no_telepon', $user->mahasiswa->no_telepon ?? $user->dosen->no_telepon ?? $user->operator->no_telepon ?? '') }}"
+                            value="{{ old('no_telepon', optional($user->mahasiswa)->no_telepon ?? optional($user->dosen)->no_telepon ?? optional($user->operator)->no_telepon ?? '') }}"
                             placeholder="08xx-xxxx-xxxx"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('no_telepon') border-red-500 @enderror"
                         >
