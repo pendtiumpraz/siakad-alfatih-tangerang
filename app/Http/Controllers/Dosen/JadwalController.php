@@ -68,7 +68,7 @@ class JadwalController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $dosen = Dosen::where('user_id', $user->id)->with('programStudis')->first();
+        $dosen = Dosen::where('user_id', $user->id)->with(['programStudis', 'mataKuliahs'])->first();
 
         if (!$dosen) {
             abort(403, 'Unauthorized access');
@@ -81,13 +81,26 @@ class JadwalController extends Controller
             abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
         }
 
-        // Only show mata kuliah from assigned program studi
-        $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
-                $q->whereIn('program_studi_id', $prodiIds);
-            })
-            ->with('kurikulum.programStudi')
-            ->orderBy('nama_mk')
-            ->get();
+        // IMPORTANT: Only show mata kuliah that are specifically assigned to this dosen
+        // Not all mata kuliah in the prodi, but only the ones dosen is assigned to teach
+        if ($dosen->mataKuliahs->isNotEmpty()) {
+            // Get only assigned mata kuliah IDs
+            $assignedMKIds = $dosen->mataKuliahs->pluck('id')->toArray();
+            
+            $mataKuliahs = MataKuliah::whereIn('id', $assignedMKIds)
+                ->with('kurikulum.programStudi')
+                ->orderBy('nama_mk')
+                ->get();
+        } else {
+            // Fallback: if no mata kuliah assigned yet, show all from assigned prodi (backward compatible)
+            // But ideally admin should assign mata kuliah first
+            $mataKuliahs = MataKuliah::whereHas('kurikulum', function($q) use ($prodiIds) {
+                    $q->whereIn('program_studi_id', $prodiIds);
+                })
+                ->with('kurikulum.programStudi')
+                ->orderBy('nama_mk')
+                ->get();
+        }
 
         // Only show ruangan that are used by assigned program studi (or all available if no specific assignment)
         $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
