@@ -538,6 +538,100 @@
                             Centang satu atau lebih program studi. Dosen hanya bisa mengelola jadwal, nilai, dan KHS dari program studi yang di-assign.
                         </p>
                     </div>
+                    
+                    <!-- Mata Kuliah Assignment per Prodi (Dynamic based on selected prodi) -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
+                            <i class="fas fa-book-open mr-1"></i>
+                            Mata Kuliah yang Diampu
+                        </label>
+                        
+                        <!-- Show message if no prodi selected -->
+                        <div x-show="selectedProdiIds.length === 0" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+                            <i class="fas fa-info-circle text-gray-400 text-3xl mb-2"></i>
+                            <p class="text-gray-600 font-semibold">Pilih Program Studi terlebih dahulu</p>
+                            <p class="text-sm text-gray-500 mt-1">Centang minimal 1 program studi di atas untuk menampilkan mata kuliah</p>
+                        </div>
+                        
+                        <!-- Mata Kuliah List per Prodi -->
+                        @foreach($programStudis as $prodi)
+                            @php
+                                $mataKuliahs = $mataKuliahsByProdi[$prodi->id] ?? collect();
+                            @endphp
+                            
+                            <div x-show="selectedProdiIds.includes({{ $prodi->id }})" x-transition class="mb-4">
+                                @if($mataKuliahs->isNotEmpty())
+                                    <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50">
+                                        <!-- Prodi Header -->
+                                        <div class="mb-3 pb-3 border-b border-gray-300">
+                                            <h4 class="text-md font-bold text-[#2D5F3F]">
+                                                <i class="fas fa-university mr-1"></i>
+                                                {{ $prodi->kode_prodi }} - {{ $prodi->nama_prodi }}
+                                            </h4>
+                                        </div>
+                                        
+                                        <!-- Select All Button -->
+                                        <div class="mb-3">
+                                            <label class="flex items-center space-x-2 font-semibold text-[#2D5F3F] cursor-pointer hover:bg-white p-2 rounded transition">
+                                                <input 
+                                                    type="checkbox" 
+                                                    class="w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
+                                                    onclick="selectAllMKCreate{{ str_replace('-', '', $prodi->kode_prodi) }}(this)"
+                                                >
+                                                <span><i class="fas fa-check-double mr-1"></i>Pilih Semua Mata Kuliah</span>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Mata Kuliah Checkboxes -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
+                                            @foreach($mataKuliahs->sortBy('semester')->groupBy('semester') as $semester => $mkBySemester)
+                                                <div class="md:col-span-2 mt-2 mb-1">
+                                                    <h4 class="text-sm font-bold text-[#2D5F3F] bg-[#D4AF37] bg-opacity-20 px-2 py-1 rounded">
+                                                        Semester {{ $semester }}
+                                                    </h4>
+                                                </div>
+                                                @foreach($mkBySemester as $mk)
+                                                    <label class="flex items-start space-x-2 p-2 hover:bg-white rounded cursor-pointer transition mk-checkbox-create-{{ str_replace('-', '', $prodi->kode_prodi) }}">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            name="mata_kuliah_ids[]" 
+                                                            value="{{ $mk->id }}"
+                                                            {{ (is_array(old('mata_kuliah_ids')) && in_array($mk->id, old('mata_kuliah_ids'))) ? 'checked' : '' }}
+                                                            class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
+                                                        >
+                                                        <span class="text-sm text-gray-700">
+                                                            <span class="font-semibold text-[#2D5F3F]">{{ $mk->kode_mk }}</span> - {{ $mk->nama_mk }} 
+                                                            <span class="text-xs text-gray-500">({{ $mk->sks }} SKS)</span>
+                                                        </span>
+                                                    </label>
+                                                @endforeach
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center bg-white">
+                                        <i class="fas fa-book-open text-gray-400 text-2xl mb-2"></i>
+                                        <p class="text-gray-600 font-semibold">Tidak ada mata kuliah untuk {{ $prodi->nama_prodi }}</p>
+                                        <p class="text-sm text-gray-500 mt-1">Silakan tambahkan mata kuliah terlebih dahulu di menu Mata Kuliah</p>
+                                    </div>
+                                @endif
+                            </div>
+                            
+                            <script>
+                                function selectAllMKCreate{{ str_replace('-', '', $prodi->kode_prodi) }}(source) {
+                                    const checkboxes = document.querySelectorAll('.mk-checkbox-create-{{ str_replace('-', '', $prodi->kode_prodi) }} input[type="checkbox"]');
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = source.checked;
+                                    });
+                                }
+                            </script>
+                        @endforeach
+                        
+                        <p class="mt-3 text-xs text-gray-500">
+                            <i class="fas fa-lightbulb mr-1 text-yellow-500"></i>
+                            <strong>Tips:</strong> Dosen hanya bisa membuat jadwal dan input nilai untuk mata kuliah yang di-assign di sini.
+                        </p>
+                    </div>
 
                 </div>
             </div>
