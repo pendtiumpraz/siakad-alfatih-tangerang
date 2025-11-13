@@ -422,6 +422,7 @@
             </div>
 
             <!-- Dosen Fields -->
+            @if($user->role === 'dosen')
             <div x-show="selectedRole === 'dosen'" x-transition>
                 <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
                     <i class="fas fa-chalkboard-teacher mr-2"></i>
@@ -438,7 +439,7 @@
                             type="text"
                             id="nidn"
                             name="nidn"
-                            value="{{ old('nidn', $user->dosen->nidn ?? '') }}"
+                            value="{{ old('nidn', optional($user->dosen)->nidn) }}"
                             :required="selectedRole === 'dosen'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('nidn') border-red-500 @enderror"
                         >
@@ -456,7 +457,7 @@
                             type="text"
                             id="dosen_nama_lengkap"
                             name="dosen_nama_lengkap"
-                            value="{{ old('dosen_nama_lengkap', $user->dosen->nama_lengkap ?? '') }}"
+                            value="{{ old('dosen_nama_lengkap', optional($user->dosen)->nama_lengkap) }}"
                             :required="selectedRole === 'dosen'"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('dosen_nama_lengkap') border-red-500 @enderror"
                         >
@@ -474,7 +475,7 @@
                             type="text"
                             id="gelar_depan"
                             name="gelar_depan"
-                            value="{{ old('gelar_depan', $user->dosen->gelar_depan ?? '') }}"
+                            value="{{ old('gelar_depan', optional($user->dosen)->gelar_depan) }}"
                             placeholder="Dr., Prof."
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('gelar_depan') border-red-500 @enderror"
                         >
@@ -492,7 +493,7 @@
                             type="text"
                             id="gelar_belakang"
                             name="gelar_belakang"
-                            value="{{ old('gelar_belakang', $user->dosen->gelar_belakang ?? '') }}"
+                            value="{{ old('gelar_belakang', optional($user->dosen)->gelar_belakang) }}"
                             placeholder="S.Pd.I, M.Pd"
                             class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('gelar_belakang') border-red-500 @enderror"
                         >
@@ -554,6 +555,7 @@
 
                 </div>
             </div>
+            @endif
 
             <!-- Operator Fields -->
             <div x-show="selectedRole === 'operator'" x-transition>
