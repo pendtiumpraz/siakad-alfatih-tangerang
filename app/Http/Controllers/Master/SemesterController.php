@@ -126,6 +126,31 @@ class SemesterController extends Controller
     }
 
     /**
+     * Trigger manual KHS generation for a semester
+     */
+    public function generateKhs($id)
+    {
+        try {
+            $semester = Semester::findOrFail($id);
+            
+            // Call artisan command
+            \Artisan::call('khs:generate', [
+                'semester_id' => $id,
+                '--force' => true,
+            ]);
+            
+            $output = \Artisan::output();
+            
+            return redirect()->back()
+                ->with('success', "KHS generation triggered for {$semester->tahun_akademik}. Check logs for details.");
+                
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to generate KHS: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Show the form for editing the specified semester
      */
     public function edit($id)

@@ -104,6 +104,77 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- KHS Information Section -->
+                    <div class="mt-6 pt-6 border-t-2 border-[#D4AF37]">
+                        <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4">
+                            <i class="fas fa-graduation-cap mr-2"></i>
+                            Informasi KHS
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            @if($semester->khs_generate_date)
+                            <div>
+                                <p class="text-sm text-gray-500">Tanggal Generate KHS</p>
+                                <p class="text-lg font-semibold text-gray-700">
+                                    <i class="fas fa-calendar-day text-[#D4AF37] mr-1"></i>
+                                    {{ \Carbon\Carbon::parse($semester->khs_generate_date)->format('d F Y') }}
+                                </p>
+                            </div>
+                            @endif
+                            @if(isset($semester->khs_status))
+                            <div>
+                                <p class="text-sm text-gray-500">Status KHS</p>
+                                @php
+                                    $statusColors = [
+                                        'draft' => 'bg-gray-100 text-gray-800',
+                                        'generated' => 'bg-blue-100 text-blue-800',
+                                        'approved' => 'bg-green-100 text-green-800',
+                                        'published' => 'bg-purple-100 text-purple-800',
+                                    ];
+                                    $statusColor = $statusColors[$semester->khs_status] ?? 'bg-gray-100 text-gray-800';
+                                @endphp
+                                <span class="inline-flex items-center px-3 py-1 {{ $statusColor }} text-sm font-semibold rounded-full">
+                                    {{ ucfirst($semester->khs_status) }}
+                                </span>
+                            </div>
+                            @endif
+                            @if($semester->khs_auto_generate)
+                            <div>
+                                <p class="text-sm text-gray-500">Auto Generate</p>
+                                <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
+                                    <i class="fas fa-check mr-1"></i>
+                                    Diaktifkan
+                                </span>
+                            </div>
+                            @endif
+                            <div>
+                                <p class="text-sm text-gray-500">Total KHS</p>
+                                <p class="text-lg font-semibold text-indigo-600">
+                                    <i class="fas fa-file-alt mr-1"></i>
+                                    {{ $semester->khs_count }} KHS
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Manual Generate Button -->
+                        <div class="mt-4">
+                            <form action="{{ route('admin.semester.generate-khs', $semester->id) }}" method="POST" onsubmit="return confirm('Generate KHS untuk semester ini? Proses ini mungkin memakan waktu beberapa menit.')">
+                                @csrf
+                                <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition">
+                                    <i class="fas fa-cogs mr-2"></i>
+                                    Generate KHS Manual
+                                </button>
+                                <a href="{{ route('admin.khs.index', ['semester_id' => $semester->id]) }}" class="ml-2 px-6 py-3 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white font-semibold rounded-lg hover:shadow-lg transition">
+                                    <i class="fas fa-list mr-2"></i>
+                                    Lihat Daftar KHS
+                                </a>
+                            </form>
+                            <p class="mt-2 text-xs text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Generate KHS akan membuat/update KHS untuk semua mahasiswa aktif yang memiliki nilai di semester ini.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Statistics -->
