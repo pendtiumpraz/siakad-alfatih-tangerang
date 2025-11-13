@@ -188,6 +188,6 @@ class Mahasiswa extends Model
     
     public function dosenPa()
     {
-        return $this->belongsTo(Dosen::class, 'dosen_pa_id');
+        return $this->belongsTo(Dosen::class, 'dosen_wali_id');
     }
 }
