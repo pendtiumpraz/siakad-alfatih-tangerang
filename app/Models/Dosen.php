@@ -47,13 +47,6 @@ class Dosen extends Model
         return $this->hasMany(Nilai::class);
     }
 
-    public function mataKuliahs()
-    {
-        return $this->belongsToMany(MataKuliah::class, 'jadwals')
-            ->withPivot('semester_id', 'ruangan_id', 'hari', 'jam_mulai', 'jam_selesai')
-            ->withTimestamps();
-    }
-
     public function mahasiswaBimbingan()
     {
         return $this->hasMany(Mahasiswa::class, 'dosen_wali_id');
