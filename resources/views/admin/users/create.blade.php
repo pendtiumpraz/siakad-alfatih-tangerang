@@ -498,30 +498,35 @@
                         @enderror
                     </div>
 
-                    <!-- Program Studi Assignment (Multi-Select) -->
+                    <!-- Program Studi Assignment (Checkbox) -->
                     <div class="md:col-span-2">
-                        <label for="program_studi_ids" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">
                             Program Studi <span class="text-red-500">*</span>
                         </label>
-                        <select
-                            id="program_studi_ids"
-                            name="program_studi_ids[]"
-                            multiple
-                            size="5"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('program_studi_ids') border-red-500 @enderror"
-                        >
-                            @foreach($programStudis as $prodi)
-                                <option value="{{ $prodi->id }}" {{ (is_array(old('program_studi_ids')) && in_array($prodi->id, old('program_studi_ids'))) ? 'selected' : '' }}>
-                                    {{ $prodi->kode_prodi }} - {{ $prodi->nama_prodi }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50 @error('program_studi_ids') border-red-500 @enderror">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                @foreach($programStudis as $prodi)
+                                    <label class="flex items-start space-x-3 p-2 hover:bg-white rounded cursor-pointer transition">
+                                        <input
+                                            type="checkbox"
+                                            name="program_studi_ids[]"
+                                            value="{{ $prodi->id }}"
+                                            {{ (is_array(old('program_studi_ids')) && in_array($prodi->id, old('program_studi_ids'))) ? 'checked' : '' }}
+                                            class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
+                                        >
+                                        <span class="text-sm text-gray-700">
+                                            <span class="font-semibold">{{ $prodi->kode_prodi }}</span> - {{ $prodi->nama_prodi }}
+                                        </span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
                         @error('program_studi_ids')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-2 text-xs text-gray-500">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Tahan Ctrl (Windows) atau Command (Mac) untuk memilih multiple program studi. Dosen hanya bisa mengelola jadwal, nilai, dan KHS dari program studi yang di-assign.
+                            Centang satu atau lebih program studi. Dosen hanya bisa mengelola jadwal, nilai, dan KHS dari program studi yang di-assign.
                         </p>
                     </div>
 
