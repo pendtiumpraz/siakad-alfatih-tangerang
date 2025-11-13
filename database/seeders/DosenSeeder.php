@@ -24,6 +24,7 @@ class DosenSeeder extends Seeder
                 'gelar_belakang' => 'M.Kom',
                 'no_telepon' => '081234567801',
                 'email_dosen' => 'ahmad.fauzi@siakad.ac.id',
+                'program_studi_codes' => ['PAI', 'ES'], // Assign to PAI and Ekonomi Syariah
             ],
             [
                 'nidn' => '0415108802',
@@ -32,6 +33,7 @@ class DosenSeeder extends Seeder
                 'gelar_belakang' => 'M.T',
                 'no_telepon' => '081234567802',
                 'email_dosen' => 'siti.nurhaliza@siakad.ac.id',
+                'program_studi_codes' => ['PAI'], // Assign to PAI only
             ],
             [
                 'nidn' => '0520079001',
@@ -40,14 +42,30 @@ class DosenSeeder extends Seeder
                 'gelar_belakang' => 'M.Kom',
                 'no_telepon' => '081234567803',
                 'email_dosen' => 'budi.santoso@siakad.ac.id',
+                'program_studi_codes' => ['ES', 'PIAUD'], // Assign to ES and PIAUD
             ],
         ];
 
         foreach ($dosenUsers as $index => $user) {
             if (isset($dosenData[$index])) {
-                Dosen::create(array_merge($dosenData[$index], [
+                $data = $dosenData[$index];
+                $programStudiCodes = $data['program_studi_codes'] ?? [];
+                unset($data['program_studi_codes']);
+                
+                $dosen = Dosen::create(array_merge($data, [
                     'user_id' => $user->id,
                 ]));
+                
+                // Assign dosen to program studi
+                if (!empty($programStudiCodes)) {
+                    $programStudiIds = \App\Models\ProgramStudi::whereIn('kode_prodi', $programStudiCodes)
+                        ->pluck('id')
+                        ->toArray();
+                    
+                    if (!empty($programStudiIds)) {
+                        $dosen->programStudis()->attach($programStudiIds);
+                    }
+                }
             }
         }
     }

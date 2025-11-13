@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
             OperatorSeeder::class,
             DosenSeeder::class,
             MahasiswaSeeder::class,
+            
+            // 5a. Assign dosen to program studi (depends on dosen and program_studi)
+            // DosenProgramStudiSeeder::class, // Optional: Use this if you need to reassign existing dosen
 
             // 6. Seed kurikulum (depends on program_studi)
             // KurikulumSeeder::class, // DISABLED - Kurikulum created automatically in StaiAlfatihMataKuliahS1Seeder
