@@ -77,6 +77,17 @@ class SuperAdminController extends Controller
     public function show($id)
     {
         $user = User::withTrashed()->with(['mahasiswa.programStudi', 'dosen', 'operator'])->findOrFail($id);
+        
+        // Try to load programStudis for dosen if available
+        if ($user->dosen) {
+            try {
+                if (\Schema::hasTable('dosen_program_studi') && method_exists($user->dosen, 'programStudis')) {
+                    $user->dosen->load('programStudis');
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Could not load programStudis in show: ' . $e->getMessage());
+            }
+        }
 
         return view('admin.users.show', compact('user'));
     }

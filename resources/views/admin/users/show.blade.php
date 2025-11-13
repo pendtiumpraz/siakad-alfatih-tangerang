@@ -316,6 +316,36 @@
                             </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->gelar_belakang ?? '-' }}</p>
                         </div>
+                        <div class="md:col-span-2">
+                            <label class="text-sm text-gray-600">
+                                <i class="fas fa-graduation-cap mr-1 text-[#D4AF37]"></i>Program Studi
+                            </label>
+                            @php
+                                try {
+                                    $programStudis = $user->dosen->relationLoaded('programStudis') 
+                                        ? $user->dosen->programStudis 
+                                        : collect();
+                                } catch (\Throwable $e) {
+                                    $programStudis = collect();
+                                }
+                            @endphp
+                            @if($programStudis->isNotEmpty())
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    @foreach($programStudis as $prodi)
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-300">
+                                            <i class="fas fa-check-circle mr-1"></i>
+                                            {{ $prodi->kode_prodi }} - {{ $prodi->nama_prodi }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="font-semibold text-red-600 mt-2">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Belum di-assign ke program studi
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">Dosen harus di-assign minimal 1 program studi untuk dapat mengakses sistem.</p>
+                            @endif
+                        </div>
                         <div>
                             <label class="text-sm text-gray-600">
                                 <i class="fas fa-envelope mr-1 text-[#D4AF37]"></i>Email Dosen
