@@ -149,7 +149,12 @@ class SemesterController extends Controller
             'jenis' => 'required|in:ganjil,genap,pendek',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'khs_generate_date' => 'nullable|date',
+            'khs_auto_generate' => 'boolean',
+            'khs_show_ketua_prodi_signature' => 'boolean',
+            'khs_show_dosen_pa_signature' => 'boolean',
+            'khs_status' => 'nullable|in:draft,generated,approved,published',
         ]);
 
         try {
