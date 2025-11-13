@@ -546,6 +546,15 @@
                             Mata Kuliah yang Diampu
                         </label>
                         
+                        {{-- Debug: Show available data --}}
+                        @if(config('app.debug'))
+                        <div class="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                            <strong>Debug Info:</strong>
+                            Program Studis: {{ $programStudis->count() }} |
+                            MataKuliahs Array Keys: {{ implode(', ', array_keys($mataKuliahsByProdi ?? [])) }}
+                        </div>
+                        @endif
+                        
                         <!-- Show message if no prodi selected -->
                         <div x-show="selectedProdiIds.length === 0" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
                             <i class="fas fa-info-circle text-gray-400 text-3xl mb-2"></i>
