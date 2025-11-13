@@ -289,6 +289,22 @@ class SuperAdminController extends Controller
 
             return view('admin.users.edit', compact('user', 'programStudis'));
             
+            // Load ALL mata kuliah grouped by program studi for dynamic filtering
+            $mataKuliahsByProdi = [];
+            foreach ($programStudis as $prodi) {
+                $kurikulum = $prodi->kurikulums->first();
+                if ($kurikulum) {
+                    $mataKuliahsByProdi[$prodi->id] = $kurikulum->mataKuliahs()
+                        ->orderBy('semester')
+                        ->orderBy('kode_mk')
+                        ->get();
+                } else {
+                    $mataKuliahsByProdi[$prodi->id] = collect();
+                }
+            }
+            
+            return view('admin.users.edit', compact('user', 'programStudis', 'mataKuliahsByProdi'));
+            
         } catch (\Throwable $e) {
             // Catch all errors including fatal
             \Log::error('Error in user edit: ' . $e->getMessage());

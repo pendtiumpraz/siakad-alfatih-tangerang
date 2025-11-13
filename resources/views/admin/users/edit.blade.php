@@ -502,8 +502,17 @@
                         @enderror
                     </div>
 
-                    <!-- Program Studi Assignment (Checkbox) -->
-                    <div class="md:col-span-2">
+                    <!-- Program Studi Assignment (Checkbox) - with Alpine.js tracking -->
+                    <div class="md:col-span-2" x-data="{ 
+                        selectedProdiIds: {{ json_encode($checkedProdiIds ?? []) }},
+                        toggleProdi(prodiId) {
+                            if (this.selectedProdiIds.includes(prodiId)) {
+                                this.selectedProdiIds = this.selectedProdiIds.filter(id => id !== prodiId);
+                            } else {
+                                this.selectedProdiIds.push(prodiId);
+                            }
+                        }
+                    }">
                         <label class="block text-sm font-semibold text-gray-700 mb-3">
                             Program Studi <span class="text-red-500">*</span>
                         </label>
@@ -536,6 +545,7 @@
                                             name="program_studi_ids[]"
                                             value="{{ $prodi->id }}"
                                             {{ in_array($prodi->id, $checkedProdiIds) ? 'checked' : '' }}
+                                            @change="toggleProdi({{ $prodi->id }})"
                                             class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
                                         >
                                         <span class="text-sm text-gray-700">
@@ -554,34 +564,35 @@
                         </p>
                     </div>
 
-                    <!-- Mata Kuliah Assignment per Prodi -->
-                    @if($user->dosen && $user->dosen->relationLoaded('programStudis') && $user->dosen->programStudis->isNotEmpty())
-                    <div class="md:col-span-2" x-data="{ selectedProdiForMK: '{{ $user->dosen->programStudis->first()->kode_prodi ?? '' }}' }">
+                    <!-- Mata Kuliah Assignment per Prodi (Dynamic based on selected prodi) -->
+                    <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-3">
                             <i class="fas fa-book-open mr-1"></i>
                             Mata Kuliah yang Diampu
                         </label>
                         
-                        <!-- Program Studi Selector -->
-                        <div class="mb-3">
-                            <label class="block text-xs text-gray-600 mb-2">Pilih Program Studi:</label>
-                            <select x-model="selectedProdiForMK" class="w-full md:w-1/2 px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition">
-                                @foreach($user->dosen->programStudis as $prodi)
-                                    <option value="{{ $prodi->kode_prodi }}">{{ $prodi->kode_prodi }} - {{ $prodi->nama_prodi }}</option>
-                                @endforeach
-                            </select>
+                        @php
+                            // Get assigned MK IDs
+                            $assignedMKIds = [];
+                            if ($user->dosen && $user->dosen->relationLoaded('mataKuliahs')) {
+                                $assignedMKIds = $user->dosen->mataKuliahs->pluck('id')->toArray();
+                            }
+                        @endphp
+                        
+                        <!-- Show message if no prodi selected -->
+                        <div x-show="selectedProdiIds.length === 0" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+                            <i class="fas fa-info-circle text-gray-400 text-3xl mb-2"></i>
+                            <p class="text-gray-600 font-semibold">Pilih Program Studi terlebih dahulu</p>
+                            <p class="text-sm text-gray-500 mt-1">Centang minimal 1 program studi di atas untuk menampilkan mata kuliah</p>
                         </div>
-
+                        
                         <!-- Mata Kuliah List per Prodi -->
-                        @foreach($user->dosen->programStudis as $prodi)
+                        @foreach($programStudis as $prodi)
                             @php
-                                $mataKuliahs = optional($prodi->kurikulums->first())->mataKuliahs ?? collect();
-                                $assignedMKIds = $user->dosen->relationLoaded('mataKuliahs') 
-                                    ? $user->dosen->mataKuliahs->pluck('id')->toArray() 
-                                    : [];
+                                $mataKuliahs = $mataKuliahsByProdi[$prodi->id] ?? collect();
                             @endphp
                             
-                            <div x-show="selectedProdiForMK === '{{ $prodi->kode_prodi }}'" x-transition>
+                            <div x-show="selectedProdiIds.includes({{ $prodi->id }})" x-transition class="mb-4">
                                 @if($mataKuliahs->isNotEmpty())
                                     <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50">
                                         <!-- Select All Button -->
