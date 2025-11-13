@@ -511,16 +511,20 @@
                                 @foreach($programStudis as $prodi)
                                     @php
                                         $isChecked = false;
+                                        
+                                        // Priority 1: Check old input (validation failed)
                                         if (old('program_studi_ids')) {
                                             $isChecked = in_array($prodi->id, old('program_studi_ids'));
-                                        } elseif (isset($user->dosen) && method_exists($user->dosen, 'programStudis')) {
+                                        }
+                                        // Priority 2: Check existing dosen assignment
+                                        elseif (isset($user->dosen)) {
                                             try {
-                                                $programStudisCollection = $user->dosen->programStudis;
-                                                if ($programStudisCollection) {
-                                                    $isChecked = $programStudisCollection->contains($prodi->id);
+                                                // Check if relation exists and is loaded
+                                                if ($user->dosen->relationLoaded('programStudis')) {
+                                                    $isChecked = $user->dosen->programStudis->contains('id', $prodi->id);
                                                 }
-                                            } catch (\Exception $e) {
-                                                // Ignore if programStudis relation doesn't exist yet
+                                            } catch (\Throwable $e) {
+                                                // Silently ignore any errors
                                             }
                                         }
                                     @endphp

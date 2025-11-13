@@ -226,7 +226,7 @@ class SuperAdminController extends Controller
     public function edit($id)
     {
         try {
-            // Load user first
+            // Load user first without programStudis relation
             $user = User::with(['mahasiswa', 'dosen', 'operator'])
                 ->withTrashed()
                 ->findOrFail($id);
@@ -234,13 +234,20 @@ class SuperAdminController extends Controller
             // Try to load programStudis if dosen exists and table exists
             if ($user->dosen) {
                 try {
-                    // Check if table exists and method exists before loading relation
-                    if (\Schema::hasTable('dosen_program_studi') && method_exists($user->dosen, 'programStudis')) {
+                    // Triple safety check
+                    if (\Schema::hasTable('dosen_program_studi') && 
+                        method_exists($user->dosen, 'programStudis') &&
+                        \DB::table('dosen_program_studi')->exists()) {
+                        
                         $user->dosen->load('programStudis');
+                        \Log::info("Successfully loaded programStudis for dosen: {$user->dosen->id}");
+                    } else {
+                        \Log::info("Skipping programStudis load - table or relation not available");
                     }
-                } catch (\Exception $e) {
-                    // Ignore if relation fails to load
+                } catch (\Throwable $e) {
+                    // Catch any error including fatal errors
                     \Log::warning('Could not load programStudis for dosen: ' . $e->getMessage());
+                    // Continue without programStudis relation
                 }
             }
 
@@ -248,11 +255,13 @@ class SuperAdminController extends Controller
 
             return view('admin.users.edit', compact('user', 'programStudis'));
             
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            // Catch all errors including fatal
             \Log::error('Error in user edit: ' . $e->getMessage());
             \Log::error($e->getTraceAsString());
             
-            return back()->with('error', 'Terjadi kesalahan saat membuka halaman edit: ' . $e->getMessage());
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Terjadi kesalahan saat membuka halaman edit. Silakan coba lagi atau hubungi administrator.');
         }
     }
 
