@@ -113,14 +113,18 @@
                             Status
                         </label>
                         <div class="flex items-center space-x-4" x-data="{ isActive: {{ old('is_active', $semester->is_active ? '1' : '0') }} == 1 }">
-                            <label class="flex items-center cursor-pointer">
+                            <label class="flex items-center cursor-pointer group">
                                 <div class="relative">
                                     <input type="checkbox" name="is_active" value="1" x-model="isActive" class="sr-only" {{ old('is_active', $semester->is_active) ? 'checked' : '' }}>
-                                    <div class="w-14 h-8 bg-gray-300 rounded-full shadow-inner transition" :class="isActive ? 'bg-green-500' : 'bg-gray-300'"></div>
-                                    <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow transition-transform" :class="isActive ? 'transform translate-x-6' : ''"></div>
+                                    <div class="w-14 h-8 rounded-full shadow-inner transition-all duration-300" :class="isActive ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gray-300 group-hover:bg-gray-400'"></div>
+                                    <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 transform" :class="isActive ? 'translate-x-6' : 'translate-x-0'">
+                                        <div class="w-full h-full flex items-center justify-center">
+                                            <i class="fas text-xs transition-all duration-300" :class="isActive ? 'fa-check text-green-600' : 'fa-times text-gray-400'"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="ml-3">
-                                    <span class="text-sm font-medium" :class="isActive ? 'text-green-700' : 'text-gray-700'" x-text="isActive ? 'Aktif' : 'Tidak Aktif'"></span>
+                                    <span class="text-sm font-semibold transition-colors" :class="isActive ? 'text-green-700' : 'text-gray-600'" x-text="isActive ? 'Aktif' : 'Tidak Aktif'"></span>
                                 </div>
                             </label>
                         </div>
