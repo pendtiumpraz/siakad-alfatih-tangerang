@@ -185,4 +185,9 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Khs::class);
     }
+    
+    public function dosenPa()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_pa_id');
+    }
 }
