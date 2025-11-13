@@ -379,7 +379,7 @@
                                 type="date"
                                 id="tanggal_lulus"
                                 name="tanggal_lulus"
-                                value="{{ old('tanggal_lulus', $user->mahasiswa->tanggal_lulus ? $user->mahasiswa->tanggal_lulus->format('Y-m-d') : '') }}"
+                                value="{{ old('tanggal_lulus', optional($user->mahasiswa)->tanggal_lulus ? optional($user->mahasiswa)->tanggal_lulus->format('Y-m-d') : '') }}"
                                 x-bind:disabled="useCurrentDateLulus"
                                 class="flex-1 px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_lulus') border-red-500 @enderror"
                             >
@@ -404,7 +404,7 @@
                                 type="date"
                                 id="tanggal_dropout"
                                 name="tanggal_dropout"
-                                value="{{ old('tanggal_dropout', $user->mahasiswa->tanggal_dropout ? $user->mahasiswa->tanggal_dropout->format('Y-m-d') : '') }}"
+                                value="{{ old('tanggal_dropout', optional($user->mahasiswa)->tanggal_dropout ? optional($user->mahasiswa)->tanggal_dropout->format('Y-m-d') : '') }}"
                                 x-bind:disabled="useCurrentDateDropout"
                                 class="flex-1 px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('tanggal_dropout') border-red-500 @enderror"
                             >
