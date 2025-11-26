@@ -48,7 +48,7 @@ class PenggajianController extends Controller
                 ->with('error', 'Silakan lengkapi data rekening Anda terlebih dahulu sebelum mengajukan pencairan gaji.');
         }
 
-        $semesters = Semester::orderBy('tahun_ajaran', 'desc')
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')
             ->orderBy('jenis', 'desc')
             ->get();
 
@@ -173,7 +173,7 @@ class PenggajianController extends Controller
                 ->with('error', 'Pengajuan yang sudah diverifikasi tidak dapat diedit.');
         }
 
-        $semesters = Semester::orderBy('tahun_ajaran', 'desc')
+        $semesters = Semester::orderBy('tahun_akademik', 'desc')
             ->orderBy('jenis', 'desc')
             ->get();
 
