@@ -169,8 +169,15 @@ class PenggajianController extends Controller
 
         // Only pending can be edited
         if (!$penggajian->canBeEdited()) {
+            $message = match($penggajian->status) {
+                'verified' => 'Pengajuan yang sudah diverifikasi tidak dapat diedit.',
+                'paid' => 'Pengajuan yang sudah dibayar tidak dapat diedit.',
+                'rejected' => 'Pengajuan yang ditolak tidak dapat diedit. Silakan buat pengajuan baru.',
+                default => 'Pengajuan ini tidak dapat diedit.'
+            };
+            
             return redirect()->route('dosen.penggajian.show', $id)
-                ->with('error', 'Pengajuan yang sudah diverifikasi tidak dapat diedit.');
+                ->with('error', $message);
         }
 
         $semesters = Semester::orderBy('tahun_akademik', 'desc')
@@ -196,8 +203,15 @@ class PenggajianController extends Controller
 
         // Only pending can be edited
         if (!$penggajian->canBeEdited()) {
+            $message = match($penggajian->status) {
+                'verified' => 'Pengajuan yang sudah diverifikasi tidak dapat diedit.',
+                'paid' => 'Pengajuan yang sudah dibayar tidak dapat diedit.',
+                'rejected' => 'Pengajuan yang ditolak tidak dapat diedit. Silakan buat pengajuan baru.',
+                default => 'Pengajuan ini tidak dapat diedit.'
+            };
+            
             return redirect()->route('dosen.penggajian.show', $id)
-                ->with('error', 'Pengajuan yang sudah diverifikasi tidak dapat diedit.');
+                ->with('error', $message);
         }
 
         // Validate (same as store)
@@ -272,8 +286,15 @@ class PenggajianController extends Controller
 
         // Only pending can be deleted
         if (!$penggajian->canBeEdited()) {
+            $message = match($penggajian->status) {
+                'verified' => 'Pengajuan yang sudah diverifikasi tidak dapat dihapus.',
+                'paid' => 'Pengajuan yang sudah dibayar tidak dapat dihapus.',
+                'rejected' => 'Pengajuan yang ditolak tidak dapat dihapus.',
+                default => 'Pengajuan ini tidak dapat dihapus.'
+            };
+            
             return redirect()->route('dosen.penggajian.index')
-                ->with('error', 'Pengajuan yang sudah diverifikasi tidak dapat dihapus.');
+                ->with('error', $message);
         }
 
         $penggajian->delete();

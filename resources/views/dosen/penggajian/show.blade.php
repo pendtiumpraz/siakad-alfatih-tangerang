@@ -34,6 +34,29 @@
         </div>
     @endif
 
+    <!-- Info Alert if not editable -->
+    @if(!$penggajian->canBeEdited())
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-info-circle text-blue-400 text-xl"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-800">
+                        <strong>Informasi:</strong> 
+                        @if($penggajian->status === 'verified')
+                            Pengajuan ini sudah <strong>diverifikasi</strong> oleh admin. Anda tidak dapat mengedit atau menghapus pengajuan ini.
+                        @elseif($penggajian->status === 'paid')
+                            Pengajuan ini sudah <strong>dibayar</strong>. Anda tidak dapat mengedit atau menghapus pengajuan ini.
+                        @elseif($penggajian->status === 'rejected')
+                            Pengajuan ini <strong>ditolak</strong>. Silakan buat pengajuan baru dengan data yang benar.
+                        @endif
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-6">
