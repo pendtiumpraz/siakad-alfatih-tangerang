@@ -16,7 +16,7 @@ class PengumumanController extends Controller
     {
         $pengumumans = Pengumuman::with('pembuat')
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->paginate(15)->withQueryString();
 
         return view('admin.pengumuman.index', compact('pengumumans'));
     }

@@ -82,7 +82,7 @@
                     <p class="text-sm text-gray-600 mt-1">Kelas {{ $kelas[$index - 1] }} - {{ $ruangan[$index - 1] }}</p>
                 </div>
                 <div class="flex-shrink-0">
-                    <a href="{{ route('dosen.jadwal.index') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-sm">
+                    <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-sm">
                         Detail
                     </a>
                 </div>
@@ -98,7 +98,7 @@
         </div>
 
         <div class="mt-6 pt-4 border-t border-gray-200 text-center">
-            <a href="{{ route('dosen.jadwal.index') }}" class="text-green-600 hover:text-green-800 font-medium">
+            <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="text-green-600 hover:text-green-800 font-medium">
                 Lihat Semua Jadwal
             </a>
         </div>
@@ -149,7 +149,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('dosen.jadwal.index') }}" class="flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg hover:shadow-md transition-all">
+                <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="flex items-center p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg hover:shadow-md transition-all">
                     <div class="p-3 bg-blue-600 rounded-lg mr-4">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -173,7 +173,7 @@
                     </div>
                 </a>
 
-                <a href="{{ route('dosen.jadwal.create') }}" class="flex items-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-300 rounded-lg hover:shadow-md transition-all">
+                <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="flex items-center p-4 bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-300 rounded-lg hover:shadow-md transition-all">
                     <div class="p-3 bg-purple-600 rounded-lg mr-4">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>

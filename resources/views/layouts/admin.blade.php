@@ -197,6 +197,10 @@
                             <i class="fas fa-calendar-alt w-4"></i>
                             <span class="ml-3">Semester</span>
                         </a>
+                        <a href="{{ route('admin.jadwal.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.jadwal.*') ? 'active' : '' }}">
+                            <i class="fas fa-clock w-4"></i>
+                            <span class="ml-3">Jadwal Perkuliahan</span>
+                        </a>
                         <a href="{{ route('admin.jalur-seleksi.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.jalur-seleksi.*') ? 'active' : '' }}">
                             <i class="fas fa-route w-4"></i>
                             <span class="ml-3">Jalur Seleksi</span>

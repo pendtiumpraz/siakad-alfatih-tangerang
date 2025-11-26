@@ -611,4 +611,77 @@ class MahasiswaController extends Controller
                 ->with('error', 'Gagal mengupload bukti pembayaran: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Show the edit username form.
+     */
+    public function editUsername()
+    {
+        return view('mahasiswa.profile.edit-username');
+    }
+
+    /**
+     * Update username (only allowed once).
+     */
+    public function updateUsername(Request $request)
+    {
+        $user = Auth::user();
+
+        // Check if username has already been changed
+        if ($user->username_changed_at) {
+            return redirect()->back()->with('error', 'Username sudah pernah diubah. Tidak dapat diubah lagi.');
+        }
+
+        // Validate input
+        $validated = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'regex:/^[a-z0-9_.]+$/',
+                'unique:users,username,' . $user->id
+            ],
+            'password' => 'required|string',
+        ], [
+            'username.required' => 'Username wajib diisi',
+            'username.min' => 'Username minimal 3 karakter',
+            'username.max' => 'Username maksimal 255 karakter',
+            'username.regex' => 'Username hanya boleh berisi huruf kecil, angka, underscore (_), dan titik (.)',
+            'username.unique' => 'Username sudah digunakan',
+            'password.required' => 'Password wajib diisi untuk konfirmasi',
+        ]);
+
+        // Verify password
+        if (!\Hash::check($request->password, $user->password)) {
+            return redirect()->back()
+                ->withErrors(['password' => 'Password salah'])
+                ->withInput($request->except('password'));
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            // Update username and set timestamp
+            $user->update([
+                'username' => $validated['username'],
+                'username_changed_at' => now(),
+            ]);
+
+            \DB::commit();
+
+            \Log::info("Mahasiswa {$user->id} changed username to: {$validated['username']}");
+
+            return redirect()->route('mahasiswa.dashboard')
+                ->with('success', 'Username berhasil diubah! Login selanjutnya gunakan username baru Anda.');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error("Failed to update username for mahasiswa {$user->id}: " . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Gagal mengubah username: ' . $e->getMessage())
+                ->withInput($request->except('password'));
+        }
+    }
 }

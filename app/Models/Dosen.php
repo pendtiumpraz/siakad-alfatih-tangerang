@@ -73,4 +73,33 @@ class Dosen extends Model
     {
         return $this->hasMany(Mahasiswa::class, 'dosen_wali_id');
     }
+
+    /**
+     * Get program studi dari jadwal yang dimiliki dosen
+     * Program studi didapat dari mata kuliah di jadwal
+     */
+    public function getProgramStudisFromJadwal()
+    {
+        return $this->jadwals()
+            ->with('mataKuliah.kurikulum.programStudi')
+            ->get()
+            ->pluck('mataKuliah.kurikulum.programStudi')
+            ->filter()
+            ->unique('id')
+            ->values();
+    }
+
+    /**
+     * Get mata kuliah dari jadwal yang dimiliki dosen
+     */
+    public function getMataKuliahsFromJadwal()
+    {
+        return $this->jadwals()
+            ->with('mataKuliah')
+            ->get()
+            ->pluck('mataKuliah')
+            ->filter()
+            ->unique('id')
+            ->values();
+    }
 }

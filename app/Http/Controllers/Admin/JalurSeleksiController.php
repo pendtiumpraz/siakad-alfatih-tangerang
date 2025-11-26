@@ -13,7 +13,7 @@ class JalurSeleksiController extends Controller
      */
     public function index()
     {
-        $jalurSeleksis = JalurSeleksi::latest()->paginate(10);
+        $jalurSeleksis = JalurSeleksi::latest()->paginate(10)->withQueryString();
 
         return view('admin.jalur-seleksi.index', compact('jalurSeleksis'));
     }

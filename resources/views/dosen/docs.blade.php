@@ -162,7 +162,7 @@
                         <div class="bg-gray-50 rounded-lg p-6">
                             <h4 class="font-bold text-gray-800 mb-4">Menu Penting:</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                                <a href="{{ route('dosen.jadwal.index') }}" class="flex items-center text-[#2D5F3F] hover:underline">
+                                <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="flex items-center text-[#2D5F3F] hover:underline">
                                     <i class="fas fa-calendar mr-2"></i>Jadwal Mengajar
                                 </a>
                                 <a href="{{ route('dosen.nilai.index') }}" class="flex items-center text-[#2D5F3F] hover:underline">

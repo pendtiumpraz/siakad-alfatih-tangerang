@@ -5,6 +5,159 @@
     <!-- Page Header -->
     <x-admin.page-header title="Manajemen User" />
 
+    <!-- Success/Error Messages -->
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md" role="alert">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <p class="font-bold">Berhasil!</p>
+                    <p>{!! session('success') !!}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md" role="alert">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <p class="font-bold">Error!</p>
+                    <p>{!! session('error') !!}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if (session('import_errors'))
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md" role="alert">
+            <div class="flex items-start">
+                <svg class="w-6 h-6 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <div class="flex-1">
+                    <p class="font-bold mb-2">Beberapa baris mengalami error:</p>
+                    <div class="text-sm max-h-48 overflow-y-auto">
+                        {!! session('import_errors') !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- Import Section -->
+    <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-lg shadow-md border-2 border-[#4A7C59] p-6" x-data="{ openImport: false }">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-3 bg-[#4A7C59] rounded-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Import Data User</h3>
+                    <p class="text-sm text-gray-600">Import data mahasiswa atau dosen dari file Excel</p>
+                </div>
+            </div>
+            <button @click="openImport = !openImport" class="px-4 py-2 bg-white border-2 border-[#4A7C59] text-[#4A7C59] font-semibold rounded-lg hover:bg-[#4A7C59] hover:text-white transition">
+                <svg class="w-5 h-5 inline-block mr-2 transition-transform" :class="openImport ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                <span x-text="openImport ? 'Tutup' : 'Buka'"></span>
+            </button>
+        </div>
+
+        <div x-show="openImport" x-collapse class="space-y-6">
+            <!-- Import Mahasiswa -->
+            <div class="bg-white rounded-lg border-2 border-green-300 p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h4 class="text-lg font-bold text-[#4A7C59] mb-2">
+                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                            Import Mahasiswa
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">Upload file Excel berisi data mahasiswa (Password default: <code class="bg-gray-100 px-2 py-1 rounded">mahasiswa_staialfatih</code>)</p>
+                        <div class="flex items-start space-x-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span><strong>Template sudah berisi 30 data contoh</strong> (10 mahasiswa semester 5, 10 semester 3, 10 semester 1). Edit sesuai kebutuhan atau hapus untuk mulai dari kosong.</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.users.template.mahasiswa') }}" class="px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#c49d2f] transition font-semibold text-sm whitespace-nowrap">
+                        <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Template
+                    </a>
+                </div>
+                <form action="{{ route('admin.users.import.mahasiswa') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File CSV (.csv)</label>
+                        <input type="file" name="file" accept=".csv" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none p-2">
+                        <p class="mt-1 text-xs text-gray-500"><strong>Data WAJIB:</strong> username (NIM), email, nim, nama_lengkap, kode_prodi, angkatan, jenis_kelamin, status. <strong>Yang lain biarkan kosong!</strong></p>
+                    </div>
+                    <button type="submit" class="px-6 py-2 bg-[#4A7C59] text-white rounded-lg hover:bg-[#3d6849] transition font-semibold">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Import Mahasiswa
+                    </button>
+                </form>
+            </div>
+
+            <!-- Import Dosen -->
+            <div class="bg-white rounded-lg border-2 border-yellow-300 p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h4 class="text-lg font-bold text-[#D4AF37] mb-2">
+                            <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            Import Dosen
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-2">Upload file CSV berisi data dasar dosen (Password default: <code class="bg-gray-100 px-2 py-1 rounded">dosen_staialfatih</code>).</p>
+                        <div class="flex items-start space-x-2 text-xs text-blue-600 bg-blue-50 p-2 rounded">
+                            <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span><strong>Template berisi 11 contoh data dasar:</strong> Username=NIDN, Email, No HP, NIDN, Nama Lengkap, Gelar. <strong class="text-green-600">Program studi & mata kuliah otomatis dari jadwal!</strong></span>
+                        </div>
+
+                    </div>
+                    <a href="{{ route('admin.users.template.dosen') }}" class="px-4 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#c49d2f] transition font-semibold text-sm whitespace-nowrap">
+                        <svg class="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Template
+                    </a>
+                </div>
+                <form action="{{ route('admin.users.import.dosen') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File CSV (.csv)</label>
+                        <input type="file" name="file" accept=".csv" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none p-2">
+                        <p class="mt-1 text-xs text-gray-500"><strong>Data WAJIB:</strong> username (NIDN), email, nidn, nama_lengkap. <strong class="text-green-600">Program studi & mata kuliah akan otomatis dari jadwal!</strong></p>
+                    </div>
+                    <button type="submit" class="px-6 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#c49d2f] transition font-semibold">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        Import Dosen
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Filter & Search Section -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
         <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col md:flex-row gap-4">

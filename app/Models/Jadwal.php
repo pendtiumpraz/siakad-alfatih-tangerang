@@ -10,7 +10,8 @@ class Jadwal extends Model
     use HasFactory;
 
     protected $fillable = [
-        'semester_id',
+        'semester_id', // Nullable, untuk backward compatibility
+        'jenis_semester', // 'ganjil' atau 'genap' - MAIN field untuk jadwal
         'mata_kuliah_id',
         'dosen_id',
         'ruangan_id',
@@ -18,6 +19,13 @@ class Jadwal extends Model
         'jam_mulai',
         'jam_selesai',
         'kelas',
+    ];
+
+    /**
+     * Get the attributes that should be cast.
+     */
+    protected $casts = [
+        'jenis_semester' => 'string',
     ];
 
 

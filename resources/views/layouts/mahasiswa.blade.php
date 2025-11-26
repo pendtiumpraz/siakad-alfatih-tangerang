@@ -150,6 +150,14 @@
                     <span>Jadwal Kuliah</span>
                 </a>
 
+                <a href="{{ route('mahasiswa.krs.index') }}"
+                   class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('mahasiswa.krs.*') ? 'active' : '' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 6h6m-6 4h6"/>
+                    </svg>
+                    <span>KRS (Rencana Studi)</span>
+                </a>
+
                 <a href="{{ route('mahasiswa.nilai.index') }}"
                    class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg {{ request()->routeIs('mahasiswa.nilai.*') ? 'active' : '' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

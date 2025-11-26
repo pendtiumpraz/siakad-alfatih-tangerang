@@ -424,15 +424,9 @@
             <!-- Dosen Fields -->
             @if($user->role === 'dosen')
             @php
-                // Pre-calculate checked IDs BEFORE Alpine.js uses it
+                // Get program studi IDs from jadwal (read-only)
                 $checkedProdiIds = [];
-                
-                // Priority 1: old input
-                if (old('program_studi_ids')) {
-                    $checkedProdiIds = old('program_studi_ids');
-                }
-                // Priority 2: existing assignment
-                elseif ($user->dosen) {
+                if ($user->dosen) {
                     try {
                         if ($user->dosen->relationLoaded('programStudis')) {
                             $checkedProdiIds = $user->dosen->programStudis->pluck('id')->toArray();
@@ -443,16 +437,7 @@
                 }
             @endphp
             
-            <div x-show="selectedRole === 'dosen'" x-transition x-data="{ 
-                selectedProdiIds: {{ json_encode($checkedProdiIds) }},
-                toggleProdi(prodiId) {
-                    if (this.selectedProdiIds.includes(prodiId)) {
-                        this.selectedProdiIds = this.selectedProdiIds.filter(id => id !== prodiId);
-                    } else {
-                        this.selectedProdiIds.push(prodiId);
-                    }
-                }
-            }">
+            <div x-show="selectedRole === 'dosen'" x-transition>
                 <h3 class="text-lg font-semibold text-[#2D5F3F] mb-4 pb-2 border-b-2 border-[#D4AF37]">
                     <i class="fas fa-chalkboard-teacher mr-2"></i>
                     Informasi Dosen
@@ -531,41 +516,46 @@
                         @enderror
                     </div>
 
-                    <!-- Program Studi Assignment (Checkbox) - with Alpine.js tracking -->
+                    <!-- Program Studi Assignment (Read-only from Jadwal) -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            Program Studi <span class="text-red-500">*</span>
+                            <i class="fas fa-university mr-1"></i>
+                            Program Studi
                         </label>
-                        <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50 @error('program_studi_ids') border-red-500 @enderror">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                
-                                @foreach($programStudis as $prodi)
-                                    <label class="flex items-start space-x-3 p-2 hover:bg-white rounded cursor-pointer transition">
-                                        <input
-                                            type="checkbox"
-                                            name="program_studi_ids[]"
-                                            value="{{ $prodi->id }}"
-                                            {{ in_array($prodi->id, $checkedProdiIds) ? 'checked' : '' }}
-                                            @change="toggleProdi({{ $prodi->id }})"
-                                            class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
-                                        >
-                                        <span class="text-sm text-gray-700">
-                                            <span class="font-semibold">{{ $prodi->kode_prodi }}</span> - {{ $prodi->nama_prodi }}
-                                        </span>
-                                    </label>
-                                @endforeach
-                            </div>
+                        <div class="border-2 border-blue-400 rounded-lg p-4 bg-blue-50">
+                            @if($checkedProdiIds && count($checkedProdiIds) > 0)
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    @foreach($programStudis as $prodi)
+                                        @if(in_array($prodi->id, $checkedProdiIds))
+                                            <label class="flex items-start space-x-3 p-2 bg-white rounded">
+                                                <input
+                                                    type="checkbox"
+                                                    checked
+                                                    disabled
+                                                    class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded opacity-60 cursor-not-allowed"
+                                                >
+                                                <span class="text-sm text-gray-700">
+                                                    <span class="font-semibold">{{ $prodi->kode_prodi }}</span> - {{ $prodi->nama_prodi }}
+                                                </span>
+                                            </label>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-4">
+                                    <i class="fas fa-info-circle text-blue-500 text-3xl mb-2"></i>
+                                    <p class="text-gray-600 font-semibold">Belum ada program studi</p>
+                                    <p class="text-sm text-gray-500 mt-1">Program studi akan otomatis muncul ketika dosen memiliki jadwal mengajar</p>
+                                </div>
+                            @endif
                         </div>
-                        @error('program_studi_ids')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                        <p class="mt-2 text-xs text-gray-500">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Centang satu atau lebih program studi. Dosen hanya bisa mengelola jadwal, nilai, dan KHS dari program studi yang di-assign.
+                        <p class="mt-2 text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                            <i class="fas fa-lock mr-1"></i>
+                            <strong>Read-only:</strong> Program studi ditentukan otomatis dari master data jadwal. Untuk mengubah, kelola jadwal mengajar dosen di menu Jadwal.
                         </p>
                     </div>
 
-                    <!-- Mata Kuliah Assignment per Prodi (Dynamic based on selected prodi) -->
+                    <!-- Mata Kuliah Assignment (Read-only from Jadwal) -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-3">
                             <i class="fas fa-book-open mr-1"></i>
@@ -573,100 +563,63 @@
                         </label>
                         
                         @php
-                            // Get assigned MK IDs
+                            // Get assigned MK IDs from jadwal
                             $assignedMKIds = [];
                             if ($user->dosen && $user->dosen->relationLoaded('mataKuliahs')) {
                                 $assignedMKIds = $user->dosen->mataKuliahs->pluck('id')->toArray();
                             }
                         @endphp
                         
-                        {{-- Debug: Show available data --}}
-                        @if(config('app.debug'))
-                        <div class="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                            <strong>Debug Info:</strong>
-                            Program Studis: {{ $programStudis->count() }} |
-                            MataKuliahs Array Keys: {{ implode(', ', array_keys($mataKuliahsByProdi ?? [])) }} |
-                            Assigned MK: {{ count($assignedMKIds) }}
-                        </div>
-                        @endif
-                        
-                        <!-- Show message if no prodi selected -->
-                        <div x-show="selectedProdiIds.length === 0" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
-                            <i class="fas fa-info-circle text-gray-400 text-3xl mb-2"></i>
-                            <p class="text-gray-600 font-semibold">Pilih Program Studi terlebih dahulu</p>
-                            <p class="text-sm text-gray-500 mt-1">Centang minimal 1 program studi di atas untuk menampilkan mata kuliah</p>
-                        </div>
-                        
-                        <!-- Mata Kuliah List per Prodi -->
-                        @foreach($programStudis as $prodi)
-                            @php
-                                $mataKuliahs = $mataKuliahsByProdi[$prodi->id] ?? collect();
-                            @endphp
-                            
-                            <div x-show="selectedProdiIds.includes({{ $prodi->id }})" x-transition class="mb-4">
-                                @if($mataKuliahs->isNotEmpty())
-                                    <div class="border-2 border-[#2D5F3F] rounded-lg p-4 bg-gray-50">
-                                        <!-- Select All Button -->
-                                        <div class="mb-3 pb-3 border-b border-gray-300">
-                                            <label class="flex items-center space-x-2 font-semibold text-[#2D5F3F] cursor-pointer hover:bg-white p-2 rounded transition">
-                                                <input 
-                                                    type="checkbox" 
-                                                    class="w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
-                                                    onclick="selectAllMK{{ str_replace('-', '', $prodi->kode_prodi) }}(this)"
-                                                >
-                                                <span><i class="fas fa-check-double mr-1"></i>Pilih Semua Mata Kuliah {{ $prodi->kode_prodi }}</span>
-                                            </label>
-                                        </div>
-                                        
-                                        <!-- Mata Kuliah Checkboxes -->
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto">
-                                            @foreach($mataKuliahs->sortBy('semester')->groupBy('semester') as $semester => $mkBySemester)
-                                                <div class="md:col-span-2 mt-2 mb-1">
-                                                    <h4 class="text-sm font-bold text-[#2D5F3F] bg-[#D4AF37] bg-opacity-20 px-2 py-1 rounded">
-                                                        Semester {{ $semester }}
-                                                    </h4>
-                                                </div>
-                                                @foreach($mkBySemester as $mk)
-                                                    <label class="flex items-start space-x-2 p-2 hover:bg-white rounded cursor-pointer transition mk-checkbox-{{ str_replace('-', '', $prodi->kode_prodi) }}">
-                                                        <input 
-                                                            type="checkbox" 
-                                                            name="mata_kuliah_ids[]" 
-                                                            value="{{ $mk->id }}"
-                                                            {{ in_array($mk->id, $assignedMKIds) ? 'checked' : '' }}
-                                                            class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded focus:ring-[#D4AF37]"
-                                                        >
-                                                        <span class="text-sm text-gray-700">
-                                                            <span class="font-semibold text-[#2D5F3F]">{{ $mk->kode_mk }}</span> - {{ $mk->nama_mk }} 
-                                                            <span class="text-xs text-gray-500">({{ $mk->sks }} SKS)</span>
-                                                        </span>
-                                                    </label>
-                                                @endforeach
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                @else
-                                    <div class="border-2 border-yellow-300 rounded-lg p-4 bg-yellow-50">
-                                        <p class="text-yellow-700">
-                                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                                            Belum ada mata kuliah untuk program studi <strong>{{ $prodi->nama_prodi }}</strong>.
-                                        </p>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <script>
-                                function selectAllMK{{ str_replace('-', '', $prodi->kode_prodi) }}(source) {
-                                    const checkboxes = document.querySelectorAll('.mk-checkbox-{{ str_replace('-', '', $prodi->kode_prodi) }} input[type="checkbox"]');
-                                    checkboxes.forEach(checkbox => {
-                                        checkbox.checked = source.checked;
+                        @if(count($assignedMKIds) > 0)
+                            <div class="border-2 border-blue-400 rounded-lg p-4 bg-blue-50 max-h-96 overflow-y-auto">
+                                @php
+                                    $mataKuliahsGrouped = $user->dosen->mataKuliahs->sortBy('semester')->groupBy(function($mk) {
+                                        return $mk->kurikulum->programStudi->kode_prodi ?? 'Lainnya';
                                     });
-                                }
-                            </script>
-                        @endforeach
+                                @endphp
+                                
+                                @foreach($mataKuliahsGrouped as $prodiKode => $mataKuliahs)
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-bold text-[#2D5F3F] bg-[#D4AF37] bg-opacity-30 px-3 py-2 rounded mb-2">
+                                            <i class="fas fa-university mr-1"></i>
+                                            {{ $prodiKode }}
+                                        </h4>
+                                        
+                                        @foreach($mataKuliahs->groupBy('semester') as $semester => $mkBySemester)
+                                            <div class="ml-4 mb-3">
+                                                <h5 class="text-xs font-semibold text-gray-600 mb-2">Semester {{ $semester }}</h5>
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                    @foreach($mkBySemester as $mk)
+                                                        <label class="flex items-start space-x-2 p-2 bg-white rounded">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                checked 
+                                                                disabled
+                                                                class="mt-1 w-4 h-4 text-[#2D5F3F] border-gray-300 rounded opacity-60 cursor-not-allowed"
+                                                            >
+                                                            <span class="text-sm text-gray-700">
+                                                                <span class="font-semibold text-[#2D5F3F]">{{ $mk->kode_mk }}</span> - {{ $mk->nama_mk }} 
+                                                                <span class="text-xs text-gray-500">({{ $mk->sks }} SKS)</span>
+                                                            </span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="border-2 border-blue-400 rounded-lg p-6 text-center bg-blue-50">
+                                <i class="fas fa-info-circle text-blue-500 text-3xl mb-2"></i>
+                                <p class="text-gray-600 font-semibold">Belum ada mata kuliah</p>
+                                <p class="text-sm text-gray-500 mt-1">Mata kuliah akan otomatis muncul ketika dosen memiliki jadwal mengajar</p>
+                            </div>
+                        @endif
 
-                        <p class="mt-3 text-xs text-gray-500">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Pilih mata kuliah yang akan diampu oleh dosen. Dosen hanya bisa membuat jadwal dan menilai mahasiswa untuk mata kuliah yang di-assign.
+                        <p class="mt-3 text-xs text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                            <i class="fas fa-lock mr-1"></i>
+                            <strong>Read-only:</strong> Mata kuliah ditentukan otomatis dari master data jadwal. Untuk mengubah, kelola jadwal mengajar dosen di menu Jadwal.
                         </p>
                     </div>
 

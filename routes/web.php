@@ -7,12 +7,13 @@ use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\NimRangeController;
 use App\Http\Controllers\Admin\SPMBController as AdminSPMBController;
 use App\Http\Controllers\Admin\DaftarUlangController;
+use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
 use App\Http\Controllers\Operator\OperatorDashboardController;
 use App\Http\Controllers\Operator\PembayaranController;
 use App\Http\Controllers\Operator\SPMBController as OperatorSPMBController;
 use App\Http\Controllers\Dosen\DosenDashboardController;
 use App\Http\Controllers\Dosen\DosenController;
-use App\Http\Controllers\Dosen\JadwalController;
+use App\Http\Controllers\Dosen\JadwalViewController;
 use App\Http\Controllers\Dosen\NilaiController;
 use App\Http\Controllers\Dosen\KHSController;
 use App\Http\Controllers\Mahasiswa\MahasiswaDashboardController;
@@ -69,6 +70,16 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('users', SuperAdminController::class);
     Route::post('users/{id}/restore', [SuperAdminController::class, 'restore'])->name('users.restore');
     Route::delete('users/{id}/force-delete', [SuperAdminController::class, 'forceDelete'])->name('users.force-delete');
+    
+    // Import Users
+    Route::get('users/template/mahasiswa', [SuperAdminController::class, 'downloadMahasiswaTemplate'])->name('users.template.mahasiswa');
+    Route::get('users/template/dosen', [SuperAdminController::class, 'downloadDosenTemplate'])->name('users.template.dosen');
+    Route::post('users/import/mahasiswa', [SuperAdminController::class, 'importMahasiswa'])->name('users.import.mahasiswa');
+    Route::post('users/import/dosen', [SuperAdminController::class, 'importDosen'])->name('users.import.dosen');
+    
+    // Download Master Data (for import reference)
+    Route::get('users/master-data/program-studi', [SuperAdminController::class, 'downloadMasterDataProdi'])->name('users.master-data.program-studi');
+    Route::get('users/master-data/mata-kuliah', [SuperAdminController::class, 'downloadMasterDataMataKuliah'])->name('users.master-data.mata-kuliah');
 
     // System Settings
     Route::get('settings', [SuperAdminController::class, 'settings'])->name('settings.index');
@@ -148,6 +159,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::delete('/remove-dosen-wali/{mahasiswaId}', [\App\Http\Controllers\Admin\PengurusController::class, 'removeDosenWali'])->name('remove-dosen-wali');
     });
 
+    // Jadwal Management (Admin creates ALL jadwal)
+    Route::resource('jadwal', AdminJadwalController::class);
+    Route::post('jadwal/check-conflict', [AdminJadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
+
     // Documentation
     Route::get('/docs', [AdminDashboardController::class, 'docs'])->name('docs');
 });
@@ -205,10 +220,14 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
     // Profile
     Route::get('profile', [DosenController::class, 'profile'])->name('profile');
     Route::put('profile', [DosenController::class, 'updateProfile'])->name('profile.update');
+    
+    // Edit Username (Only once)
+    Route::get('profile/edit-username', [DosenController::class, 'editUsername'])->name('username.edit');
+    Route::put('profile/update-username', [DosenController::class, 'updateUsername'])->name('username.update');
 
-    // Schedule Management
-    Route::resource('jadwal', JadwalController::class);
-    Route::post('jadwal/check-conflict', [JadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
+    // Schedule View (Read-only for Dosen)
+    Route::get('jadwal-mengajar', [JadwalViewController::class, 'index'])->name('jadwal-mengajar.index');
+    Route::get('jadwal-mengajar/{id}', [JadwalViewController::class, 'show'])->name('jadwal-mengajar.show');
 
     // Grade Management
     Route::get('nilai', [NilaiController::class, 'index'])->name('nilai.index');
@@ -251,6 +270,10 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     // Student Portal
     Route::get('profile', [MahasiswaController::class, 'profile'])->name('profile');
     Route::put('profile', [MahasiswaController::class, 'updateProfile'])->name('profile.update');
+    
+    // Edit Username (Only once)
+    Route::get('profile/edit-username', [MahasiswaController::class, 'editUsername'])->name('username.edit');
+    Route::put('profile/update-username', [MahasiswaController::class, 'updateUsername'])->name('username.update');
 
     Route::get('jadwal', [MahasiswaController::class, 'jadwal'])->name('jadwal.index');
     Route::get('jadwal/{id}', [MahasiswaController::class, 'jadwalDetail'])->name('jadwal.detail');
@@ -260,6 +283,12 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
     Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
     Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
+    // KRS (Kartu Rencana Studi)
+    Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
+    Route::post('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'store'])->name('krs.store');
+    Route::delete('krs/{id}', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'destroy'])->name('krs.destroy');
+    Route::post('krs/submit', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'submit'])->name('krs.submit');
+    Route::get('krs/print', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'print'])->name('krs.print');
 
     Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
     Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.detail');

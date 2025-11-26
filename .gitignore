@@ -26,3 +26,6 @@ Thumbs.db
 # Allow compiled assets for production
 \!public/css/
 \!public/js/
+
+# OAuth documentation with potential sensitive info
+SETUP_GOOGLE_DRIVE_OAUTH.md

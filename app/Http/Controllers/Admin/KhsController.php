@@ -47,7 +47,7 @@ class KhsController extends Controller
         }
 
         $khsList = $query->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(20)->withQueryString();
 
         // Get data for filters
         $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();

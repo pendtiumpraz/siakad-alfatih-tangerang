@@ -56,7 +56,7 @@
                     <span class="font-medium">Dashboard</span>
                 </a>
 
-                <a href="{{ route('dosen.jadwal.index') }}" class="flex items-center px-4 py-3 text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('dosen.jadwal.*') ? 'bg-green-700 border-l-4 border-yellow-400' : 'hover:bg-green-700' }}">
+                <a href="{{ route('dosen.jadwal-mengajar.index') }}" class="flex items-center px-4 py-3 text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('dosen.jadwal-mengajar.*') ? 'bg-green-700 border-l-4 border-yellow-400' : 'hover:bg-green-700' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>

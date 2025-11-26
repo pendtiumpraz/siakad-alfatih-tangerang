@@ -429,12 +429,12 @@
                             <span class="summary-value">{{ $khs->total_sks ?? 0 }} SKS</span>
                         </div>
                         <div class="summary-item clearfix">
-                            <span class="summary-label">Total SKS Lulus</span>
-                            <span class="summary-value summary-value-green">{{ $khs->total_sks_lulus ?? 0 }} SKS</span>
+                            <span class="summary-label">Total SKS Kumulatif</span>
+                            <span class="summary-value summary-value-green">{{ $khs->total_sks_kumulatif ?? 0 }} SKS</span>
                         </div>
                         <div class="ip-box ip-box-gold clearfix">
                             <span class="ip-label">IP Semester</span>
-                            <span class="ip-value">{{ number_format($khs->ip_semester ?? 0, 2) }}</span>
+                            <span class="ip-value">{{ number_format($khs->ip ?? 0, 2) }}</span>
                         </div>
                     </td>
                     <td style="width: 4%;"></td>
@@ -450,7 +450,7 @@
                         </div>
                         <div class="ip-box ip-box-green clearfix">
                             <span class="ip-label">IPK</span>
-                            <span class="ip-value">{{ number_format($khs->ip_kumulatif ?? 0, 2) }}</span>
+                            <span class="ip-value">{{ number_format($khs->ipk ?? 0, 2) }}</span>
                         </div>
                     </td>
                 </tr>
@@ -463,7 +463,7 @@
                 <tr>
                     <td class="status-left">
                         <p style="font-weight: bold; color: #1f2937; margin: 0 0 4px 0; font-size: 14px;">Status Semester:</p>
-                        <p style="font-size: 14px; color: #6b7280; margin: 0;">Berdasarkan IP Semester {{ number_format($khs->ip_semester ?? 0, 2) }}, mahasiswa dinyatakan:</p>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0;">Berdasarkan IP Semester {{ number_format($khs->ip ?? 0, 2) }}, mahasiswa dinyatakan:</p>
                     </td>
                     <td class="status-right">
                         <span class="status-badge">LULUS</span>

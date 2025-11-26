@@ -13,6 +13,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+// Temporary: Excel package not fully installed - using CSV instead
+// use Maatwebsite\Excel\Facades\Excel;
+// use App\Exports\MahasiswaTemplateExport;
+// use App\Exports\DosenTemplateExport;
+// use App\Exports\ProgramStudiExport;
+// use App\Exports\MataKuliahExport;
+// use App\Imports\MahasiswaImport;
+// use App\Imports\DosenImport;
 
 class SuperAdminController extends Controller
 {
@@ -56,7 +64,7 @@ class SuperAdminController extends Controller
         // Order by latest
         $query->orderBy('created_at', 'desc');
 
-        $users = $query->paginate(15);
+        $users = $query->paginate(15)->withQueryString();
 
         return view('admin.users.index', compact('users'));
     }
@@ -139,15 +147,10 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
-            'program_studi_ids' => ['required_if:role,dosen', 'array', 'min:1'],
-            'program_studi_ids.*' => ['exists:program_studis,id'],
+            // Program studi and mata kuliah are now auto-synced from jadwal, no manual input needed
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
-        ], [
-            // Custom error messages
-            'program_studi_ids.required_if' => 'Program studi wajib dipilih minimal 1 untuk dosen.',
-            'program_studi_ids.min' => 'Pilih minimal 1 program studi untuk dosen.',
         ]);
 
         DB::beginTransaction();
@@ -212,25 +215,9 @@ class SuperAdminController extends Controller
                         'no_telepon' => $validated['no_telepon'] ?? null,
                     ]);
                     
-                    // Attach program studi to dosen (only if table exists)
-                    try {
-                        if (!empty($validated['program_studi_ids'])) {
-                            $dosen->programStudis()->attach($validated['program_studi_ids']);
-                        }
-                    } catch (\Exception $e) {
-                        // Ignore if dosen_program_studi table doesn't exist yet
-                        \Log::warning('Failed to attach program studi for dosen: ' . $e->getMessage());
-                    }
-                    
-                    // Attach mata kuliah to dosen (only if table exists)
-                    try {
-                        if (!empty($validated['mata_kuliah_ids'])) {
-                            $dosen->mataKuliahs()->attach($validated['mata_kuliah_ids']);
-                        }
-                    } catch (\Exception $e) {
-                        // Ignore if dosen_mata_kuliah table doesn't exist yet
-                        \Log::warning('Failed to attach mata kuliah for dosen: ' . $e->getMessage());
-                    }
+                    // Program studi and mata kuliah are now auto-synced from jadwal
+                    // No manual assignment needed - they are read-only and derived from jadwal data
+                    \Log::info("Dosen created: {$dosen->id}. Program studi & mata kuliah auto-managed from jadwal.");
                     break;
 
                 case 'operator':
@@ -266,33 +253,21 @@ class SuperAdminController extends Controller
                 ->withTrashed()
                 ->findOrFail($id);
             
-            // Load dosen separately to avoid relation errors
+            // Load dosen separately and get data from jadwal
             if ($user->role === 'dosen') {
                 try {
                     $user->load('dosen');
                     
-                    // Only try to load programStudis if table exists
-                    if ($user->dosen && \Schema::hasTable('dosen_program_studi')) {
-                        try {
-                            $user->dosen->load('programStudis');
-                            \Log::info("Successfully loaded programStudis for dosen: {$user->dosen->id}");
-                        } catch (\Throwable $e) {
-                            \Log::warning('Could not load programStudis: ' . $e->getMessage());
-                            // Set empty collection to prevent view errors
-                            $user->dosen->setRelation('programStudis', collect());
-                        }
-                    }
-                    
-                    // Try to load mataKuliahs if table exists
-                    if ($user->dosen && \Schema::hasTable('dosen_mata_kuliah')) {
-                        try {
-                            $user->dosen->load('mataKuliahs');
-                            \Log::info("Successfully loaded mataKuliahs for dosen: {$user->dosen->id}");
-                        } catch (\Throwable $e) {
-                            \Log::warning('Could not load mataKuliahs: ' . $e->getMessage());
-                            // Set empty collection to prevent view errors
-                            $user->dosen->setRelation('mataKuliahs', collect());
-                        }
+                    if ($user->dosen) {
+                        // Get program studi and mata kuliah from jadwal instead of pivot tables
+                        $programStudisFromJadwal = $user->dosen->getProgramStudisFromJadwal();
+                        $mataKuliahsFromJadwal = $user->dosen->getMataKuliahsFromJadwal();
+                        
+                        // Set as relation for view compatibility
+                        $user->dosen->setRelation('programStudis', $programStudisFromJadwal);
+                        $user->dosen->setRelation('mataKuliahs', $mataKuliahsFromJadwal);
+                        
+                        \Log::info("Loaded from jadwal - Prodi: {$programStudisFromJadwal->count()}, MK: {$mataKuliahsFromJadwal->count()}");
                     }
                 } catch (\Throwable $e) {
                     \Log::warning('Could not load dosen: ' . $e->getMessage());
@@ -362,10 +337,7 @@ class SuperAdminController extends Controller
             'gelar_depan' => ['nullable', 'string', 'max:50'],
             'gelar_belakang' => ['nullable', 'string', 'max:50'],
             'dosen_status' => ['nullable', 'in:aktif,non-aktif'],
-            'program_studi_ids' => ['nullable', 'array'],
-            'program_studi_ids.*' => ['exists:program_studis,id'],
-            'mata_kuliah_ids' => ['nullable', 'array'],
-            'mata_kuliah_ids.*' => ['exists:mata_kuliahs,id'],
+            // Program studi and mata kuliah are now auto-synced from jadwal, no manual input needed
 
             // Operator fields
             'operator_nama_lengkap' => ['required_if:role,operator', 'nullable', 'string', 'max:255'],
@@ -438,39 +410,9 @@ class SuperAdminController extends Controller
                         ]
                     );
                     
-                    // Sync program studi to dosen (only if table exists)
-                    try {
-                        if (isset($validated['program_studi_ids']) && is_array($validated['program_studi_ids'])) {
-                            \Log::info('Syncing program studis for dosen: ' . $dosen->id, $validated['program_studi_ids']);
-                            $dosen->programStudis()->sync($validated['program_studi_ids']);
-                            \Log::info('Successfully synced ' . count($validated['program_studi_ids']) . ' program studis');
-                        } else {
-                            // If no program studi selected, detach all
-                            \Log::info('No program studi ids provided, detaching all for dosen: ' . $dosen->id);
-                            $dosen->programStudis()->detach();
-                        }
-                    } catch (\Exception $e) {
-                        // Log the error
-                        \Log::error('Failed to sync program studi for dosen: ' . $e->getMessage());
-                        \Log::error($e->getTraceAsString());
-                    }
-                    
-                    // Sync mata kuliah to dosen (only if table exists)
-                    try {
-                        if (isset($validated['mata_kuliah_ids']) && is_array($validated['mata_kuliah_ids'])) {
-                            \Log::info('Syncing mata kuliahs for dosen: ' . $dosen->id, $validated['mata_kuliah_ids']);
-                            $dosen->mataKuliahs()->sync($validated['mata_kuliah_ids']);
-                            \Log::info('Successfully synced ' . count($validated['mata_kuliah_ids']) . ' mata kuliahs');
-                        } else {
-                            // If no mata kuliah selected, detach all
-                            \Log::info('No mata kuliah ids provided, detaching all for dosen: ' . $dosen->id);
-                            $dosen->mataKuliahs()->detach();
-                        }
-                    } catch (\Exception $e) {
-                        // Log the error
-                        \Log::error('Failed to sync mata kuliah for dosen: ' . $e->getMessage());
-                        \Log::error($e->getTraceAsString());
-                    }
+                    // Program studi and mata kuliah are now auto-synced from jadwal
+                    // No manual sync needed - they are read-only and derived from jadwal data
+                    \Log::info("Dosen updated: {$dosen->id}. Program studi & mata kuliah auto-managed from jadwal.");
                     break;
 
                 case 'operator':
@@ -623,6 +565,372 @@ class SuperAdminController extends Controller
 
             return back()->withInput()
                 ->with('error', 'Gagal memperbarui pengaturan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download template Excel untuk import mahasiswa
+     */
+    public function downloadMahasiswaTemplate()
+    {
+        // Temporary: Generate CSV template
+        $csv = "username,email,no_telepon,nim,nama_lengkap,kode_prodi,angkatan,tempat_lahir,tanggal_lahir,jenis_kelamin,alamat,status,tanggal_lulus,tanggal_dropout\n";
+        
+        // Sample data
+        $samples = [
+            ['2022001', '2022001@staialfatih.ac.id', '', '2022001', 'Ahmad Zaki Mubarak', 'PAI-S1-L', '2022', '', '', 'L', '', 'aktif', '', ''],
+            ['2022002', '2022002@staialfatih.ac.id', '', '2022002', 'Siti Aisyah Nurjanah', 'PAI-S1-L', '2022', '', '', 'P', '', 'aktif', '', ''],
+            ['2022003', '2022003@staialfatih.ac.id', '', '2022003', 'Muhammad Iqbal Ramadhan', 'PAI-S1-L', '2022', '', '', 'L', '', 'aktif', '', ''],
+            ['2022004', '2022004@staialfatih.ac.id', '', '2022004', 'Fatimah Az-Zahra', 'MPI-S1-L', '2022', '', '', 'P', '', 'aktif', '', ''],
+            ['2022005', '2022005@staialfatih.ac.id', '', '2022005', 'Umar Abdullah Faruq', 'MPI-S1-L', '2022', '', '', 'L', '', 'aktif', '', ''],
+            ['2022006', '2022006@staialfatih.ac.id', '', '2022006', 'Khadijah Husna', 'PGMI-S1-D', '2022', '', '', 'P', '', 'aktif', '', ''],
+            ['2022007', '2022007@staialfatih.ac.id', '', '2022007', 'Ali Hasan Maulana', 'PGMI-S1-D', '2022', '', '', 'L', '', 'aktif', '', ''],
+            ['2022008', '2022008@staialfatih.ac.id', '', '2022008', 'Mariam Salma Amalia', 'HES-S1-L', '2022', '', '', 'P', '', 'aktif', '', ''],
+            ['2022009', '2022009@staialfatih.ac.id', '', '2022009', 'Hamzah Yusuf Habibi', 'HES-S1-L', '2022', '', '', 'L', '', 'aktif', '', ''],
+            ['2022010', '2022010@staialfatih.ac.id', '', '2022010', 'Zaynab Nadia Putri', 'HES-S1-L', '2022', '', '', 'P', '', 'aktif', '', ''],
+            ['2022011', '2022011@staialfatih.ac.id', '', '2022011', 'Ibrahim Malik Firdaus', 'PAI-S1-L', '2022', '', '', 'L', '', 'cuti', '', ''],
+            ['2020001', '2020001@staialfatih.ac.id', '', '2020001', 'Hasan Abdullah Alumni', 'PAI-S1-L', '2020', '', '', 'L', '', 'lulus', '2024-08-15', ''],
+            ['2021001', '2021001@staialfatih.ac.id', '', '2021001', 'Ahmad Zainuddin', 'MPI-S1-L', '2021', '', '', 'L', '', 'dropout', '', '2023-12-01'],
+        ];
+        
+        foreach ($samples as $row) {
+            $csv .= '"' . implode('","', $row) . '"' . "\n";
+        }
+        
+        return response($csv, 200)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="template_import_mahasiswa.csv"');
+    }
+
+    /**
+     * Download template Excel untuk import dosen
+     */
+    public function downloadDosenTemplate()
+    {
+        // Generate CSV template without prodi and mata kuliah columns
+        // Program studi and mata kuliah are now auto-managed from jadwal
+        $csv = "username,email,no_telepon,nidn,nama_lengkap,gelar_depan,gelar_belakang\n";
+        
+        // Sample data
+        $samples = [
+            ['0101018901', '0101018901@staialfatih.ac.id', '081234567890', '0101018901', 'Ahmad Fauzi', 'Dr.', 'M.Pd.I'],
+            ['0202019002', '0202019002@staialfatih.ac.id', '081234567891', '0202019002', 'Siti Nurhaliza', 'Dr.', 'M.A'],
+            ['0303018703', '0303018703@staialfatih.ac.id', '081234567892', '0303018703', 'Muhammad Yusuf', 'Prof. Dr.', 'M.A'],
+            ['0404019104', '0404019104@staialfatih.ac.id', '', '0404019104', 'Abdullah Salim', '', 'S.Pd.I, M.Pd'],
+            ['0505019205', '0505019205@staialfatih.ac.id', '', '0505019205', 'Khadijah Azzahra', '', 'S.Ag, M.Pd.I'],
+            ['0808019008', '0808019008@staialfatih.ac.id', '', '0808019008', 'Hamzah Ibrahim', '', 'S.Pd, M.Pd'],
+            ['0909019409', '0909019409@staialfatih.ac.id', '', '0909019409', 'Aisyah Zahra', '', 'S.Pd.I, M.Pd'],
+            ['1010018910', '1010018910@staialfatih.ac.id', '', '1010018910', 'Bilal Mustafa', '', 'S.H.I, M.E.Sy'],
+            ['1111019211', '1111019211@staialfatih.ac.id', '', '1111019211', 'Maryam Safiya', '', 'S.Ag, M.E.I'],
+            ['1212019512', '1212019512@staialfatih.ac.id', '', '1212019512', 'Zaid Hakim', '', 'S.Pd.I, M.Pd'],
+            ['1313019613', '1313019613@staialfatih.ac.id', '', '1313019613', 'Naima Latifah', '', 'S.Th.I, M.A'],
+        ];
+        
+        foreach ($samples as $row) {
+            $csv .= '"' . implode('","', $row) . '"' . "\n";
+        }
+        
+        return response($csv, 200)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', 'attachment; filename="template_import_dosen.csv"');
+    }
+
+    /**
+     * Download master data Program Studi (untuk rujukan import)
+     */
+    public function downloadMasterDataProdi()
+    {
+        // Temporary: Excel package not fully installed
+        // TODO: Run composer install fully to enable this feature
+        $programStudis = \App\Models\ProgramStudi::where('is_active', true)->get();
+        
+        $csv = "Kode Prodi,Nama Program Studi,Jenjang,Akreditasi,Status\n";
+        foreach ($programStudis as $ps) {
+            $csv .= sprintf('"%s","%s","%s","%s","%s"' . "\n",
+                $ps->kode_prodi,
+                $ps->nama_prodi,
+                $ps->jenjang,
+                $ps->akreditasi ?? '-',
+                $ps->is_active ? 'Aktif' : 'Non-Aktif'
+            );
+        }
+        
+        return response($csv, 200)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="master_data_program_studi.csv"');
+    }
+
+    /**
+     * Download master data Mata Kuliah (untuk rujukan import)
+     */
+    public function downloadMasterDataMataKuliah(Request $request)
+    {
+        // Temporary: Excel package not fully installed
+        // TODO: Run composer install fully to enable this feature
+        $programStudiId = $request->get('program_studi_id');
+        
+        $query = \App\Models\MataKuliah::with('kurikulum.programStudi');
+        if ($programStudiId) {
+            $query->whereHas('kurikulum', function ($q) use ($programStudiId) {
+                $q->where('program_studi_id', $programStudiId);
+            });
+        }
+        $mataKuliahs = $query->orderBy('kode_mk')->get();
+        
+        $csv = "Kode Mata Kuliah,Nama Mata Kuliah,Program Studi,SKS,Semester,Jenis\n";
+        foreach ($mataKuliahs as $mk) {
+            $csv .= sprintf('"%s","%s","%s","%s","%s","%s"' . "\n",
+                $mk->kode_mk,
+                $mk->nama_mk,
+                $mk->kurikulum->programStudi->kode_prodi ?? '-',
+                $mk->sks,
+                $mk->semester,
+                $mk->jenis
+            );
+        }
+        
+        return response($csv, 200)
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename="master_data_mata_kuliah.csv"');
+    }
+
+    /**
+     * Import mahasiswa dari file CSV
+     */
+    public function importMahasiswa(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:5120',
+        ], [
+            'file.required' => 'File CSV wajib diupload',
+            'file.mimes' => 'File harus berformat CSV (.csv)',
+            'file.max' => 'Ukuran file maksimal 5MB',
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $path = $file->getRealPath();
+            $csv = array_map('str_getcsv', file($path));
+            
+            // Remove header row
+            $header = array_shift($csv);
+            
+            $successCount = 0;
+            $skipCount = 0;
+            $errors = [];
+            
+            foreach ($csv as $rowIndex => $row) {
+                $rowNumber = $rowIndex + 2; // +2 because header is row 1
+                
+                // Skip empty rows
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+                
+                try {
+                    // Map CSV columns to data array
+                    $data = [
+                        'username' => $row[0] ?? '',
+                        'email' => $row[1] ?? '',
+                        'no_telepon' => $row[2] ?? null,
+                        'nim' => $row[3] ?? '',
+                        'nama_lengkap' => $row[4] ?? '',
+                        'kode_prodi' => $row[5] ?? '',
+                        'angkatan' => $row[6] ?? '',
+                        'tempat_lahir' => $row[7] ?? null,
+                        'tanggal_lahir' => $row[8] ?? null,
+                        'jenis_kelamin' => $row[9] ?? '',
+                        'alamat' => $row[10] ?? null,
+                        'status' => $row[11] ?? 'aktif',
+                        'tanggal_lulus' => $row[12] ?? null,
+                        'tanggal_dropout' => $row[13] ?? null,
+                    ];
+                    
+                    // Validate required fields
+                    if (empty($data['username']) || empty($data['nim']) || empty($data['nama_lengkap']) || empty($data['kode_prodi'])) {
+                        $errors[] = "Baris {$rowNumber}: Field wajib tidak lengkap";
+                        $skipCount++;
+                        continue;
+                    }
+                    
+                    // Check if user already exists
+                    if (\App\Models\User::where('username', $data['username'])->exists()) {
+                        $skipCount++;
+                        continue;
+                    }
+                    
+                    // Find program studi
+                    $programStudi = \App\Models\ProgramStudi::where('kode_prodi', $data['kode_prodi'])->first();
+                    if (!$programStudi) {
+                        $errors[] = "Baris {$rowNumber}: Program studi '{$data['kode_prodi']}' tidak ditemukan";
+                        $skipCount++;
+                        continue;
+                    }
+                    
+                    // Create user
+                    $user = \App\Models\User::create([
+                        'username' => $data['username'],
+                        'email' => $data['email'] ?: $data['username'] . '@staialfatih.ac.id',
+                        'password' => Hash::make('mahasiswa_staialfatih'),
+                        'role' => 'mahasiswa',
+                    ]);
+                    
+                    // Create mahasiswa profile
+                    \App\Models\Mahasiswa::create([
+                        'user_id' => $user->id,
+                        'nim' => $data['nim'],
+                        'nama_lengkap' => $data['nama_lengkap'],
+                        'program_studi_id' => $programStudi->id,
+                        'angkatan' => $data['angkatan'],
+                        'tempat_lahir' => $data['tempat_lahir'],
+                        'tanggal_lahir' => $data['tanggal_lahir'] ?: null,
+                        'jenis_kelamin' => $data['jenis_kelamin'],
+                        'alamat' => $data['alamat'],
+                        'no_telepon' => $data['no_telepon'],
+                        'status' => $data['status'],
+                        'tanggal_lulus' => $data['tanggal_lulus'] ?: null,
+                        'tanggal_dropout' => $data['tanggal_dropout'] ?: null,
+                    ]);
+                    
+                    $successCount++;
+                    
+                } catch (\Exception $e) {
+                    $errors[] = "Baris {$rowNumber}: " . $e->getMessage();
+                    $skipCount++;
+                }
+            }
+            
+            $message = "Import selesai! Berhasil: {$successCount}, Dilewati: {$skipCount}";
+            
+            if (!empty($errors)) {
+                $errorMessage = implode('<br>', array_slice($errors, 0, 10));
+                if (count($errors) > 10) {
+                    $errorMessage .= '<br>... dan ' . (count($errors) - 10) . ' error lainnya';
+                }
+                session()->flash('import_errors', $errorMessage);
+            }
+            
+            if ($successCount > 0) {
+                return redirect()->route('admin.users.index')->with('success', $message);
+            } else {
+                return redirect()->route('admin.users.index')->with('error', 'Tidak ada data yang berhasil diimport.');
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Gagal import mahasiswa: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Import dosen dari file CSV
+     * Program studi and mata kuliah are now auto-managed from jadwal, no longer imported
+     */
+    public function importDosen(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:5120',
+        ], [
+            'file.required' => 'File CSV wajib diupload',
+            'file.mimes' => 'File harus berformat CSV (.csv)',
+            'file.max' => 'Ukuran file maksimal 5MB',
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $path = $file->getRealPath();
+            $csv = array_map('str_getcsv', file($path));
+            
+            // Remove header row
+            $header = array_shift($csv);
+            
+            $successCount = 0;
+            $skipCount = 0;
+            $errors = [];
+            
+            foreach ($csv as $rowIndex => $row) {
+                $rowNumber = $rowIndex + 2;
+                
+                // Skip empty rows
+                if (empty(array_filter($row))) {
+                    continue;
+                }
+                
+                try {
+                    // Map CSV columns and TRIM all values to remove whitespace
+                    // No longer include kode_prodi and kode_mk
+                    $data = [
+                        'username' => trim($row[0] ?? ''),
+                        'email' => trim($row[1] ?? ''),
+                        'no_telepon' => !empty(trim($row[2] ?? '')) ? trim($row[2]) : null,
+                        'nidn' => trim($row[3] ?? ''),
+                        'nama_lengkap' => trim($row[4] ?? ''),
+                        'gelar_depan' => !empty(trim($row[5] ?? '')) ? trim($row[5]) : null,
+                        'gelar_belakang' => !empty(trim($row[6] ?? '')) ? trim($row[6]) : null,
+                    ];
+                    
+                    // Validate required fields (kode_prodi no longer required)
+                    if (empty($data['username']) || empty($data['nidn']) || empty($data['nama_lengkap'])) {
+                        $errors[] = "Baris {$rowNumber}: Field wajib tidak lengkap (username={$data['username']}, nidn={$data['nidn']}, nama={$data['nama_lengkap']})";
+                        $skipCount++;
+                        continue;
+                    }
+                    
+                    // Check if user already exists
+                    if (\App\Models\User::where('username', $data['username'])->exists()) {
+                        $errors[] = "Baris {$rowNumber}: Username '{$data['username']}' sudah ada, dilewati";
+                        $skipCount++;
+                        continue;
+                    }
+                    
+                    // Create user
+                    $user = \App\Models\User::create([
+                        'username' => $data['username'],
+                        'email' => $data['email'] ?: $data['username'] . '@staialfatih.ac.id',
+                        'password' => Hash::make('dosen_staialfatih'),
+                        'role' => 'dosen',
+                    ]);
+                    
+                    // Create dosen profile without program_studi_id
+                    $dosen = \App\Models\Dosen::create([
+                        'user_id' => $user->id,
+                        'nidn' => $data['nidn'],
+                        'nama_lengkap' => $data['nama_lengkap'],
+                        'gelar_depan' => $data['gelar_depan'],
+                        'gelar_belakang' => $data['gelar_belakang'],
+                        'no_telepon' => $data['no_telepon'],
+                    ]);
+                    
+                    // Program studi and mata kuliah will be auto-populated from jadwal
+                    \Log::info("Dosen imported: {$data['nama_lengkap']} (NIDN: {$data['nidn']}). Program studi & mata kuliah will be auto-managed from jadwal.");
+                    
+                    $successCount++;
+                    
+                } catch (\Exception $e) {
+                    $errors[] = "Baris {$rowNumber}: " . $e->getMessage();
+                    $skipCount++;
+                }
+            }
+            
+            $message = "Import selesai! Berhasil: {$successCount}, Dilewati: {$skipCount}";
+            
+            if (!empty($errors)) {
+                $errorMessage = implode('<br>', array_slice($errors, 0, 10));
+                if (count($errors) > 10) {
+                    $errorMessage .= '<br>... dan ' . (count($errors) - 10) . ' error lainnya';
+                }
+                session()->flash('import_errors', $errorMessage);
+            }
+            
+            if ($successCount > 0) {
+                return redirect()->route('admin.users.index')->with('success', $message);
+            } else {
+                return redirect()->route('admin.users.index')->with('error', 'Tidak ada data yang berhasil diimport.');
+            }
+            
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Gagal import dosen: ' . $e->getMessage());
         }
     }
 }

@@ -199,9 +199,6 @@ class KHSController extends Controller
 
         $ipKumulatif = $totalSksKumulatif > 0 ? round($totalNilaiSksKumulatif / $totalSksKumulatif, 2) : 0;
 
-        // Determine status semester
-        $statusSemester = $ipSemester >= 2.0 ? 'naik' : 'mengulang';
-
         // Create or update KHS
         $khs = Khs::updateOrCreate(
             [
@@ -209,11 +206,10 @@ class KHSController extends Controller
                 'semester_id' => $validated['semester_id'],
             ],
             [
-                'total_sks' => $totalSks,
-                'total_sks_lulus' => $totalSksLulus,
-                'ip_semester' => $ipSemester,
-                'ip_kumulatif' => $ipKumulatif,
-                'status_semester' => $statusSemester,
+                'total_sks_semester' => $totalSks,
+                'total_sks_kumulatif' => $totalSksKumulatif,
+                'ip' => $ipSemester,
+                'ipk' => $ipKumulatif,
             ]
         );
 

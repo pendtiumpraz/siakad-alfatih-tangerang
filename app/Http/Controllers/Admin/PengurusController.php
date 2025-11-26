@@ -97,7 +97,7 @@ class PengurusController extends Controller
             $query->whereNull('dosen_wali_id');
         }
 
-        $mahasiswas = $query->paginate(20);
+        $mahasiswas = $query->paginate(20)->withQueryString();
         $programStudis = ProgramStudi::all();
         $dosens = Dosen::with('user')->orderBy('nama_lengkap')->get();
 

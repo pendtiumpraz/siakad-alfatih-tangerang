@@ -37,9 +37,11 @@ class MahasiswaDashboardController extends Controller
             ->orderBy('semester_id', 'desc')
             ->first();
 
-        // Get total SKS kumulatif dari semua KHS yang lulus
-        $totalSksLulus = Khs::where('mahasiswa_id', $mahasiswa->id)
-            ->sum('total_sks_lulus');
+        // Get total SKS kumulatif dari KHS terbaru
+        $latestKhs = Khs::where('mahasiswa_id', $mahasiswa->id)
+            ->orderBy('semester_id', 'desc')
+            ->first();
+        $totalSksLulus = $latestKhs ? $latestKhs->total_sks_kumulatif : 0;
 
         // Get jadwal hari ini
         $hariIni = Carbon::now()->locale('id')->isoFormat('dddd'); // Senin, Selasa, dst
@@ -99,8 +101,8 @@ class MahasiswaDashboardController extends Controller
 
         // Compile stats
         $stats = [
-            'ip_semester' => $khsTerakhir->ip_semester ?? 0,
-            'ipk' => $khsTerakhir->ip_kumulatif ?? 0,
+            'ip_semester' => $khsTerakhir->ip ?? 0,
+            'ipk' => $khsTerakhir->ipk ?? 0,
             'total_sks' => $totalSksLulus,
             'semester_aktif' => $mahasiswa->semester_aktif ?? 1,
             'status' => $mahasiswa->status ?? 'aktif',
