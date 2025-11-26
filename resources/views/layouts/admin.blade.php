@@ -213,6 +213,15 @@
                             <i class="fas fa-id-card w-4"></i>
                             <span class="ml-3">NIM Range</span>
                         </a>
+                        
+                        <!-- Divider -->
+                        <div class="my-2 border-t border-white/20"></div>
+                        
+                        <!-- Import CSV -->
+                        <a href="{{ route('admin.import.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm bg-[#D4AF37]/20 border border-[#D4AF37]/30 {{ request()->routeIs('admin.import.*') ? 'active' : '' }}">
+                            <i class="fas fa-file-csv w-4 text-[#D4AF37]"></i>
+                            <span class="ml-3 font-semibold">Import CSV</span>
+                        </a>
                     </div>
                 </div>
 
