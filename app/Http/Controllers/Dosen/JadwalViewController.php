@@ -69,4 +69,62 @@ class JadwalViewController extends Controller
 
         return view('dosen.jadwal-mengajar.show', compact('jadwal', 'dosen'));
     }
+
+    /**
+     * Show calendar view for dosen's teaching schedule
+     */
+    public function calendar(Request $request)
+    {
+        $user = Auth::user();
+        $dosen = Dosen::where('user_id', $user->id)->first();
+
+        if (!$dosen) {
+            abort(403, 'Data dosen tidak ditemukan');
+        }
+
+        // Get filter parameters (hanya jenis_semester, tidak ada prodi karena ini dosen view)
+        $jenis_semester = $request->get('jenis_semester', 'ganjil');
+
+        // Build query - hanya jadwal dosen yang login
+        $jadwals = Jadwal::with(['mataKuliah.kurikulum.programStudi', 'dosen', 'ruangan'])
+            ->where('dosen_id', $dosen->id)
+            ->where('jenis_semester', $jenis_semester)
+            ->get();
+
+        // Organize jadwal by day and time slot
+        $calendar = [
+            'Minggu' => [],
+            'Senin' => [],
+            'Selasa' => [],
+            'Rabu' => [],
+            'Kamis' => [],
+            'Jumat' => [],
+            'Sabtu' => []
+        ];
+
+        // Time slots from 06:00 to 22:00 (every hour)
+        $timeSlots = [];
+        for ($hour = 6; $hour <= 22; $hour++) {
+            $timeSlots[] = sprintf('%02d:00', $hour);
+        }
+
+        // Populate calendar
+        foreach ($jadwals as $jadwal) {
+            $hari = $jadwal->hari;
+            if ($hari === 'Ahad') {
+                $hari = 'Minggu';
+            }
+            
+            if (isset($calendar[$hari])) {
+                $calendar[$hari][] = $jadwal;
+            }
+        }
+
+        return view('dosen.jadwal-mengajar.calendar', compact(
+            'calendar',
+            'timeSlots',
+            'dosen',
+            'jenis_semester'
+        ));
+    }
 }

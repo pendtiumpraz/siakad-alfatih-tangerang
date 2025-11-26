@@ -228,6 +228,7 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 
     // Schedule View (Read-only for Dosen)
     Route::get('jadwal-mengajar', [JadwalViewController::class, 'index'])->name('jadwal-mengajar.index');
+    Route::get('jadwal-mengajar/calendar', [JadwalViewController::class, 'calendar'])->name('jadwal-mengajar.calendar');
     Route::get('jadwal-mengajar/{id}', [JadwalViewController::class, 'show'])->name('jadwal-mengajar.show');
 
     // Grade Management
