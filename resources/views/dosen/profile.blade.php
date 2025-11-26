@@ -62,12 +62,14 @@
                                 <span>Edit Profil</span>
                             </button>
                             
-                            <button onclick="openModal('editUsernameModal')" class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                                <span>Ubah Username</span>
-                            </button>
+                            @if(!$dosen->user->username_changed_at)
+                                <button onclick="openModal('editUsernameModal')" class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span>Ubah Username</span>
+                                </button>
+                            @endif
                             
                             <button onclick="openModal('editPasswordModal')" class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-semibold">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,7 +197,7 @@
                                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                             </svg>
-                                            Sudah diubah
+                                            Sudah diubah (tidak dapat diubah lagi)
                                         </span>
                                     @else
                                         <span class="text-xs text-green-600 flex items-center mt-1">
@@ -207,11 +209,12 @@
                                     @endif
                                 </div>
                             </div>
-                            <button onclick="openModal('editUsernameModal')" 
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-sm"
-                                    @if($dosen->user->username_changed_at) disabled class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed font-semibold text-sm" @endif>
-                                Ubah
-                            </button>
+                            @if(!$dosen->user->username_changed_at)
+                                <button onclick="openModal('editUsernameModal')" 
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold text-sm">
+                                    Ubah
+                                </button>
+                            @endif
                         </div>
 
                         <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
