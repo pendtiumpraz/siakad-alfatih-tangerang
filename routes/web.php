@@ -172,6 +172,15 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::post('jadwal/check-conflict', [AdminJadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
     Route::resource('jadwal', AdminJadwalController::class);
 
+    // Penggajian Dosen Management
+    Route::prefix('penggajian-dosen')->name('penggajian.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'verify'])->name('verify');
+        Route::get('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'payment'])->name('payment');
+        Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
+    });
+
     // Documentation
     Route::get('/docs', [AdminDashboardController::class, 'docs'])->name('docs');
 });
@@ -271,6 +280,9 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 
     // Pengumuman Management
     Route::resource('pengumuman', \App\Http\Controllers\Dosen\PengumumanController::class);
+
+    // Penggajian Management
+    Route::resource('penggajian', \App\Http\Controllers\Dosen\PenggajianController::class);
 
     // Documentation
     Route::get('/docs', [DosenDashboardController::class, 'docs'])->name('docs');
