@@ -284,15 +284,12 @@
                                 @click="open = !open"
                                 class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
                             >
-                                <!-- DEBUG NAVBAR: Foto = "{{ $mahasiswa->foto ?? 'NULL' }}" -->
                                 @if($mahasiswa && $mahasiswa->foto)
-                                    <!-- NAVBAR: MASUK IF -->
                                     <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w200"
                                          alt="Profile"
                                          class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37] object-cover"
-                                         onerror="console.error('Navbar img error:', this.src); this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap ?? 'Mahasiswa') }}&background=3b82f6&color=fff';">
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap ?? 'Mahasiswa') }}&background=3b82f6&color=fff';">
                                 @else
-                                    <!-- NAVBAR: MASUK ELSE -->
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap ?? 'Mahasiswa') }}&background=3b82f6&color=fff"
                                          alt="Profile"
                                          class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37]">
