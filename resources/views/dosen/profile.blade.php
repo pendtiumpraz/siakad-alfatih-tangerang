@@ -153,20 +153,9 @@
                                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
                                 </svg>
-                                Email Akun
+                                Email
                             </p>
                             <p class="font-semibold text-gray-900">{{ $dosen->user->email ?? '-' }}</p>
-                        </div>
-
-                        <div class="bg-blue-50 rounded-lg p-4">
-                            <p class="text-sm text-blue-600 mb-1 flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                                </svg>
-                                Email Dosen
-                            </p>
-                            <p class="font-semibold text-gray-900">{{ $dosen->email ?? '-' }}</p>
                         </div>
 
                         <div class="bg-green-50 rounded-lg p-4">
@@ -287,12 +276,6 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Gelar Belakang</label>
                     <input type="text" name="gelar_belakang" value="{{ old('gelar_belakang', $dosen->gelar_belakang) }}"
                            placeholder="M.Pd., M.Si., dll"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email Dosen</label>
-                    <input type="email" name="email" value="{{ old('email', $dosen->email) }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
 
