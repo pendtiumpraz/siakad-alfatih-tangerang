@@ -147,18 +147,23 @@ class Pendaftar extends Model
      */
     public function getFotoUrlAttribute(): ?string
     {
+        // Use direct download URL if we have Google Drive file ID
+        if ($this->google_drive_file_id) {
+            return "https://drive.usercontent.google.com/download?id={$this->google_drive_file_id}&export=view&authuser=0";
+        }
+
         $url = $this->google_drive_link ?? $this->foto;
 
         if (!$url) {
             return null;
         }
 
-        // Convert Google Drive link to thumbnail format (avoids CORS issues)
+        // Extract file ID from Google Drive link
         if (str_contains($url, 'drive.google.com')) {
             preg_match('/\/d\/([^\/]+)/', $url, $matches);
             if (isset($matches[1])) {
-                // Use thumbnail API - more reliable for embedding, no CORS issues
-                return "https://drive.google.com/thumbnail?id={$matches[1]}&sz=w400";
+                // Use direct download URL format
+                return "https://drive.usercontent.google.com/download?id={$matches[1]}&export=view&authuser=0";
             }
         }
 
