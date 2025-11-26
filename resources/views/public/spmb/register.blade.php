@@ -389,8 +389,8 @@
 
                             <!-- 1. Pas Foto -->
                             <div class="border rounded-lg p-4 bg-gray-50">
-                                <label class="block font-semibold text-gray-800 mb-2">1. Pas Foto 4x6 <span class="text-red-500">*</span></label>
-                                <p class="text-xs text-gray-600 mb-3">JPG/PNG, Max: 500KB, Rasio 4x6, Latar merah/biru</p>
+                                <label class="block font-semibold text-gray-800 mb-2">1. Pas Foto <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-600 mb-3">JPG/PNG, Max: 2MB, Background sesuai tahun (merah/biru)</p>
                                 <input type="file" name="foto" accept="image/jpeg,image/jpg,image/png"
                                        @change="previewPhoto($event)"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
@@ -408,8 +408,8 @@
                             </div>
 
                             <!-- 3. Transkrip -->
-                            <div class="border rounded-lg p-4 bg-gray-50">
-                                <label class="block font-semibold text-gray-800 mb-2">3. Transkrip Nilai / Raport <span class="text-red-500">*</span></label>
+                            <div class="border border-dashed rounded-lg p-4 bg-blue-50">
+                                <label class="block font-semibold text-gray-800 mb-2">3. Transkrip Nilai <span class="text-xs text-blue-600">(Khusus prodi S2)</span></label>
                                 <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 2MB</p>
                                 <input type="file" name="transkrip_nilai" accept="application/pdf,image/jpeg,image/jpg,image/png"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
@@ -431,19 +431,35 @@
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
                             </div>
 
-                            <!-- 6. Akta -->
-                            <div class="border rounded-lg p-4 bg-gray-50">
-                                <label class="block font-semibold text-gray-800 mb-2">6. Akta Kelahiran <span class="text-red-500">*</span></label>
-                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
-                                <input type="file" name="akta_kelahiran" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                            <!-- 6. Surat Bukti Mengajar -->
+                            <div class="border border-dashed rounded-lg p-4 bg-green-50">
+                                <label class="block font-semibold text-gray-800 mb-2">6. Surat Bukti Mengajar <span class="text-xs text-green-600">(Khusus Guru)</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 2MB - Dari sekolah tempat mengajar</p>
+                                <input type="file" name="surat_mengajar" accept="application/pdf,image/jpeg,image/jpg,image/png"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
                             </div>
 
-                            <!-- 7. SKTM -->
-                            <div class="border border-dashed rounded-lg p-4 bg-yellow-50">
-                                <label class="block font-semibold text-gray-800 mb-2">7. SKTM <span class="text-xs text-gray-500">(Opsional - Jalur Beasiswa)</span></label>
-                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB</p>
-                                <input type="file" name="sktm" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                            <!-- 7. Surat Keterangan RT Dhuafa -->
+                            <div class="border border-dashed rounded-lg p-4 bg-orange-50">
+                                <label class="block font-semibold text-gray-800 mb-2">7. Surat Keterangan RT <span class="text-xs text-orange-600">(Khusus Dhuafa)</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB - Surat keterangan dari RT setempat</p>
+                                <input type="file" name="surat_rt_dhuafa" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 8. Surat Keterangan Yatim -->
+                            <div class="border border-dashed rounded-lg p-4 bg-purple-50">
+                                <label class="block font-semibold text-gray-800 mb-2">8. Surat Keterangan Yatim <span class="text-xs text-purple-600">(Khusus Yatim)</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB - Surat keterangan yatim dari RT</p>
+                                <input type="file" name="surat_rt_yatim" accept="application/pdf,image/jpeg,image/jpg,image/png"
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
+                            </div>
+
+                            <!-- 9. Sertifikat Quran -->
+                            <div class="border border-dashed rounded-lg p-4 bg-teal-50">
+                                <label class="block font-semibold text-gray-800 mb-2">9. Sertifikat Quran <span class="text-xs text-teal-600">(Khusus Penghafal Quran)</span></label>
+                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 2MB - Minimal Juz 30 dan siap di test</p>
+                                <input type="file" name="sertifikat_quran" accept="application/pdf,image/jpeg,image/jpg,image/png"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
                             </div>
                         </div>

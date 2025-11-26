@@ -193,38 +193,36 @@ class PublicController extends Controller
 
         // Document rules - required for final submission, optional for draft
         if (!$isDraft) {
-            $rules['foto'] = 'required|image|mimes:jpg,jpeg,png|max:500';
+            $rules['foto'] = 'required|image|mimes:jpg,jpeg,png|max:2048';
             $rules['ijazah'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
-            $rules['transkrip_nilai'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['transkrip_nilai'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'; // Khusus S2
             $rules['ktp'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
             $rules['kartu_keluarga'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
-            $rules['akta_kelahiran'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
-            // SKTM only required for jalur beasiswa
-            if ($request->input('jalur_seleksi_id')) {
-                $jalur = \App\Models\JalurSeleksi::find($request->input('jalur_seleksi_id'));
-                if ($jalur && stripos($jalur->nama, 'beasiswa') !== false) {
-                    $rules['sktm'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:1024';
-                }
-            }
+            // New documents (optional - conditional)
+            $rules['surat_mengajar'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'; // Khusus guru
+            $rules['surat_rt_dhuafa'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024'; // Khusus dhuafa
+            $rules['surat_rt_yatim'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024'; // Khusus yatim
+            $rules['sertifikat_quran'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'; // Khusus penghafal quran
         } else {
-            $rules['foto'] = 'nullable|image|mimes:jpg,jpeg,png|max:500';
+            $rules['foto'] = 'nullable|image|mimes:jpg,jpeg,png|max:2048';
             $rules['ijazah'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
             $rules['transkrip_nilai'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
             $rules['ktp'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
             $rules['kartu_keluarga'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
-            $rules['akta_kelahiran'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
-            $rules['sktm'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['surat_mengajar'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
+            $rules['surat_rt_dhuafa'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['surat_rt_yatim'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:1024';
+            $rules['sertifikat_quran'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048';
         }
 
         $validator = Validator::make($request->all(), $rules, [
-            'foto.required' => 'Foto 4x6 harus diupload sebelum submit pendaftaran.',
+            'foto.required' => 'Foto harus diupload sebelum submit pendaftaran.',
             'foto.image' => 'Foto harus berupa gambar.',
             'foto.mimes' => 'Foto harus berformat JPG, JPEG, atau PNG.',
-            'foto.max' => 'Ukuran foto maksimal 500KB.',
+            'foto.max' => 'Ukuran foto maksimal 2MB.',
             'ijazah.required' => 'Ijazah/SKL harus diupload.',
             'ijazah.mimes' => 'Ijazah harus berformat PDF, JPG, JPEG, atau PNG.',
             'ijazah.max' => 'Ukuran ijazah maksimal 2MB.',
-            'transkrip_nilai.required' => 'Transkrip nilai/raport harus diupload.',
             'transkrip_nilai.mimes' => 'Transkrip harus berformat PDF, JPG, JPEG, atau PNG.',
             'transkrip_nilai.max' => 'Ukuran transkrip maksimal 2MB.',
             'ktp.required' => 'KTP harus diupload.',
@@ -233,12 +231,14 @@ class PublicController extends Controller
             'kartu_keluarga.required' => 'Kartu Keluarga harus diupload.',
             'kartu_keluarga.mimes' => 'Kartu Keluarga harus berformat PDF, JPG, JPEG, atau PNG.',
             'kartu_keluarga.max' => 'Ukuran Kartu Keluarga maksimal 1MB.',
-            'akta_kelahiran.required' => 'Akta Kelahiran harus diupload.',
-            'akta_kelahiran.mimes' => 'Akta Kelahiran harus berformat PDF, JPG, JPEG, atau PNG.',
-            'akta_kelahiran.max' => 'Ukuran Akta Kelahiran maksimal 1MB.',
-            'sktm.required' => 'SKTM harus diupload untuk jalur beasiswa.',
-            'sktm.mimes' => 'SKTM harus berformat PDF, JPG, JPEG, atau PNG.',
-            'sktm.max' => 'Ukuran SKTM maksimal 1MB.',
+            'surat_mengajar.mimes' => 'Surat Bukti Mengajar harus berformat PDF, JPG, JPEG, atau PNG.',
+            'surat_mengajar.max' => 'Ukuran Surat Bukti Mengajar maksimal 2MB.',
+            'surat_rt_dhuafa.mimes' => 'Surat Keterangan RT harus berformat PDF, JPG, JPEG, atau PNG.',
+            'surat_rt_dhuafa.max' => 'Ukuran Surat Keterangan RT maksimal 1MB.',
+            'surat_rt_yatim.mimes' => 'Surat Keterangan Yatim harus berformat PDF, JPG, JPEG, atau PNG.',
+            'surat_rt_yatim.max' => 'Ukuran Surat Keterangan Yatim maksimal 1MB.',
+            'sertifikat_quran.mimes' => 'Sertifikat Quran harus berformat PDF, JPG, JPEG, atau PNG.',
+            'sertifikat_quran.max' => 'Ukuran Sertifikat Quran maksimal 2MB.',
             'nik.size' => 'NIK harus 16 digit.',
             'program_studi_pilihan_2.different' => 'Pilihan 2 harus berbeda dengan Pilihan 1.',
         ]);
@@ -298,7 +298,8 @@ class PublicController extends Controller
 
         // Prepare data
         $data = $request->except([
-            'foto', 'ijazah', 'transkrip_nilai', 'ktp', 'kartu_keluarga', 'akta_kelahiran', 'sktm',
+            'foto', 'ijazah', 'transkrip_nilai', 'ktp', 'kartu_keluarga',
+            'surat_mengajar', 'surat_rt_dhuafa', 'surat_rt_yatim', 'sertifikat_quran',
             'save_as_draft', 'id'
         ]);
 
@@ -310,8 +311,10 @@ class PublicController extends Controller
             'transkrip_nilai' => ['category' => 'Transkrip', 'db_field' => 'transkrip_google_drive'],
             'ktp' => ['category' => 'KTP', 'db_field' => 'ktp_google_drive'],
             'kartu_keluarga' => ['category' => 'KK', 'db_field' => 'kk_google_drive'],
-            'akta_kelahiran' => ['category' => 'Akta', 'db_field' => 'akta_google_drive'],
-            'sktm' => ['category' => 'SKTM', 'db_field' => 'sktm_google_drive'],
+            'surat_mengajar' => ['category' => 'Surat-Mengajar', 'db_field' => 'surat_mengajar_google_drive'],
+            'surat_rt_dhuafa' => ['category' => 'Surat-RT-Dhuafa', 'db_field' => 'surat_rt_dhuafa_google_drive'],
+            'surat_rt_yatim' => ['category' => 'Surat-RT-Yatim', 'db_field' => 'surat_rt_yatim_google_drive'],
+            'sertifikat_quran' => ['category' => 'Sertifikat-Quran', 'db_field' => 'sertifikat_quran_google_drive'],
         ];
 
         $uploadedFiles = []; // Track uploaded files for rollback
@@ -321,20 +324,6 @@ class PublicController extends Controller
                 try {
                     $category = $config['category'];
                     $dbField = $config['db_field'];
-
-                    // Validate foto aspect ratio
-                    if ($field === 'foto') {
-                        $foto = $request->file($field);
-                        $dimensions = getimagesize($foto->getPathname());
-                        $ratio = $dimensions[0] / $dimensions[1];
-                        if ($ratio < 0.62 || $ratio > 0.72) {
-                            // Rollback uploaded files
-                            $this->rollbackUploadedFiles($uploadedFiles);
-                            return redirect()->back()
-                                ->withErrors(['foto' => 'Foto harus memiliki rasio 4x6 (portrait).'])
-                                ->withInput();
-                        }
-                    }
 
                     \Log::info("Starting upload for {$category}...");
 
