@@ -23,7 +23,7 @@
                         <div class="flex flex-col items-center -mt-16">
                             <div class="relative">
                                 @if($dosen->foto_url)
-                                    <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400"
+                                    <img src="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}"
                                          alt="Foto Profil"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff'">
@@ -48,6 +48,11 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
                                     Dosen
                                 </span>
+                                @if($dosen->foto_url)
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        <i class="fas fa-cloud-upload-alt mr-1"></i>Foto tersimpan di Google Drive
+                                    </p>
+                                @endif
                             </div>
                         </div>
 
