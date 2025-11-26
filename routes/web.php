@@ -181,6 +181,29 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
     });
 
+    // Master Data Import
+    Route::prefix('import')->name('import.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'index'])->name('index');
+        
+        // Import actions
+        Route::post('/program-studi', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importProgramStudi'])->name('program-studi');
+        Route::post('/kurikulum', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importKurikulum'])->name('kurikulum');
+        Route::post('/mata-kuliah', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importMataKuliah'])->name('mata-kuliah');
+        Route::post('/ruangan', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importRuangan'])->name('ruangan');
+        Route::post('/semester', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importSemester'])->name('semester');
+        Route::post('/jadwal', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'importJadwal'])->name('jadwal');
+    });
+    
+    // Template downloads
+    Route::prefix('template')->name('template.')->group(function() {
+        Route::get('/program-studi', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateProgramStudi'])->name('program-studi');
+        Route::get('/kurikulum', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateKurikulum'])->name('kurikulum');
+        Route::get('/mata-kuliah', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateMataKuliah'])->name('mata-kuliah');
+        Route::get('/ruangan', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateRuangan'])->name('ruangan');
+        Route::get('/semester', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateSemester'])->name('semester');
+        Route::get('/jadwal', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'downloadTemplateJadwal'])->name('jadwal');
+    });
+
     // Documentation
     Route::get('/docs', [AdminDashboardController::class, 'docs'])->name('docs');
 });
