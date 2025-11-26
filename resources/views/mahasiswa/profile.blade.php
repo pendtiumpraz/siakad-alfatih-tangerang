@@ -27,9 +27,9 @@
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="this.src='https://drive.usercontent.google.com/download?id={{ $mahasiswa->foto }}&export=view'; this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=059669&color=fff';};">
+                                         onerror="this.src='https://drive.usercontent.google.com/download?id={{ $mahasiswa->foto }}&export=view'; this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';};">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=059669&color=fff"
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff"
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
                                 @endif
@@ -49,6 +49,19 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
                                     Mahasiswa
                                 </span>
+                                
+                                <!-- Debug Info -->
+                                @if($mahasiswa->foto)
+                                    <details class="mt-3">
+                                        <summary class="text-xs text-blue-600 cursor-pointer">Debug: Klik untuk lihat Foto ID</summary>
+                                        <div class="mt-1 p-2 bg-gray-100 rounded text-xs">
+                                            <p><strong>Foto ID:</strong> <code>{{ $mahasiswa->foto }}</code></p>
+                                            <a href="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w400" target="_blank" class="text-blue-600 underline">Test URL</a>
+                                        </div>
+                                    </details>
+                                @else
+                                    <p class="text-xs text-gray-400 mt-2">Belum ada foto tersimpan</p>
+                                @endif
 
                             </div>
                         </div>
@@ -329,7 +342,7 @@
                                 <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w200"
                                      alt="Foto saat ini"
                                      class="w-32 h-32 object-cover rounded-lg border-2 border-blue-500 shadow-md"
-                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=059669&color=fff';">
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';">
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-gray-600 mb-1">
