@@ -40,6 +40,7 @@ return [
         'spmb' => 'SPMB',
         'foto_dosen' => 'Foto-Dosen',
         'foto_mahasiswa' => 'Foto-Mahasiswa',
+        'bukti_penggajian_dosen' => 'Bukti-Penggajian-Dosen',
     ],
 
     /*

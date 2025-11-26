@@ -70,17 +70,21 @@ class PenggajianDosen extends Model
     }
 
     /**
-     * Get status badge color
+     * Get status badge HTML
      */
     public function getStatusBadgeAttribute(): string
     {
-        return match($this->status) {
+        $class = match($this->status) {
             'pending' => 'bg-yellow-500 text-white',
             'verified' => 'bg-green-500 text-white',
             'paid' => 'bg-blue-500 text-white',
             'rejected' => 'bg-red-500 text-white',
             default => 'bg-gray-500 text-white',
         };
+
+        $label = $this->status_label;
+
+        return "<span class=\"inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold {$class}\">{$label}</span>";
     }
 
     /**

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PenggajianDosen;
 use App\Models\Dosen;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class PenggajianDosenController extends Controller
 {
@@ -141,7 +143,7 @@ class PenggajianDosenController extends Controller
      */
     public function storePayment(Request $request, $id)
     {
-        $penggajian = PenggajianDosen::findOrFail($id);
+        $penggajian = PenggajianDosen::with('dosen')->findOrFail($id);
 
         // Check if can be paid
         if (!$penggajian->canBePaid()) {
@@ -152,17 +154,15 @@ class PenggajianDosenController extends Controller
         // Validate
         $validator = Validator::make($request->all(), [
             'jumlah_dibayar' => 'required|numeric|min:0',
-            'bukti_pembayaran' => ['required', 'url', function ($attribute, $value, $fail) {
-                if (!str_contains($value, 'drive.google.com')) {
-                    $fail('Link bukti pembayaran harus dari Google Drive.');
-                }
-            }],
+            'bukti_pembayaran' => 'required|file|mimes:jpeg,jpg,png,pdf|max:5120', // Max 5MB
         ], [
             'jumlah_dibayar.required' => 'Jumlah yang dibayar wajib diisi.',
             'jumlah_dibayar.numeric' => 'Jumlah harus berupa angka.',
             'jumlah_dibayar.min' => 'Jumlah minimal 0.',
-            'bukti_pembayaran.required' => 'Link bukti pembayaran wajib diisi.',
-            'bukti_pembayaran.url' => 'Link bukti pembayaran harus berupa URL yang valid.',
+            'bukti_pembayaran.required' => 'Bukti pembayaran wajib diunggah.',
+            'bukti_pembayaran.file' => 'Bukti pembayaran harus berupa file.',
+            'bukti_pembayaran.mimes' => 'Format file harus JPG, PNG, atau PDF.',
+            'bukti_pembayaran.max' => 'Ukuran file maksimal 5MB.',
         ]);
 
         if ($validator->fails()) {
@@ -171,16 +171,41 @@ class PenggajianDosenController extends Controller
                 ->withInput();
         }
 
-        // Update payment
-        $penggajian->update([
-            'status' => 'paid',
-            'jumlah_dibayar' => $request->jumlah_dibayar,
-            'bukti_pembayaran' => $request->bukti_pembayaran,
-            'paid_by' => auth()->id(),
-            'paid_at' => now(),
-        ]);
+        try {
+            // Upload bukti pembayaran to Google Drive
+            $driveService = new GoogleDriveService();
+            $uploadResult = $driveService->uploadBuktiPenggajian(
+                $request->file('bukti_pembayaran'),
+                $penggajian->dosen->nama_lengkap,
+                $penggajian->periode
+            );
 
-        return redirect()->route('admin.penggajian.show', $id)
-            ->with('success', 'Pembayaran berhasil dicatat. Status pengajuan diubah menjadi "Sudah Dibayar".');
+            // Make file publicly accessible
+            $driveService->makeFilePublic($uploadResult['id']);
+
+            // Update payment
+            $penggajian->update([
+                'status' => 'paid',
+                'jumlah_dibayar' => $request->jumlah_dibayar,
+                'bukti_pembayaran' => $uploadResult['id'], // Store Google Drive file ID
+                'paid_by' => auth()->id(),
+                'paid_at' => now(),
+            ]);
+
+            Log::info("Pembayaran gaji dosen berhasil: {$penggajian->dosen->nama_lengkap} - {$penggajian->periode}", [
+                'penggajian_id' => $penggajian->id,
+                'jumlah' => $request->jumlah_dibayar,
+                'google_drive_id' => $uploadResult['id'],
+            ]);
+
+            return redirect()->route('admin.penggajian.show', $id)
+                ->with('success', 'Pembayaran berhasil dicatat dan bukti transfer telah disimpan ke Google Drive.');
+        } catch (\Exception $e) {
+            Log::error("Gagal upload bukti pembayaran: " . $e->getMessage());
+            
+            return redirect()->back()
+                ->with('error', 'Gagal mengunggah bukti pembayaran: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 }

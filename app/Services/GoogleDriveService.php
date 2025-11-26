@@ -433,6 +433,52 @@ class GoogleDriveService
     }
 
     /**
+     * Upload bukti penggajian dosen
+     * Structure: Bukti-Penggajian-Dosen/{tahun}/{bulan}/pembayaran_dosen_{nama}_{bulan}.{ext}
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $namaDosen
+     * @param string $periode Format: YYYY-MM
+     * @return array
+     */
+    public function uploadBuktiPenggajian($file, string $namaDosen, string $periode): array
+    {
+        // Parse periode (format: 2025-01)
+        [$tahun, $bulan] = explode('-', $periode);
+        
+        // Month names in Indonesian
+        $bulanNama = [
+            '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+            '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+            '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+        ];
+        
+        // Get or create root folder: Bukti-Penggajian-Dosen
+        $rootFolder = $this->findFolder(config('google-drive.folders.bukti_penggajian_dosen'))
+            ?? $this->createFolder(config('google-drive.folders.bukti_penggajian_dosen'));
+        
+        // Get or create year folder: e.g., "2025"
+        $tahunFolder = $this->findFolder($tahun, $rootFolder)
+            ?? $this->createFolder($tahun, $rootFolder);
+        
+        // Get or create month folder: e.g., "01-Januari"
+        $bulanFolderName = "{$bulan}-{$bulanNama[$bulan]}";
+        $bulanFolder = $this->findFolder($bulanFolderName, $tahunFolder)
+            ?? $this->createFolder($bulanFolderName, $tahunFolder);
+        
+        // Generate file name: pembayaran_dosen_{nama}_{bulan}.{ext}
+        // Clean nama dosen from special characters
+        $namaClean = preg_replace('/[^A-Za-z0-9_-]/', '_', $namaDosen);
+        $namaClean = preg_replace('/_+/', '_', $namaClean); // Remove multiple underscores
+        $extension = $file->getClientOriginalExtension();
+        $fileName = "pembayaran_dosen_{$namaClean}_{$bulanNama[$bulan]}.{$extension}";
+        
+        // Upload file
+        $tempPath = $file->getRealPath();
+        return $this->uploadFile($tempPath, $fileName, $bulanFolder, $file->getMimeType());
+    }
+
+    /**
      * Make file publicly accessible
      *
      * @param string $fileId

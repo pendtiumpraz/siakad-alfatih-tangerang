@@ -28,7 +28,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Form Pembayaran -->
         <div class="lg:col-span-2">
-            <form action="{{ route('admin.penggajian.storePayment', $penggajian->id) }}" method="POST" class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6 space-y-6">
+            <form action="{{ route('admin.penggajian.storePayment', $penggajian->id) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6 space-y-6">
                 @csrf
 
                 <!-- Info Dosen -->
@@ -122,15 +122,15 @@
 
                         <div>
                             <label for="bukti_pembayaran" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Link Bukti Transfer (Google Drive) <span class="text-red-500">*</span>
+                                Bukti Transfer <span class="text-red-500">*</span>
                             </label>
-                            <input type="url" id="bukti_pembayaran" name="bukti_pembayaran" 
-                                value="{{ old('bukti_pembayaran') }}" 
+                            <input type="file" id="bukti_pembayaran" name="bukti_pembayaran" 
+                                accept="image/jpeg,image/jpg,image/png,application/pdf"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5F3F] focus:border-transparent" 
-                                placeholder="https://drive.google.com/..." required>
+                                required>
                             <p class="text-xs text-gray-500 mt-1">
                                 <i class="fas fa-info-circle text-blue-500 mr-1"></i>
-                                Upload bukti transfer ke Google Drive dan share dengan "anyone with the link can view"
+                                Upload bukti transfer (JPG, PNG, PDF max 5MB). File akan otomatis disimpan ke Google Drive.
                             </p>
                         </div>
                     </div>
@@ -214,15 +214,15 @@
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        Simpan screenshot bukti transfer
+                        Lakukan transfer ke rekening dosen
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        Upload bukti ke Google Drive
+                        Screenshot bukti transfer dari bank
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
-                        Pastikan link dapat diakses oleh semua
+                        Upload file (akan otomatis ke Google Drive)
                     </li>
                 </ul>
             </div>
