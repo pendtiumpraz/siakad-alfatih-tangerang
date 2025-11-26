@@ -551,10 +551,21 @@ class PublicController extends Controller
 
         // Convert foto to base64 for PDF (DomPDF can't load external images)
         $fotoBase64 = null;
-        if ($pendaftar->foto_url) {
+        if ($pendaftar->google_drive_file_id) {
             try {
-                // Download image from Google Drive
-                $imageContent = @file_get_contents($pendaftar->foto_url);
+                // Use direct download URL format for Google Drive
+                $downloadUrl = "https://drive.usercontent.google.com/download?id={$pendaftar->google_drive_file_id}&export=download&authuser=0";
+                
+                // Download image from Google Drive with proper headers
+                $context = stream_context_create([
+                    'http' => [
+                        'method' => 'GET',
+                        'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\n"
+                    ]
+                ]);
+                
+                $imageContent = @file_get_contents($downloadUrl, false, $context);
+                
                 if ($imageContent) {
                     // Convert to base64
                     $base64 = base64_encode($imageContent);
@@ -583,9 +594,12 @@ class PublicController extends Controller
 
                     // Create data URI
                     $fotoBase64 = "data:{$mimeType};base64,{$base64}";
+                    \Log::info("Successfully converted foto to base64 for PDF, mime: {$mimeType}");
+                } else {
+                    \Log::warning("Failed to download image from Google Drive: {$downloadUrl}");
                 }
             } catch (\Exception $e) {
-                \Log::warning('Failed to load photo for PDF: ' . $e->getMessage());
+                \Log::error('Failed to load photo for PDF: ' . $e->getMessage());
             }
         }
 

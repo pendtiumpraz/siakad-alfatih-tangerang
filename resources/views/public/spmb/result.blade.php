@@ -634,22 +634,50 @@
             <div class="mt-8 bg-white rounded-2xl shadow-2xl p-8 no-print">
                 <h3 class="text-2xl font-bold text-islamic-green mb-4">Langkah Selanjutnya</h3>
                 <div class="space-y-3 text-sm text-gray-700">
-                    <div class="flex items-start">
-                        <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">1</div>
-                        <p>Lakukan pembayaran biaya pendaftaran sebesar <strong>Rp {{ number_format($pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0, 0, ',', '.') }}</strong></p>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">2</div>
-                        <p>Upload bukti pembayaran melalui sistem (formulir di atas)</p>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">3</div>
-                        <p>Tunggu verifikasi dari admin (maksimal 2x24 jam)</p>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">4</div>
-                        <p>Pantau terus status pendaftaran Anda melalui nomor pendaftaran</p>
-                    </div>
+                    @if($biayaPendaftaran > 0)
+                        <!-- Steps for PAID registration -->
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">1</div>
+                            <p>Lakukan pembayaran biaya pendaftaran sebesar <strong>Rp {{ number_format($biayaPendaftaran, 0, ',', '.') }}</strong></p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">2</div>
+                            <p>Upload bukti pembayaran melalui sistem (formulir di atas)</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">3</div>
+                            <p>Tunggu verifikasi dari admin (maksimal 2x24 jam)</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">4</div>
+                            <p>Pantau terus status pendaftaran Anda melalui nomor pendaftaran</p>
+                        </div>
+                    @else
+                        <!-- Steps for FREE registration -->
+                        <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-lg">
+                            <div class="flex items-center">
+                                <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h4 class="font-bold text-green-800">Pendaftaran GRATIS!</h4>
+                                    <p class="text-sm text-green-700">Jalur seleksi ini tidak memerlukan biaya pendaftaran</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">1</div>
+                            <p><strong>Pendaftaran Anda telah berhasil!</strong> Tidak ada biaya yang perlu dibayarkan.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">2</div>
+                            <p>Tunggu pengumuman hasil seleksi dari admin melalui email atau SMS</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">3</div>
+                            <p>Pantau terus status pendaftaran Anda melalui nomor pendaftaran di menu <strong>"Cek Status Pendaftaran"</strong></p>
+                        </div>
+                    @endif
                 </div>
             </div>
         @elseif($pendaftar->status === 'verified')
