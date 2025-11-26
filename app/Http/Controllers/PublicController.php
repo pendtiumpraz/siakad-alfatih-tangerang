@@ -657,4 +657,28 @@ class PublicController extends Controller
                 ->with('error', 'Gagal submit daftar ulang. Silakan coba lagi atau hubungi admin.');
         }
     }
+
+    /**
+     * Download template Surat Keterangan RT - Yatim
+     */
+    public function downloadTemplateRTYatim()
+    {
+        $pdf = \PDF::loadView('public.templates.surat-rt-yatim');
+        $pdf->setPaper('A4', 'portrait');
+        
+        $filename = 'Template_Surat_RT_Yatim_' . date('Y-m-d') . '.pdf';
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Download template Surat Keterangan RT - Dhuafa
+     */
+    public function downloadTemplateRTDhuafa()
+    {
+        $pdf = \PDF::loadView('public.templates.surat-rt-dhuafa');
+        $pdf->setPaper('A4', 'portrait');
+        
+        $filename = 'Template_Surat_RT_Dhuafa_' . date('Y-m-d') . '.pdf';
+        return $pdf->download($filename);
+    }
 }

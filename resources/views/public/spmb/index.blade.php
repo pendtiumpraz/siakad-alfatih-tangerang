@@ -227,6 +227,77 @@
             </div>
         </div>
 
+        <!-- Download Template Section -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-islamic-green mb-2">Download Template Surat</h2>
+                <div class="w-24 h-1 bg-islamic-gold mx-auto"></div>
+                <p class="text-gray-600 mt-4">Untuk memudahkan proses pendaftaran, kami menyediakan template surat keterangan RT</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Template Surat RT Yatim -->
+                <div class="border-2 border-purple-200 rounded-xl p-6 hover:border-purple-400 hover:shadow-lg transition duration-200">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-purple-100 rounded-lg p-3">
+                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Surat Keterangan RT - Yatim</h3>
+                            <p class="text-sm text-gray-600 mb-4">Template surat keterangan dari RT untuk kategori yatim</p>
+                            <a href="{{ route('public.spmb.template.rt-yatim') }}" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg transition duration-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Surat RT Dhuafa -->
+                <div class="border-2 border-orange-200 rounded-xl p-6 hover:border-orange-400 hover:shadow-lg transition duration-200">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-orange-100 rounded-lg p-3">
+                            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Surat Keterangan RT - Dhuafa</h3>
+                            <p class="text-sm text-gray-600 mb-4">Template surat keterangan dari RT untuk kategori dhuafa</p>
+                            <a href="{{ route('public.spmb.template.rt-dhuafa') }}" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded-lg transition duration-200">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 max-w-4xl mx-auto">
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-blue-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <p class="text-sm text-blue-700 font-semibold mb-1">Petunjuk Penggunaan Template:</p>
+                        <ul class="text-sm text-blue-600 space-y-1">
+                            <li>• Download template sesuai kategori yang Anda pilih (Yatim atau Dhuafa)</li>
+                            <li>• Isi data dengan lengkap dan benar</li>
+                            <li>• Minta tanda tangan Ketua RT setempat</li>
+                            <li>• Lampirkan materai 10.000 dan cap RT</li>
+                            <li>• Scan atau foto dengan jelas untuk di-upload saat pendaftaran</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Contact/Help Section -->
         <div class="bg-islamic-gold rounded-2xl shadow-2xl p-8 text-center">
             <h3 class="text-2xl font-bold text-islamic-green mb-3">Butuh Bantuan?</h3>

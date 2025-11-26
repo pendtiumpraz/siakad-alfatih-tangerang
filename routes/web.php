@@ -43,6 +43,10 @@ Route::prefix('spmb')->name('public.spmb.')->group(function() {
     Route::get('/download-pdf/{nomor_pendaftaran}', [PublicController::class, 'downloadPDF'])->name('download-pdf');
     Route::post('/upload-payment/{id}', [PublicController::class, 'uploadPayment'])->name('upload-payment');
     Route::post('/submit-daftar-ulang/{id}', [PublicController::class, 'submitDaftarUlang'])->name('submit-daftar-ulang');
+    
+    // Download RT Certificate Templates
+    Route::get('/template/surat-rt-yatim', [PublicController::class, 'downloadTemplateRTYatim'])->name('template.rt-yatim');
+    Route::get('/template/surat-rt-dhuafa', [PublicController::class, 'downloadTemplateRTDhuafa'])->name('template.rt-dhuafa');
 });
 
 // Google Drive OAuth Routes (requires authentication)
