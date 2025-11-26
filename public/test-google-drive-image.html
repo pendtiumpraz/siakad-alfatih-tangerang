@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Google Drive Image Load</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-box {
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .success { border-color: #28a745; background: #d4edda; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .warning { border-color: #ffc107; background: #fff3cd; }
+        img {
+            max-width: 300px;
+            border: 3px solid #007bff;
+            margin: 10px 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test Google Drive Image Load - Mahasiswa</h1>
+    
+    <div class="test-box warning">
+        <h2>📋 Dari Database:</h2>
+        <p><strong>NIM:</strong> 2024010001</p>
+        <p><strong>Nama:</strong> Ahmad Fauzi</p>
+        <p><strong>Foto ID:</strong> <code>1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ</code></p>
+    </div>
+
+    <div class="test-box">
+        <h2>🖼️ Test 1: Thumbnail URL (sz=w400)</h2>
+        <p><code>https://drive.google.com/thumbnail?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&sz=w400</code></p>
+        <img src="https://drive.google.com/thumbnail?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&sz=w400" 
+             alt="Test 1"
+             onload="document.getElementById('status1').innerHTML='✅ <strong>BERHASIL</strong>'; document.getElementById('status1').parentElement.className='test-box success';"
+             onerror="document.getElementById('status1').innerHTML='❌ <strong>GAGAL</strong> - Image tidak bisa load'; document.getElementById('status1').parentElement.className='test-box error'; console.error('Test 1 failed');">
+        <div id="status1">⏳ Loading...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>🖼️ Test 2: Thumbnail URL (sz=w200)</h2>
+        <p><code>https://drive.google.com/thumbnail?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&sz=w200</code></p>
+        <img src="https://drive.google.com/thumbnail?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&sz=w200" 
+             alt="Test 2"
+             onload="document.getElementById('status2').innerHTML='✅ <strong>BERHASIL</strong>'; document.getElementById('status2').parentElement.className='test-box success';"
+             onerror="document.getElementById('status2').innerHTML='❌ <strong>GAGAL</strong>'; document.getElementById('status2').parentElement.className='test-box error'; console.error('Test 2 failed');">
+        <div id="status2">⏳ Loading...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>🖼️ Test 3: Usercontent URL</h2>
+        <p><code>https://drive.usercontent.google.com/download?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&export=view</code></p>
+        <img src="https://drive.usercontent.google.com/download?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&export=view" 
+             alt="Test 3"
+             onload="document.getElementById('status3').innerHTML='✅ <strong>BERHASIL</strong>'; document.getElementById('status3').parentElement.className='test-box success';"
+             onerror="document.getElementById('status3').innerHTML='❌ <strong>GAGAL</strong>'; document.getElementById('status3').parentElement.className='test-box error'; console.error('Test 3 failed');">
+        <div id="status3">⏳ Loading...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>🖼️ Test 4: Usercontent with authuser</h2>
+        <p><code>https://drive.usercontent.google.com/download?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&export=view&authuser=0</code></p>
+        <img src="https://drive.usercontent.google.com/download?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&export=view&authuser=0" 
+             alt="Test 4"
+             onload="document.getElementById('status4').innerHTML='✅ <strong>BERHASIL</strong>'; document.getElementById('status4').parentElement.className='test-box success';"
+             onerror="document.getElementById('status4').innerHTML='❌ <strong>GAGAL</strong>'; document.getElementById('status4').parentElement.className='test-box error'; console.error('Test 4 failed');">
+        <div id="status4">⏳ Loading...</div>
+    </div>
+
+    <div class="test-box warning">
+        <h2>📝 Instruksi:</h2>
+        <ol>
+            <li>Lihat test di atas - mana yang <strong>BERHASIL (✅)</strong> dan mana yang <strong>GAGAL (❌)</strong></li>
+            <li>Buka Browser Console (F12) untuk lihat error details</li>
+            <li>Screenshot hasilnya dan informasikan</li>
+            <li>Jika SEMUA gagal → masalah Google Drive permissions atau network</li>
+            <li>Jika ADA yang berhasil → gunakan URL format yang berhasil</li>
+        </ol>
+    </div>
+
+    <div class="test-box error">
+        <h2>⚠️ Jika Semua Test GAGAL:</h2>
+        <ul>
+            <li>File foto di Google Drive mungkin <strong>tidak public</strong></li>
+            <li>File mungkin sudah <strong>dihapus</strong></li>
+            <li><strong>AdBlock</strong> atau extension block Google Drive</li>
+            <li><strong>Network/Firewall</strong> block akses ke Google Drive</li>
+            <li>Coba test di <strong>Incognito Mode</strong> (Ctrl+Shift+N)</li>
+        </ul>
+    </div>
+
+    <script>
+        console.log('Test page loaded');
+        console.log('Foto ID: 1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ');
+        
+        // Log all image errors
+        document.querySelectorAll('img').forEach((img, index) => {
+            img.addEventListener('error', (e) => {
+                console.error(`Test ${index + 1} image failed to load:`, img.src);
+            });
+            img.addEventListener('load', (e) => {
+                console.log(`Test ${index + 1} image loaded successfully:`, img.src);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QUICK TEST - Google Drive Images</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .box { background: white; padding: 20px; margin: 20px auto; max-width: 800px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        img { width: 200px; height: 200px; object-fit: cover; border: 3px solid #007bff; margin: 10px; }
+        .success { border-color: #28a745; }
+        .error { border-color: #dc3545; }
+        h1 { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🚨 URGENT: Test Google Drive Image Access</h1>
+        
+        <h2>Test 1: Dosen - Ahmad Fauzia</h2>
+        <p>Foto ID: <code>1qR3peImzBrrJ3bW51BrgL5i4ZjOnuAwz</code></p>
+        <img id="img1" src="https://drive.google.com/thumbnail?id=1qR3peImzBrrJ3bW51BrgL5i4ZjOnuAwz&sz=w400">
+        <div id="status1">Loading...</div>
+        
+        <hr>
+        
+        <h2>Test 2: Mahasiswa - Ahmad Fauzi</h2>
+        <p>Foto ID: <code>1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ</code></p>
+        <img id="img2" src="https://drive.google.com/thumbnail?id=1mK4Q8pDPuvQUF9sMZgEUrIHWTz_G9NFQ&sz=w400">
+        <div id="status2">Loading...</div>
+        
+        <hr>
+        
+        <h2>🔍 Hasil:</h2>
+        <div id="result" style="padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107;">
+            Tunggu sampai kedua gambar selesai load...
+        </div>
+        
+        <h2>💡 Troubleshooting:</h2>
+        <ul>
+            <li><strong>Jika KEDUA gambar TIDAK MUNCUL:</strong>
+                <ul>
+                    <li>❌ Google Drive API limit tercapai</li>
+                    <li>❌ File permissions di Google Drive berubah jadi private</li>
+                    <li>❌ Browser/AdBlock blocking Google Drive</li>
+                    <li>✅ SOLUSI: Test di <strong>Incognito Mode</strong> (Ctrl+Shift+N)</li>
+                </ul>
+            </li>
+            <li><strong>Jika SALAH SATU muncul:</strong>
+                <ul>
+                    <li>File salah satunya dihapus dari Google Drive</li>
+                </ul>
+            </li>
+            <li><strong>Jika KEDUA gambar MUNCUL DI SINI tapi TIDAK di sistem:</strong>
+                <ul>
+                    <li>Cache browser issue</li>
+                    <li>✅ SOLUSI: Hard refresh (Ctrl+Shift+Delete, clear cache)</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+        const status1 = document.getElementById('status1');
+        const status2 = document.getElementById('status2');
+        const result = document.getElementById('result');
+        
+        let loaded1 = false;
+        let loaded2 = false;
+        
+        img1.onload = () => {
+            loaded1 = true;
+            status1.innerHTML = '<strong style="color: green;">✅ BERHASIL LOAD</strong>';
+            img1.className = 'success';
+            checkComplete();
+        };
+        
+        img1.onerror = () => {
+            status1.innerHTML = '<strong style="color: red;">❌ GAGAL LOAD</strong>';
+            img1.className = 'error';
+            console.error('Dosen image failed:', img1.src);
+            checkComplete();
+        };
+        
+        img2.onload = () => {
+            loaded2 = true;
+            status2.innerHTML = '<strong style="color: green;">✅ BERHASIL LOAD</strong>';
+            img2.className = 'success';
+            checkComplete();
+        };
+        
+        img2.onerror = () => {
+            status2.innerHTML = '<strong style="color: red;">❌ GAGAL LOAD</strong>';
+            img2.className = 'error';
+            console.error('Mahasiswa image failed:', img2.src);
+            checkComplete();
+        };
+        
+        function checkComplete() {
+            setTimeout(() => {
+                if (loaded1 && loaded2) {
+                    result.style.background = '#d4edda';
+                    result.style.borderColor = '#28a745';
+                    result.innerHTML = '<strong style="color: green;">✅ KEDUA FOTO BERHASIL LOAD!</strong><br>Berarti masalahnya di cache browser. Lakukan:<br>1. Ctrl+Shift+Delete → Clear cache<br>2. Ctrl+F5 (Hard refresh)';
+                } else if (!loaded1 && !loaded2) {
+                    result.style.background = '#f8d7da';
+                    result.style.borderColor = '#dc3545';
+                    result.innerHTML = '<strong style="color: red;">❌ KEDUA FOTO GAGAL!</strong><br>Masalah:<br>1. Google Drive files tidak public<br>2. AdBlock/Extension blocking<br>3. Network/Firewall<br><br><strong>SOLUSI:</strong> Test di Incognito Mode atau disable AdBlock';
+                } else {
+                    result.style.background = '#fff3cd';
+                    result.style.borderColor = '#ffc107';
+                    result.innerHTML = '<strong style="color: orange;">⚠️ SALAH SATU BERHASIL, SALAH SATU GAGAL</strong><br>File yang gagal mungkin sudah dihapus dari Google Drive';
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
