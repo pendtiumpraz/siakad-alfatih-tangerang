@@ -146,26 +146,39 @@ class MahasiswaController extends Controller
 
         $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'tempat_lahir' => 'required|string|max:100',
-            'tanggal_lahir' => 'required|date',
-            'jenis_kelamin' => 'required|in:L,P',
-            'alamat' => 'required|string',
-            'no_telepon' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'no_telepon' => 'nullable|string|max:20',
             'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // 2MB max
         ]);
 
-        // Handle foto upload
-        if ($request->hasFile('foto')) {
-            // Delete old foto if exists
-            if ($mahasiswa->foto && Storage::exists($mahasiswa->foto)) {
-                Storage::delete($mahasiswa->foto);
-            }
+        // Update email to users table (separate from mahasiswas table)
+        if ($request->filled('email')) {
+            $mahasiswa->user->update([
+                'email' => $validated['email']
+            ]);
+        }
+        
+        // Remove email from validated data (not a mahasiswas table column)
+        unset($validated['email']);
 
-            // Store new foto
-            $fotoPath = $request->file('foto')->store('mahasiswa/foto', 'public');
-            $validated['foto'] = $fotoPath;
+        // Handle foto upload to Google Drive
+        if ($request->hasFile('foto')) {
+            try {
+                $driveService = new GoogleDriveService();
+                $result = $driveService->uploadFotoMahasiswa($request->file('foto'), $mahasiswa->nim);
+                
+                // Store Google Drive file ID only
+                $validated['foto'] = $result['id'];
+                
+                \Log::info("Mahasiswa {$mahasiswa->nim} uploaded foto to Google Drive: {$result['id']}");
+            } catch (\Exception $e) {
+                \Log::error("Failed to upload foto mahasiswa to Google Drive: " . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'Gagal mengupload foto ke Google Drive: ' . $e->getMessage());
+            }
         }
 
+        // Update mahasiswa profile
         $mahasiswa->update($validated);
 
         if ($request->expectsJson()) {
