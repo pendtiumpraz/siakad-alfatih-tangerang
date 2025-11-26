@@ -368,12 +368,13 @@
                                         </svg>
                                     </div>
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800">Informasi Upload:</h3>
+                                        <h3 class="text-sm font-medium text-blue-800">📄 Informasi Upload:</h3>
                                         <div class="mt-2 text-sm text-blue-700">
                                             <ul class="list-disc list-inside space-y-1">
                                                 <li>Semua dokumen akan diupload ke Google Drive</li>
                                                 <li>Pastikan scan dokumen jelas dan terbaca</li>
-                                                <li>SKTM hanya wajib untuk jalur beasiswa</li>
+                                                <li><strong>Template tersedia!</strong> Untuk Surat RT (Dhuafa & Yatim), klik tombol <strong>"Download Template PDF"</strong> pada masing-masing dokumen</li>
+                                                <li>Dokumen opsional hanya diupload sesuai kategori beasiswa Anda</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -435,7 +436,17 @@
                             <!-- 7. Surat Keterangan RT Dhuafa -->
                             <div class="border border-dashed rounded-lg p-4 bg-orange-50">
                                 <label class="block font-semibold text-gray-800 mb-2">7. Surat Keterangan RT <span class="text-xs text-orange-600">(Khusus Dhuafa)</span></label>
-                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB - Surat keterangan dari RT setempat</p>
+                                <p class="text-xs text-gray-600 mb-2">PDF/JPG/PNG, Max: 1MB - Surat keterangan dari RT setempat</p>
+                                
+                                <!-- Download Template Button -->
+                                <a href="{{ route('public.spmb.template.rt-dhuafa') }}" target="_blank"
+                                   class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition duration-200 mb-3">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Download Template PDF
+                                </a>
+                                
                                 <input type="file" name="surat_rt_dhuafa" accept="application/pdf,image/jpeg,image/jpg,image/png"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
                             </div>
@@ -443,7 +454,17 @@
                             <!-- 8. Surat Keterangan Yatim -->
                             <div class="border border-dashed rounded-lg p-4 bg-purple-50">
                                 <label class="block font-semibold text-gray-800 mb-2">8. Surat Keterangan Yatim <span class="text-xs text-purple-600">(Khusus Yatim)</span></label>
-                                <p class="text-xs text-gray-600 mb-3">PDF/JPG/PNG, Max: 1MB - Surat keterangan yatim dari RT</p>
+                                <p class="text-xs text-gray-600 mb-2">PDF/JPG/PNG, Max: 1MB - Surat keterangan yatim dari RT</p>
+                                
+                                <!-- Download Template Button -->
+                                <a href="{{ route('public.spmb.template.rt-yatim') }}" target="_blank"
+                                   class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition duration-200 mb-3">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Download Template PDF
+                                </a>
+                                
                                 <input type="file" name="surat_rt_yatim" accept="application/pdf,image/jpeg,image/jpg,image/png"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green">
                             </div>
