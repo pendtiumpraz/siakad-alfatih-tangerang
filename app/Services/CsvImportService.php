@@ -115,20 +115,34 @@ class CsvImportService
      */
     public function generateTemplate($headers, $filename)
     {
-        $handle = fopen('php://output', 'w');
-        
-        // Write UTF-8 BOM for Excel compatibility
-        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
-        
-        // Write headers
-        fputcsv($handle, $headers);
-        
-        fclose($handle);
-        
         return response()->streamDownload(function() use ($headers) {
             $handle = fopen('php://output', 'w');
             fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
             fputcsv($handle, $headers);
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+    
+    /**
+     * Generate CSV template with example row
+     */
+    public function generateTemplateWithExample($headers, $exampleRow, $filename)
+    {
+        return response()->streamDownload(function() use ($headers, $exampleRow) {
+            $handle = fopen('php://output', 'w');
+            
+            // Write UTF-8 BOM for Excel compatibility
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+            
+            // Write headers
+            fputcsv($handle, $headers);
+            
+            // Write example row
+            fputcsv($handle, $exampleRow);
+            
             fclose($handle);
         }, $filename, [
             'Content-Type' => 'text/csv',

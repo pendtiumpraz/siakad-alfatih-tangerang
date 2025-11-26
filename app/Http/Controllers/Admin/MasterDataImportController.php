@@ -10,6 +10,7 @@ use App\Models\MataKuliah;
 use App\Models\Ruangan;
 use App\Models\Semester;
 use App\Models\Jadwal;
+use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -127,7 +128,7 @@ class MasterDataImportController extends Controller
             'nama_mk' => 'required|string|max:255',
             'sks' => 'required|integer|min:1|max:6',
             'semester' => 'required|integer|min:1|max:14',
-            'jenis' => 'required|in:Wajib,Pilihan',
+            'jenis' => 'required|in:wajib,pilihan,Wajib,Pilihan',
             'deskripsi' => 'nullable|string'
         ];
         
@@ -144,7 +145,7 @@ class MasterDataImportController extends Controller
                     'nama_mk' => $row['nama_mk'],
                     'sks' => $row['sks'],
                     'semester' => $row['semester'],
-                    'jenis' => $row['jenis'],
+                    'jenis' => strtolower($row['jenis']), // Normalize to lowercase
                     'deskripsi' => $row['deskripsi'] ?? null,
                 ];
             }
@@ -268,7 +269,7 @@ class MasterDataImportController extends Controller
             $validationRules,
             function($row) {
                 $mataKuliah = MataKuliah::where('kode_mk', $row['kode_mk'])->first();
-                $dosen = \App\Models\Dosen::where('nidn', $row['nidn_dosen'])->first();
+                $dosen = Dosen::where('nidn', $row['nidn_dosen'])->first();
                 $ruangan = Ruangan::where('kode_ruangan', $row['kode_ruangan'])->first();
                 
                 return [
@@ -297,7 +298,18 @@ class MasterDataImportController extends Controller
     public function downloadTemplateProgramStudi()
     {
         $headers = ['kode_prodi', 'nama_prodi', 'jenjang', 'akreditasi', 'is_active'];
-        return $this->csvService->generateTemplate($headers, 'template_program_studi.csv');
+        
+        // Get sample data from database
+        $sample = ProgramStudi::first();
+        $exampleRow = $sample ? [
+            $sample->kode_prodi,
+            $sample->nama_prodi,
+            $sample->jenjang,
+            $sample->akreditasi ?? '',
+            $sample->is_active ? '1' : '0'
+        ] : ['PAI-S1-L', 'Pendidikan Agama Islam', 'S1', 'B', '1'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_program_studi.csv');
     }
     
     /**
@@ -306,7 +318,19 @@ class MasterDataImportController extends Controller
     public function downloadTemplateKurikulum()
     {
         $headers = ['kode_prodi', 'nama_kurikulum', 'tahun_mulai', 'tahun_selesai', 'total_sks', 'is_active'];
-        return $this->csvService->generateTemplate($headers, 'template_kurikulum.csv');
+        
+        // Get sample data
+        $sample = Kurikulum::with('programStudi')->first();
+        $exampleRow = $sample ? [
+            $sample->programStudi->kode_prodi,
+            $sample->nama_kurikulum,
+            $sample->tahun_mulai,
+            $sample->tahun_selesai ?? '',
+            $sample->total_sks,
+            $sample->is_active ? '1' : '0'
+        ] : ['PAI-S1-L', 'Kurikulum Pendidikan Agama Islam 2024', '2024', '', '148', '1'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_kurikulum.csv');
     }
     
     /**
@@ -315,7 +339,20 @@ class MasterDataImportController extends Controller
     public function downloadTemplateMataKuliah()
     {
         $headers = ['kurikulum_nama', 'kode_mk', 'nama_mk', 'sks', 'semester', 'jenis', 'deskripsi'];
-        return $this->csvService->generateTemplate($headers, 'template_mata_kuliah.csv');
+        
+        // Get sample data
+        $sample = MataKuliah::with('kurikulum')->first();
+        $exampleRow = $sample ? [
+            $sample->kurikulum->nama_kurikulum,
+            $sample->kode_mk,
+            $sample->nama_mk,
+            $sample->sks,
+            $sample->semester,
+            $sample->jenis,
+            $sample->deskripsi ?? ''
+        ] : ['Kurikulum Pendidikan Agama Islam 2024', 'PAI-1-001-L', 'Pendidikan Pancasila dan Kewarganegaraan', '2', '1', 'wajib', 'Pendidikan Pancasila dan Kewarganegaraan'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_mata_kuliah.csv');
     }
     
     /**
@@ -324,7 +361,19 @@ class MasterDataImportController extends Controller
     public function downloadTemplateRuangan()
     {
         $headers = ['kode_ruangan', 'nama_ruangan', 'kapasitas', 'jenis', 'fasilitas', 'is_available'];
-        return $this->csvService->generateTemplate($headers, 'template_ruangan.csv');
+        
+        // Get sample data
+        $sample = Ruangan::first();
+        $exampleRow = $sample ? [
+            $sample->kode_ruangan,
+            $sample->nama_ruangan,
+            $sample->kapasitas,
+            $sample->jenis,
+            $sample->fasilitas ?? '',
+            $sample->is_available ? '1' : '0'
+        ] : ['R101', 'Ruang Kuliah 101', '40', 'offline', 'Proyektor, AC, Whiteboard', '1'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_ruangan.csv');
     }
     
     /**
@@ -333,7 +382,19 @@ class MasterDataImportController extends Controller
     public function downloadTemplateSemester()
     {
         $headers = ['nama_semester', 'tahun_akademik', 'jenis', 'tanggal_mulai', 'tanggal_selesai', 'is_active'];
-        return $this->csvService->generateTemplate($headers, 'template_semester.csv');
+        
+        // Get sample data
+        $sample = Semester::first();
+        $exampleRow = $sample ? [
+            $sample->nama_semester,
+            $sample->tahun_akademik,
+            $sample->jenis,
+            $sample->tanggal_mulai->format('Y-m-d'),
+            $sample->tanggal_selesai->format('Y-m-d'),
+            $sample->is_active ? '1' : '0'
+        ] : ['Semester Ganjil 2024/2025', '2024/2025', 'ganjil', '2024-09-01', '2025-01-31', '1'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_semester.csv');
     }
     
     /**
@@ -342,6 +403,20 @@ class MasterDataImportController extends Controller
     public function downloadTemplateJadwal()
     {
         $headers = ['jenis_semester', 'kode_mk', 'nidn_dosen', 'kode_ruangan', 'hari', 'jam_mulai', 'jam_selesai', 'kelas'];
-        return $this->csvService->generateTemplate($headers, 'template_jadwal.csv');
+        
+        // Get sample data
+        $sample = Jadwal::with(['mataKuliah', 'dosen', 'ruangan'])->first();
+        $exampleRow = $sample ? [
+            $sample->jenis_semester,
+            $sample->mataKuliah->kode_mk,
+            $sample->dosen->nidn,
+            $sample->ruangan->kode_ruangan,
+            $sample->hari,
+            substr($sample->jam_mulai, 0, 5), // HH:MM format
+            substr($sample->jam_selesai, 0, 5), // HH:MM format
+            $sample->kelas
+        ] : ['genap', 'PGMI-2-004-L', '0301108901', 'ONLINE-5', 'Senin', '11:00', '12:00', 'A'];
+        
+        return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_jadwal.csv');
     }
 }
