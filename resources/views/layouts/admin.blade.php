@@ -201,6 +201,10 @@
                             <i class="fas fa-clock w-4"></i>
                             <span class="ml-3">Jadwal Perkuliahan</span>
                         </a>
+                        <a href="{{ route('admin.penggajian.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.penggajian.*') ? 'active' : '' }}">
+                            <i class="fas fa-money-bill-wave w-4"></i>
+                            <span class="ml-3">Penggajian Dosen</span>
+                        </a>
                         <a href="{{ route('admin.jalur-seleksi.index') }}" class="sidebar-link flex items-center px-4 py-2 mb-1 text-white rounded-lg text-sm {{ request()->routeIs('admin.jalur-seleksi.*') ? 'active' : '' }}">
                             <i class="fas fa-route w-4"></i>
                             <span class="ml-3">Jalur Seleksi</span>

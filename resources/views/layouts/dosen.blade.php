@@ -84,6 +84,13 @@
                     <span class="font-medium">Pengumuman</span>
                 </a>
 
+                <a href="{{ route('dosen.penggajian.index') }}" class="flex items-center px-4 py-3 text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('dosen.penggajian.*') ? 'bg-green-700 border-l-4 border-yellow-400' : 'hover:bg-green-700' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="font-medium">Penggajian</span>
+                </a>
+
                 <!-- Master Data Section -->
                 <div class="pt-4 mt-4 border-t border-green-700">
                     <p class="px-4 mb-2 text-xs font-semibold text-green-300 uppercase">Master Data</p>
