@@ -106,6 +106,16 @@ class DosenController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // 2MB max
         ]);
 
+        // Update email to users table (separate from dosens table)
+        if ($request->filled('email')) {
+            $dosen->user->update([
+                'email' => $validated['email']
+            ]);
+        }
+        
+        // Remove email from validated data (not a dosens table column)
+        unset($validated['email']);
+
         // Handle foto upload to Google Drive
         if ($request->hasFile('foto')) {
             try {
@@ -123,6 +133,7 @@ class DosenController extends Controller
             }
         }
 
+        // Update dosen profile
         $dosen->update($validated);
 
         if ($request->expectsJson()) {

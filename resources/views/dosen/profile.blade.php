@@ -280,6 +280,15 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <input type="email" name="email" value="{{ old('email', $dosen->user->email) }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">No. Telepon</label>
                     <input type="text" name="no_telepon" value="{{ old('no_telepon', $dosen->no_telepon) }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
