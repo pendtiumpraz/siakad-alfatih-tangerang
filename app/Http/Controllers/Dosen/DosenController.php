@@ -101,7 +101,7 @@ class DosenController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'gelar_depan' => 'nullable|string|max:50',
             'gelar_belakang' => 'nullable|string|max:50',
-            'email_dosen' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255',
             'no_telepon' => 'nullable|string|max:20',
             'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // 2MB max
         ]);
@@ -112,9 +112,8 @@ class DosenController extends Controller
                 $driveService = new GoogleDriveService();
                 $result = $driveService->uploadFotoDosen($request->file('foto'), $dosen->nidn);
                 
-                // Store Google Drive file ID
+                // Store Google Drive file ID only
                 $validated['foto'] = $result['id'];
-                $validated['foto_url'] = $result['webViewLink'];
                 
                 Log::info("Dosen {$dosen->nidn} uploaded foto to Google Drive: {$result['id']}");
             } catch (\Exception $e) {

@@ -23,6 +23,7 @@ class Dosen extends Model
         'no_telepon',
         'email',
         'status',
+        'foto',
     ];
 
     protected $casts = [

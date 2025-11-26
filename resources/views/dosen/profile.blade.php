@@ -16,13 +16,13 @@
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                     <!-- Cover Image -->
-                    <div class="h-32 bg-gradient-to-r from-green-600 to-green-700"></div>
+                    <div class="h-20 bg-gradient-to-r from-green-600 to-green-700"></div>
                     
                     <!-- Profile Photo -->
                     <div class="relative px-6 pb-6">
-                        <div class="flex flex-col items-center -mt-16">
+                        <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
-                                @if($dosen->foto_url)
+                                @if($dosen->foto)
                                     <img src="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}"
                                          alt="Foto Profil"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
@@ -48,7 +48,7 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
                                     Dosen
                                 </span>
-                                @if($dosen->foto_url)
+                                @if($dosen->foto)
                                     <p class="text-xs text-gray-400 mt-2">
                                         <i class="fas fa-cloud-upload-alt mr-1"></i>Foto tersimpan di Google Drive
                                     </p>
