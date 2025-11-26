@@ -124,6 +124,12 @@ class DosenController extends Controller
         }
 
         $dosen->update($validated);
+        
+        // Refresh to get updated data
+        $dosen->refresh();
+        
+        // Debug log
+        Log::info("After update - Dosen {$dosen->nidn} foto value: " . ($dosen->foto ?? 'NULL'));
 
         if ($request->expectsJson()) {
             return response()->json([

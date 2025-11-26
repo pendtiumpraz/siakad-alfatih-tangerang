@@ -48,6 +48,18 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
                                     Dosen
                                 </span>
+                                <!-- Debug Info (temporary) -->
+                                <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-left">
+                                    <p class="font-bold text-yellow-800 mb-2">🔍 Debug Info:</p>
+                                    <p class="text-gray-700">Foto ID: <code class="bg-white px-1 py-0.5 rounded">{{ $dosen->foto ?? 'NULL/EMPTY' }}</code></p>
+                                    <p class="text-gray-700">Kondisi @if: {{ $dosen->foto ? '✅ TRUE (foto ada)' : '❌ FALSE (foto kosong)' }}</p>
+                                    @if($dosen->foto)
+                                        <p class="text-gray-700 mt-1">Full URL:</p>
+                                        <p class="text-xs break-all bg-white p-1 rounded">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</p>
+                                        <a href="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs mt-1 inline-block">Test URL di tab baru</a>
+                                    @endif
+                                </div>
+                                
                                 @if($dosen->foto)
                                     <p class="text-xs text-gray-400 mt-2">
                                         <i class="fas fa-cloud-upload-alt mr-1"></i>Foto tersimpan di Google Drive
