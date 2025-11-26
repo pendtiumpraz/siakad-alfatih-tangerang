@@ -23,11 +23,11 @@
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
                                 @if($mahasiswa->foto)
-                                    <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w400"
+                                    <img src="{{ route('image.proxy', ['id' => $mahasiswa->foto]) }}"
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="this.src='https://drive.usercontent.google.com/download?id={{ $mahasiswa->foto }}&export=view&authuser=0'; this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';};">
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff"
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
@@ -326,7 +326,7 @@
                     @if($mahasiswa->foto)
                         <div class="mb-4 flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w200"
+                                <img src="{{ route('image.proxy', ['id' => $mahasiswa->foto]) }}"
                                      alt="Foto saat ini"
                                      class="w-32 h-32 object-cover rounded-lg border-2 border-blue-500 shadow-md"
                                      onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';">

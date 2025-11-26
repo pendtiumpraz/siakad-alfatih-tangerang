@@ -23,11 +23,11 @@
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
                                 @if($dosen->foto)
-                                    <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400"
+                                    <img src="{{ route('image.proxy', ['id' => $dosen->foto]) }}"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="this.src='https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view'; this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';};">
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
@@ -304,7 +304,7 @@
                     @if($dosen->foto)
                         <div class="mb-4 flex items-start space-x-4">
                             <div class="flex-shrink-0">
-                                <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w200"
+                                <img src="{{ route('image.proxy', ['id' => $dosen->foto]) }}"
                                      alt="Foto saat ini"
                                      class="w-32 h-32 object-cover rounded-lg border-2 border-green-500 shadow-md"
                                      onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
