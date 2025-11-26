@@ -190,16 +190,9 @@
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Agama <span class="text-red-500">*</span></label>
-                                <select name="agama" x-model="formData.agama" required
-                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-islamic-green focus:border-transparent">
-                                    <option value="">Pilih</option>
-                                    <option value="Islam">Islam</option>
-                                    <option value="Kristen">Kristen</option>
-                                    <option value="Katolik">Katolik</option>
-                                    <option value="Hindu">Hindu</option>
-                                    <option value="Buddha">Buddha</option>
-                                    <option value="Konghucu">Konghucu</option>
-                                </select>
+                                <input type="text" name="agama" x-model="formData.agama" value="Islam" readonly
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed">
+                                <p class="text-xs text-gray-500 mt-1">STAI Al-Fatih adalah perguruan tinggi Islam</p>
                             </div>
 
                             <div>
@@ -589,7 +582,7 @@
                     jenis_kelamin: draft?.jenis_kelamin || '',
                     tempat_lahir: draft?.tempat_lahir || '',
                     tanggal_lahir: draft?.tanggal_lahir || '',
-                    agama: draft?.agama || '',
+                    agama: 'Islam', // Always Islam for STAI Al-Fatih
                     alamat: draft?.alamat || '',
                     kelurahan: draft?.kelurahan || '',
                     kecamatan: draft?.kecamatan || '',

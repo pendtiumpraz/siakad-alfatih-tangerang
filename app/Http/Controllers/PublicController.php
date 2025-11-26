@@ -174,7 +174,7 @@ class PublicController extends Controller
             'jenis_kelamin' => 'required|in:L,P',
             'tempat_lahir' => 'required|string|max:255',
             'tanggal_lahir' => 'required|date|before:today',
-            'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+            'agama' => 'required|in:Islam', // STAI Al-Fatih - Islamic Higher Education
             'alamat' => 'required|string',
             'kelurahan' => 'required|string|max:255',
             'kecamatan' => 'required|string|max:255',
