@@ -335,6 +335,11 @@
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Profil</label>
                     
+                    <!-- Debug: Show foto status -->
+                    <div class="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                        <strong>Debug:</strong> Foto = {{ $mahasiswa->foto ? '✅ Ada (ID: ' . $mahasiswa->foto . ')' : '❌ Belum ada (NULL)' }}
+                    </div>
+                    
                     <!-- Preview Foto Existing -->
                     @if($mahasiswa->foto)
                         <div class="mb-4 flex items-start space-x-4">
@@ -351,6 +356,13 @@
                                 </p>
                                 <p class="text-xs text-gray-500">Upload foto baru untuk mengganti foto saat ini</p>
                             </div>
+                        </div>
+                    @else
+                        <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded">
+                            <p class="text-sm text-gray-600">
+                                <i class="fas fa-info-circle text-gray-400 mr-1"></i>
+                                Belum ada foto. Silakan upload foto baru di bawah.
+                            </p>
                         </div>
                     @endif
                     

@@ -285,11 +285,12 @@
                                 class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
                             >
                                 @if($mahasiswa && $mahasiswa->foto)
-                                    <img src="{{ Storage::url($mahasiswa->foto) }}"
+                                    <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w200"
                                          alt="Profile"
-                                         class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37] object-cover">
+                                         class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37] object-cover"
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap ?? 'Mahasiswa') }}&background=3b82f6&color=fff';">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ $mahasiswa->nama_lengkap ?? 'Mahasiswa' }}&background=4A7C59&color=fff"
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap ?? 'Mahasiswa') }}&background=3b82f6&color=fff"
                                          alt="Profile"
                                          class="w-10 h-10 rounded-full ring-2 ring-[#D4AF37]">
                                 @endif
