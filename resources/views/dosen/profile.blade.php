@@ -23,11 +23,12 @@
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
                                 @if($dosen->foto)
-                                    <img src="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view&authuser=0"
+                                    <img src="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
+                                         onerror="console.error('Image failed to load. Foto ID: {{ $dosen->foto }}'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
+                                         onload="console.log('✅ Image loaded! Foto ID: {{ $dosen->foto }}');">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
@@ -52,6 +53,19 @@
                                 @if($dosen->foto)
                                     <p class="text-xs text-gray-400 mt-2">
                                         <i class="fas fa-cloud-upload-alt mr-1"></i>Foto tersimpan di Google Drive
+                                    </p>
+                                    <!-- Temporary debug -->
+                                    <details class="mt-2">
+                                        <summary class="text-xs text-blue-600 cursor-pointer">Debug Info (klik untuk expand)</summary>
+                                        <div class="mt-1 p-2 bg-gray-100 rounded text-xs">
+                                            <p><strong>Foto ID:</strong> <code>{{ $dosen->foto }}</code></p>
+                                            <p><strong>URL:</strong></p>
+                                            <a href="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view" target="_blank" class="text-blue-600 underline text-xs break-all">Test Link - Klik untuk buka</a>
+                                        </div>
+                                    </details>
+                                @else
+                                    <p class="text-xs text-red-400 mt-2">
+                                        ⚠️ Belum ada foto tersimpan
                                     </p>
                                 @endif
                             </div>
