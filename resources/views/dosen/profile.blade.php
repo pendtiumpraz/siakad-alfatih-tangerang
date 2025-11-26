@@ -24,13 +24,15 @@
                             <div class="relative">
                                 @if($dosen->foto)
                                     <img src="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}"
-                                         alt="Foto Profil"
-                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
-                                         onerror="console.log('Image load failed, trying fallback...'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
-                                         onload="console.log('✅ Image loaded successfully from Google Drive');">
+                                         alt="Foto Profil {{ $dosen->nama_lengkap }}"
+                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover bg-gray-200"
+                                         crossorigin="anonymous"
+                                         loading="eager"
+                                         onerror="console.error('❌ Image load failed for foto ID: {{ $dosen->foto }}'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
+                                         onload="console.log('✅ Image loaded successfully from Google Drive'); this.style.backgroundColor='transparent';">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
-                                         alt="Foto Profil"
+                                         alt="Foto Profil {{ $dosen->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
                                 @endif
                                 <button onclick="openModal('editProfileModal')" class="absolute bottom-0 right-0 bg-green-600 text-white p-2 rounded-full shadow-lg hover:bg-green-700 transition">
