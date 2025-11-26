@@ -66,6 +66,22 @@ class Pendaftar extends Model
         'sktm',
         'sktm_google_drive_id',
         'sktm_google_drive_link',
+        // Surat Bukti Mengajar (khusus guru)
+        'surat_mengajar',
+        'surat_mengajar_google_drive_id',
+        'surat_mengajar_google_drive_link',
+        // Surat Keterangan RT Dhuafa (khusus dhuafa)
+        'surat_rt_dhuafa',
+        'surat_rt_dhuafa_google_drive_id',
+        'surat_rt_dhuafa_google_drive_link',
+        // Surat Keterangan Yatim dari RT (khusus yatim)
+        'surat_rt_yatim',
+        'surat_rt_yatim_google_drive_id',
+        'surat_rt_yatim_google_drive_link',
+        // Sertifikat Quran (khusus penghafal quran - minimal juz 30)
+        'sertifikat_quran',
+        'sertifikat_quran_google_drive_id',
+        'sertifikat_quran_google_drive_link',
     ];
 
     protected $casts = [
