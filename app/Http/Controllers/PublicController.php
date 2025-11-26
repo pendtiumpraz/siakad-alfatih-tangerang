@@ -73,8 +73,10 @@ class PublicController extends Controller
             'transkrip_google_drive_id' => 'Transkrip',
             'ktp_google_drive_id' => 'KTP',
             'kk_google_drive_id' => 'Kartu Keluarga',
-            'akta_google_drive_id' => 'Akta',
-            'sktm_google_drive_id' => 'SKTM',
+            'surat_mengajar_google_drive_id' => 'Surat Mengajar',
+            'surat_rt_dhuafa_google_drive_id' => 'Surat RT Dhuafa',
+            'surat_rt_yatim_google_drive_id' => 'Surat RT Yatim',
+            'sertifikat_quran_google_drive_id' => 'Sertifikat Quran',
         ];
 
         foreach ($documents as $field => $label) {
