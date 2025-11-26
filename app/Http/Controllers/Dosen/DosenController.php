@@ -202,4 +202,54 @@ class DosenController extends Controller
                 ->withInput($request->except('password'));
         }
     }
+
+    /**
+     * Show the edit password form.
+     */
+    public function editPassword()
+    {
+        return view('dosen.profile.edit-password');
+    }
+
+    /**
+     * Update password.
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        // Validate input
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Password lama wajib diisi',
+            'password.required' => 'Password baru wajib diisi',
+            'password.min' => 'Password baru minimal 8 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak cocok',
+        ]);
+
+        // Verify current password
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()
+                ->withErrors(['current_password' => 'Password lama salah'])
+                ->withInput();
+        }
+
+        try {
+            // Update password
+            $user->update([
+                'password' => \Hash::make($validated['password']),
+            ]);
+
+            return redirect()->route('dosen.profile')
+                ->with('success', 'Password berhasil diubah');
+
+        } catch (\Exception $e) {
+            \Log::error("Failed to update password for user {$user->id}: " . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Gagal mengubah password: ' . $e->getMessage());
+        }
+    }
 }

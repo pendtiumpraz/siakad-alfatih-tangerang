@@ -225,6 +225,10 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
     // Edit Username (Only once)
     Route::get('profile/edit-username', [DosenController::class, 'editUsername'])->name('username.edit');
     Route::put('profile/update-username', [DosenController::class, 'updateUsername'])->name('username.update');
+    
+    // Edit Password
+    Route::get('profile/edit-password', [DosenController::class, 'editPassword'])->name('password.edit');
+    Route::put('profile/update-password', [DosenController::class, 'updatePassword'])->name('password.update');
 
     // Schedule View (Read-only for Dosen)
     Route::get('jadwal-mengajar', [JadwalViewController::class, 'index'])->name('jadwal-mengajar.index');
@@ -276,6 +280,10 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     // Edit Username (Only once)
     Route::get('profile/edit-username', [MahasiswaController::class, 'editUsername'])->name('username.edit');
     Route::put('profile/update-username', [MahasiswaController::class, 'updateUsername'])->name('username.update');
+    
+    // Edit Password
+    Route::get('profile/edit-password', [MahasiswaController::class, 'editPassword'])->name('password.edit');
+    Route::put('profile/update-password', [MahasiswaController::class, 'updatePassword'])->name('password.update');
 
     Route::get('jadwal', [MahasiswaController::class, 'jadwal'])->name('jadwal.index');
     Route::get('jadwal/{id}', [MahasiswaController::class, 'jadwalDetail'])->name('jadwal.detail');
