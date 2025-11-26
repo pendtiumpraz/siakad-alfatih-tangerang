@@ -49,19 +49,6 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
                                     Mahasiswa
                                 </span>
-                                
-                                <!-- Debug Info -->
-                                @if($mahasiswa->foto)
-                                    <details class="mt-3">
-                                        <summary class="text-xs text-blue-600 cursor-pointer">Debug: Klik untuk lihat Foto ID</summary>
-                                        <div class="mt-1 p-2 bg-gray-100 rounded text-xs">
-                                            <p><strong>Foto ID:</strong> <code>{{ $mahasiswa->foto }}</code></p>
-                                            <a href="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w400" target="_blank" class="text-blue-600 underline">Test URL</a>
-                                        </div>
-                                    </details>
-                                @else
-                                    <p class="text-xs text-gray-400 mt-2">Belum ada foto tersimpan</p>
-                                @endif
 
                             </div>
                         </div>
@@ -335,11 +322,6 @@
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Profil</label>
                     
-                    <!-- Debug: Show foto status -->
-                    <div class="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                        <strong>Debug:</strong> Foto = {{ $mahasiswa->foto ? '✅ Ada (ID: ' . $mahasiswa->foto . ')' : '❌ Belum ada (NULL)' }}
-                    </div>
-                    
                     <!-- Preview Foto Existing -->
                     @if($mahasiswa->foto)
                         <div class="mb-4 flex items-start space-x-4">
@@ -356,13 +338,6 @@
                                 </p>
                                 <p class="text-xs text-gray-500">Upload foto baru untuk mengganti foto saat ini</p>
                             </div>
-                        </div>
-                    @else
-                        <div class="mb-4 p-3 bg-gray-50 border border-gray-200 rounded">
-                            <p class="text-sm text-gray-600">
-                                <i class="fas fa-info-circle text-gray-400 mr-1"></i>
-                                Belum ada foto. Silakan upload foto baru di bawah.
-                            </p>
                         </div>
                     @endif
                     
