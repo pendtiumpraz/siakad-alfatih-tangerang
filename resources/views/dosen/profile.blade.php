@@ -172,6 +172,67 @@
                     </div>
                 </div>
 
+                <!-- Bank Information -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                            Informasi Rekening
+                        </h3>
+                        <button onclick="openModal('editProfileModal')" class="text-green-600 hover:text-green-700 font-semibold text-sm flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                    </div>
+
+                    @if(!$dosen->nama_bank || !$dosen->nomor_rekening)
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-yellow-700 font-semibold">
+                                        Data rekening belum lengkap!
+                                    </p>
+                                    <p class="text-xs text-yellow-600 mt-1">
+                                        Silakan lengkapi data rekening untuk dapat mengajukan pencairan gaji.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-orange-50 rounded-lg p-4">
+                            <p class="text-sm text-orange-600 mb-1 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path>
+                                    <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                Nama Bank
+                            </p>
+                            <p class="font-semibold text-gray-900">{{ $dosen->nama_bank ?? '-' }}</p>
+                        </div>
+
+                        <div class="bg-orange-50 rounded-lg p-4">
+                            <p class="text-sm text-orange-600 mb-1 flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd"></path>
+                                </svg>
+                                Nomor Rekening
+                            </p>
+                            <p class="font-semibold text-gray-900">{{ $dosen->nomor_rekening ?? '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Account Security -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <div class="flex items-center mb-6">
@@ -295,6 +356,22 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">No. Telepon</label>
                     <input type="text" name="no_telepon" value="{{ old('no_telepon', $dosen->no_telepon) }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Bank</label>
+                    <input type="text" name="nama_bank" value="{{ old('nama_bank', $dosen->nama_bank) }}"
+                           placeholder="BRI, BNI, Mandiri, dll"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <p class="text-xs text-gray-500 mt-1">Diperlukan untuk pencairan gaji</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nomor Rekening</label>
+                    <input type="text" name="nomor_rekening" value="{{ old('nomor_rekening', $dosen->nomor_rekening) }}"
+                           placeholder="1234567890"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <p class="text-xs text-gray-500 mt-1">Diperlukan untuk pencairan gaji</p>
                 </div>
 
                 <div class="md:col-span-2">

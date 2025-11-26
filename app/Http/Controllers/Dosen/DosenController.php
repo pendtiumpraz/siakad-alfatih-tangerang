@@ -103,6 +103,8 @@ class DosenController extends Controller
             'gelar_belakang' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
             'no_telepon' => 'nullable|string|max:20',
+            'nama_bank' => 'nullable|string|max:100',
+            'nomor_rekening' => 'nullable|string|max:50',
             'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // 2MB max
         ]);
 
