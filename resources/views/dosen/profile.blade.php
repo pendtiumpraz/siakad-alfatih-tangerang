@@ -26,7 +26,8 @@
                                     <img src="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}"
                                          alt="Foto Profil"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
-                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff'">
+                                         onerror="console.log('Image load failed, trying fallback...'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
+                                         onload="console.log('✅ Image loaded successfully from Google Drive');">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
                                          alt="Foto Profil"
@@ -61,9 +62,23 @@
                                         @endif
                                     </p>
                                     @if($dosen->foto)
-                                        <p class="text-gray-700 mt-1">Full URL:</p>
-                                        <p class="text-xs break-all bg-white p-1 rounded">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</p>
-                                        <a href="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs mt-1 inline-block">Test URL di tab baru</a>
+                                        <div class="mt-2">
+                                            <p class="text-gray-700 font-semibold">Test URLs (klik untuk buka):</p>
+                                            <div class="ml-2 mt-1 space-y-1">
+                                                <div>
+                                                    <span class="text-gray-600">Format 1 (uc?export=view):</span>
+                                                    <a href="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</a>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-600">Format 2 (thumbnail):</span>
+                                                    <a href="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400</a>
+                                                </div>
+                                                <div>
+                                                    <span class="text-gray-600">Format 3 (file/d/view):</span>
+                                                    <a href="https://drive.google.com/file/d/{{ $dosen->foto }}/view" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/file/d/{{ $dosen->foto }}/view</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endif
                                 </div>
                                 
