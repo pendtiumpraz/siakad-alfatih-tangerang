@@ -23,11 +23,11 @@
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
                                 @if($dosen->foto)
-                                    <img src="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view"
+                                    <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="console.error('Image failed to load. Foto ID: {{ $dosen->foto }}'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
+                                         onerror="console.error('❌ Thumbnail failed. Trying usercontent...'); this.src='https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view'; this.onerror=function(){console.error('❌ All formats failed'); this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';};"
                                          onload="console.log('✅ Image loaded! Foto ID: {{ $dosen->foto }}');">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
@@ -57,10 +57,13 @@
                                     <!-- Temporary debug -->
                                     <details class="mt-2">
                                         <summary class="text-xs text-blue-600 cursor-pointer">Debug Info (klik untuk expand)</summary>
-                                        <div class="mt-1 p-2 bg-gray-100 rounded text-xs">
+                                        <div class="mt-1 p-2 bg-gray-100 rounded text-xs space-y-1">
                                             <p><strong>Foto ID:</strong> <code>{{ $dosen->foto }}</code></p>
-                                            <p><strong>URL:</strong></p>
-                                            <a href="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view" target="_blank" class="text-blue-600 underline text-xs break-all">Test Link - Klik untuk buka</a>
+                                            <p><strong>Format 1 (thumbnail - PRIMARY):</strong></p>
+                                            <a href="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400" target="_blank" class="text-blue-600 underline text-xs break-all block">Klik untuk test</a>
+                                            <p class="mt-1"><strong>Format 2 (usercontent - FALLBACK):</strong></p>
+                                            <a href="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view" target="_blank" class="text-blue-600 underline text-xs break-all block">Klik untuk test</a>
+                                            <p class="mt-2 text-orange-600"><strong>⚠️ Jika foto tidak muncul:</strong> File di Google Drive mungkin belum public</p>
                                         </div>
                                     </details>
                                 @else
