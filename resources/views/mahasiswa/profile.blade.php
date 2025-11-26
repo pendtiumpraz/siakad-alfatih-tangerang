@@ -37,13 +37,16 @@
                     <div class="relative px-6 pb-6">
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
+                                <!-- DEBUG: Foto = "{{ $mahasiswa->foto }}" -->
                                 @if($mahasiswa->foto)
+                                    <!-- MASUK IF BLOCK -->
                                     <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w400"
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="this.src='https://drive.usercontent.google.com/download?id={{ $mahasiswa->foto }}&export=view'; this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';};">
+                                         onerror="console.error('Image load error for: ' + this.src); this.src='https://drive.usercontent.google.com/download?id={{ $mahasiswa->foto }}&export=view&authuser=0'; this.onerror=function(){console.error('Fallback also failed'); this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';};">
                                 @else
+                                    <!-- MASUK ELSE BLOCK -->
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff"
                                          alt="Foto Profil {{ $mahasiswa->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
@@ -337,14 +340,17 @@
                 <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Profil</label>
                     
+                    <!-- DEBUG: Modal - Foto = "{{ $mahasiswa->foto }}" -->
+                    
                     <!-- Preview Foto Existing -->
                     @if($mahasiswa->foto)
+                        <!-- MODAL: MASUK IF BLOCK -->
                         <div class="mb-4 flex items-start space-x-4">
                             <div class="flex-shrink-0">
                                 <img src="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w200"
                                      alt="Foto saat ini"
                                      class="w-32 h-32 object-cover rounded-lg border-2 border-blue-500 shadow-md"
-                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';">
+                                     onerror="console.error('Modal image error:', this.src); this.src='https://ui-avatars.com/api/?name={{ urlencode($mahasiswa->nama_lengkap) }}&size=200&background=3b82f6&color=fff';">
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-gray-600 mb-1">
@@ -352,8 +358,12 @@
                                     <strong>Foto saat ini tersimpan di Google Drive</strong>
                                 </p>
                                 <p class="text-xs text-gray-500">Upload foto baru untuk mengganti foto saat ini</p>
+                                <p class="text-xs text-gray-400 mt-1">ID: {{ $mahasiswa->foto }}</p>
                             </div>
                         </div>
+                    @else
+                        <!-- MODAL: MASUK ELSE BLOCK -->
+                        <p class="text-sm text-gray-500 mb-3">Belum ada foto.</p>
                     @endif
                     
                     <!-- Input File Foto Baru -->
