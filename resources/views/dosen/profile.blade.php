@@ -50,9 +50,16 @@
                                 </span>
                                 <!-- Debug Info (temporary) -->
                                 <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-left">
-                                    <p class="font-bold text-yellow-800 mb-2">🔍 Debug Info:</p>
+                                    <p class="font-bold text-yellow-800 mb-2">Debug Info:</p>
                                     <p class="text-gray-700">Foto ID: <code class="bg-white px-1 py-0.5 rounded">{{ $dosen->foto ?? 'NULL/EMPTY' }}</code></p>
-                                    <p class="text-gray-700">Kondisi @if: {{ $dosen->foto ? '✅ TRUE (foto ada)' : '❌ FALSE (foto kosong)' }}</p>
+                                    <p class="text-gray-700">
+                                        Status: 
+                                        @if($dosen->foto)
+                                            <span class="text-green-600 font-bold">TRUE (foto ada)</span>
+                                        @else
+                                            <span class="text-red-600 font-bold">FALSE (foto kosong)</span>
+                                        @endif
+                                    </p>
                                     @if($dosen->foto)
                                         <p class="text-gray-700 mt-1">Full URL:</p>
                                         <p class="text-xs break-all bg-white p-1 rounded">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</p>
