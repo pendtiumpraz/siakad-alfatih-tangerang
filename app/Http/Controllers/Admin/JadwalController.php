@@ -453,4 +453,67 @@ class JadwalController extends Controller
             'conflicts' => $conflicts
         ]);
     }
+
+    /**
+     * Show calendar view with filters
+     */
+    public function calendar(Request $request)
+    {
+        // Get filter parameters
+        $jenis_semester = $request->get('jenis_semester', 'ganjil');
+        $program_studi_id = $request->get('program_studi_id');
+
+        // Get all program studi for filter dropdown
+        $programStudis = ProgramStudi::orderBy('nama_prodi')->get();
+
+        // Build query
+        $query = Jadwal::with(['mataKuliah.kurikulum.programStudi', 'dosen', 'ruangan'])
+            ->where('jenis_semester', $jenis_semester);
+
+        // Filter by program studi if selected
+        if ($program_studi_id) {
+            $query->whereHas('mataKuliah.kurikulum', function($q) use ($program_studi_id) {
+                $q->where('program_studi_id', $program_studi_id);
+            });
+        }
+
+        $jadwals = $query->get();
+
+        // Organize jadwal by day and time slot
+        $calendar = [
+            'Minggu' => [],
+            'Senin' => [],
+            'Selasa' => [],
+            'Rabu' => [],
+            'Kamis' => [],
+            'Jumat' => [],
+            'Sabtu' => []
+        ];
+
+        // Time slots from 06:00 to 22:00 (every hour)
+        $timeSlots = [];
+        for ($hour = 6; $hour <= 22; $hour++) {
+            $timeSlots[] = sprintf('%02d:00', $hour);
+        }
+
+        // Populate calendar
+        foreach ($jadwals as $jadwal) {
+            $hari = $jadwal->hari;
+            if ($hari === 'Ahad') {
+                $hari = 'Minggu';
+            }
+            
+            if (isset($calendar[$hari])) {
+                $calendar[$hari][] = $jadwal;
+            }
+        }
+
+        return view('admin.jadwal.calendar', compact(
+            'calendar',
+            'timeSlots',
+            'programStudis',
+            'jenis_semester',
+            'program_studi_id'
+        ));
+    }
 }

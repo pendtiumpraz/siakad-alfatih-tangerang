@@ -160,8 +160,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     });
 
     // Jadwal Management (Admin creates ALL jadwal)
-    Route::resource('jadwal', AdminJadwalController::class);
+    Route::get('jadwal/calendar', [AdminJadwalController::class, 'calendar'])->name('jadwal.calendar');
     Route::post('jadwal/check-conflict', [AdminJadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
+    Route::resource('jadwal', AdminJadwalController::class);
 
     // Documentation
     Route::get('/docs', [AdminDashboardController::class, 'docs'])->name('docs');
