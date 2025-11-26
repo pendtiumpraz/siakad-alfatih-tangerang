@@ -391,9 +391,10 @@
             @php
                 $hasPendingPayment = $pendaftar->pembayaranPendaftarans()->where('status', 'pending')->exists();
                 $hasVerifiedPayment = $pendaftar->pembayaranPendaftarans()->where('status', 'verified')->exists();
+                $biayaPendaftaran = $pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0;
             @endphp
 
-            @if(!$hasVerifiedPayment)
+            @if($biayaPendaftaran > 0 && !$hasVerifiedPayment)
                 <div class="mt-8 bg-white rounded-2xl shadow-2xl overflow-hidden no-print" x-data="{ uploading: false }">
                     <!-- Header -->
                     <div class="bg-gradient-to-r from-islamic-green to-green-600 px-6 py-4">
@@ -403,7 +404,7 @@
                             </svg>
                             Upload Bukti Pembayaran
                         </h3>
-                        <p class="text-islamic-gold text-sm mt-1">Biaya Pendaftaran: <span class="font-bold">Rp {{ number_format($pendaftar->jalurSeleksi->biaya_pendaftaran ?? 0, 0, ',', '.') }}</span></p>
+                        <p class="text-islamic-gold text-sm mt-1">Biaya Pendaftaran: <span class="font-bold">Rp {{ number_format($biayaPendaftaran, 0, ',', '.') }}</span></p>
                     </div>
 
                     <div class="p-6">
