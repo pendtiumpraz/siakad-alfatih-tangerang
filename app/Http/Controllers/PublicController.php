@@ -551,10 +551,10 @@ class PublicController extends Controller
 
         // Convert foto to base64 for PDF (DomPDF can't load external images)
         $fotoBase64 = null;
-        if ($pendaftar->google_drive_file_id) {
+        if ($pendaftar->foto_direct_url) {
             try {
                 // Use direct download URL format for Google Drive
-                $downloadUrl = "https://drive.usercontent.google.com/download?id={$pendaftar->google_drive_file_id}&export=download&authuser=0";
+                $downloadUrl = $pendaftar->foto_direct_url;
                 
                 // Download image from Google Drive with proper headers
                 $context = stream_context_create([

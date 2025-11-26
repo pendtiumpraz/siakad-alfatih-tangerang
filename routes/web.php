@@ -25,12 +25,16 @@ use App\Http\Controllers\Master\RuanganController;
 use App\Http\Controllers\Master\SemesterController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\GoogleDriveOAuthController;
+use App\Http\Controllers\ImageProxyController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+// Image Proxy for Google Drive (bypass CORS)
+Route::get('/image-proxy', [ImageProxyController::class, 'proxy'])->name('image.proxy');
 
 // Public SPMB Routes (No authentication required)
 Route::prefix('spmb')->name('public.spmb.')->group(function() {

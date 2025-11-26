@@ -143,13 +143,13 @@ class Pendaftar extends Model
     }
 
     /**
-     * Get embeddable photo URL
+     * Get embeddable photo URL (using proxy to bypass CORS)
      */
     public function getFotoUrlAttribute(): ?string
     {
-        // Use direct download URL if we have Google Drive file ID
+        // Use proxy URL if we have Google Drive file ID
         if ($this->google_drive_file_id) {
-            return "https://drive.usercontent.google.com/download?id={$this->google_drive_file_id}&export=view&authuser=0";
+            return route('image.proxy', ['id' => $this->google_drive_file_id]);
         }
 
         $url = $this->google_drive_link ?? $this->foto;
@@ -158,12 +158,11 @@ class Pendaftar extends Model
             return null;
         }
 
-        // Extract file ID from Google Drive link
+        // Extract file ID from Google Drive link and use proxy
         if (str_contains($url, 'drive.google.com')) {
             preg_match('/\/d\/([^\/]+)/', $url, $matches);
             if (isset($matches[1])) {
-                // Use direct download URL format
-                return "https://drive.usercontent.google.com/download?id={$matches[1]}&export=view&authuser=0";
+                return route('image.proxy', ['id' => $matches[1]]);
             }
         }
 
@@ -173,6 +172,18 @@ class Pendaftar extends Model
         }
 
         return $url;
+    }
+    
+    /**
+     * Get direct Google Drive download URL (for PDF generation)
+     */
+    public function getFotoDirectUrlAttribute(): ?string
+    {
+        if ($this->google_drive_file_id) {
+            return "https://drive.usercontent.google.com/download?id={$this->google_drive_file_id}&export=download&authuser=0";
+        }
+        
+        return null;
     }
 
     /**

@@ -193,6 +193,8 @@
                                     <img id="pendaftar-foto"
                                          src="{{ $pendaftar->foto_url }}"
                                          alt="Foto {{ $pendaftar->nama }}"
+                                         referrerpolicy="no-referrer"
+                                         crossorigin="anonymous"
                                          class="w-32 h-48 object-cover border-4 border-islamic-green rounded-lg shadow-lg mx-auto">
                                     <!-- Fallback: Link to view in Google Drive if image fails -->
                                     <div id="foto-fallback" style="display:none;" class="w-32 h-48 flex flex-col items-center justify-center border-4 border-islamic-green rounded-lg bg-gray-50 mx-auto">
