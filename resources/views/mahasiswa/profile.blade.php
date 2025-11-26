@@ -8,6 +8,21 @@
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-gray-900">Profil Saya</h1>
             <p class="mt-2 text-gray-600">Kelola informasi profil dan keamanan akun Anda</p>
+            
+            <!-- TEMPORARY: Show foto status -->
+            <div class="mt-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 text-sm">
+                <p><strong>🔍 DEBUG INFO:</strong></p>
+                <p>NIM: {{ $mahasiswa->nim }}</p>
+                <p>Nama: {{ $mahasiswa->nama_lengkap }}</p>
+                <p>Foto ID: <code>{{ $mahasiswa->foto ?? 'NULL (Belum ada foto)' }}</code></p>
+                @if($mahasiswa->foto)
+                    <p>✅ Foto TERSIMPAN di database</p>
+                    <p>URL: <a href="https://drive.google.com/thumbnail?id={{ $mahasiswa->foto }}&sz=w400" target="_blank" class="text-blue-600 underline">Test URL</a></p>
+                @else
+                    <p>❌ Foto BELUM ADA di database</p>
+                    <p>Silakan upload foto baru via tombol "Edit Profil"</p>
+                @endif
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
