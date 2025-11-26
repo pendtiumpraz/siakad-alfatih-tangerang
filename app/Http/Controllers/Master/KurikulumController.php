@@ -76,7 +76,7 @@ class KurikulumController extends Controller
         $query->with('programStudi')->withCount('mataKuliahs');
 
         // Pagination
-        $kurikulums = $query->orderBy('tahun_mulai', 'desc')->paginate(15);
+        $kurikulums = $query->orderBy('tahun_mulai', 'desc')->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalKurikulum = Kurikulum::count();

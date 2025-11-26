@@ -28,7 +28,7 @@ class DaftarUlangController extends Controller
             $query->where('status', $request->status);
         }
 
-        $daftarUlangs = $query->paginate(20);
+        $daftarUlangs = $query->paginate(20)->withQueryString();
         $stats = [
             'total' => DaftarUlang::count(),
             'pending' => DaftarUlang::where('status', 'pending')->count(),

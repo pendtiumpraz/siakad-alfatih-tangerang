@@ -85,7 +85,7 @@ class ProgramStudiController extends Controller
         $query->withCount(['kurikulums', 'mahasiswas']);
 
         // Pagination
-        $programStudis = $query->orderBy('kode_prodi', 'asc')->paginate(15);
+        $programStudis = $query->orderBy('kode_prodi', 'asc')->paginate(15)->withQueryString();
 
         // Statistics
         $totalProgramStudi = ProgramStudi::count();

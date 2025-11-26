@@ -85,7 +85,7 @@ class MataKuliahController extends Controller
             ->withCount(['jadwals', 'nilais']);
 
         // Pagination
-        $mataKuliahs = $query->orderBy('kode_mk', 'asc')->paginate(15);
+        $mataKuliahs = $query->orderBy('kode_mk', 'asc')->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalMataKuliah = MataKuliah::count();

@@ -42,7 +42,7 @@ class PenggajianDosenController extends Controller
         $query->orderByRaw("FIELD(status, 'pending', 'verified', 'paid', 'rejected')")
               ->orderBy('created_at', 'desc');
 
-        $penggajians = $query->paginate(15);
+        $penggajians = $query->paginate(15)->withQueryString();
 
         // Get unique periodes for filter
         $periodes = PenggajianDosen::select('periode')

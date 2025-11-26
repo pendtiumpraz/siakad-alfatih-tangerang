@@ -32,7 +32,7 @@ class SemesterController extends Controller
 
         $semesters = $query->orderBy('tahun_akademik', 'desc')
                           ->orderBy('jenis', 'desc')
-                          ->paginate(15);
+                          ->paginate(15)->withQueryString();
 
         if ($request->expectsJson()) {
             return response()->json([

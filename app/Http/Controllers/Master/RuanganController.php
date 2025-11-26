@@ -83,7 +83,7 @@ class RuanganController extends Controller
         $query->withCount('jadwals');
 
         // Pagination
-        $ruangans = $query->orderBy('kode_ruangan', 'asc')->paginate(15);
+        $ruangans = $query->orderBy('kode_ruangan', 'asc')->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalRuangan = Ruangan::count();

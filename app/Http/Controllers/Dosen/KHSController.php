@@ -63,7 +63,7 @@ class KHSController extends Controller
             $query->where('semester_id', $request->semester_id);
         }
 
-        $khs = $query->orderBy('created_at', 'desc')->paginate(15);
+        $khs = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
 
         return view('dosen.khs.index', compact('khs', 'dosen', 'mahasiswas', 'semesters'));
     }

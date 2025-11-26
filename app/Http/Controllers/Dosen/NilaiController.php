@@ -109,7 +109,7 @@ class NilaiController extends Controller
             ->where('dosen_id', $dosen->id)
             ->with(['mahasiswa', 'semester'])
             ->orderBy('created_at', 'desc')
-            ->paginate(15);
+            ->paginate(15)->withQueryString();
 
         return view('dosen.nilai.mahasiswa', compact('mataKuliah', 'nilais', 'dosen'));
     }

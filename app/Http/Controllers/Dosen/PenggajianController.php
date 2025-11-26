@@ -25,7 +25,7 @@ class PenggajianController extends Controller
         $penggajians = PenggajianDosen::where('dosen_id', $dosen->id)
             ->with(['semester', 'verifier', 'payer'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10)->withQueryString();
 
         return view('dosen.penggajian.index', compact('penggajians', 'dosen'));
     }

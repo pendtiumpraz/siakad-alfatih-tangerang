@@ -56,7 +56,7 @@ class SemesterController extends Controller
         // Pagination
         $semesters = $query->orderBy('tahun_akademik', 'desc')
             ->orderBy('jenis', 'asc')
-            ->paginate(15);
+            ->paginate(15)->withQueryString();
 
         $viewPrefix = $this->getViewPrefix();
         return view("{$viewPrefix}.semester.index", compact('semesters'));

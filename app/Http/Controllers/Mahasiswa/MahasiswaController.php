@@ -414,7 +414,7 @@ class MahasiswaController extends Controller
         }
 
         $pembayarans = $query->orderBy('tanggal_jatuh_tempo', 'desc')
-                            ->paginate(15);
+                            ->paginate(15)->withQueryString();
 
         $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
 

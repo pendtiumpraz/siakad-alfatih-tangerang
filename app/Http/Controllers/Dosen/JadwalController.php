@@ -57,7 +57,7 @@ class JadwalController extends Controller
         $jadwals = $query->orderBy('semester_id', 'desc')
             ->orderBy('hari')
             ->orderBy('jam_mulai')
-            ->paginate(15);
+            ->paginate(15)->withQueryString();
 
         return view('dosen.jadwal.index', compact('jadwals', 'dosen', 'semesters'));
     }

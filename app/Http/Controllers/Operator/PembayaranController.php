@@ -177,7 +177,7 @@ class PembayaranController extends Controller
         // Order by latest
         $query->orderBy('created_at', 'desc');
 
-        $pembayarans = $query->paginate(20);
+        $pembayarans = $query->paginate(20)->withQueryString();
 
         // Get filter options
         $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_lengkap')
