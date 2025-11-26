@@ -110,7 +110,7 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <a href="{{ route('admin.penggajian.show', $penggajian->id) }}" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" title="Lihat Detail">
+                                    <a href="{{ route('admin.penggajian.show', $penggajian->id) }}" class="text-blue-600 hover:text-blue-800 transition" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     @if($penggajian->canBeVerified())

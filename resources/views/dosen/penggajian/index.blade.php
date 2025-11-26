@@ -66,17 +66,17 @@
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <div class="flex items-center justify-center space-x-2">
-                                    <a href="{{ route('dosen.penggajian.show', $penggajian->id) }}" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" title="Lihat Detail">
+                                    <a href="{{ route('dosen.penggajian.show', $penggajian->id) }}" class="text-blue-600 hover:text-blue-800 transition" title="Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     @if($penggajian->canBeEdited())
-                                        <a href="{{ route('dosen.penggajian.edit', $penggajian->id) }}" class="p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition" title="Edit">
+                                        <a href="{{ route('dosen.penggajian.edit', $penggajian->id) }}" class="text-[#D4AF37] hover:text-[#b8941f] transition" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('dosen.penggajian.destroy', $penggajian->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus pengajuan ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition" title="Hapus">
+                                            <button type="submit" class="text-red-600 hover:text-red-800 transition" title="Hapus">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
