@@ -33,35 +33,35 @@
             </div>
 
             @if($jalurSeleksis->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="flex justify-center">
                     @foreach($jalurSeleksis as $jalur)
-                        <div class="border-2 border-islamic-green/20 rounded-xl p-6 hover:shadow-lg hover:border-islamic-gold transition duration-200">
-                            <div class="flex items-center mb-4">
-                                <div class="bg-islamic-green text-white rounded-full w-12 h-12 flex items-center justify-center mr-4">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <div class="max-w-2xl w-full border-2 border-islamic-green/20 rounded-xl p-8 hover:shadow-xl hover:border-islamic-gold transition duration-200">
+                            <div class="text-center mb-6">
+                                <div class="bg-islamic-green text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                     </svg>
                                 </div>
-                                <h3 class="text-xl font-bold text-islamic-green">{{ $jalur->nama }}</h3>
+                                <h3 class="text-2xl font-bold text-islamic-green mb-2">{{ $jalur->nama }}</h3>
                             </div>
 
-                            <p class="text-gray-600 mb-4 text-sm">{{ $jalur->deskripsi }}</p>
+                            <p class="text-gray-600 mb-6 text-center leading-relaxed">{{ $jalur->deskripsi }}</p>
 
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="text-gray-600">Biaya Pendaftaran:</span>
-                                    <span class="font-bold text-islamic-green">Rp {{ number_format($jalur->biaya_pendaftaran, 0, ',', '.') }}</span>
+                            <div class="bg-islamic-green/5 rounded-lg p-4 mb-6">
+                                <div class="flex justify-center items-center">
+                                    <span class="text-gray-600 mr-2">Biaya Pendaftaran:</span>
+                                    <span class="text-2xl font-bold text-islamic-green">
+                                        @if($jalur->biaya_pendaftaran == 0)
+                                            GRATIS
+                                        @else
+                                            Rp {{ number_format($jalur->biaya_pendaftaran, 0, ',', '.') }}
+                                        @endif
+                                    </span>
                                 </div>
-                                @if($jalur->kuota_total)
-                                    <div class="flex justify-between items-center text-sm">
-                                        <span class="text-gray-600">Kuota:</span>
-                                        <span class="font-semibold text-islamic-green">{{ $jalur->kuota_total }} orang</span>
-                                    </div>
-                                @endif
                             </div>
 
-                            <a href="{{ route('public.spmb.register') }}?jalur={{ $jalur->id }}" class="block text-center bg-islamic-green hover:bg-islamic-green-light text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                                Pilih Jalur Ini
+                            <a href="{{ route('public.spmb.register') }}?jalur={{ $jalur->id }}" class="block text-center bg-islamic-green hover:bg-islamic-green-light text-white font-bold py-4 px-6 rounded-lg transition duration-200 transform hover:scale-105">
+                                Daftar Sekarang
                             </a>
                         </div>
                     @endforeach
@@ -80,45 +80,45 @@
                 <div class="w-24 h-1 bg-islamic-gold mx-auto"></div>
             </div>
 
-            <div class="space-y-6 max-w-3xl mx-auto">
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">1</div>
-                        <div class="w-1 h-full bg-islamic-gold/30 mt-2"></div>
+            <div class="max-w-3xl mx-auto">
+                <div class="flex gap-4 mb-6">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">1</div>
+                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
                     </div>
-                    <div class="pb-8">
+                    <div class="flex-1 pb-6">
                         <h4 class="font-bold text-islamic-green mb-1">Pendaftaran Online</h4>
                         <p class="text-gray-600 text-sm">Isi formulir pendaftaran dan upload dokumen yang diperlukan</p>
                     </div>
                 </div>
 
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">2</div>
-                        <div class="w-1 h-full bg-islamic-gold/30 mt-2"></div>
+                <div class="flex gap-4 mb-6">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">2</div>
+                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
                     </div>
-                    <div class="pb-8">
+                    <div class="flex-1 pb-6">
                         <h4 class="font-bold text-islamic-green mb-1">Pembayaran</h4>
                         <p class="text-gray-600 text-sm">Lakukan pembayaran biaya pendaftaran sesuai jalur yang dipilih</p>
                     </div>
                 </div>
 
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">3</div>
-                        <div class="w-1 h-full bg-islamic-gold/30 mt-2"></div>
+                <div class="flex gap-4 mb-6">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">3</div>
+                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
                     </div>
-                    <div class="pb-8">
+                    <div class="flex-1 pb-6">
                         <h4 class="font-bold text-islamic-green mb-1">Ujian/Seleksi</h4>
                         <p class="text-gray-600 text-sm">Mengikuti ujian atau seleksi sesuai jalur yang dipilih</p>
                     </div>
                 </div>
 
                 <div class="flex gap-4">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">4</div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">4</div>
                     </div>
-                    <div>
+                    <div class="flex-1">
                         <h4 class="font-bold text-islamic-green mb-1">Pengumuman & Daftar Ulang</h4>
                         <p class="text-gray-600 text-sm">Cek hasil seleksi dan lakukan daftar ulang jika diterima</p>
                     </div>
@@ -135,7 +135,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -144,7 +144,7 @@
                 </div>
 
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -153,16 +153,25 @@
                 </div>
 
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <p class="text-gray-700">Pas foto 4x6 (JPG/PNG, max 500KB)</p>
+                    <p class="text-gray-700">Pas foto dengan background sesuai tahun (merah/biru)</p>
                 </div>
 
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-700">Transkrip nilai (khusus yang memilih prodi S2)</p>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -171,7 +180,7 @@
                 </div>
 
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
@@ -180,12 +189,39 @@
                 </div>
 
                 <div class="flex items-start gap-3">
-                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <p class="text-gray-700">Fotokopi Akta Kelahiran</p>
+                    <p class="text-gray-700">Surat Bukti Mengajar dari sekolah (khusus guru)</p>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-700">Surat Keterangan RT (khusus dhuafa)</p>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-700">Surat Keterangan Yatim dari RT (khusus yatim)</p>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="bg-islamic-green text-white rounded-full w-6 h-6 min-w-[1.5rem] min-h-[1.5rem] flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <p class="text-gray-700">Sertifikat Quran minimal Juz 30 dan siap di test (khusus penghafal Quran)</p>
                 </div>
             </div>
         </div>
