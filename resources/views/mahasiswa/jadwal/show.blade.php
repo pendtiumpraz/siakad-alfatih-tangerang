@@ -7,7 +7,7 @@
     <!-- Page Title -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800">Ulumul Qur'an</h1>
+            <h1 class="text-3xl font-bold text-gray-800">{{ $jadwal->mataKuliah->nama_mk ?? 'Mata Kuliah' }}</h1>
             <p class="text-gray-600 mt-1">Detail informasi mata kuliah</p>
         </div>
         <a href="{{ route('mahasiswa.jadwal.index') }}"
@@ -35,21 +35,21 @@
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label class="text-xs text-gray-500 uppercase tracking-wide">Kode Mata Kuliah</label>
-                        <p class="text-gray-800 font-semibold mt-1">PAI-501</p>
+                        <p class="text-gray-800 font-semibold mt-1">{{ $jadwal->mataKuliah->kode_mk ?? '-' }}</p>
                     </div>
                     <div>
                         <label class="text-xs text-gray-500 uppercase tracking-wide">SKS</label>
-                        <p class="text-gray-800 font-semibold mt-1">3 SKS</p>
+                        <p class="text-gray-800 font-semibold mt-1">{{ $jadwal->mataKuliah->sks ?? '-' }} SKS</p>
                     </div>
                     <div>
                         <label class="text-xs text-gray-500 uppercase tracking-wide">Semester</label>
-                        <p class="text-gray-800 font-semibold mt-1">Semester 5</p>
+                        <p class="text-gray-800 font-semibold mt-1">Semester {{ $jadwal->mataKuliah->semester ?? '-' }}</p>
                     </div>
                     <div>
-                        <label class="text-xs text-gray-500 uppercase tracking-wide">Jenis</label>
+                        <label class="text-xs text-gray-500 uppercase tracking-wide">Kelas</label>
                         <p class="text-gray-800 font-semibold mt-1">
                             <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                Wajib
+                                {{ $jadwal->kelas ?? '-' }}
                             </span>
                         </p>
                     </div>
@@ -66,14 +66,20 @@
                 </h3>
                 <div class="flex items-center space-x-4">
                     <div class="w-16 h-16 rounded-full overflow-hidden bg-[#4A7C59]">
-                        <img src="https://ui-avatars.com/api/?name=Ahmad+Fauzi&size=200&background=4A7C59&color=fff"
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($jadwal->dosen->nama_lengkap ?? 'Dosen') }}&size=200&background=4A7C59&color=fff"
                              alt="Dosen"
                              class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
-                        <p class="font-bold text-gray-800 text-lg">Dr. H. Ahmad Fauzi, M.Ag</p>
-                        <p class="text-sm text-gray-600">NIP: 0123456789</p>
-                        <p class="text-sm text-gray-500 mt-1">Email: ahmad.fauzi@staialfatih.ac.id</p>
+                        <p class="font-bold text-gray-800 text-lg">
+                            @if($jadwal->dosen ?? false)
+                                {{ $jadwal->dosen->gelar_depan ? $jadwal->dosen->gelar_depan . ' ' : '' }}{{ $jadwal->dosen->nama_lengkap }}{{ $jadwal->dosen->gelar_belakang ? ', ' . $jadwal->dosen->gelar_belakang : '' }}
+                            @else
+                                -
+                            @endif
+                        </p>
+                        <p class="text-sm text-gray-600">NIP: {{ $jadwal->dosen->nidn ?? '-' }}</p>
+                        <p class="text-sm text-gray-500 mt-1">Email: {{ $jadwal->dosen->user->email ?? '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -87,11 +93,7 @@
                     <span>Deskripsi Mata Kuliah</span>
                 </h3>
                 <p class="text-gray-700 leading-relaxed">
-                    Mata kuliah ini membahas tentang ilmu-ilmu Al-Qur'an yang mencakup sejarah turunnya Al-Qur'an,
-                    proses kodifikasi, qira'at, asbabun nuzul, makki dan madani, nasikh mansukh, muhkam mutasyabih,
-                    amtsal, qasas, dan berbagai metodologi memahami Al-Qur'an. Mahasiswa diharapkan mampu memahami
-                    kedudukan Al-Qur'an sebagai sumber utama ajaran Islam dan dapat mengaplikasikan ilmu-ilmu Al-Qur'an
-                    dalam kehidupan sehari-hari serta dalam pembelajaran Pendidikan Agama Islam.
+                    {{ $jadwal->mataKuliah->deskripsi ?? 'Deskripsi mata kuliah belum tersedia. Silakan hubungi dosen pengampu untuk informasi lebih lanjut mengenai materi perkuliahan.' }}
                 </p>
             </div>
 
@@ -145,22 +147,22 @@
                 <div class="space-y-4">
                     <div class="bg-gradient-to-br from-[#4A7C59] to-[#5a9c6f] text-white p-4 rounded-lg text-center">
                         <p class="text-sm opacity-90 mb-1">Hari</p>
-                        <p class="text-2xl font-bold">Senin</p>
+                        <p class="text-2xl font-bold">{{ $jadwal->hari ?? '-' }}</p>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="bg-blue-50 p-3 rounded-lg text-center">
                             <p class="text-xs text-gray-600 mb-1">Waktu Mulai</p>
-                            <p class="font-bold text-gray-800">08:00</p>
+                            <p class="font-bold text-gray-800">{{ $jadwal->jam_mulai ? \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') : '-' }}</p>
                         </div>
                         <div class="bg-blue-50 p-3 rounded-lg text-center">
                             <p class="text-xs text-gray-600 mb-1">Waktu Selesai</p>
-                            <p class="font-bold text-gray-800">09:40</p>
+                            <p class="font-bold text-gray-800">{{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '-' }}</p>
                         </div>
                     </div>
                     <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
                         <p class="text-xs text-gray-600 mb-1">Ruangan</p>
-                        <p class="font-bold text-gray-800 text-lg">A-201</p>
-                        <p class="text-xs text-gray-500 mt-1">Gedung A Lantai 2</p>
+                        <p class="font-bold text-gray-800 text-lg">{{ $jadwal->ruangan->nama_ruangan ?? '-' }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $jadwal->ruangan->gedung ?? '' }}</p>
                     </div>
                 </div>
             </div>
