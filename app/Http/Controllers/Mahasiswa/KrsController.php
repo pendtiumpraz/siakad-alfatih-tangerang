@@ -8,348 +8,436 @@ use App\Models\Mahasiswa;
 use App\Models\Semester;
 use App\Models\MataKuliah;
 use App\Models\Nilai;
-use App\Models\Pembayaran;
-use App\Models\Kurikulum;
 use App\Models\Jadwal;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class KrsController extends Controller
 {
     /**
-     * Display KRS form for current semester
+     * Display KRS for current semester
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->with('programStudi')->first();
-
+        $mahasiswa = auth()->user()->mahasiswa;
+        
         if (!$mahasiswa) {
-            abort(403, 'Data mahasiswa tidak ditemukan');
+            return redirect()->route('mahasiswa.dashboard')
+                ->with('error', 'Data mahasiswa tidak ditemukan.');
         }
 
         // Get active semester
-        $semester = Semester::where('is_active', true)->first();
-
-        if (!$semester) {
-            return view('mahasiswa.krs.index')->with('error', 'Tidak ada semester aktif saat ini');
+        $activeSemester = Semester::where('is_active', true)->first();
+        
+        if (!$activeSemester) {
+            return view('mahasiswa.krs.blocked')
+                ->with('message', 'Tidak ada semester aktif saat ini.')
+                ->with('type', 'info');
         }
 
-        // Check pembayaran SPP
-        $pembayaran = Pembayaran::where('mahasiswa_id', $mahasiswa->id)
-            ->where('semester_id', $semester->id)
+        // Check if mahasiswa has paid SPP for this semester
+        $hasPaidSPP = Pembayaran::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $activeSemester->id)
             ->where('jenis_pembayaran', 'spp')
             ->where('status', 'lunas')
-            ->first();
+            ->exists();
 
-        if (!$pembayaran) {
-            return view('mahasiswa.krs.blocked', [
-                'mahasiswa' => $mahasiswa,
-                'semester' => $semester,
-                'reason' => 'Anda belum melunasi pembayaran SPP untuk semester ini'
-            ]);
+        if (!$hasPaidSPP) {
+            return view('mahasiswa.krs.blocked')
+                ->with('message', 'Anda belum membayar SPP untuk semester ini. Silakan lunasi pembayaran SPP terlebih dahulu untuk mengisi KRS.')
+                ->with('type', 'warning')
+                ->with('semester', $activeSemester);
         }
 
-        // Get existing KRS
-        $existingKrs = Krs::where('mahasiswa_id', $mahasiswa->id)
-            ->where('semester_id', $semester->id)
-            ->with('mataKuliah')
+        // Get KRS for current semester
+        $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $activeSemester->id)
+            ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
+                $q->where('semester_id', $activeSemester->id);
+            }])
             ->get();
 
-        // Get mata kuliah wajib untuk semester ini (berdasarkan kurikulum)
-        $mataKuliahWajib = MataKuliah::whereHas('kurikulum', function ($query) use ($mahasiswa) {
-                $query->where('program_studi_id', $mahasiswa->program_studi_id);
-            })
-            ->where('semester', $semester->semester)
-            ->where('jenis', 'wajib')
-            ->get();
+        // Check if KRS already submitted
+        $isSubmitted = $krsItems->where('status', '!=', 'draft')->count() > 0;
+        $krsStatus = $krsItems->first()?->status ?? 'draft';
 
-        // Get mata kuliah yang tidak lulus dari SEMUA semester sebelumnya (untuk mengulang)
-        // Mahasiswa bisa mengulang kapan saja sampai semester 14
-        $mataKuliahTidakLulus = Nilai::where('mahasiswa_id', $mahasiswa->id)
+        // If no KRS items yet, auto-populate mata kuliah wajib
+        if ($krsItems->isEmpty()) {
+            $this->autoPopulateMataKuliahWajib($mahasiswa, $activeSemester);
+            
+            // Reload KRS items
+            $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
+                ->where('semester_id', $activeSemester->id)
+                ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
+                    $q->where('semester_id', $activeSemester->id);
+                }])
+                ->get();
+        }
+
+        // Get mata kuliah that can be retaken (failed from previous semesters)
+        $failedMataKuliahs = Nilai::where('mahasiswa_id', $mahasiswa->id)
             ->where('status', 'tidak_lulus')
-            ->with(['mataKuliah'])
+            ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
+                $q->where('semester_id', $activeSemester->id);
+            }])
             ->get()
             ->pluck('mataKuliah')
             ->unique('id')
-            ->filter(function ($mk) {
-                return $mk !== null;
-            });
+            ->filter(function($mk) use ($krsItems) {
+                // Only show if not already in KRS
+                return !$krsItems->pluck('mata_kuliah_id')->contains($mk->id);
+            })
+            ->values();
 
-        // Calculate total SKS (informational only, no limit)
-        $totalSks = $existingKrs->sum(function ($krs) {
+        // Calculate total SKS
+        $totalSks = $krsItems->sum(function($krs) {
             return $krs->mataKuliah->sks ?? 0;
         });
 
-        // Get status KRS
-        $firstKrs = $existingKrs->first();
-        $status = $firstKrs->status ?? 'draft';
+        // Get mata kuliah wajib count
+        $mataKuliahWajibCount = $krsItems->filter(function($krs) {
+            return !$krs->is_mengulang;
+        })->count();
+
+        $mataKuliahMengulangCount = $krsItems->filter(function($krs) {
+            return $krs->is_mengulang;
+        })->count();
 
         return view('mahasiswa.krs.index', compact(
             'mahasiswa',
-            'semester',
-            'existingKrs',
-            'mataKuliahWajib',
-            'mataKuliahTidakLulus',
-            'totalSks'
+            'activeSemester',
+            'krsItems',
+            'failedMataKuliahs',
+            'totalSks',
+            'mataKuliahWajibCount',
+            'mataKuliahMengulangCount',
+            'isSubmitted',
+            'krsStatus'
         ));
     }
 
     /**
-     * Auto-populate KRS with all wajib mata kuliah + selected mengulang
+     * Auto-populate mata kuliah wajib for current semester
+     */
+    private function autoPopulateMataKuliahWajib(Mahasiswa $mahasiswa, Semester $semester)
+    {
+        try {
+            // Get kurikulum from mahasiswa's program studi
+            $kurikulum = $mahasiswa->programStudi->kurikulums()
+                ->where('is_active', true)
+                ->first();
+
+            if (!$kurikulum) {
+                Log::warning("No active kurikulum found for mahasiswa {$mahasiswa->id}");
+                return;
+            }
+
+            // Calculate current semester number for mahasiswa
+            // Assuming mahasiswa starts at semester 1
+            $currentSemesterNumber = $this->calculateMahasiswaSemester($mahasiswa, $semester);
+
+            // Get mata kuliah wajib for this semester
+            $mataKuliahsWajib = MataKuliah::where('kurikulum_id', $kurikulum->id)
+                ->where('semester', $currentSemesterNumber)
+                ->where('jenis', 'wajib')
+                ->get();
+
+            foreach ($mataKuliahsWajib as $mataKuliah) {
+                // Check if jadwal exists for this mata kuliah
+                $jadwalExists = Jadwal::where('mata_kuliah_id', $mataKuliah->id)
+                    ->where('semester_id', $semester->id)
+                    ->exists();
+
+                if (!$jadwalExists) {
+                    Log::info("No jadwal found for mata kuliah {$mataKuliah->id}, skipping auto-populate");
+                    continue;
+                }
+
+                // Create KRS entry
+                Krs::create([
+                    'mahasiswa_id' => $mahasiswa->id,
+                    'semester_id' => $semester->id,
+                    'mata_kuliah_id' => $mataKuliah->id,
+                    'is_mengulang' => false,
+                    'status' => 'draft',
+                ]);
+            }
+
+            Log::info("Auto-populated {$mataKuliahsWajib->count()} mata kuliah wajib for mahasiswa {$mahasiswa->id}");
+        } catch (\Exception $e) {
+            Log::error("Error auto-populating mata kuliah wajib: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Calculate which semester the mahasiswa is currently in
+     */
+    private function calculateMahasiswaSemester(Mahasiswa $mahasiswa, Semester $currentSemester)
+    {
+        // Simple calculation based on tahun masuk
+        // You can enhance this logic based on your business rules
+        
+        $tahunMasuk = (int) substr($mahasiswa->nim, 0, 4); // Assuming NIM format YYYYXXXX
+        $currentYear = (int) substr($currentSemester->tahun_akademik, 0, 4);
+        
+        $yearDiff = $currentYear - $tahunMasuk;
+        
+        // Ganjil = 1, 3, 5, 7
+        // Genap = 2, 4, 6, 8
+        if ($currentSemester->jenis === 'ganjil') {
+            return ($yearDiff * 2) + 1;
+        } else {
+            return ($yearDiff * 2) + 2;
+        }
+    }
+
+    /**
+     * Add mata kuliah mengulang to KRS
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
-
-        if (!$mahasiswa) {
-            return back()->with('error', 'Data mahasiswa tidak ditemukan');
-        }
-
-        $semester = Semester::where('is_active', true)->first();
-
-        if (!$semester) {
-            return back()->with('error', 'Tidak ada semester aktif');
-        }
-
-        // Check pembayaran
-        $pembayaran = Pembayaran::where('mahasiswa_id', $mahasiswa->id)
-            ->where('semester_id', $semester->id)
-            ->where('jenis_pembayaran', 'spp')
-            ->where('status', 'lunas')
-            ->first();
-
-        if (!$pembayaran) {
-            return back()->with('error', 'Anda belum melunasi pembayaran SPP');
-        }
-
-        // Check if KRS already submitted
-        $existingStatus = Krs::where('mahasiswa_id', $mahasiswa->id)
-            ->where('semester_id', $semester->id)
-            ->value('status');
-
-        if ($existingStatus && $existingStatus != 'draft') {
-            return back()->with('error', 'KRS sudah disubmit dan tidak bisa diubah');
-        }
-
         $validated = $request->validate([
             'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
-            'is_mengulang' => 'boolean',
         ]);
 
+        $mahasiswa = auth()->user()->mahasiswa;
+        $activeSemester = Semester::where('is_active', true)->first();
+
+        if (!$activeSemester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif.');
+        }
+
+        // Check if KRS is still in draft
+        $existingKrs = Krs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $activeSemester->id)
+            ->first();
+
+        if ($existingKrs && $existingKrs->status !== 'draft') {
+            return redirect()->back()->with('error', 'KRS sudah disubmit, tidak bisa menambah mata kuliah.');
+        }
+
+        // Check if already exists
+        $exists = Krs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $activeSemester->id)
+            ->where('mata_kuliah_id', $validated['mata_kuliah_id'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Mata kuliah sudah ada di KRS.');
+        }
+
+        // Check for schedule conflict
+        $conflict = $this->checkScheduleConflict($mahasiswa->id, $activeSemester->id, $validated['mata_kuliah_id']);
+        
+        if ($conflict) {
+            return redirect()->back()->with('error', "Jadwal bentrok dengan mata kuliah: {$conflict['nama_mk']} pada {$conflict['hari']}, {$conflict['jam_mulai']} - {$conflict['jam_selesai']}");
+        }
+
         try {
-            // Check if already exists
-            $exists = Krs::where('mahasiswa_id', $mahasiswa->id)
-                ->where('semester_id', $semester->id)
-                ->where('mata_kuliah_id', $validated['mata_kuliah_id'])
-                ->exists();
-
-            if ($exists) {
-                return back()->with('error', 'Mata kuliah sudah ditambahkan ke KRS');
-            }
-
-            $mataKuliah = MataKuliah::find($validated['mata_kuliah_id']);
-
-            // Validasi jadwal bentrok (jika mata kuliah mengulang)
-            if ($request->boolean('is_mengulang')) {
-                $conflict = $this->checkJadwalConflict($mahasiswa->id, $semester->id, $validated['mata_kuliah_id']);
-                
-                if ($conflict) {
-                    return back()->with('error', "Jadwal bentrok! Mata kuliah ini bertabrakan dengan: {$conflict['nama_mk']} ({$conflict['hari']} {$conflict['jam']})");
-                }
-            }
-
-            // Create KRS
             Krs::create([
                 'mahasiswa_id' => $mahasiswa->id,
-                'semester_id' => $semester->id,
+                'semester_id' => $activeSemester->id,
                 'mata_kuliah_id' => $validated['mata_kuliah_id'],
-                'is_mengulang' => $request->boolean('is_mengulang'),
+                'is_mengulang' => true,
                 'status' => 'draft',
             ]);
 
-            return back()->with('success', 'Mata kuliah berhasil ditambahkan ke KRS');
-
+            return redirect()->back()->with('success', 'Mata kuliah berhasil ditambahkan ke KRS.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menambahkan mata kuliah: ' . $e->getMessage());
+            Log::error("Error adding mata kuliah to KRS: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan mata kuliah ke KRS.');
         }
     }
 
     /**
-     * Remove KRS item (only for mengulang mata kuliah)
+     * Check for schedule conflicts
+     */
+    private function checkScheduleConflict($mahasiswaId, $semesterId, $newMataKuliahId)
+    {
+        // Get jadwal for new mata kuliah
+        $newJadwal = Jadwal::where('mata_kuliah_id', $newMataKuliahId)
+            ->where('semester_id', $semesterId)
+            ->first();
+
+        if (!$newJadwal) {
+            return false; // No jadwal, no conflict
+        }
+
+        // Get all jadwal for current KRS
+        $existingKrs = Krs::where('mahasiswa_id', $mahasiswaId)
+            ->where('semester_id', $semesterId)
+            ->pluck('mata_kuliah_id');
+
+        $existingJadwals = Jadwal::whereIn('mata_kuliah_id', $existingKrs)
+            ->where('semester_id', $semesterId)
+            ->with('mataKuliah')
+            ->get();
+
+        foreach ($existingJadwals as $jadwal) {
+            // Check if same day
+            if ($jadwal->hari === $newJadwal->hari) {
+                // Check time overlap
+                if ($this->isTimeOverlap(
+                    $jadwal->jam_mulai, $jadwal->jam_selesai,
+                    $newJadwal->jam_mulai, $newJadwal->jam_selesai
+                )) {
+                    return [
+                        'nama_mk' => $jadwal->mataKuliah->nama_mk,
+                        'hari' => $jadwal->hari,
+                        'jam_mulai' => $jadwal->jam_mulai,
+                        'jam_selesai' => $jadwal->jam_selesai,
+                    ];
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if two time ranges overlap
+     */
+    private function isTimeOverlap($start1, $end1, $start2, $end2)
+    {
+        return ($start1 < $end2) && ($end1 > $start2);
+    }
+
+    /**
+     * Remove mata kuliah mengulang from KRS
      */
     public function destroy($id)
     {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
+        $mahasiswa = auth()->user()->mahasiswa;
+        
+        $krs = Krs::where('id', $id)
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->first();
 
-        if (!$mahasiswa) {
-            return back()->with('error', 'Data mahasiswa tidak ditemukan');
+        if (!$krs) {
+            return redirect()->back()->with('error', 'Data KRS tidak ditemukan.');
+        }
+
+        if ($krs->status !== 'draft') {
+            return redirect()->back()->with('error', 'KRS sudah disubmit, tidak bisa menghapus mata kuliah.');
+        }
+
+        if (!$krs->is_mengulang) {
+            return redirect()->back()->with('error', 'Mata kuliah wajib tidak bisa dihapus.');
         }
 
         try {
-            $krs = Krs::where('id', $id)
-                ->where('mahasiswa_id', $mahasiswa->id)
-                ->where('status', 'draft')
-                ->firstOrFail();
-
-            // Hanya mata kuliah mengulang yang bisa dihapus
-            if (!$krs->is_mengulang) {
-                return back()->with('error', 'Mata kuliah wajib tidak dapat dihapus dari KRS');
-            }
-
             $krs->delete();
-
-            return back()->with('success', 'Mata kuliah berhasil dihapus dari KRS');
-
+            return redirect()->back()->with('success', 'Mata kuliah berhasil dihapus dari KRS.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus mata kuliah');
+            Log::error("Error deleting KRS: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus mata kuliah dari KRS.');
         }
     }
 
     /**
-     * Submit KRS for approval
+     * Submit KRS
      */
-    public function submit()
+    public function submit(Request $request)
     {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->first();
+        $mahasiswa = auth()->user()->mahasiswa;
+        $activeSemester = Semester::where('is_active', true)->first();
 
-        if (!$mahasiswa) {
-            return back()->with('error', 'Data mahasiswa tidak ditemukan');
+        if (!$activeSemester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif.');
         }
 
-        $semester = Semester::where('is_active', true)->first();
+        $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $activeSemester->id)
+            ->where('status', 'draft')
+            ->get();
 
-        if (!$semester) {
-            return back()->with('error', 'Tidak ada semester aktif');
+        if ($krsItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada KRS yang dapat disubmit.');
+        }
+
+        // Validate minimum SKS (optional, adjust as needed)
+        $totalSks = $krsItems->sum(function($krs) {
+            return $krs->mataKuliah->sks ?? 0;
+        });
+
+        if ($totalSks < 1) {
+            return redirect()->back()->with('error', 'Minimal harus mengambil 1 SKS.');
+        }
+
+        // Maximum SKS check (24 SKS as per requirement)
+        if ($totalSks > 24) {
+            return redirect()->back()->with('error', 'Maksimal SKS per semester adalah 24 SKS. Total SKS Anda: ' . $totalSks);
         }
 
         try {
-            $krsCount = Krs::where('mahasiswa_id', $mahasiswa->id)
-                ->where('semester_id', $semester->id)
-                ->where('status', 'draft')
-                ->count();
+            DB::beginTransaction();
 
-            if ($krsCount == 0) {
-                return back()->with('error', 'Tidak ada mata kuliah dalam KRS untuk disubmit');
+            foreach ($krsItems as $krs) {
+                $krs->update([
+                    'status' => 'submitted',
+                    'submitted_at' => now(),
+                ]);
             }
 
-            // Update all KRS to submitted
-            Krs::where('mahasiswa_id', $mahasiswa->id)
-                ->where('semester_id', $semester->id)
-                ->where('status', 'draft')
-                ->update([
-                    'status' => 'submitted',
-                    'submitted_at' => Carbon::now(),
-                ]);
+            DB::commit();
 
-            return back()->with('success', 'KRS berhasil disubmit. Menunggu persetujuan admin.');
-
+            return redirect()->back()->with('success', 'KRS berhasil disubmit. Menunggu persetujuan Dosen PA.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal submit KRS: ' . $e->getMessage());
+            DB::rollBack();
+            Log::error("Error submitting KRS: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal submit KRS.');
         }
     }
 
     /**
      * Print KRS
      */
-    public function print()
+    public function print(Request $request)
     {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->with('programStudi')->first();
-
+        $mahasiswa = auth()->user()->mahasiswa;
+        
         if (!$mahasiswa) {
-            abort(403, 'Data mahasiswa tidak ditemukan');
+            return redirect()->route('mahasiswa.dashboard')
+                ->with('error', 'Data mahasiswa tidak ditemukan.');
         }
 
-        $semester = Semester::where('is_active', true)->first();
-
-        if (!$semester) {
-            return back()->with('error', 'Tidak ada semester aktif');
+        $activeSemester = Semester::where('is_active', true)->first();
+        
+        if (!$activeSemester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif saat ini.');
         }
 
         $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
-            ->where('semester_id', $semester->id)
-            ->with(['mataKuliah', 'approvedBy'])
+            ->where('semester_id', $activeSemester->id)
+            ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
+                $q->where('semester_id', $activeSemester->id)->with(['dosen', 'ruangan']);
+            }, 'approvedBy'])
             ->get();
 
         if ($krsItems->isEmpty()) {
-            return back()->with('error', 'Belum ada mata kuliah dalam KRS');
+            return redirect()->back()->with('error', 'Belum ada KRS untuk dicetak.');
         }
 
-        $totalSks = $krsItems->sum(function ($item) {
-            return $item->mataKuliah->sks ?? 0;
+        $totalSks = $krsItems->sum(function($krs) {
+            return $krs->mataKuliah->sks ?? 0;
         });
 
-        return view('mahasiswa.krs.print', compact('mahasiswa', 'semester', 'krsItems', 'totalSks'));
-    }
+        $krsStatus = $krsItems->first()->status;
+        $submittedAt = $krsItems->first()->submitted_at;
+        $approvedAt = $krsItems->first()->approved_at;
+        $approvedBy = $krsItems->first()->approvedBy;
 
-    /**
-     * Check if jadwal bentrok between existing KRS and new mata kuliah
-     * 
-     * @param int $mahasiswaId
-     * @param int $semesterId
-     * @param int $newMataKuliahId
-     * @return array|false Return conflict info or false if no conflict
-     */
-    private function checkJadwalConflict($mahasiswaId, $semesterId, $newMataKuliahId)
-    {
-        // Get jadwal for new mata kuliah
-        $newJadwal = Jadwal::where('semester_id', $semesterId)
-            ->where('mata_kuliah_id', $newMataKuliahId)
-            ->first();
-
-        if (!$newJadwal) {
-            // Jika tidak ada jadwal, tidak bisa cek conflict (skip validation)
-            return false;
-        }
-
-        // Get all existing KRS mata kuliah IDs
-        $existingMkIds = Krs::where('mahasiswa_id', $mahasiswaId)
-            ->where('semester_id', $semesterId)
-            ->pluck('mata_kuliah_id')
-            ->toArray();
-
-        if (empty($existingMkIds)) {
-            return false;
-        }
-
-        // Get jadwal for existing mata kuliah
-        $existingJadwals = Jadwal::where('semester_id', $semesterId)
-            ->whereIn('mata_kuliah_id', $existingMkIds)
-            ->with('mataKuliah')
-            ->get();
-
-        // Check for conflicts
-        foreach ($existingJadwals as $jadwal) {
-            // Same day?
-            if ($jadwal->hari != $newJadwal->hari) {
-                continue;
-            }
-
-            // Time overlap?
-            $existingStart = strtotime($jadwal->jam_mulai);
-            $existingEnd = strtotime($jadwal->jam_selesai);
-            $newStart = strtotime($newJadwal->jam_mulai);
-            $newEnd = strtotime($newJadwal->jam_selesai);
-
-            // Check if times overlap
-            if (($newStart >= $existingStart && $newStart < $existingEnd) ||
-                ($newEnd > $existingStart && $newEnd <= $existingEnd) ||
-                ($newStart <= $existingStart && $newEnd >= $existingEnd)) {
-                
-                return [
-                    'nama_mk' => $jadwal->mataKuliah->nama_mk,
-                    'hari' => $jadwal->hari,
-                    'jam' => date('H:i', $existingStart) . '-' . date('H:i', $existingEnd),
-                ];
-            }
-        }
-
-        return false;
+        return view('mahasiswa.krs.print', compact(
+            'mahasiswa',
+            'activeSemester',
+            'krsItems',
+            'totalSks',
+            'krsStatus',
+            'submittedAt',
+            'approvedAt',
+            'approvedBy'
+        ));
     }
 }

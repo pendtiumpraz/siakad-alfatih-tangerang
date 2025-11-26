@@ -7,12 +7,12 @@
 ## 📋 DAFTAR ISI
 
 1. [Sistem KRS (Kartu Rencana Studi)](#1-sistem-krs)
-2. [Sistem Jadwal Perkuliahan](#2-sistem-jadwal-perkuliahan)
-3. [Auto-Assignment Dosen](#3-auto-assignment-dosen)
+2. [Sistem Jadwal Perkuliahan](#2-sistem-jadwal-perkuliahan) (DONE)
+3. [Auto-Assignment Dosen](#3-auto-assignment-dosen) (DONE)
 4. [Integrasi Jadwal dengan KRS](#4-integrasi-jadwal-dengan-krs)
 5. [Kalender Akademik](#5-kalender-akademik)
-6. [Import Master Data (CSV)](#6-import-master-data-csv)
-7. [Perbaikan Pagination dengan Filter](#7-perbaikan-pagination-dengan-filter)
+6. [Import Master Data (CSV)](#6-import-master-data-csv) (DONE)
+7. [Perbaikan Pagination dengan Filter] (#7-perbaikan-pagination-dengan-filter) (DONE)
 
 ---
 
