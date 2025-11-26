@@ -23,12 +23,11 @@
                         <div class="flex flex-col items-center -mt-10">
                             <div class="relative">
                                 @if($dosen->foto)
-                                    <img src="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}"
+                                    <img src="https://lh3.googleusercontent.com/d/{{ $dosen->foto }}"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
                                          class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover bg-gray-200"
-                                         crossorigin="anonymous"
                                          loading="eager"
-                                         onerror="console.error('❌ Image load failed for foto ID: {{ $dosen->foto }}'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
+                                         onerror="console.error('❌ Image load failed, trying fallback...'); this.onerror=function(){console.error('❌ All formats failed'); this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';}; this.src='https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400';"
                                          onload="console.log('✅ Image loaded successfully from Google Drive'); this.style.backgroundColor='transparent';">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
@@ -68,16 +67,20 @@
                                             <p class="text-gray-700 font-semibold">Test URLs (klik untuk buka):</p>
                                             <div class="ml-2 mt-1 space-y-1">
                                                 <div>
+                                                    <span class="text-green-600 font-bold">⭐ Format BARU (googleusercontent CDN):</span>
+                                                    <a href="https://lh3.googleusercontent.com/d/{{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs block break-all">https://lh3.googleusercontent.com/d/{{ $dosen->foto }}</a>
+                                                </div>
+                                                <div class="border-t pt-1">
                                                     <span class="text-gray-600">Format 1 (uc?export=view):</span>
-                                                    <a href="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</a>
+                                                    <a href="https://drive.google.com/uc?export=view&id={{ $dosen->foto }}" target="_blank" class="text-blue-600 underline text-xs block break-all">https://drive.google.com/uc?export=view&id={{ $dosen->foto }}</a>
                                                 </div>
                                                 <div>
                                                     <span class="text-gray-600">Format 2 (thumbnail):</span>
-                                                    <a href="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400</a>
+                                                    <a href="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400" target="_blank" class="text-blue-600 underline text-xs block break-all">https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400</a>
                                                 </div>
                                                 <div>
                                                     <span class="text-gray-600">Format 3 (file/d/view):</span>
-                                                    <a href="https://drive.google.com/file/d/{{ $dosen->foto }}/view" target="_blank" class="text-blue-600 underline text-xs block">https://drive.google.com/file/d/{{ $dosen->foto }}/view</a>
+                                                    <a href="https://drive.google.com/file/d/{{ $dosen->foto }}/view" target="_blank" class="text-blue-600 underline text-xs block break-all">https://drive.google.com/file/d/{{ $dosen->foto }}/view</a>
                                                 </div>
                                             </div>
                                         </div>
