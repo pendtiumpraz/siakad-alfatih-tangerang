@@ -24,6 +24,8 @@ class Dosen extends Model
         'email',
         'status',
         'foto',
+        'nama_bank',
+        'nomor_rekening',
     ];
 
     protected $casts = [
@@ -46,6 +48,11 @@ class Dosen extends Model
     public function nilais()
     {
         return $this->hasMany(Nilai::class);
+    }
+
+    public function penggajians()
+    {
+        return $this->hasMany(PenggajianDosen::class);
     }
 
     public function mahasiswaBimbingan()
