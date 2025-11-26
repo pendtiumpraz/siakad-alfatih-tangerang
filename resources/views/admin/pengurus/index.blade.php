@@ -94,7 +94,7 @@
                                             <p class="font-semibold text-gray-800">
                                                 {{ $prodi->ketuaProdi->gelar_depan }} {{ $prodi->ketuaProdi->nama_lengkap }} {{ $prodi->ketuaProdi->gelar_belakang }}
                                             </p>
-                                            <p class="text-sm text-gray-600">NIDN: {{ $prodi->ketuaProdi->nidn }}</p>
+                                            <p class="text-sm text-gray-600">NIP: {{ $prodi->ketuaProdi->nidn }}</p>
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('admin.pengurus.remove-ketua-prodi', $prodi->id) }}" onsubmit="return confirm('Yakin ingin menghapus ketua prodi ini?')">
@@ -152,7 +152,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Dosen</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIDN</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIP</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Mahasiswa Bimbingan</th>
                         </tr>
                     </thead>

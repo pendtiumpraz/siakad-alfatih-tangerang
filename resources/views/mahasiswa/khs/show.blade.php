@@ -187,7 +187,7 @@
                         {{ $khs->mahasiswa->dosenPa->nama_lengkap }}
                     </p>
                     @if($khs->mahasiswa->dosenPa->nidn)
-                    <p class="text-xs text-gray-500">NIDN: {{ $khs->mahasiswa->dosenPa->nidn }}</p>
+                    <p class="text-xs text-gray-500">NIP: {{ $khs->mahasiswa->dosenPa->nidn }}</p>
                     @endif
                 </div>
                 @endif
@@ -198,7 +198,7 @@
                     <p class="font-semibold border-t-2 border-gray-800 inline-block px-8 pt-2">
                         ___________________________
                     </p>
-                    <p class="text-xs text-gray-500">NIDN: _______________</p>
+                    <p class="text-xs text-gray-500">NIP: _______________</p>
                 </div>
                 @endif
             </div>

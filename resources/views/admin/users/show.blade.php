@@ -113,7 +113,7 @@
                             @if($user->role === 'mahasiswa')
                                 NIM
                             @elseif($user->role === 'dosen')
-                                NIDN
+                                NIP
                             @elseif($user->role === 'operator')
                                 Employee ID
                             @else
@@ -294,7 +294,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="text-sm text-gray-600">
-                                <i class="fas fa-id-badge mr-1 text-[#D4AF37]"></i>NIDN
+                                <i class="fas fa-id-badge mr-1 text-[#D4AF37]"></i>NIP
                             </label>
                             <p class="font-semibold text-[#2D5F3F]">{{ $user->dosen->nidn }}</p>
                         </div>

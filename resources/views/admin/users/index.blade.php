@@ -129,7 +129,7 @@
                             <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span><strong>Template berisi 11 contoh data dasar:</strong> Username=NIDN, Email, No HP, NIDN, Nama Lengkap, Gelar. <strong class="text-green-600">Program studi & mata kuliah otomatis dari jadwal!</strong></span>
+                            <span><strong>Template berisi 11 contoh data dasar:</strong> Username=NIP, Email, No HP, NIP, Nama Lengkap, Gelar. <strong class="text-green-600">Program studi & mata kuliah otomatis dari jadwal!</strong></span>
                         </div>
 
                     </div>
@@ -145,7 +145,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Pilih File CSV (.csv)</label>
                         <input type="file" name="file" accept=".csv" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none p-2">
-                        <p class="mt-1 text-xs text-gray-500"><strong>Data WAJIB:</strong> username (NIDN), email, nidn, nama_lengkap. <strong class="text-green-600">Program studi & mata kuliah akan otomatis dari jadwal!</strong></p>
+                        <p class="mt-1 text-xs text-gray-500"><strong>Data WAJIB:</strong> username (NIP), email, nidn, nama_lengkap. <strong class="text-green-600">Program studi & mata kuliah akan otomatis dari jadwal!</strong></p>
                     </div>
                     <button type="submit" class="px-6 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#c49d2f] transition font-semibold">
                         <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -65,7 +65,7 @@
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="text-sm text-gray-600">NIDN</label>
+                            <label class="text-sm text-gray-600">NIP</label>
                             <p class="font-semibold text-gray-900">{{ auth()->user()->dosen->nidn }}</p>
                         </div>
                         <div>

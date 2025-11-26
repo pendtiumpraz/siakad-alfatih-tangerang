@@ -72,7 +72,7 @@
                     </div>
                     <div class="flex-1">
                         <p class="font-bold text-gray-800 text-lg">Dr. H. Ahmad Fauzi, M.Ag</p>
-                        <p class="text-sm text-gray-600">NIDN: 0123456789</p>
+                        <p class="text-sm text-gray-600">NIP: 0123456789</p>
                         <p class="text-sm text-gray-500 mt-1">Email: ahmad.fauzi@staialfatih.ac.id</p>
                     </div>
                 </div>

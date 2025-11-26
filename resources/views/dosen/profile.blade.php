@@ -41,7 +41,7 @@
                 </h2>
                 <div class="flex flex-wrap justify-center md:justify-start gap-2 mt-3">
                     <span class="px-4 py-1.5 bg-[#4A7C59] text-white rounded-full text-sm font-semibold">
-                        NIDN: {{ $dosen->nidn }}
+                        NIP: {{ $dosen->nidn }}
                     </span>
                     <span class="px-4 py-1.5 bg-[#D4AF37] text-white rounded-full text-sm font-semibold">
                         Dosen
@@ -62,7 +62,7 @@
         <!-- Profile Information -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-[#4A7C59]">
-                <h3 class="text-sm font-medium text-gray-500 mb-1">NIDN</h3>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">NIP</h3>
                 <p class="text-lg text-gray-900 font-semibold">{{ $dosen->nidn }}</p>
             </div>
 

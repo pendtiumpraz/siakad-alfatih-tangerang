@@ -444,10 +444,10 @@
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- NIDN -->
+                    <!-- NIP -->
                     <div>
                         <label for="nidn" class="block text-sm font-semibold text-gray-700 mb-2">
-                            NIDN <span class="text-red-500">*</span>
+                            NIP <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="text"

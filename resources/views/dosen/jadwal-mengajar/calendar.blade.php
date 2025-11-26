@@ -50,7 +50,7 @@
             </div>
             <div class="ml-3">
                 <p class="text-sm text-green-700">
-                    <strong>Dosen:</strong> {{ $dosen->nama_lengkap }} (NIDN: {{ $dosen->nidn }}) | 
+                    <strong>Dosen:</strong> {{ $dosen->nama_lengkap }} (NIP: {{ $dosen->nidn }}) | 
                     <strong>Semester:</strong> <span class="px-2 py-1 {{ $jenis_semester == 'ganjil' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }} rounded-full text-xs font-semibold">{{ ucfirst($jenis_semester) }}</span>
                 </p>
             </div>

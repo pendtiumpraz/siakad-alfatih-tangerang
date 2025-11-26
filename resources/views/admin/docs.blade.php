@@ -321,7 +321,7 @@
                                         <div class="bg-blue-50 p-3 rounded">
                                             <p class="font-semibold text-blue-700 text-sm">👨‍🏫 Dosen:</p>
                                             <ul class="text-xs text-gray-600 ml-4 list-disc mt-1">
-                                                <li>NIDN</li>
+                                                <li>NIP</li>
                                                 <li>Gelar (S.Pd.I, M.Pd, dll)</li>
                                             </ul>
                                         </div>
