@@ -80,47 +80,50 @@
                 <div class="w-24 h-1 bg-islamic-gold mx-auto"></div>
             </div>
 
-            <div class="max-w-3xl mx-auto">
-                <div class="flex gap-4 mb-6">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">1</div>
-                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
+            <div class="max-w-3xl mx-auto relative">
+                <!-- Timeline Line Background -->
+                <div class="absolute left-5 top-5 bottom-5 w-0.5 bg-islamic-gold/20"></div>
+                
+                <!-- Timeline Items -->
+                <div class="relative">
+                    <div class="flex gap-4 mb-8">
+                        <div class="flex-shrink-0">
+                            <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold relative z-10">1</div>
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h4 class="font-bold text-islamic-green mb-1">Pendaftaran Online</h4>
+                            <p class="text-gray-600 text-sm">Isi formulir pendaftaran dan upload dokumen yang diperlukan</p>
+                        </div>
                     </div>
-                    <div class="flex-1 pb-6">
-                        <h4 class="font-bold text-islamic-green mb-1">Pendaftaran Online</h4>
-                        <p class="text-gray-600 text-sm">Isi formulir pendaftaran dan upload dokumen yang diperlukan</p>
-                    </div>
-                </div>
 
-                <div class="flex gap-4 mb-6">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">2</div>
-                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
+                    <div class="flex gap-4 mb-8">
+                        <div class="flex-shrink-0">
+                            <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold relative z-10">2</div>
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h4 class="font-bold text-islamic-green mb-1">Pembayaran</h4>
+                            <p class="text-gray-600 text-sm">Lakukan pembayaran biaya pendaftaran sesuai jalur yang dipilih</p>
+                        </div>
                     </div>
-                    <div class="flex-1 pb-6">
-                        <h4 class="font-bold text-islamic-green mb-1">Pembayaran</h4>
-                        <p class="text-gray-600 text-sm">Lakukan pembayaran biaya pendaftaran sesuai jalur yang dipilih</p>
-                    </div>
-                </div>
 
-                <div class="flex gap-4 mb-6">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">3</div>
-                        <div class="w-1 flex-1 bg-islamic-gold/30 mt-2 mb-2"></div>
+                    <div class="flex gap-4 mb-8">
+                        <div class="flex-shrink-0">
+                            <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold relative z-10">3</div>
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h4 class="font-bold text-islamic-green mb-1">Ujian/Seleksi</h4>
+                            <p class="text-gray-600 text-sm">Mengikuti ujian atau seleksi sesuai jalur yang dipilih</p>
+                        </div>
                     </div>
-                    <div class="flex-1 pb-6">
-                        <h4 class="font-bold text-islamic-green mb-1">Ujian/Seleksi</h4>
-                        <p class="text-gray-600 text-sm">Mengikuti ujian atau seleksi sesuai jalur yang dipilih</p>
-                    </div>
-                </div>
 
-                <div class="flex gap-4">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="bg-islamic-gold text-white rounded-full w-10 h-10 min-w-[2.5rem] min-h-[2.5rem] flex items-center justify-center font-bold flex-shrink-0">4</div>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-islamic-green mb-1">Pengumuman & Daftar Ulang</h4>
-                        <p class="text-gray-600 text-sm">Cek hasil seleksi dan lakukan daftar ulang jika diterima</p>
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="bg-islamic-gold text-white rounded-full w-10 h-10 flex items-center justify-center font-bold relative z-10">4</div>
+                        </div>
+                        <div class="flex-1 pt-1">
+                            <h4 class="font-bold text-islamic-green mb-1">Pengumuman & Daftar Ulang</h4>
+                            <p class="text-gray-600 text-sm">Cek hasil seleksi dan lakukan daftar ulang jika diterima</p>
+                        </div>
                     </div>
                 </div>
             </div>
