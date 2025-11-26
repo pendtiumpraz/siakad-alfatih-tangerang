@@ -22,10 +22,11 @@
                     <div class="relative px-6 pb-6">
                         <div class="flex flex-col items-center -mt-16">
                             <div class="relative">
-                                @if($dosen->foto && Storage::disk('public')->exists($dosen->foto))
-                                    <img src="{{ asset('storage/' . $dosen->foto) }}"
+                                @if($dosen->foto_url)
+                                    <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w400"
                                          alt="Foto Profil"
-                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
+                                         onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff'">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
                                          alt="Foto Profil"

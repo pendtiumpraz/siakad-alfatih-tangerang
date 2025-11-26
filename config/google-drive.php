@@ -38,6 +38,8 @@ return [
         'pembayaran' => 'Pembayaran',
         'dokumen_mahasiswa' => 'Dokumen-Mahasiswa',
         'spmb' => 'SPMB',
+        'foto_dosen' => 'Foto-Dosen',
+        'foto_mahasiswa' => 'Foto-Mahasiswa',
     ],
 
     /*

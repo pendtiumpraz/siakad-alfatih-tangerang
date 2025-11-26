@@ -357,6 +357,82 @@ class GoogleDriveService
     }
 
     /**
+     * Upload foto dosen
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $nidn
+     * @return array
+     */
+    public function uploadFotoDosen($file, string $nidn): array
+    {
+        // Get or create Foto-Dosen folder
+        $fotoDosenFolder = $this->findFolder(config('google-drive.folders.foto_dosen'))
+            ?? $this->createFolder(config('google-drive.folders.foto_dosen'));
+
+        // Generate file name: NIDN_foto.ext
+        $extension = $file->getClientOriginalExtension();
+        $fileName = "{$nidn}_foto.{$extension}";
+
+        // Delete old foto if exists (search by NIDN prefix)
+        try {
+            $query = "name contains '{$nidn}_foto' and '{$fotoDosenFolder}' in parents and trashed=false";
+            $response = $this->service->files->listFiles([
+                'q' => $query,
+                'fields' => 'files(id)',
+            ]);
+
+            foreach ($response->getFiles() as $oldFile) {
+                $this->deleteFile($oldFile->id);
+                Log::info("Google Drive: Deleted old foto dosen for NIDN {$nidn}");
+            }
+        } catch (Exception $e) {
+            Log::warning("Google Drive: Could not delete old foto: " . $e->getMessage());
+        }
+
+        // Upload new foto
+        $tempPath = $file->getRealPath();
+        return $this->uploadFile($tempPath, $fileName, $fotoDosenFolder, $file->getMimeType());
+    }
+
+    /**
+     * Upload foto mahasiswa
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $nim
+     * @return array
+     */
+    public function uploadFotoMahasiswa($file, string $nim): array
+    {
+        // Get or create Foto-Mahasiswa folder
+        $fotoMahasiswaFolder = $this->findFolder(config('google-drive.folders.foto_mahasiswa'))
+            ?? $this->createFolder(config('google-drive.folders.foto_mahasiswa'));
+
+        // Generate file name: NIM_foto.ext
+        $extension = $file->getClientOriginalExtension();
+        $fileName = "{$nim}_foto.{$extension}";
+
+        // Delete old foto if exists
+        try {
+            $query = "name contains '{$nim}_foto' and '{$fotoMahasiswaFolder}' in parents and trashed=false";
+            $response = $this->service->files->listFiles([
+                'q' => $query,
+                'fields' => 'files(id)',
+            ]);
+
+            foreach ($response->getFiles() as $oldFile) {
+                $this->deleteFile($oldFile->id);
+                Log::info("Google Drive: Deleted old foto mahasiswa for NIM {$nim}");
+            }
+        } catch (Exception $e) {
+            Log::warning("Google Drive: Could not delete old foto: " . $e->getMessage());
+        }
+
+        // Upload new foto
+        $tempPath = $file->getRealPath();
+        return $this->uploadFile($tempPath, $fileName, $fotoMahasiswaFolder, $file->getMimeType());
+    }
+
+    /**
      * Make file publicly accessible
      *
      * @param string $fileId

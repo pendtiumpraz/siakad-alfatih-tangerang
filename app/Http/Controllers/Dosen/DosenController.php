@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
 use App\Models\Nilai;
 use App\Models\Dosen;
+use App\Services\GoogleDriveService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -104,16 +105,22 @@ class DosenController extends Controller
             'foto' => 'nullable|image|mimes:jpeg,jpg,png|max:2048', // 2MB max
         ]);
 
-        // Handle foto upload
+        // Handle foto upload to Google Drive
         if ($request->hasFile('foto')) {
-            // Delete old foto if exists
-            if ($dosen->foto && Storage::exists($dosen->foto)) {
-                Storage::delete($dosen->foto);
+            try {
+                $driveService = new GoogleDriveService();
+                $result = $driveService->uploadFotoDosen($request->file('foto'), $dosen->nidn);
+                
+                // Store Google Drive file ID
+                $validated['foto'] = $result['id'];
+                $validated['foto_url'] = $result['webViewLink'];
+                
+                Log::info("Dosen {$dosen->nidn} uploaded foto to Google Drive: {$result['id']}");
+            } catch (\Exception $e) {
+                Log::error("Failed to upload foto dosen to Google Drive: " . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'Gagal mengupload foto ke Google Drive: ' . $e->getMessage());
             }
-
-            // Store new foto
-            $fotoPath = $request->file('foto')->store('dosen/foto', 'public');
-            $validated['foto'] = $fotoPath;
         }
 
         $dosen->update($validated);
