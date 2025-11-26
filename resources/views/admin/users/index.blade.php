@@ -230,6 +230,7 @@
                     <tr>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Username</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Email</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Role</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
@@ -245,6 +246,17 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{ $user->username }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                @if($user->role == 'mahasiswa' && $user->mahasiswa)
+                                    {{ $user->mahasiswa->nama_lengkap }}
+                                @elseif($user->role == 'dosen' && $user->dosen)
+                                    {{ $user->dosen->nama_lengkap }}
+                                @elseif($user->role == 'operator' && $user->operator)
+                                    {{ $user->operator->nama_lengkap }}
+                                @else
+                                    -
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 {{ $user->email }}
@@ -281,7 +293,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-8 text-center text-gray-500">
                                 <i class="fas fa-users text-4xl mb-2 text-gray-300"></i>
                                 <p>Tidak ada data user</p>
                             </td>

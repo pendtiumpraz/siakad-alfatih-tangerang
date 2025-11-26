@@ -64,6 +64,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jenis Semester</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Mata Kuliah</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Dosen</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Hari</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Kelas</th>
@@ -81,6 +82,7 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $jadwal->mataKuliah->kode_mk }} - {{ $jadwal->mataKuliah->nama_mk }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->dosen->nama_lengkap ?? '-' }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->hari }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->kelas }}</td>
@@ -106,7 +108,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

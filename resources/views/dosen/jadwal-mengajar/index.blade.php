@@ -79,8 +79,9 @@
                                     {{ $jadwals->firstItem() + $index }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $jadwal->semester->nama_semester ?? '-' }}<br>
-                                    <span class="text-xs text-gray-500">{{ $jadwal->semester->tahun_akademik ?? '-' }}</span>
+                                    <span class="px-2 py-1 {{ $jadwal->jenis_semester == 'ganjil' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }} rounded-full text-xs font-medium">
+                                        Semester {{ ucfirst($jadwal->jenis_semester) }}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-900">
                                     <div class="font-medium">{{ $jadwal->mataKuliah->nama_mk ?? '-' }}</div>
