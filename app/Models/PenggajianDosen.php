@@ -125,6 +125,24 @@ class PenggajianDosen extends Model
     }
 
     /**
+     * Get Google Drive URL for bukti pembayaran
+     */
+    public function getBuktiPembayaranUrlAttribute(): ?string
+    {
+        if (!$this->bukti_pembayaran) {
+            return null;
+        }
+
+        // If it's already a URL, return as is (backward compatibility)
+        if (filter_var($this->bukti_pembayaran, FILTER_VALIDATE_URL)) {
+            return $this->bukti_pembayaran;
+        }
+
+        // Otherwise, it's a Google Drive file ID - construct view URL
+        return "https://drive.google.com/file/d/{$this->bukti_pembayaran}/view";
+    }
+
+    /**
      * Check if can be edited
      */
     public function canBeEdited(): bool

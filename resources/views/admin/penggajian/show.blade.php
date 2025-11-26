@@ -307,9 +307,9 @@
                         </div>
                     </div>
                     @if($penggajian->bukti_pembayaran)
-                        <a href="{{ $penggajian->bukti_pembayaran }}" target="_blank" class="mt-4 flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition">
+                        <a href="{{ $penggajian->bukti_pembayaran_url }}" target="_blank" class="mt-4 flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition">
                             <span class="text-sm font-semibold text-blue-800">
-                                <i class="fas fa-receipt mr-2"></i>Bukti Pembayaran
+                                <i class="fas fa-receipt mr-2"></i>Lihat Bukti Pembayaran
                             </span>
                             <i class="fas fa-external-link-alt text-blue-600"></i>
                         </a>
