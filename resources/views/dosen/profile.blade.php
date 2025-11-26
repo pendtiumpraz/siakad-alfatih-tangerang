@@ -187,7 +187,7 @@
                                 </svg>
                                 Email Dosen
                             </p>
-                            <p class="font-semibold text-gray-900">{{ $dosen->email_dosen ?? '-' }}</p>
+                            <p class="font-semibold text-gray-900">{{ $dosen->email ?? '-' }}</p>
                         </div>
 
                         <div class="bg-green-50 rounded-lg p-4">
@@ -313,7 +313,7 @@
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Email Dosen</label>
-                    <input type="email" name="email_dosen" value="{{ old('email_dosen', $dosen->email_dosen) }}"
+                    <input type="email" name="email" value="{{ old('email', $dosen->email) }}"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
 
@@ -323,11 +323,39 @@
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                 </div>
 
-                <div>
+                <div class="md:col-span-2">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Profil</label>
-                    <input type="file" name="foto" accept="image/*"
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    
+                    <!-- Preview Foto Existing -->
+                    @if($dosen->foto)
+                        <div class="mb-4 flex items-start space-x-4">
+                            <div class="flex-shrink-0">
+                                <img src="https://drive.google.com/thumbnail?id={{ $dosen->foto }}&sz=w200"
+                                     alt="Foto saat ini"
+                                     class="w-32 h-32 object-cover rounded-lg border-2 border-green-500 shadow-md"
+                                     onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-600 mb-1">
+                                    <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                                    <strong>Foto saat ini tersimpan di Google Drive</strong>
+                                </p>
+                                <p class="text-xs text-gray-500">Upload foto baru untuk mengganti foto saat ini</p>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    <!-- Input File Foto Baru -->
+                    <input type="file" name="foto" accept="image/jpeg,image/jpg,image/png" id="fotoInput"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                           onchange="previewNewFoto(event)">
                     <p class="text-xs text-gray-500 mt-1">Max 2MB (JPG, PNG)</p>
+                    
+                    <!-- Preview Foto Baru (before upload) -->
+                    <div id="newFotoPreview" class="mt-3 hidden">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">Preview Foto Baru:</p>
+                        <img id="newFotoImage" src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg border-2 border-blue-500 shadow-md">
+                    </div>
                 </div>
             </div>
 
@@ -518,6 +546,35 @@ function togglePasswordVisibility(fieldId, iconId) {
         field.type = 'password';
         eyeIcon.classList.remove('hidden');
         eyeSlashIcon.classList.add('hidden');
+    }
+}
+
+// Preview new foto before upload
+function previewNewFoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran file terlalu besar! Maksimal 2MB');
+            event.target.value = '';
+            return;
+        }
+        
+        // Validate file type
+        if (!file.type.match('image/jpeg') && !file.type.match('image/jpg') && !file.type.match('image/png')) {
+            alert('Format file tidak valid! Hanya JPG dan PNG yang diperbolehkan');
+            event.target.value = '';
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('newFotoImage').src = e.target.result;
+            document.getElementById('newFotoPreview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    } else {
+        document.getElementById('newFotoPreview').classList.add('hidden');
     }
 }
 
