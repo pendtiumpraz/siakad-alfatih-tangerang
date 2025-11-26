@@ -25,10 +25,9 @@
                                 @if($dosen->foto)
                                     <img src="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view&authuser=0"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
-                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover bg-gray-200"
+                                         class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                          loading="eager"
-                                         onerror="console.error('❌ Image load failed from Google Drive usercontent'); this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';"
-                                         onload="console.log('✅ Image loaded successfully from Google Drive usercontent!'); this.style.backgroundColor='transparent';">
+                                         onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
                                 @else
                                     <img src="https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff"
                                          alt="Foto Profil {{ $dosen->nama_lengkap }}"
@@ -50,30 +49,6 @@
                                 <span class="inline-block mt-2 px-4 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-full">
                                     Dosen
                                 </span>
-                                <!-- Debug Info (temporary) -->
-                                <div class="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-left">
-                                    <p class="font-bold text-yellow-800 mb-2">Debug Info:</p>
-                                    <p class="text-gray-700">Foto ID: <code class="bg-white px-1 py-0.5 rounded">{{ $dosen->foto ?? 'NULL/EMPTY' }}</code></p>
-                                    <p class="text-gray-700">
-                                        Status: 
-                                        @if($dosen->foto)
-                                            <span class="text-green-600 font-bold">TRUE (foto ada)</span>
-                                        @else
-                                            <span class="text-red-600 font-bold">FALSE (foto kosong)</span>
-                                        @endif
-                                    </p>
-                                    @if($dosen->foto)
-                                        <div class="mt-2">
-                                            <p class="text-gray-700 font-semibold mb-1">URL yang Digunakan:</p>
-                                            <div class="bg-green-50 border border-green-300 p-2 rounded">
-                                                <p class="text-green-800 font-bold text-xs mb-1">✅ Google Drive usercontent (OFFICIAL):</p>
-                                                <a href="https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view&authuser=0" target="_blank" class="text-blue-600 underline text-xs block break-all">https://drive.usercontent.google.com/download?id={{ $dosen->foto }}&export=view&authuser=0</a>
-                                                <p class="text-green-700 text-xs mt-1 italic">Format ini adalah URL resmi Google Drive untuk embedding images</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                                
                                 @if($dosen->foto)
                                     <p class="text-xs text-gray-400 mt-2">
                                         <i class="fas fa-cloud-upload-alt mr-1"></i>Foto tersimpan di Google Drive
