@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">Calendar View - Jadwal Perkuliahan</h1>
-            <p class="text-gray-600 mt-1">Tampilan kalender mingguan jadwal perkuliahan</p>
+            <p class="text-gray-600 mt-1">Tampilan kalender pekanan jadwal perkuliahan</p>
         </div>
         <a href="{{ route('admin.jadwal.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-semibold shadow-md flex items-center space-x-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@
     </x-islamic-card>
 
     <!-- Calendar Grid -->
-    <x-islamic-card title="Kalender Mingguan">
+    <x-islamic-card title="Kalender Pekanan">
         <div class="overflow-x-auto">
             <table class="min-w-full border-collapse border border-gray-300">
                 <thead>
