@@ -132,7 +132,7 @@
         <!-- 3. Mata Kuliah -->
         <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
             <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-3" style="background: linear-gradient(to bottom right, #7C3AED, #5B21B6);">
                     <i class="fas fa-book text-white text-xl"></i>
                 </div>
                 <div>
@@ -145,10 +145,10 @@
                 @csrf
                 <div>
                     <input type="file" name="file" accept=".csv" required
-                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500">
+                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2" style="--tw-ring-color: #7C3AED;">
                 </div>
                 <div class="flex space-x-2">
-                    <button type="submit" class="flex-1 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition text-sm font-semibold">
+                    <button type="submit" class="flex-1 text-white px-4 py-2 rounded-lg transition text-sm font-semibold" style="background-color: #7C3AED;" onmouseover="this.style.backgroundColor='#6D28D9'" onmouseout="this.style.backgroundColor='#7C3AED'">
                         <i class="fas fa-upload mr-1"></i> Import
                     </button>
                     <a href="{{ route('admin.template.mata-kuliah') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition text-center text-sm font-semibold">
@@ -166,7 +166,7 @@
         <!-- 4. Ruangan -->
         <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
             <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-3" style="background: linear-gradient(to bottom right, #F97316, #C2410C);">
                     <i class="fas fa-door-open text-white text-xl"></i>
                 </div>
                 <div>
@@ -179,10 +179,10 @@
                 @csrf
                 <div>
                     <input type="file" name="file" accept=".csv" required
-                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500">
+                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2" style="--tw-ring-color: #F97316;">
                 </div>
                 <div class="flex space-x-2">
-                    <button type="submit" class="flex-1 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition text-sm font-semibold">
+                    <button type="submit" class="flex-1 text-white px-4 py-2 rounded-lg transition text-sm font-semibold" style="background-color: #F97316;" onmouseover="this.style.backgroundColor='#EA580C'" onmouseout="this.style.backgroundColor='#F97316'">
                         <i class="fas fa-upload mr-1"></i> Import
                     </button>
                     <a href="{{ route('admin.template.ruangan') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition text-center text-sm font-semibold">
@@ -200,7 +200,7 @@
         <!-- 5. Semester -->
         <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
             <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center mr-3">
+                <div class="w-12 h-12 rounded-lg flex items-center justify-center mr-3" style="background: linear-gradient(to bottom right, #0891B2, #0E7490);">
                     <i class="fas fa-calendar-alt text-white text-xl"></i>
                 </div>
                 <div>
@@ -213,10 +213,10 @@
                 @csrf
                 <div>
                     <input type="file" name="file" accept=".csv" required
-                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-teal-500">
+                        class="w-full text-sm border border-gray-300 rounded-lg p-2 focus:ring-2" style="--tw-ring-color: #0891B2;">
                 </div>
                 <div class="flex space-x-2">
-                    <button type="submit" class="flex-1 bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition text-sm font-semibold">
+                    <button type="submit" class="flex-1 text-white px-4 py-2 rounded-lg transition text-sm font-semibold" style="background-color: #0891B2;" onmouseover="this.style.backgroundColor='#0E7490'" onmouseout="this.style.backgroundColor='#0891B2'">
                         <i class="fas fa-upload mr-1"></i> Import
                     </button>
                     <a href="{{ route('admin.template.semester') }}" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition text-center text-sm font-semibold">
