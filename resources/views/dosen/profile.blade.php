@@ -304,77 +304,77 @@
 
 <!-- Modal Edit Profile -->
 <div id="editProfileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-            <h3 class="text-2xl font-bold text-gray-900">Edit Profil</h3>
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white border-b px-4 py-2.5 flex items-center justify-between">
+            <h3 class="text-lg font-bold text-gray-900">Edit Profil</h3>
             <button onclick="closeModal('editProfileModal')" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </div>
 
-        <form action="{{ route('dosen.profile.update') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-5 max-h-[calc(90vh-140px)] overflow-y-auto">
+        <form action="{{ route('dosen.profile.update') }}" method="POST" enctype="multipart/form-data" class="p-4 space-y-3 max-h-[calc(90vh-100px)] overflow-y-auto">
             @csrf
             @method('PUT')
 
             <!-- Personal Info Section -->
             <div>
-                <h4 class="text-sm font-bold text-gray-700 mb-2 flex items-center">
-                    <svg class="w-4 h-4 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h4 class="text-xs font-bold text-gray-700 mb-1.5 flex items-center">
+                    <svg class="w-3 h-3 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     Informasi Pribadi
                 </h4>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
+                        <label class="block text-[11px] font-semibold text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
                         <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $dosen->nama_lengkap) }}"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                               class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500"
                                required>
                         @error('nama_lengkap')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Gelar Depan</label>
+                        <label class="block text-[11px] font-semibold text-gray-700 mb-1">Gelar Depan</label>
                         <input type="text" name="gelar_depan" value="{{ old('gelar_depan', $dosen->gelar_depan) }}"
                                placeholder="Dr., Prof."
-                               class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                               class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Gelar Belakang</label>
+                        <label class="block text-[11px] font-semibold text-gray-700 mb-1">Gelar Belakang</label>
                         <input type="text" name="gelar_belakang" value="{{ old('gelar_belakang', $dosen->gelar_belakang) }}"
                                placeholder="M.Pd., M.Si."
-                               class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                               class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">Email</label>
+                        <label class="block text-[11px] font-semibold text-gray-700 mb-1">Email</label>
                         <input type="email" name="email" value="{{ old('email', $dosen->user->email) }}"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                               class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                         @error('email')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            <p class="text-red-500 text-[10px] mt-0.5">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1.5">No. Telepon</label>
+                        <label class="block text-[11px] font-semibold text-gray-700 mb-1">No. Telepon</label>
                         <input type="text" name="no_telepon" value="{{ old('no_telepon', $dosen->no_telepon) }}"
                                placeholder="08xxxxxxxxxx"
-                               class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                               class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                     </div>
                 </div>
             </div>
 
             <!-- Foto & Bank Info Section (Side by Side) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-gray-200">
                 <!-- Left: Foto Profile -->
                 <div>
-                    <h4 class="text-sm font-bold text-gray-700 mb-2 flex items-center">
-                        <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h4 class="text-xs font-bold text-gray-700 mb-1.5 flex items-center">
+                        <svg class="w-3 h-3 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
@@ -383,59 +383,59 @@
                     
                     <!-- Preview Foto Existing -->
                     @if($dosen->foto)
-                        <div class="mb-2">
+                        <div class="mb-1.5">
                             <img src="{{ route('image.proxy', ['id' => $dosen->foto]) }}"
                                  alt="Foto saat ini"
-                                 class="w-full h-32 object-cover rounded-lg border-2 border-green-500 shadow-sm"
+                                 class="w-full h-24 object-cover rounded border-2 border-green-500"
                                  onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($dosen->nama_lengkap) }}&size=200&background=059669&color=fff';">
-                            <p class="text-xs text-green-600 mt-1.5">
-                                <i class="fas fa-check-circle mr-1"></i>
+                            <p class="text-[10px] text-green-600 mt-1">
+                                <i class="fas fa-check-circle mr-0.5"></i>
                                 Foto tersimpan
                             </p>
                         </div>
                     @endif
                     
                     <!-- Input File Foto Baru -->
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Upload Foto Baru</label>
+                    <label class="block text-[11px] font-semibold text-gray-600 mb-0.5">Upload Foto Baru</label>
                     <input type="file" name="foto" accept="image/jpeg,image/jpg,image/png" id="fotoInput"
-                           class="w-full px-3 py-1.5 text-xs border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                           class="w-full px-2 py-1 text-[10px] border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500"
                            onchange="previewNewFoto(event)">
-                    <p class="text-xs text-gray-500 mt-1">Max 2MB (JPG, PNG)</p>
+                    <p class="text-[10px] text-gray-500 mt-0.5">Max 2MB (JPG, PNG)</p>
                     
                     <!-- Preview Foto Baru (before upload) -->
-                    <div id="newFotoPreview" class="mt-2 hidden">
-                        <p class="text-xs font-semibold text-gray-700 mb-1">Preview:</p>
-                        <img id="newFotoImage" src="" alt="Preview" class="w-full h-24 object-cover rounded-lg border-2 border-blue-500 shadow-sm">
+                    <div id="newFotoPreview" class="mt-1.5 hidden">
+                        <p class="text-[10px] font-semibold text-gray-700 mb-0.5">Preview:</p>
+                        <img id="newFotoImage" src="" alt="Preview" class="w-full h-20 object-cover rounded border-2 border-blue-500">
                     </div>
                 </div>
 
                 <!-- Right: Bank Info -->
                 <div>
-                    <h4 class="text-sm font-bold text-gray-700 mb-2 flex items-center">
-                        <svg class="w-4 h-4 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <h4 class="text-xs font-bold text-gray-700 mb-1.5 flex items-center">
+                        <svg class="w-3 h-3 mr-1.5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                         </svg>
                         Informasi Rekening
                     </h4>
                     
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Nama Bank</label>
+                            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Nama Bank</label>
                             <input type="text" name="nama_bank" value="{{ old('nama_bank', $dosen->nama_bank) }}"
                                    placeholder="BRI, BNI, Mandiri"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                   class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Nomor Rekening</label>
+                            <label class="block text-[11px] font-semibold text-gray-700 mb-1">Nomor Rekening</label>
                             <input type="text" name="nomor_rekening" value="{{ old('nomor_rekening', $dosen->nomor_rekening) }}"
                                    placeholder="1234567890"
-                                   class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                                   class="w-full px-2 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-green-500 focus:border-green-500">
                         </div>
                         
-                        <div class="bg-orange-50 border border-orange-200 rounded-lg p-2.5">
-                            <p class="text-xs text-orange-700 flex items-start">
-                                <i class="fas fa-info-circle mr-1.5 mt-0.5 flex-shrink-0"></i>
+                        <div class="bg-orange-50 border border-orange-200 rounded p-2">
+                            <p class="text-[10px] text-orange-700 flex items-start">
+                                <i class="fas fa-info-circle mr-1 mt-0.5 flex-shrink-0 text-[9px]"></i>
                                 <span>Diperlukan untuk pencairan gaji</span>
                             </p>
                         </div>
@@ -443,11 +443,11 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end space-x-3 pt-4 border-t">
-                <button type="button" onclick="closeModal('editProfileModal')" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-semibold">
+            <div class="flex items-center justify-end space-x-2 pt-2.5 border-t">
+                <button type="button" onclick="closeModal('editProfileModal')" class="px-4 py-1.5 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition font-semibold">
                     Batal
                 </button>
-                <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold">
+                <button type="submit" class="px-4 py-1.5 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition font-semibold">
                     Simpan Perubahan
                 </button>
             </div>
