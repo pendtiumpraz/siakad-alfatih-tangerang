@@ -179,6 +179,12 @@
                     @endif
                 </a>
 
+                <!-- Input Nilai Batch -->
+                <a href="{{ route('admin.nilai-kolektif.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.nilai-kolektif.*') ? 'active' : '' }}">
+                    <i class="fas fa-edit w-5"></i>
+                    <span class="ml-3">Input Nilai Batch</span>
+                </a>
+
                 <!-- Master Data (Expandable) -->
                 <div class="mb-2">
                     <button @click="masterDataOpen = !masterDataOpen" class="sidebar-link flex items-center justify-between w-full px-4 py-3 text-white rounded-lg">

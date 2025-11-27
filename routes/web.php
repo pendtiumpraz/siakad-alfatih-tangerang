@@ -192,6 +192,13 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/mahasiswa/{mahasiswaId}/reject', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'reject'])->name('reject');
     });
 
+    // Nilai Kolektif (Batch Input)
+    Route::prefix('nilai-kolektif')->name('nilai-kolektif.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\NilaiKolektifController::class, 'index'])->name('index');
+        Route::get('/preview', [\App\Http\Controllers\Admin\NilaiKolektifController::class, 'preview'])->name('preview');
+        Route::post('/store', [\App\Http\Controllers\Admin\NilaiKolektifController::class, 'store'])->name('store');
+    });
+
     // Master Data Import
     Route::prefix('import')->name('import.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Admin\MasterDataImportController::class, 'index'])->name('index');
