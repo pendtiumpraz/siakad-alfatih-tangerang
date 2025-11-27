@@ -167,6 +167,18 @@
                     <span class="ml-3">Pengumuman</span>
                 </a>
 
+                <!-- KRS Approval -->
+                <a href="{{ route('admin.krs-approval.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.krs-approval.*') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-check w-5"></i>
+                    <span class="ml-3">Approval KRS</span>
+                    @php
+                        $pendingKrsCount = \App\Models\Krs::where('status', 'submitted')->count();
+                    @endphp
+                    @if($pendingKrsCount > 0)
+                        <span class="ml-auto px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">{{ $pendingKrsCount }}</span>
+                    @endif
+                </a>
+
                 <!-- Master Data (Expandable) -->
                 <div class="mb-2">
                     <button @click="masterDataOpen = !masterDataOpen" class="sidebar-link flex items-center justify-between w-full px-4 py-3 text-white rounded-lg">
