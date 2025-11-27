@@ -178,6 +178,10 @@ class KrsApprovalController extends Controller
                 ->where('jenis_pembayaran', 'spp')
                 ->first();
             $mhs->spp_status = $sppPayment?->status ?? 'belum_lunas';
+            $mhs->spp_paid = $mhs->spp_status === 'lunas';
+            
+            // Flag: can be approved?
+            $mhs->can_approve = $mhs->krs_status === 'submitted' && $mhs->spp_paid;
         }
         
         // Summary statistics
@@ -235,6 +239,7 @@ class KrsApprovalController extends Controller
     
     /**
      * Mass Approve: Approve all KRS in a program studi
+     * HANYA untuk mahasiswa yang SUDAH BAYAR SPP
      */
     public function massApproveProdi(Request $request, $prodiId)
     {
@@ -246,17 +251,22 @@ class KrsApprovalController extends Controller
         try {
             DB::beginTransaction();
             
-            // Get all mahasiswa in this prodi with submitted KRS
+            // Get mahasiswa with submitted KRS AND paid SPP
             $mahasiswaIds = Mahasiswa::where('program_studi_id', $prodiId)
                 ->where('status', 'aktif')
                 ->whereHas('krs', function($q) use ($validated) {
                     $q->where('semester_id', $validated['semester_id'])
                       ->where('status', 'submitted');
                 })
+                ->whereHas('pembayarans', function($q) use ($validated) {
+                    $q->where('semester_id', $validated['semester_id'])
+                      ->where('jenis_pembayaran', 'spp')
+                      ->where('status', 'lunas');
+                })
                 ->pluck('id');
             
             if ($mahasiswaIds->isEmpty()) {
-                return redirect()->back()->with('error', 'Tidak ada KRS yang perlu di-approve.');
+                return redirect()->back()->with('error', 'Tidak ada KRS yang bisa di-approve. Pastikan mahasiswa sudah bayar SPP.');
             }
             
             // Update all KRS to approved
@@ -270,14 +280,30 @@ class KrsApprovalController extends Controller
                     'keterangan' => $validated['keterangan'] ?? 'Approved via mass approval',
                 ]);
             
+            // Count mahasiswa yang di-skip (belum bayar)
+            $totalSubmitted = Mahasiswa::where('program_studi_id', $prodiId)
+                ->where('status', 'aktif')
+                ->whereHas('krs', function($q) use ($validated) {
+                    $q->where('semester_id', $validated['semester_id'])
+                      ->where('status', 'submitted');
+                })
+                ->count();
+            
+            $skipped = $totalSubmitted - $updatedCount;
+            
             DB::commit();
             
             // TODO: Send bulk notification to all mahasiswa
             
             $prodi = ProgramStudi::find($prodiId);
             
+            $message = "Berhasil approve {$updatedCount} KRS untuk Program Studi {$prodi->nama_prodi}.";
+            if ($skipped > 0) {
+                $message .= " {$skipped} mahasiswa di-skip karena belum bayar SPP.";
+            }
+            
             return redirect()->route('admin.krs-approval.index')
-                ->with('success', "Berhasil approve {$updatedCount} KRS untuk Program Studi {$prodi->nama_prodi}.");
+                ->with('success', $message);
                 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -324,16 +350,34 @@ class KrsApprovalController extends Controller
     
     /**
      * Approve individual KRS
+     * Validasi: Mahasiswa HARUS sudah bayar SPP
+     * Exception: Admin bisa force approve (untuk kasus khusus: terlambat, dll)
      */
     public function approve($mahasiswaId, Request $request)
     {
         $validated = $request->validate([
             'semester_id' => 'required|exists:semesters,id',
             'keterangan' => 'nullable|string|max:500',
+            'force_approve' => 'nullable|boolean', // Override SPP check
         ]);
         
         try {
             DB::beginTransaction();
+            
+            $mahasiswa = Mahasiswa::findOrFail($mahasiswaId);
+            
+            // Check SPP payment (unless force approve)
+            if (!($validated['force_approve'] ?? false)) {
+                $hasPaidSPP = Pembayaran::where('mahasiswa_id', $mahasiswaId)
+                    ->where('semester_id', $validated['semester_id'])
+                    ->where('jenis_pembayaran', 'spp')
+                    ->where('status', 'lunas')
+                    ->exists();
+                
+                if (!$hasPaidSPP) {
+                    return redirect()->back()->with('error', 'Mahasiswa belum bayar SPP. Tidak bisa approve KRS.');
+                }
+            }
             
             $krsItems = Krs::where('mahasiswa_id', $mahasiswaId)
                 ->where('semester_id', $validated['semester_id'])
@@ -344,12 +388,17 @@ class KrsApprovalController extends Controller
                 return redirect()->back()->with('error', 'Tidak ada KRS yang perlu di-approve.');
             }
             
+            $keterangan = $validated['keterangan'];
+            if ($validated['force_approve'] ?? false) {
+                $keterangan = '[FORCE APPROVE] ' . ($keterangan ?? 'Approved meskipun belum bayar SPP');
+            }
+            
             foreach ($krsItems as $krs) {
                 $krs->update([
                     'status' => 'approved',
                     'approved_at' => now(),
                     'approved_by' => auth()->id(),
-                    'keterangan' => $validated['keterangan'],
+                    'keterangan' => $keterangan,
                 ]);
             }
             

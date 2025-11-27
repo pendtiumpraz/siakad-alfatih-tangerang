@@ -80,15 +80,47 @@
 ```
 Mahasiswa → Isi & Submit KRS
     ↓
+System Check: Sudah bayar SPP?
+    ↓
+❌ Belum Bayar → Status: Pending (tidak bisa approve)
+✅ Sudah Bayar → Bisa di-approve
+    ↓
 Admin/Operator → Review & Approve/Reject
     ↓
-Status Approved → KRS Final (tidak bisa edit)
+Status Approved → KRS Final (tidak bisa edit) + Jadwal MUNCUL
 ```
 
+**SPP Payment Validation:**
+```php
+IF mahasiswa belum bayar SPP:
+  ❌ TIDAK BISA DI-APPROVE
+  Status tetap: Submitted (Pending)
+  Jadwal: TIDAK MUNCUL
+  Message: "Mahasiswa belum bayar SPP"
+  
+IF mahasiswa sudah bayar SPP:
+  ✅ BISA DI-APPROVE
+  Status: Submitted → Approved
+  Jadwal: MUNCUL di menu mahasiswa
+```
+
+**Mass Approval Logic:**
+- Hanya approve mahasiswa yang SUDAH BAYAR SPP
+- Skip otomatis yang belum bayar
+- Show notification: "150 KRS approved, 10 di-skip (belum bayar SPP)"
+
+**Manual Override (Kasus Khusus):**
+- Admin bisa force approve individual (misal: mahasiswa telat, beasiswa)
+- Checkbox: "Force Approve (tanpa validasi SPP)"
+- Keterangan otomatis: "[FORCE APPROVE] Approved meskipun belum bayar SPP"
+
 **Need to Build:**
-1. Admin/Operator view untuk lihat semua KRS pending
-2. Button Approve/Reject dengan keterangan
-3. Email/notifikasi ke mahasiswa ketika approved/rejected
+1. ✅ Admin/Operator view untuk lihat semua KRS pending (DONE)
+2. ✅ Button Approve/Reject dengan keterangan (DONE)
+3. ✅ SPP validation saat approve (DONE)
+4. ✅ Force approve checkbox untuk override (DONE)
+5. [ ] Email/notifikasi ke mahasiswa ketika approved/rejected (TODO)
+6. [ ] Views untuk dashboard & detail (TODO)
 
 ### C. Integrasi Nilai dengan KRS
 **Requirement:**
