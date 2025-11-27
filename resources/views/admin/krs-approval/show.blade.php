@@ -18,8 +18,8 @@
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg relative mb-6" role="alert">
-            <span class="font-semibold">{{ session('success') }}</span>
+        <div class="border px-6 py-4 rounded-lg relative mb-6" role="alert" style="background-color: #DCFCE7; border-color: #4ADE80; color: #15803D;">
+            <span class="font-semibold">✅ {{ session('success') }}</span>
         </div>
     @endif
 
@@ -34,7 +34,7 @@
         <!-- Left Column - Mahasiswa Info -->
         <div class="lg:col-span-1">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #2D5F3F, #4A7C59);">
                     <h3 class="text-lg font-bold text-white">Informasi Mahasiswa</h3>
                 </div>
                 <div class="p-6 space-y-4">
@@ -183,7 +183,7 @@
         <!-- Right Column - KRS Table -->
         <div class="lg:col-span-2">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #2D5F3F, #4A7C59);">
                     <h3 class="text-lg font-bold text-white">Daftar Mata Kuliah ({{ $krsItems->count() }} MK)</h3>
                 </div>
 
@@ -221,7 +221,7 @@
                                             <div class="text-sm font-semibold text-gray-900">{{ $krs->mataKuliah->nama_mk }}</div>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <span class="text-sm font-bold text-blue-600">{{ $krs->mataKuliah->sks }}</span>
+                                            <span class="text-sm font-bold" style="color: #2D5F3F;">{{ $krs->mataKuliah->sks }}</span>
                                         </td>
                                         <td class="px-6 py-4 text-center">
                                             @if($krs->is_mengulang)
@@ -257,7 +257,7 @@
                                         Total SKS:
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <span class="text-lg font-bold text-blue-600">{{ $totalSks }}</span>
+                                        <span class="text-lg font-bold" style="color: #2D5F3F;">{{ $totalSks }}</span>
                                     </td>
                                     <td colspan="2"></td>
                                 </tr>
