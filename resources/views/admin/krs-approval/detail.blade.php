@@ -18,34 +18,34 @@
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg relative mb-6" role="alert">
-            <span class="font-semibold">{{ session('success') }}</span>
+        <div class="border px-6 py-4 rounded-lg relative mb-6" role="alert" style="background-color: #DCFCE7; border-color: #4ADE80; color: #15803D;">
+            <span class="font-semibold">✅ {{ session('success') }}</span>
         </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg relative mb-6" role="alert">
-            <span class="font-semibold">{{ session('error') }}</span>
+        <div class="border px-6 py-4 rounded-lg relative mb-6" role="alert" style="background-color: #FEE2E2; border-color: #F87171; color: #B91C1C;">
+            <span class="font-semibold">❌ {{ session('error') }}</span>
         </div>
     @endif
 
     <!-- Summary Stats -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-gray-500">
-            <div class="text-sm text-gray-600 mb-1">Total Mahasiswa</div>
-            <div class="text-2xl font-bold text-gray-800">{{ $summary['total'] }}</div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4" style="border-color: #6B7280;">
+            <div class="text-sm mb-1" style="color: #4B5563;">Total Mahasiswa</div>
+            <div class="text-2xl font-bold" style="color: #1F2937;">{{ $summary['total'] }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-orange-500">
-            <div class="text-sm text-orange-600 mb-1">Pending Approval</div>
-            <div class="text-2xl font-bold text-orange-800">{{ $summary['submitted'] }}</div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4" style="border-color: #F97316;">
+            <div class="text-sm mb-1" style="color: #EA580C;">Pending Approval</div>
+            <div class="text-2xl font-bold" style="color: #C2410C;">{{ $summary['submitted'] }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-green-500">
-            <div class="text-sm text-green-600 mb-1">Sudah Approved</div>
-            <div class="text-2xl font-bold text-green-800">{{ $summary['approved'] }}</div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4" style="border-color: #2D5F3F;">
+            <div class="text-sm mb-1" style="color: #2D5F3F;">Sudah Approved</div>
+            <div class="text-2xl font-bold" style="color: #1F4530;">{{ $summary['approved'] }}</div>
         </div>
-        <div class="bg-white rounded-lg shadow-md p-4 border-l-4 border-red-500">
-            <div class="text-sm text-red-600 mb-1">Rejected</div>
-            <div class="text-2xl font-bold text-red-800">{{ $summary['rejected'] }}</div>
+        <div class="bg-white rounded-lg shadow-md p-4 border-l-4" style="border-color: #DC2626;">
+            <div class="text-sm mb-1" style="color: #DC2626;">Rejected</div>
+            <div class="text-2xl font-bold" style="color: #991B1B;">{{ $summary['rejected'] }}</div>
         </div>
     </div>
 
@@ -127,7 +127,11 @@
                     <button type="submit" 
                             id="approveSelectedBtn"
                             disabled
-                            class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition font-semibold flex items-center gap-2"
+                            class="px-6 py-2 text-white rounded-lg transition font-semibold flex items-center gap-2"
+                            style="background-color: #16A34A;"
+                            onmouseover="if(!this.disabled) this.style.backgroundColor='#15803D'"
+                            onmouseout="if(!this.disabled) this.style.backgroundColor='#16A34A'"
+                            disabled style="background-color: #D1D5DB; cursor: not-allowed;"
                             onclick="return confirm('Approve KRS yang dipilih?\n\nHanya mahasiswa yang sudah bayar SPP yang akan di-approve.')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -245,7 +249,7 @@
                                 <!-- Actions -->
                                 <td class="px-6 py-4 text-center whitespace-nowrap">
                                     <a href="{{ route('admin.krs-approval.show', ['mahasiswaId' => $mhs->id, 'semester_id' => $semester->id]) }}" 
-                                       class="text-blue-600 hover:text-blue-800 font-semibold text-sm inline-flex items-center gap-1"
+                                       class="font-semibold text-sm inline-flex items-center gap-1 hover:underline" style="color: #2D5F3F;"
                                        title="Lihat Detail KRS">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

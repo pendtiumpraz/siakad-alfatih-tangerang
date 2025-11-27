@@ -57,11 +57,11 @@
     <!-- Program Studi Cards -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         @forelse($programStudis as $prodi)
-            <div class="bg-white rounded-lg shadow-lg border overflow-hidden hover:shadow-xl transition-shadow duration-300" style="border-color: #E5E7EB;">
+            <div class="bg-white rounded-lg shadow-lg border overflow-hidden hover:shadow-xl transition-shadow duration-300" style="border-color: #D4AF37;">
                 <!-- Header -->
-                <div class="px-6 py-4" style="background: linear-gradient(to right, #2563EB, #1D4ED8);">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #2D5F3F, #4A7C59);">
                     <h3 class="text-xl font-bold text-white">{{ $prodi->nama_prodi }}</h3>
-                    <p class="text-sm" style="color: #DBEAFE;">{{ $prodi->kode_prodi }}</p>
+                    <p class="text-sm" style="color: #D1FAE5;">{{ $prodi->kode_prodi }}</p>
                 </div>
 
                 <!-- Statistics -->
@@ -163,9 +163,9 @@
 
                         <a href="{{ route('admin.krs-approval.detail', ['prodiId' => $prodi->id, 'semester_id' => $semester->id]) }}" 
                            class="px-6 py-3 text-white rounded-lg transition-all duration-200 font-semibold shadow-md hover:shadow-lg flex items-center gap-2"
-                           style="background: linear-gradient(to right, #2563EB, #1D4ED8);"
-                           onmouseover="this.style.background='linear-gradient(to right, #1D4ED8, #1E40AF)'"
-                           onmouseout="this.style.background='linear-gradient(to right, #2563EB, #1D4ED8)'">
+                           style="background: linear-gradient(to right, #2D5F3F, #4A7C59);"
+                           onmouseover="this.style.background='linear-gradient(to right, #1F4530, #2D5F3F)'"
+                           onmouseout="this.style.background='linear-gradient(to right, #2D5F3F, #4A7C59)'">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                             </svg>
@@ -186,14 +186,14 @@
     </div>
 
     <!-- Info Box -->
-    <div class="mt-8 border rounded-lg p-6" style="background-color: #EFF6FF; border-color: #BFDBFE;">
+    <div class="mt-8 border-2 rounded-lg p-6" style="background-color: #ECFDF5; border-color: #D4AF37;">
         <div class="flex items-start">
-            <svg class="w-6 h-6 mr-3 mt-0.5" style="color: #2563EB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 mr-3 mt-0.5" style="color: #2D5F3F;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
             <div>
-                <h4 class="text-lg font-semibold mb-2" style="color: #1E40AF;">ℹ️ Informasi Approval KRS</h4>
-                <ul class="text-sm space-y-1" style="color: #1D4ED8;">
+                <h4 class="text-lg font-semibold mb-2" style="color: #2D5F3F;">ℹ️ Informasi Approval KRS</h4>
+                <ul class="text-sm space-y-1" style="color: #065F46;">
                     <li>• <strong>Mass Approve:</strong> Hanya akan approve mahasiswa yang <strong>sudah bayar SPP</strong></li>
                     <li>• Mahasiswa yang belum bayar SPP akan di-skip otomatis</li>
                     <li>• Untuk approve mahasiswa yang belum bayar (kasus khusus), gunakan <strong>Force Approve</strong> di detail individual</li>
