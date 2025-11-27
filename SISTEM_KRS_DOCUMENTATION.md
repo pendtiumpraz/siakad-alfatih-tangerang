@@ -85,7 +85,63 @@ public function krs()
 
 **Impact:** All KRS queries using `$mahasiswa->krs()` now work!
 
----
+### **FIX #2: Empty Jadwal (BLOCKING)** ✅
+**Problem:** KRS empty karena tidak ada jadwal untuk mata kuliah wajib
+
+**Solution:** Created `JadwalPlaceholderSeeder`
+```php
+// Buat dummy dosen & ruangan "Belum Ditentukan"
+// Generate jadwal placeholder untuk semua MK
+// Jam: 00:00:00 (placeholder, admin edit later)
+```
+
+**Result:** 
+- ✅ 484 jadwal placeholder created
+- ✅ KRS auto-populate works
+- ✅ Admin bisa edit jadwal via UI
+
+**Usage:**
+```bash
+php artisan db:seed --class=JadwalPlaceholderSeeder
+```
+
+### **FIX #3: Historical Data - Input Nilai Batch** ✅
+**Problem:** Mahasiswa angkatan lama (2022-2023) tidak punya data nilai semester lalu
+
+**Solution:** Created `Input Nilai Batch (Kolektif)` system
+
+**Features:**
+- ✅ Collective input per Prodi + Angkatan + Semester
+- ✅ Smart grid: Input 25 mahasiswa × 9 MK = 225 nilai in one page
+- ✅ Auto-calculate grade & status from nilai angka
+- ✅ Visual feedback: Green (lulus), Red (tidak lulus)
+- ✅ Batch save with transaction
+- ✅ Auto-generate KHS (IP & IPK)
+- ✅ MK tidak lulus → auto muncul di KRS mengulang
+
+**Access:**
+```
+Admin → Input Nilai Batch
+Route: /admin/nilai-kolektif
+```
+
+**Files:**
+```
+Controller: app/Http/Controllers/Admin/NilaiKolektifController.php
+Views:      resources/views/admin/nilai-kolektif/
+            ├── index.blade.php (filter form)
+            └── preview.blade.php (input grid)
+Routes:     /admin/nilai-kolektif (index, preview, store)
+```
+
+**Use Case:**
+```
+Input nilai semester 1 untuk angkatan 2022:
+├── Filter: PAI, 2022, Semester 1
+├── Grid: 25 mahasiswa × 9 MK = 225 nilai
+├── Input time: ±15 menit
+└── Result: Nilai saved + KHS generated + Mengulang works
+```
 
 ---
 
