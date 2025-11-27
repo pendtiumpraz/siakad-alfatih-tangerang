@@ -173,17 +173,22 @@ class KrsController extends Controller
 
     /**
      * Calculate which semester the mahasiswa is currently in
+     * 
+     * Use mahasiswa->semester_aktif if available (auto-calculated by Mahasiswa model)
+     * Fallback to manual calculation if not available
      */
     private function calculateMahasiswaSemester(Mahasiswa $mahasiswa, Semester $currentSemester)
     {
-        // Simple calculation based on tahun masuk
-        // You can enhance this logic based on your business rules
+        // PRIORITY 1: Use semester_aktif from mahasiswa (auto-calculated by model)
+        if ($mahasiswa->semester_aktif && $mahasiswa->semester_aktif > 0) {
+            return $mahasiswa->semester_aktif;
+        }
         
-        $tahunMasuk = (int) substr($mahasiswa->nim, 0, 4); // Assuming NIM format YYYYXXXX
+        // PRIORITY 2: Fallback to manual calculation using angkatan
         $currentYear = (int) substr($currentSemester->tahun_akademik, 0, 4);
+        $yearDiff = $currentYear - $mahasiswa->angkatan; // Use angkatan, not NIM!
         
-        $yearDiff = $currentYear - $tahunMasuk;
-        
+        // Calculate semester based on year difference and semester type
         // Ganjil = 1, 3, 5, 7
         // Genap = 2, 4, 6, 8
         if ($currentSemester->jenis === 'ganjil') {
