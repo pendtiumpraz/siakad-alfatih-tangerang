@@ -185,6 +185,11 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Khs::class);
     }
+
+    public function krs()
+    {
+        return $this->hasMany(Krs::class);
+    }
     
     public function dosenPa()
     {
