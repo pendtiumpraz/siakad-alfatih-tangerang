@@ -21,22 +21,65 @@
             color: #000;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #000;
-            padding-bottom: 10px;
+        /* Kop Surat */
+        .kop-surat {
+            margin-bottom: 20px;
         }
 
-        .header h1 {
-            font-size: 16pt;
+        .kop-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .kop-logo {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .kop-text {
+            flex: 1;
+            text-align: center;
+        }
+
+        .kop-text h1 {
+            font-size: 18pt;
             font-weight: bold;
+            color: #2D5F3F;
             margin-bottom: 5px;
         }
 
-        .header h2 {
+        .kop-text p {
+            font-size: 10pt;
+            color: #2D5F3F;
+            margin: 2px 0;
+        }
+
+        .garis-double {
+            margin-top: 10px;
+        }
+
+        .garis-tipis {
+            border-top: 1px solid #000;
+            margin-bottom: 2px;
+        }
+
+        .garis-tebal {
+            border-top: 3px solid #000;
+        }
+
+        /* Header Title KHS */
+        .header-title {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+
+        .header-title h2 {
             font-size: 14pt;
             font-weight: bold;
+            color: #000;
         }
 
         .info-section {
@@ -154,10 +197,26 @@
         }
     @endphp
 
-    <!-- Header -->
-    <div class="header">
-        <h1>KARTU HASIL STUDI (KHS)</h1>
-        <h2>STAI AL-FATIH TANGERANG</h2>
+    <!-- Kop Surat -->
+    <div class="kop-surat">
+        <div class="kop-content">
+            <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL-FATIH" class="kop-logo">
+            <div class="kop-text">
+                <h1>STAI AL FATIH TANGERANG</h1>
+                <p>Jl. Raden Fatah No. 5, RT. 004/RW. 006, Parung Serab, Kec. Ciledug, Kota</p>
+                <p>Tangerang, Banten, Kode Pos 15153</p>
+                <p>Email: info@staialfatih.or.id, Website: https://staialfatih.or.id</p>
+            </div>
+        </div>
+        <div class="garis-double">
+            <div class="garis-tipis"></div>
+            <div class="garis-tebal"></div>
+        </div>
+    </div>
+
+    <!-- Header Title -->
+    <div class="header-title">
+        <h2>KARTU HASIL STUDI (KHS) MAHASISWA</h2>
     </div>
 
     <!-- Student Information -->
