@@ -193,27 +193,30 @@ class NilaiKolektifController extends Controller
 
     /**
      * Calculate grade from nilai
+     * Based on official STAI AL-FATIH grading system
+     * Grade: A+, A, B+, B, C+, C, D+, D, E (NO minus grades)
      */
     private function calculateGrade($nilai)
     {
-        if ($nilai >= 85) {
-            return ['grade' => 'A', 'bobot' => 4.0, 'status' => 'lulus'];
-        } elseif ($nilai >= 80) {
-            return ['grade' => 'A-', 'bobot' => 3.7, 'status' => 'lulus'];
-        } elseif ($nilai >= 75) {
-            return ['grade' => 'B+', 'bobot' => 3.3, 'status' => 'lulus'];
-        } elseif ($nilai >= 70) {
-            return ['grade' => 'B', 'bobot' => 3.0, 'status' => 'lulus'];
-        } elseif ($nilai >= 65) {
-            return ['grade' => 'B-', 'bobot' => 2.7, 'status' => 'lulus'];
-        } elseif ($nilai >= 60) {
-            return ['grade' => 'C+', 'bobot' => 2.3, 'status' => 'lulus'];
-        } elseif ($nilai >= 55) {
-            return ['grade' => 'C', 'bobot' => 2.0, 'status' => 'lulus'];
-        } elseif ($nilai >= 50) {
-            return ['grade' => 'D', 'bobot' => 1.0, 'status' => 'tidak_lulus'];
+        if ($nilai >= 98 && $nilai <= 100) {
+            return ['grade' => 'A+', 'bobot' => 4.00, 'status' => 'lulus'];
+        } elseif ($nilai >= 93 && $nilai <= 97) {
+            return ['grade' => 'A', 'bobot' => 3.70, 'status' => 'lulus'];
+        } elseif ($nilai >= 88 && $nilai <= 92) {
+            return ['grade' => 'B+', 'bobot' => 3.60, 'status' => 'lulus'];
+        } elseif ($nilai >= 80 && $nilai <= 87) {
+            return ['grade' => 'B', 'bobot' => 2.95, 'status' => 'lulus'];
+        } elseif ($nilai >= 70 && $nilai <= 79) {
+            return ['grade' => 'C+', 'bobot' => 2.70, 'status' => 'lulus'];
+        } elseif ($nilai >= 66 && $nilai <= 69) {
+            return ['grade' => 'C', 'bobot' => 2.00, 'status' => 'lulus'];
+        } elseif ($nilai >= 58 && $nilai <= 65) {
+            return ['grade' => 'D+', 'bobot' => 1.80, 'status' => 'lulus'];
+        } elseif ($nilai >= 50 && $nilai <= 57) {
+            return ['grade' => 'D', 'bobot' => 1.30, 'status' => 'lulus'];
         } else {
-            return ['grade' => 'E', 'bobot' => 0.0, 'status' => 'tidak_lulus'];
+            // 0-49
+            return ['grade' => 'E', 'bobot' => 1.00, 'status' => 'tidak_lulus'];
         }
     }
 

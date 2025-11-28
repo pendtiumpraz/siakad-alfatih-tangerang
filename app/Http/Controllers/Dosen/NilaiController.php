@@ -304,27 +304,31 @@ class NilaiController extends Controller
      * Calculate grade based on nilai_akhir
      * A (90-100), A- (85-89), B+ (80-84), B (75-79), B- (70-74), C+ (65-69), C (60-64), C- (55-59), D (45-54), E (0-44)
      */
+    /**
+     * Calculate nilai huruf based on nilai akhir
+     * Based on official STAI AL-FATIH grading system
+     * Grade: A+, A, B+, B, C+, C, D+, D, E (NO minus grades)
+     */
     private function calculateGrade($nilaiAkhir)
     {
-        if ($nilaiAkhir >= 90) {
+        if ($nilaiAkhir >= 98 && $nilaiAkhir <= 100) {
+            return 'A+';
+        } elseif ($nilaiAkhir >= 93 && $nilaiAkhir <= 97) {
             return 'A';
-        } elseif ($nilaiAkhir >= 85) {
-            return 'A-';
-        } elseif ($nilaiAkhir >= 80) {
+        } elseif ($nilaiAkhir >= 88 && $nilaiAkhir <= 92) {
             return 'B+';
-        } elseif ($nilaiAkhir >= 75) {
+        } elseif ($nilaiAkhir >= 80 && $nilaiAkhir <= 87) {
             return 'B';
-        } elseif ($nilaiAkhir >= 70) {
-            return 'B-';
-        } elseif ($nilaiAkhir >= 65) {
+        } elseif ($nilaiAkhir >= 70 && $nilaiAkhir <= 79) {
             return 'C+';
-        } elseif ($nilaiAkhir >= 60) {
+        } elseif ($nilaiAkhir >= 66 && $nilaiAkhir <= 69) {
             return 'C';
-        } elseif ($nilaiAkhir >= 55) {
-            return 'C-';
-        } elseif ($nilaiAkhir >= 45) {
+        } elseif ($nilaiAkhir >= 58 && $nilaiAkhir <= 65) {
+            return 'D+';
+        } elseif ($nilaiAkhir >= 50 && $nilaiAkhir <= 57) {
             return 'D';
         } else {
+            // 0-49
             return 'E';
         }
     }

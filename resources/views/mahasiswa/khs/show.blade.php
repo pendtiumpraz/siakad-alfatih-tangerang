@@ -149,7 +149,7 @@
                                     <td class="px-4 py-3 text-center text-sm font-semibold">{{ $nilai->mataKuliah->sks }}</td>
                                     <td class="px-4 py-3 text-center">
                                         <span class="px-3 py-1 {{ $nilaiColor }} text-sm font-bold rounded-full">
-                                            {{ $nilai->nilai_huruf ?? '-' }}
+                                            {{ str_replace('+', '', $nilai->nilai_huruf ?? '-') }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobot, 2) }}</td>

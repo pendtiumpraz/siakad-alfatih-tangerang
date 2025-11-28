@@ -388,7 +388,7 @@
                         <td class="text-center font-semibold">{{ $sks }}</td>
                         <td class="text-center">{{ number_format($nilai->nilai_akhir ?? 0, 2) }}</td>
                         <td class="text-center">
-                            <span class="grade-{{ strtolower($nilai->grade ?? 'e') }}">{{ $nilai->grade ?? '-' }}</span>
+                            <span class="grade-{{ strtolower($nilai->grade ?? 'e') }}">{{ str_replace('+', '', $nilai->grade ?? '-') }}</span>
                         </td>
                         <td class="text-center">{{ number_format($bobot, 1) }}</td>
                         <td class="text-center font-semibold">{{ number_format($sksBobot, 1) }}</td>
@@ -501,7 +501,7 @@
         <div class="keterangan">
             <p><strong>Keterangan:</strong></p>
             <p>L = Lulus | TL = Tidak Lulus | K = Kosong</p>
-            <p>Grade: A (90-100) | A- (85-89) | B+ (80-84) | B (75-79) | B- (70-74) | C+ (65-69) | C (60-64) | C- (55-59) | D (45-54) | E (0-44)</p>
+            <p>Grade: A (93-100) | B (80-92) | C (66-79) | D (50-65) | E (0-49)</p>
         </div>
     </div>
 </body>

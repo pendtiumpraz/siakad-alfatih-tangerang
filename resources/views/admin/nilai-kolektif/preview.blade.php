@@ -140,43 +140,43 @@
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #DCFCE7; color: #166534;">A</div>
-                <div><strong>85-100:</strong> A (4.0) ✓</div>
+                <div><strong>98-100:</strong> A+ (4.00) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #D1FAE5; color: #065F46;">A-</div>
-                <div><strong>80-84:</strong> A- (3.7) ✓</div>
+                <div><strong>93-97:</strong> A (3.70) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #D1FAE5; color: #065F46;">B+</div>
-                <div><strong>75-79:</strong> B+ (3.3) ✓</div>
+                <div><strong>88-92:</strong> B+ (3.60) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #DBEAFE; color: #1E40AF;">B</div>
-                <div><strong>70-74:</strong> B (3.0) ✓</div>
+                <div><strong>80-87:</strong> B (2.95) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #DBEAFE; color: #1E40AF;">B-</div>
-                <div><strong>65-69:</strong> B- (2.7) ✓</div>
+                <div><strong>70-79:</strong> C+ (2.70) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #FEF3C7; color: #92400E;">C+</div>
-                <div><strong>60-64:</strong> C+ (2.3) ✓</div>
+                <div><strong>66-69:</strong> C (2.00) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #FEF3C7; color: #92400E;">C</div>
-                <div><strong>55-59:</strong> C (2.0) ✓</div>
+                <div><strong>58-65:</strong> D+ (1.80) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #FEE2E2; color: #991B1B;">D</div>
-                <div><strong>50-54:</strong> D (1.0) ✗</div>
+                <div><strong>50-57:</strong> D (1.30) ✓</div>
             </div>
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded flex items-center justify-center font-bold" style="background-color: #FEE2E2; color: #991B1B;">E</div>
-                <div><strong>0-49:</strong> E (0.0) ✗</div>
+                <div><strong>0-49:</strong> E (1.00) ✗</div>
             </div>
         </div>
         <div class="mt-3 text-xs" style="color: #6B7280;">
-            <strong>Keterangan:</strong> ✓ = Lulus (Grade ≥ C), ✗ = Tidak Lulus (Grade < C)
+            <strong>Keterangan:</strong> ✓ = Lulus (Grade A+ sampai D), ✗ = Tidak Lulus (Grade E)
         </div>
     </div>
 </div>
@@ -195,32 +195,34 @@ function calculateGrade(input) {
     
     let grade, bobot, status, bgColor, textColor;
     
-    if (nilai >= 85) {
-        grade = 'A'; bobot = '4.0'; status = '✓ Lulus'; 
+    // Official STAI AL-FATIH grading system
+    if (nilai >= 98 && nilai <= 100) {
+        grade = 'A+'; bobot = '4.00'; status = '✓ Lulus'; 
         bgColor = '#DCFCE7'; textColor = '#166534';
-    } else if (nilai >= 80) {
-        grade = 'A-'; bobot = '3.7'; status = '✓ Lulus';
+    } else if (nilai >= 93 && nilai <= 97) {
+        grade = 'A'; bobot = '3.70'; status = '✓ Lulus';
         bgColor = '#D1FAE5'; textColor = '#065F46';
-    } else if (nilai >= 75) {
-        grade = 'B+'; bobot = '3.3'; status = '✓ Lulus';
-        bgColor = '#D1FAE5'; textColor = '#065F46';
-    } else if (nilai >= 70) {
-        grade = 'B'; bobot = '3.0'; status = '✓ Lulus';
+    } else if (nilai >= 88 && nilai <= 92) {
+        grade = 'B+'; bobot = '3.60'; status = '✓ Lulus';
         bgColor = '#DBEAFE'; textColor = '#1E40AF';
-    } else if (nilai >= 65) {
-        grade = 'B-'; bobot = '2.7'; status = '✓ Lulus';
+    } else if (nilai >= 80 && nilai <= 87) {
+        grade = 'B'; bobot = '2.95'; status = '✓ Lulus';
         bgColor = '#DBEAFE'; textColor = '#1E40AF';
-    } else if (nilai >= 60) {
-        grade = 'C+'; bobot = '2.3'; status = '✓ Lulus';
+    } else if (nilai >= 70 && nilai <= 79) {
+        grade = 'C+'; bobot = '2.70'; status = '✓ Lulus';
         bgColor = '#FEF3C7'; textColor = '#92400E';
-    } else if (nilai >= 55) {
-        grade = 'C'; bobot = '2.0'; status = '✓ Lulus';
+    } else if (nilai >= 66 && nilai <= 69) {
+        grade = 'C'; bobot = '2.00'; status = '✓ Lulus';
         bgColor = '#FEF3C7'; textColor = '#92400E';
-    } else if (nilai >= 50) {
-        grade = 'D'; bobot = '1.0'; status = '✗ Tidak Lulus';
-        bgColor = '#FEE2E2'; textColor = '#991B1B';
+    } else if (nilai >= 58 && nilai <= 65) {
+        grade = 'D+'; bobot = '1.80'; status = '✓ Lulus';
+        bgColor = '#FED7AA'; textColor = '#9A3412';
+    } else if (nilai >= 50 && nilai <= 57) {
+        grade = 'D'; bobot = '1.30'; status = '✓ Lulus';
+        bgColor = '#FED7AA'; textColor = '#9A3412';
     } else {
-        grade = 'E'; bobot = '0.0'; status = '✗ Tidak Lulus';
+        // 0-49
+        grade = 'E'; bobot = '1.00'; status = '✗ Tidak Lulus';
         bgColor = '#FEE2E2'; textColor = '#991B1B';
     }
     
