@@ -19,6 +19,31 @@
             max-width: 210mm;
             margin: 0 auto;
             color: #000;
+            position: relative;
+        }
+
+        /* Watermark Background Logo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            background-image: url('{{ asset('images/logo-alfatih.png') }}');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Content wrapper to stay above watermark */
+        body > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* Kop Surat */
