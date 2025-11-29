@@ -54,7 +54,7 @@ class KhsController extends Controller
     }
 
     /**
-     * Download KHS as PDF
+     * Download KHS as PDF using TCPDF (NO GD extension required!)
      */
     public function downloadPdf($id)
     {
@@ -88,16 +88,41 @@ class KhsController extends Controller
             $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
         }
 
-        // Generate PDF using DomPDF
-        $pdf = \PDF::loadView('mahasiswa.khs.pdf', compact('khs', 'khsService', 'logoBase64'));
+        // Generate PDF using TCPDF (NO GD REQUIRED!)
+        $pdf = \App::make('tcpdf');
         
-        // Set paper size and orientation
-        $pdf->setPaper('A4', 'portrait');
+        // Set document info
+        $pdf->SetCreator('SIAKAD STAI Al-Fatih Tangerang');
+        $pdf->SetAuthor('STAI Al-Fatih Tangerang');
+        $pdf->SetTitle('Kartu Hasil Studi (KHS)');
+        $pdf->SetSubject('KHS Mahasiswa');
+        
+        // Set margins (left, top, right)
+        $pdf->SetMargins(15, 15, 15);
+        $pdf->SetAutoPageBreak(true, 15);
+        
+        // Remove default header/footer
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        
+        // Add page
+        $pdf->AddPage('P', 'A4'); // Portrait, A4
+        
+        // Set font
+        $pdf->SetFont('times', '', 10);
+        
+        // Generate HTML view
+        $html = view('mahasiswa.khs.pdf', compact('khs', 'khsService', 'logoBase64'))->render();
+        
+        // Write HTML to PDF
+        $pdf->writeHTML($html, true, false, true, false, '');
         
         // Generate filename
         $filename = 'KHS_' . $mahasiswa->nim . '_' . str_replace('/', '-', $khs->semester->tahun_akademik) . '.pdf';
         
         // Download PDF
-        return $pdf->download($filename);
+        return response($pdf->Output($filename, 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 }
