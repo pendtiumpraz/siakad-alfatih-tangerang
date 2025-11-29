@@ -9,19 +9,6 @@ use Illuminate\Support\Facades\Log;
 class SemesterObserver
 {
     /**
-     * Handle the Semester "updating" event.
-     * 
-     * This runs BEFORE the update, so we can capture the old is_active state
-     */
-    public function updating(Semester $semester): void
-    {
-        // Store the old is_active value before update
-        if ($semester->isDirty('is_active')) {
-            $semester->old_is_active = $semester->getOriginal('is_active');
-        }
-    }
-
-    /**
      * Handle the Semester "updated" event.
      * 
      * Detect when is_active changes from FALSE -> TRUE
@@ -29,34 +16,33 @@ class SemesterObserver
      */
     public function updated(Semester $semester): void
     {
-        // Check if is_active changed to TRUE
-        if ($semester->isDirty('is_active') && $semester->is_active === true) {
+        // Get changes that were made
+        $changes = $semester->getChanges();
+        
+        // Check if is_active was changed AND new value is TRUE
+        if (isset($changes['is_active']) && $changes['is_active'] == 1) {
             
-            $oldIsActive = $semester->old_is_active ?? false;
-            
-            // Only proceed if changed from FALSE -> TRUE
-            if (!$oldIsActive) {
-                
-                Log::info('Semester activated, checking SPP auto-generation', [
-                    'semester_id' => $semester->id,
-                    'semester' => $semester->nama_semester,
-                ]);
+            Log::info('Semester activated, checking SPP auto-generation', [
+                'semester_id' => $semester->id,
+                'semester' => $semester->nama_semester,
+                'changes' => $changes,
+            ]);
 
-                // Get previous active semester (to check valid progression)
-                $previousSemester = Semester::where('id', '!=', $semester->id)
-                    ->orderBy('tanggal_mulai', 'desc')
-                    ->first();
+            // Get previous active semester (to check valid progression)
+            $previousSemester = Semester::where('id', '!=', $semester->id)
+                ->where('is_active', false) // Get previously active (now inactive)
+                ->orderBy('updated_at', 'desc')
+                ->first();
 
-                // Auto-generate SPP
-                $service = new SppAutoGenerateService();
-                $result = $service->generateSppForSemester($semester, $previousSemester);
+            // Auto-generate SPP
+            $service = new SppAutoGenerateService();
+            $result = $service->generateSppForSemester($semester, $previousSemester);
 
-                // Log result
-                if ($result['success']) {
-                    Log::info('SPP Auto-generation successful', $result);
-                } else {
-                    Log::warning('SPP Auto-generation failed or skipped', $result);
-                }
+            // Log result
+            if ($result['success']) {
+                Log::info('SPP Auto-generation successful', $result);
+            } else {
+                Log::warning('SPP Auto-generation failed or skipped', $result);
             }
         }
     }

@@ -80,7 +80,7 @@ class SppAutoGenerateService
                         'jumlah' => $nominalSpp,
                         'tanggal_jatuh_tempo' => $tanggalJatuhTempo,
                         'tanggal_bayar' => null,
-                        'status' => 'belum_lunas',
+                        'status' => 'pending', // ENUM: pending, lunas, terlambat
                         'bukti_pembayaran' => null,
                         'keterangan' => "Pembayaran SPP {$newSemester->nama_semester} {$newSemester->tahun_akademik}",
                     ]);
