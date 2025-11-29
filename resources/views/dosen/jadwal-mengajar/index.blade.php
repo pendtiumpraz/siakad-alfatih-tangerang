@@ -26,7 +26,7 @@
                         <option value="">Semua Semester</option>
                         @foreach($semesters as $semester)
                             <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                                {{ $semester->nama_semester }} - {{ $semester->tahun_akademik }}
+                                {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
                             </option>
                         @endforeach
                     </select>

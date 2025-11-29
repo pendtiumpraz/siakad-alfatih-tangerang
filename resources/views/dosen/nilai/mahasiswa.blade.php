@@ -108,7 +108,7 @@
                         <td class="px-4 py-3 text-sm text-gray-700 text-center">{{ $nilais->firstItem() + $index }}</td>
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $nilai->mahasiswa->nim }}</td>
                         <td class="px-4 py-3 text-sm text-gray-800">{{ $nilai->mahasiswa->nama_lengkap }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $nilai->semester->nama_semester }} ({{ ucfirst($nilai->semester->jenis) }})</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ $nilai->semester->tahun_akademik }} - {{ ucfirst($nilai->semester->jenis) }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_tugas, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_uts, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_uas, 2) }}</td>

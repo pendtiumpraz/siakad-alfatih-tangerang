@@ -20,7 +20,7 @@
                         <option value="">Semua Semester</option>
                         @foreach($semesters as $semester)
                             <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                                {{ $semester->nama_semester }} - {{ $semester->tahun_akademik }} ({{ ucfirst($semester->jenis) }})
+                                {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
                             </option>
                         @endforeach
                     </select>
@@ -64,7 +64,7 @@
                         <strong>SKS:</strong> {{ $item['mata_kuliah']->sks }}
                     </p>
                     <p class="text-sm text-gray-600">
-                        <strong>Semester:</strong> {{ $item['semester']->nama_semester }} - {{ $item['semester']->tahun_akademik }}
+                        <strong>Semester:</strong> {{ $item['semester']->tahun_akademik }} - {{ ucfirst($item['semester']->jenis) }}
                     </p>
                 </div>
 

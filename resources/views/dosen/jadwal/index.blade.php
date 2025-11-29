@@ -26,7 +26,7 @@
                         <option value="">Semua Semester</option>
                         @foreach($semesters as $semester)
                             <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                                {{ $semester->nama_semester }} - {{ $semester->tahun_akademik }}
+                                {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
                             </option>
                         @endforeach
                     </select>
@@ -78,7 +78,7 @@
                     @forelse($jadwals as $index => $jadwal)
                     <tr class="hover:bg-green-50 transition-colors">
                         <td class="px-4 py-3 text-sm text-gray-700 text-center">{{ $jadwals->firstItem() + $index }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->semester->nama_semester }} {{ $jadwal->semester->tahun_akademik }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->semester->tahun_akademik }} - {{ ucfirst($jadwal->semester->jenis) }}</td>
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $jadwal->mataKuliah->kode_mk }} - {{ $jadwal->mataKuliah->nama_mk }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->hari }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</td>
