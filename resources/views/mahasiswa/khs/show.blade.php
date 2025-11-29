@@ -216,12 +216,258 @@
 <!-- Print Styles -->
 <style>
 @media print {
-    .no-print {
+    /* Hide all web elements */
+    nav, aside, header, button, .sidebar, .no-print,
+    .flex.justify-between, a[href*="kembali"], a[href*="download"] {
         display: none !important;
     }
+    
+    /* Reset body */
     body {
         background: white;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 9pt;
+        padding: 0;
+        margin: 0;
+    }
+    
+    main {
+        margin: 0 !important;
+        padding: 15px 25px !important;
+        max-width: 100% !important;
+    }
+    
+    .space-y-6 {
+        padding: 0 !important;
+    }
+    
+    /* Show kop surat on print */
+    .kop-surat-print {
+        display: block !important;
+        margin-bottom: 10px;
+    }
+    
+    /* Watermark */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        height: 400px;
+        background-image: url('{{ asset('images/logo-alfatih.png') }}');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    /* Hide web card design */
+    .bg-gradient-to-r, .rounded-lg, .shadow-md, .border-2 {
+        background: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Clean layout */
+    .bg-white {
+        position: relative;
+        z-index: 1;
+        padding: 0 !important;
+    }
+    
+    /* Hide web header */
+    .bg-gradient-to-r.from-\[#2D5F3F\] {
+        display: none !important;
+    }
+    
+    /* Print title */
+    .print-title {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+    
+    .print-title h2 {
+        font-size: 12pt;
+        font-weight: bold;
+        text-decoration: underline;
+        margin-bottom: 3px;
+    }
+    
+    /* Print info */
+    .print-info {
+        display: block !important;
+        margin-bottom: 8px;
+    }
+    
+    .print-info p {
+        margin: 2px 0;
+        font-size: 9pt;
+        line-height: 1.3;
+    }
+    
+    /* Table styling for print */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 8px;
+    }
+    
+    table th {
+        background-color: #2D5F3F !important;
+        color: white !important;
+        padding: 4px 5px;
+        text-align: center;
+        font-size: 8pt;
+        border: 1px solid #000;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    table td {
+        padding: 3px 5px;
+        border: 1px solid #000;
+        font-size: 8pt;
+    }
+    
+    /* Hide icons and badges */
+    i, .inline-block.px-3, svg {
+        display: none !important;
+    }
+    
+    /* Print summary */
+    .print-summary {
+        display: block !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .print-summary p {
+        margin: 2px 0;
+        font-size: 9pt;
+        line-height: 1.4;
+    }
+    
+    /* Print signature */
+    .print-signature {
+        display: block !important;
+        float: right;
+        text-align: center;
+        width: 180px;
+        font-size: 9pt;
+        margin-top: 15px;
+    }
+    
+    /* Hide duplicate content */
+    .grid.grid-cols-1.md\\:grid-cols-2,
+    .flex.items-center.space-x-2,
+    h3.text-lg {
+        display: none !important;
     }
 }
+
+/* Elements only visible when printing */
+.kop-surat-print, .print-title, .print-info, .print-summary, .print-signature {
+    display: none;
+}
 </style>
+
+<!-- Kop Surat (Only visible when printing) -->
+<div class="kop-surat-print">
+    <div style="display: table; width: 100%; margin-bottom: 5px;">
+        <div style="display: table-cell; width: 60px; vertical-align: top;">
+            <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI Al-Fatih" style="width: 60px; height: 60px;">
+        </div>
+        <div style="display: table-cell; text-align: center; vertical-align: top; padding-left: 15px;">
+            <h1 style="font-size: 14pt; font-weight: bold; color: #2D5F3F; margin-bottom: 3px; line-height: 1.1;">STAI AL FATIH TANGERANG</h1>
+            <p style="font-size: 8pt; margin: 1px 0;">Jl. Raden Fatah, No. 5, RT. 004/RW. 006, Parung Serab, Kec. Ciledug, Kota</p>
+            <p style="font-size: 8pt; margin: 1px 0;">Tangerang, Banten, Kode Pos 15153</p>
+            <p style="font-size: 8pt; margin: 1px 0;">Email: info@staialfatih.or.id, Website: https://staialfatih.or.id</p>
+        </div>
+    </div>
+    <hr style="border: 0; border-top: 2px solid #2D5F3F; margin: 5px 0 10px 0;">
+</div>
+
+<!-- Print Title -->
+<div class="print-title">
+    <h2>KARTU HASIL STUDI (KHS) MAHASISWA</h2>
+</div>
+
+<!-- Print Info -->
+<div class="print-info">
+    <p><strong>Nama</strong> : {{ $khs->mahasiswa->nama_lengkap }}</p>
+    <p><strong>NIM</strong> : {{ $khs->mahasiswa->nim ?? '-' }}</p>
+    @php
+        $tahunAkademik = (int) substr($khs->semester->tahun_akademik, 0, 4);
+        $angkatan = $khs->mahasiswa->angkatan;
+        $yearDiff = $tahunAkademik - $angkatan;
+        $jenisSemester = strpos(strtolower($khs->semester->nama_semester), 'ganjil') !== false ? 'ganjil' : 'genap';
+        $semesterNumber = ($yearDiff * 2) + ($jenisSemester === 'genap' ? 2 : 1);
+        $romanNumerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+        $roman = $romanNumerals[$semesterNumber] ?? $semesterNumber;
+        $terbilang = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas', 'dua belas'];
+        $terbilangSemester = $terbilang[$semesterNumber] ?? $semesterNumber;
+    @endphp
+    <p><strong>Semester</strong> : {{ $roman }} ({{ $terbilangSemester }})</p>
+    <p><strong>Program Studi</strong> : {{ $khs->mahasiswa->programStudi->nama_prodi }}</p>
+</div>
+
+<!-- Print Summary (after table) -->
+<div class="print-summary">
+    @php
+        $totalSks = 0;
+        $totalSksLulus = 0;
+        foreach($khs->mahasiswa->nilais->where('semester_id', $khs->semester_id) as $nilai) {
+            $sks = $nilai->mataKuliah->sks ?? 0;
+            $totalSks += $sks;
+            if ($nilai->status === 'lulus') {
+                $totalSksLulus += $sks;
+            }
+        }
+    @endphp
+    <table style="width: 100%; border: none;">
+        <tr>
+            <td style="width: 50%; border: none;">
+                <p><strong>Jumlah SKS Semester</strong> : {{ $totalSks }}</p>
+                <p><strong>SKS yang diluluskan</strong> : {{ $totalSksLulus }}</p>
+                <p><strong>Indeks Prestasi Kumulatif (IPK) lalu</strong> : -</p>
+            </td>
+            <td style="width: 50%; border: none;">
+                <p><strong>Indeks Prestasi (IP)</strong> : {{ str_replace('.', ',', number_format($khs->ip, 2)) }}</p>
+                <p><strong>Indeks Prestasi Kumulatif (IPK)</strong> : {{ str_replace('.', ',', number_format($khs->ipk, 2)) }}</p>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Print Signature -->
+<div class="print-signature">
+    @php
+        $carbon = \Carbon\Carbon::now();
+        $masehi = $carbon->isoFormat('DD MMMM YYYY');
+        $hijriMonths = [
+            1 => 'Muharram', 2 => 'Safar', 3 => 'Rabiul Awal', 4 => 'Rabiul Akhir',
+            5 => 'Jumadil Awal', 6 => 'Jumadil Akhir', 7 => 'Rajab', 8 => "Sya'ban",
+            9 => 'Ramadhan', 10 => 'Syawal', 11 => 'Dzulqaidah', 12 => 'Dzulhijjah'
+        ];
+        $gregorianYear = $carbon->year;
+        $hijriYear = $gregorianYear - 579;
+        $hijriMonth = $carbon->month;
+        $hijriDay = $carbon->day;
+        $hijriDate = $hijriDay . ' ' . $hijriMonths[$hijriMonth] . ' ' . $hijriYear . ' H';
+    @endphp
+    <p>Tangerang, {{ $hijriDate }}</p>
+    <p>{{ $masehi }} M</p>
+    <br>
+    <p>PUKET I</p>
+    <p>Bid. Akademik dan Pengembangan</p>
+    <p>STAI AL FATIH</p>
+    <br><br>
+    <p style="font-weight: bold; text-decoration: underline;">Satrio Purnomo Hidayat, M.Pd.</p>
+</div>
+
 @endsection
