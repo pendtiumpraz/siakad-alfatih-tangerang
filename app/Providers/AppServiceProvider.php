@@ -59,5 +59,8 @@ class AppServiceProvider extends ServiceProvider
             ['layouts.admin', 'layouts.dosen', 'layouts.operator', 'layouts.mahasiswa'],
             \App\View\Composers\NotificationComposer::class
         );
+
+        // Register observers
+        \App\Models\Semester::observe(\App\Observers\SemesterObserver::class);
     }
 }

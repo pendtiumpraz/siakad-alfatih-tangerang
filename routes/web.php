@@ -182,6 +182,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
     });
 
+    // SPP Settings Management
+    Route::resource('spp-settings', \App\Http\Controllers\Admin\SppSettingController::class)->except(['show']);
+
     // Keuangan (Financial Accounting)
     Route::prefix('keuangan')->name('keuangan.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('index');
@@ -395,15 +398,19 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('nilai', [MahasiswaController::class, 'nilai'])->name('nilai.index');
     Route::get('nilai/{semester_id}', [MahasiswaController::class, 'nilaiDetail'])->name('nilai.detail');
 
-    Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
-    Route::get('khs/{id}/download-pdf', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'downloadPdf'])->name('khs.download-pdf');
-    Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
-    // KRS (Kartu Rencana Studi)
-    Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
-    Route::post('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'store'])->name('krs.store');
-    Route::delete('krs/{id}', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'destroy'])->name('krs.destroy');
-    Route::post('krs/submit', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'submit'])->name('krs.submit');
-    Route::get('krs/print', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'print'])->name('krs.print');
+    // KHS & KRS Routes (Protected by SPP payment check)
+    Route::middleware('check.spp')->group(function () {
+        Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
+        Route::get('khs/{id}/download-pdf', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'downloadPdf'])->name('khs.download-pdf');
+        Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
+        
+        // KRS (Kartu Rencana Studi)
+        Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
+        Route::post('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'store'])->name('krs.store');
+        Route::delete('krs/{id}', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'destroy'])->name('krs.destroy');
+        Route::post('krs/submit', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'submit'])->name('krs.submit');
+        Route::get('krs/print', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'print'])->name('krs.print');
+    });
 
     Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
     Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.detail');
