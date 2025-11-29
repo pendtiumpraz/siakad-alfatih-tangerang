@@ -199,45 +199,75 @@
     .action-buttons {
         margin-bottom: 20px;
         display: flex;
-        gap: 10px;
+        gap: 12px;
         justify-content: center;
+        flex-wrap: wrap;
+        padding: 0 20px;
     }
 
     .btn {
-        padding: 10px 20px;
+        padding: 12px 24px;
         border-radius: 8px;
         text-decoration: none;
         color: white;
-        font-family: Arial, sans-serif;
-        font-size: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        transition: all 0.3s;
+        gap: 10px;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn i {
+        font-size: 16px;
     }
 
     .btn-back {
-        background: #6b7280;
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
     }
 
     .btn-back:hover {
-        background: #4b5563;
+        background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
     }
 
     .btn-pdf {
-        background: #dc2626;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     }
 
     .btn-pdf:hover {
-        background: #b91c1c;
+        background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
     }
 
     .btn-print {
-        background: #2563eb;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     }
 
     .btn-print:hover {
-        background: #1d4ed8;
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+
+    @media (max-width: 640px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 
     @media print {
