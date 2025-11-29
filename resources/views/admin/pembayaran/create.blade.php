@@ -29,11 +29,11 @@
                     </label>
                     <select name="mahasiswa_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Mahasiswa</option>
-                        <option value="1">2301001 - Ahmad Nur Rahman</option>
-                        <option value="2">2301002 - Fatimah Azzahra</option>
-                        <option value="3">2301003 - Muhammad Ali</option>
-                        <option value="4">2301004 - Khadijah Binti Ahmad</option>
-                        <option value="5">2301005 - Umar Faruq</option>
+                        @foreach($mahasiswas as $mahasiswa)
+                        <option value="{{ $mahasiswa->id }}" {{ old('mahasiswa_id') == $mahasiswa->id ? 'selected' : '' }}>
+                            {{ $mahasiswa->nim }} - {{ $mahasiswa->nama_lengkap }} ({{ ucfirst($mahasiswa->status) }})
+                        </option>
+                        @endforeach
                     </select>
                     @error('mahasiswa_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -47,10 +47,9 @@
                     </label>
                     <select name="jenis_pembayaran" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Jenis</option>
-                        <option value="spp">SPP</option>
-                        <option value="daftar_ulang">Daftar Ulang</option>
-                        <option value="wisuda">Wisuda</option>
-                        <option value="lainnya">Lainnya</option>
+                        @foreach($jenisPembayaran as $key => $label)
+                        <option value="{{ $key }}" {{ old('jenis_pembayaran') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
                     </select>
                     @error('jenis_pembayaran')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -64,8 +63,10 @@
                     </label>
                     <select name="semester_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                         <option value="">Pilih Semester</option>
-                        @foreach($semesters ?? [] as $semester)
-                        <option value="{{ $semester->id }}">{{ $semester->nama_semester }} - {{ $semester->tahun_akademik }}</option>
+                        @foreach($semesters as $semester)
+                        <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
+                            {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
+                        </option>
                         @endforeach
                     </select>
                     @error('semester_id')
