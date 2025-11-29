@@ -140,7 +140,7 @@
                     <a href="{{ route('admin.semester.index') }}" class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition text-center">
                         <i class="fas fa-times mr-2"></i>Batal
                     </a>
-                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white font-semibold rounded-lg hover:shadow-lg hover:from-[#4A7C59] hover:to-[#D4AF37] transition">
+                    <button type="submit" id="submitBtn" class="px-6 py-2 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white font-semibold rounded-lg hover:shadow-lg hover:from-[#4A7C59] hover:to-[#D4AF37] transition">
                         <i class="fas fa-save mr-2"></i>Simpan
                     </button>
                 </div>
@@ -148,4 +148,39 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submitBtn');
+    const isActiveCheckbox = document.querySelector('input[name="is_active"]');
+    
+    form.addEventListener('submit', function(e) {
+        // Only show confirmation if "Aktif" checkbox is checked
+        if (isActiveCheckbox.checked) {
+            e.preventDefault();
+            
+            // Custom styled confirmation dialog
+            const confirmed = confirm(
+                "⚠️ PERHATIAN PENTING!\n\n" +
+                "Mengaktifkan semester baru akan:\n\n" +
+                "✓ Menonaktifkan semester yang sedang aktif\n" +
+                "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
+                "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n" +
+                "Apakah Anda yakin ingin melanjutkan?"
+            );
+            
+            if (confirmed) {
+                // Submit the form
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                form.submit();
+            }
+        }
+    });
+});
+</script>
+@endpush
+
 @endsection
