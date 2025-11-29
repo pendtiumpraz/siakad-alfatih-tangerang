@@ -142,6 +142,10 @@
             margin-bottom: 65px;
             font-size: 11px;
         }
+        
+        .signature-box:first-child p:first-child {
+            margin-bottom: 80px;
+        }
 
         .signature-box .name {
             font-weight: bold;
@@ -203,6 +207,10 @@
             
             .signature-box p {
                 margin-bottom: 55px;
+            }
+            
+            .signature-box:first-child p:first-child {
+                margin-bottom: 70px;
             }
             
             .signature-box .name {
