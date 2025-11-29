@@ -54,7 +54,7 @@ class KhsController extends Controller
     }
 
     /**
-     * Download KHS as PDF using TCPDF (NO GD extension required!)
+     * Download KHS as PDF
      */
     public function downloadPdf($id)
     {
@@ -80,7 +80,7 @@ class KhsController extends Controller
 
         $khsService = new \App\Services\KhsService();
 
-        // Generate base64 logo (no GD extension required!)
+        // Generate base64 logo
         $logoPath = public_path('images/logo-alfatih.png');
         $logoBase64 = '';
         if (file_exists($logoPath)) {
@@ -88,41 +88,14 @@ class KhsController extends Controller
             $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
         }
 
-        // Generate PDF using TCPDF (NO GD REQUIRED!)
-        $pdf = \App::make('tcpdf');
-        
-        // Set document info
-        $pdf->SetCreator('SIAKAD STAI Al-Fatih Tangerang');
-        $pdf->SetAuthor('STAI Al-Fatih Tangerang');
-        $pdf->SetTitle('Kartu Hasil Studi (KHS)');
-        $pdf->SetSubject('KHS Mahasiswa');
-        
-        // Set margins (left, top, right)
-        $pdf->SetMargins(15, 15, 15);
-        $pdf->SetAutoPageBreak(true, 15);
-        
-        // Remove default header/footer
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-        
-        // Add page
-        $pdf->AddPage('P', 'A4'); // Portrait, A4
-        
-        // Set font
-        $pdf->SetFont('times', '', 10);
-        
-        // Generate HTML view
-        $html = view('mahasiswa.khs.pdf', compact('khs', 'khsService', 'logoBase64'))->render();
-        
-        // Write HTML to PDF
-        $pdf->writeHTML($html, true, false, true, false, '');
+        // Generate PDF using DomPDF
+        $pdf = \PDF::loadView('mahasiswa.khs.pdf', compact('khs', 'khsService', 'logoBase64'));
+        $pdf->setPaper('A4', 'portrait');
         
         // Generate filename
         $filename = 'KHS_' . $mahasiswa->nim . '_' . str_replace('/', '-', $khs->semester->tahun_akademik) . '.pdf';
         
         // Download PDF
-        return response($pdf->Output($filename, 'S'))
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        return $pdf->download($filename);
     }
 }
