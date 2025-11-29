@@ -234,12 +234,27 @@
     }
 
     @media print {
-        .action-buttons {
+        /* Hide ALL non-print elements */
+        .action-buttons,
+        nav, aside, header, footer,
+        .sidebar, .navbar,
+        [class*="sidebar"], [class*="navbar"],
+        [class*="nav-"], [id*="sidebar"],
+        button:not(.btn-print) {
             display: none !important;
+        }
+
+        /* Reset page for print */
+        body {
+            background: white !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         main {
             margin: 0 !important;
+            padding: 0 !important;
+            max-width: 100% !important;
             box-shadow: none !important;
         }
 
@@ -247,10 +262,6 @@
             box-shadow: none !important;
             margin: 0 !important;
             padding: 15px 25px !important;
-        }
-
-        body {
-            background: white !important;
         }
 
         /* Ensure table is visible on print */
