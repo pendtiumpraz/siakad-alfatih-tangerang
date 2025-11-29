@@ -360,20 +360,7 @@
     <!-- Signature -->
     <div class="signature-section">
         <div class="signature-box">
-            <div>
-                Tangerang, 
-                @php
-                    // Get Hijri date (approximate conversion)
-                    $gregorianDate = now();
-                    $hijriYear = $gregorianDate->year - 579;
-                    $hijriMonths = ['Muharram', 'Safar', 'Rabiul Awal', 'Rabiul Akhir', 'Jumadil Awal', 'Jumadil Akhir', 
-                                   'Rajab', 'Syaban', 'Ramadhan', 'Syawal', 'Dzulqadah', 'Dzulhijjah'];
-                    $hijriMonth = $hijriMonths[$gregorianDate->month - 1];
-                    
-                    echo $gregorianDate->day . ' ' . $hijriMonth . ' ' . $hijriYear . ' H';
-                @endphp
-            </div>
-            <div>{{ now()->translatedFormat('d F Y') }} M</div>
+            <div>Tangerang, {{ now()->translatedFormat('d F Y') }}</div>
             <div style="margin-top: 10px; font-weight: bold;">PUKET I</div>
             <div>Bid. Akademik dan Pengembangan</div>
             <div>STAI AL-FATIH</div>
