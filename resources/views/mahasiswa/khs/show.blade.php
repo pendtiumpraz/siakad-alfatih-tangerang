@@ -335,8 +335,24 @@
     }
     
     /* Hide icons and badges */
-    i, .inline-block.px-3, svg {
+    i, .inline-block.px-3, svg, .screen-only {
         display: none !important;
+    }
+    
+    /* Show print table with proper styling */
+    .print-table {
+        display: table !important;
+        width: 100%;
+        border: 1px solid #000;
+    }
+    
+    .print-table thead tr {
+        background-color: #fff !important;
+    }
+    
+    .print-table th,
+    .print-table td {
+        border: 1px solid #000 !important;
     }
     
     /* Print summary */
