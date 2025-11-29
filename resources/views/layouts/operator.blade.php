@@ -93,7 +93,9 @@
                     </svg>
                     <span class="font-medium">Approval KRS</span>
                     @php
-                        $pendingKrsCount = \App\Models\Krs::where('status', 'submitted')->count();
+                        $pendingKrsCount = \App\Models\Krs::where('status', 'submitted')
+                            ->distinct('mahasiswa_id')
+                            ->count('mahasiswa_id');
                     @endphp
                     @if($pendingKrsCount > 0)
                         <span class="ml-auto px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">{{ $pendingKrsCount }}</span>
