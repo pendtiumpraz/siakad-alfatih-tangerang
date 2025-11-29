@@ -22,11 +22,17 @@ class CheckPembayaranSpp
     public function handle(Request $request, Closure $next): Response
     {
         // Only apply to mahasiswa
-        if (!Auth::guard('mahasiswa')->check()) {
+        if (!Auth::check() || Auth::user()->role !== 'mahasiswa') {
             return $next($request);
         }
 
-        $mahasiswa = Auth::guard('mahasiswa')->user();
+        // Get mahasiswa from authenticated user
+        $mahasiswa = Auth::user()->mahasiswa;
+        
+        // If user doesn't have mahasiswa record, allow access
+        if (!$mahasiswa) {
+            return $next($request);
+        }
         
         // Get active semester
         $activeSemester = Semester::where('is_active', true)->first();

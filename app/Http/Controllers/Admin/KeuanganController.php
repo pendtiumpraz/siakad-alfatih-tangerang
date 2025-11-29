@@ -306,7 +306,7 @@ class KeuanganController extends Controller
     /**
      * Get summary data for semester
      */
-    private function getSummary($semesterId)
+    protected function getSummary($semesterId)
     {
         // Saldo awal (could be from previous semester or manual input)
         // For now, calculate from all previous semesters
@@ -452,7 +452,7 @@ class KeuanganController extends Controller
     /**
      * Get chart data for last N semesters
      */
-    private function getChartData($limit = 6)
+    protected function getChartData($limit = 6)
     {
         $semesters = Semester::orderBy('tahun_akademik', 'desc')
             ->orderBy('jenis', 'desc')

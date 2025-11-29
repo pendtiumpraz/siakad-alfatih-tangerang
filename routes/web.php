@@ -242,6 +242,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [OperatorDashboardController::class, 'index'])->name('dashboard');
+    
 
     // Payment Management
     // Custom routes harus didefinisikan SEBELUM resource routes
@@ -291,6 +292,10 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     // Keuangan (Financial Accounting) - Operator can also manage
     Route::prefix('keuangan')->name('keuangan.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Operator\KeuanganController::class, 'index'])->name('index');
+        Route::get('/debug', function() {
+            $pembukuans = \App\Models\PembukuanKeuangan::with('semester')->paginate(20);
+            return view('operator.keuangan.debug', compact('pembukuans'));
+        })->name('debug');
         Route::get('/create', [\App\Http\Controllers\Operator\KeuanganController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Operator\KeuanganController::class, 'store'])->name('store');
         Route::get('/semester/{semester}', [\App\Http\Controllers\Operator\KeuanganController::class, 'show'])->name('show');
