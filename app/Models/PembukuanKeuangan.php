@@ -23,6 +23,8 @@ class PembukuanKeuangan extends Model
         'reference_id',
         'reference_type',
         'bukti_file',
+        'google_drive_file_id',
+        'google_drive_link',
         'created_by',
     ];
 

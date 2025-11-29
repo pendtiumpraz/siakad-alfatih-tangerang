@@ -11,9 +11,26 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Services\GoogleDriveService;
+use Exception;
 
 class KeuanganController extends Controller
 {
+    protected $driveService;
+
+    public function __construct()
+    {
+        // Initialize Google Drive service if enabled
+        if (config('google-drive.enabled')) {
+            try {
+                $this->driveService = new GoogleDriveService();
+            } catch (Exception $e) {
+                \Log::warning('Google Drive service initialization failed: ' . $e->getMessage());
+                $this->driveService = null;
+            }
+        }
+    }
+
     /**
      * Dashboard keuangan dengan summary
      */
@@ -113,30 +130,55 @@ class KeuanganController extends Controller
                 ->withInput();
         }
         
-        // Handle file upload
-        $buktiFile = null;
-        if ($request->hasFile('bukti_file')) {
-            $file = $request->file('bukti_file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $buktiFile = $file->storeAs('pembukuan', $fileName, 'public');
+        DB::beginTransaction();
+        
+        try {
+            // Handle file upload to Google Drive ONLY
+            $uploadResult = null;
+            if ($request->hasFile('bukti_file')) {
+                $uploadResult = $this->uploadBuktiTransaksi(
+                    $request->file('bukti_file'),
+                    $request->jenis,
+                    $request->sub_kategori ?? 'Lain-lain'
+                );
+            }
+            
+            // Create transaction
+            PembukuanKeuangan::create([
+                'jenis' => $request->jenis,
+                'kategori' => 'lain_lain',
+                'sub_kategori' => $request->sub_kategori,
+                'nominal' => $request->nominal,
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+                'semester_id' => $request->semester_id,
+                'is_otomatis' => false,
+                'bukti_file' => $uploadResult['bukti_file'] ?? null,
+                'google_drive_file_id' => $uploadResult['google_drive_file_id'] ?? null,
+                'google_drive_link' => $uploadResult['google_drive_link'] ?? null,
+                'created_by' => auth()->id(),
+            ]);
+            
+            DB::commit();
+            
+            return redirect()->route('admin.keuangan.index')
+                ->with('success', 'Transaksi berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            // Delete uploaded file from Google Drive if transaction failed
+            if (isset($uploadResult) && $uploadResult && $uploadResult['google_drive_file_id'] && $this->driveService) {
+                try {
+                    $this->driveService->deleteFile($uploadResult['google_drive_file_id']);
+                    \Log::info('Deleted Google Drive file after rollback: ' . $uploadResult['google_drive_file_id']);
+                } catch (Exception $deleteException) {
+                    \Log::error('Failed to delete Google Drive file after rollback: ' . $deleteException->getMessage());
+                }
+            }
+            
+            return back()->withInput()
+                ->with('error', 'Gagal menyimpan transaksi: ' . $e->getMessage());
         }
-        
-        // Create transaction
-        PembukuanKeuangan::create([
-            'jenis' => $request->jenis,
-            'kategori' => 'lain_lain',
-            'sub_kategori' => $request->sub_kategori,
-            'nominal' => $request->nominal,
-            'tanggal' => $request->tanggal,
-            'keterangan' => $request->keterangan,
-            'semester_id' => $request->semester_id,
-            'is_otomatis' => false,
-            'bukti_file' => $buktiFile,
-            'created_by' => auth()->id(),
-        ]);
-        
-        return redirect()->route('admin.keuangan.index')
-            ->with('success', 'Transaksi berhasil ditambahkan.');
     }
     
     /**
@@ -144,10 +186,10 @@ class KeuanganController extends Controller
      */
     public function edit($id)
     {
-        $transaction = PembukuanKeuangan::findOrFail($id);
+        $pembukuan = PembukuanKeuangan::findOrFail($id);
         
         // Only allow edit for manual transactions
-        if ($transaction->is_otomatis) {
+        if ($pembukuan->is_otomatis) {
             return redirect()->back()
                 ->with('error', 'Transaksi otomatis tidak dapat diedit.');
         }
@@ -157,7 +199,7 @@ class KeuanganController extends Controller
         $subKategoriPengeluaran = PembukuanKeuangan::getSubKategoriPengeluaran();
         
         return view('admin.keuangan.edit', compact(
-            'transaction',
+            'pembukuan',
             'semesters',
             'subKategoriPemasukan',
             'subKategoriPengeluaran'
@@ -193,35 +235,53 @@ class KeuanganController extends Controller
                 ->withInput();
         }
         
-        // Handle file upload
-        if ($request->hasFile('bukti_file')) {
-            // Delete old file
-            if ($transaction->bukti_file) {
-                Storage::disk('public')->delete($transaction->bukti_file);
+        DB::beginTransaction();
+        
+        try {
+            $updateData = [
+                'jenis' => $request->jenis,
+                'kategori' => 'lain_lain',
+                'sub_kategori' => $request->sub_kategori,
+                'nominal' => $request->nominal,
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan,
+                'semester_id' => $request->semester_id,
+            ];
+            
+            // Handle file upload to Google Drive ONLY
+            if ($request->hasFile('bukti_file')) {
+                // Delete old file from Google Drive
+                $this->deleteBuktiTransaksi($transaction);
+                
+                // Upload new file
+                $uploadResult = $this->uploadBuktiTransaksi(
+                    $request->file('bukti_file'),
+                    $request->jenis,
+                    $request->sub_kategori ?? 'Lain-lain'
+                );
+                
+                $updateData['bukti_file'] = $uploadResult['bukti_file'];
+                $updateData['google_drive_file_id'] = $uploadResult['google_drive_file_id'];
+                $updateData['google_drive_link'] = $uploadResult['google_drive_link'];
             }
             
-            $file = $request->file('bukti_file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $buktiFile = $file->storeAs('pembukuan', $fileName, 'public');
-            $transaction->bukti_file = $buktiFile;
+            // Update transaction
+            $transaction->update($updateData);
+            
+            DB::commit();
+            
+            return redirect()->route('admin.keuangan.index')
+                ->with('success', 'Transaksi berhasil diupdate.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return back()->withInput()
+                ->with('error', 'Gagal update transaksi: ' . $e->getMessage());
         }
-        
-        // Update transaction
-        $transaction->update([
-            'jenis' => $request->jenis,
-            'sub_kategori' => $request->sub_kategori,
-            'nominal' => $request->nominal,
-            'tanggal' => $request->tanggal,
-            'keterangan' => $request->keterangan,
-            'semester_id' => $request->semester_id,
-        ]);
-        
-        return redirect()->route('admin.keuangan.index')
-            ->with('success', 'Transaksi berhasil diupdate.');
     }
     
     /**
-     * Delete transaction
+     * Soft delete transaction
      */
     public function destroy($id)
     {
@@ -233,11 +293,10 @@ class KeuanganController extends Controller
                 ->with('error', 'Transaksi otomatis tidak dapat dihapus.');
         }
         
-        // Delete file if exists
-        if ($transaction->bukti_file) {
-            Storage::disk('public')->delete($transaction->bukti_file);
-        }
+        // Delete file from Google Drive
+        $this->deleteBuktiTransaksi($transaction);
         
+        // Soft delete
         $transaction->delete();
         
         return redirect()->back()
@@ -333,6 +392,63 @@ class KeuanganController extends Controller
         ];
     }
     
+    /**
+     * Upload bukti transaksi to Google Drive ONLY
+     * Local storage is NOT used - files must go to Google Drive
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $jenis
+     * @param string $subKategori
+     * @return array ['bukti_file' => link, 'google_drive_file_id' => id, 'google_drive_link' => link]
+     * @throws Exception if Google Drive is not available or upload fails
+     */
+    protected function uploadBuktiTransaksi($file, $jenis, $subKategori)
+    {
+        if (!$this->driveService) {
+            throw new Exception('Google Drive tidak aktif. Hubungi administrator untuk mengaktifkan Google Drive terlebih dahulu.');
+        }
+
+        try {
+            // Upload to Google Drive (REQUIRED)
+            $driveResult = $this->driveService->uploadKeuangan(
+                $file,
+                $jenis,
+                $subKategori
+            );
+
+            \Log::info("Uploaded bukti transaksi to Google Drive: {$driveResult['id']}");
+
+            return [
+                'bukti_file' => $driveResult['webViewLink'],
+                'google_drive_file_id' => $driveResult['id'],
+                'google_drive_link' => $driveResult['webViewLink'],
+            ];
+        } catch (Exception $e) {
+            \Log::error("Failed to upload bukti transaksi to Google Drive: " . $e->getMessage());
+            throw new Exception("Gagal upload bukti transaksi ke Google Drive: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete bukti transaksi from Google Drive ONLY
+     */
+    protected function deleteBuktiTransaksi($transaction)
+    {
+        if (!$this->driveService) {
+            return;
+        }
+
+        // Delete from Google Drive if file_id exists
+        if ($transaction->google_drive_file_id) {
+            try {
+                $this->driveService->deleteFile($transaction->google_drive_file_id);
+                \Log::info("Deleted bukti transaksi from Google Drive: {$transaction->google_drive_file_id}");
+            } catch (Exception $e) {
+                \Log::error("Failed to delete bukti transaksi from Google Drive: " . $e->getMessage());
+            }
+        }
+    }
+
     /**
      * Get chart data for last N semesters
      */
