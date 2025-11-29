@@ -167,8 +167,13 @@
             margin-bottom: 10px;
         }
 
-        .summary-info p {
-            margin: 2px 0;
+        .summary-info table {
+            border: none;
+        }
+
+        .summary-info td {
+            border: none;
+            padding: 2px 0;
             font-size: 9pt;
             line-height: 1.4;
         }
@@ -244,26 +249,46 @@
 
         <!-- Mahasiswa Info (Inline) -->
         <div class="mhs-info">
-            <p><strong>Nama</strong> : {{ $khs->mahasiswa->nama_lengkap }}</p>
-            <p><strong>NIM</strong> : {{ $khs->mahasiswa->nim ?? '-' }}</p>
-            @php
-                // Calculate semester number
-                $tahunAkademik = (int) substr($khs->semester->tahun_akademik, 0, 4);
-                $angkatan = $khs->mahasiswa->angkatan;
-                $yearDiff = $tahunAkademik - $angkatan;
-                $jenisSemester = strpos(strtolower($khs->semester->nama_semester), 'ganjil') !== false ? 'ganjil' : 'genap';
-                $semesterNumber = ($yearDiff * 2) + ($jenisSemester === 'genap' ? 2 : 1);
-                
-                // Convert to roman
-                $romanNumerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-                $roman = $romanNumerals[$semesterNumber] ?? $semesterNumber;
-                
-                // Terbilang
-                $terbilang = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas', 'dua belas'];
-                $terbilangSemester = $terbilang[$semesterNumber] ?? $semesterNumber;
-            @endphp
-            <p><strong>Semester</strong> : {{ $roman }} ({{ $terbilangSemester }})</p>
-            <p><strong>Program Studi</strong> : {{ $khs->mahasiswa->programStudi->nama_prodi }}</p>
+            <table style="border: none; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 120px; border: none; padding: 2px 0;">Nama</td>
+                    <td style="width: 10px; border: none; padding: 2px 0;">:</td>
+                    <td style="border: none; padding: 2px 0;">{{ $khs->mahasiswa->nama_lengkap }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; padding: 2px 0;">NIM</td>
+                    <td style="border: none; padding: 2px 0;">:</td>
+                    <td style="border: none; padding: 2px 0;">{{ $khs->mahasiswa->nim ?? '-' }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; padding: 2px 0;">Semester</td>
+                    <td style="border: none; padding: 2px 0;">:</td>
+                    <td style="border: none; padding: 2px 0; color: #d97706;">
+                        @php
+                            // Calculate semester number
+                            $tahunAkademik = (int) substr($khs->semester->tahun_akademik, 0, 4);
+                            $angkatan = $khs->mahasiswa->angkatan;
+                            $yearDiff = $tahunAkademik - $angkatan;
+                            $jenisSemester = strpos(strtolower($khs->semester->nama_semester), 'ganjil') !== false ? 'ganjil' : 'genap';
+                            $semesterNumber = ($yearDiff * 2) + ($jenisSemester === 'genap' ? 2 : 1);
+                            
+                            // Convert to roman
+                            $romanNumerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                            $roman = $romanNumerals[$semesterNumber] ?? $semesterNumber;
+                            
+                            // Terbilang
+                            $terbilang = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas', 'dua belas'];
+                            $terbilangSemester = $terbilang[$semesterNumber] ?? $semesterNumber;
+                        @endphp
+                        {{ $roman }} ({{ $terbilangSemester }})
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: none; padding: 2px 0;">Program Studi</td>
+                    <td style="border: none; padding: 2px 0;">:</td>
+                    <td style="border: none; padding: 2px 0;">{{ $khs->mahasiswa->programStudi->nama_prodi }}</td>
+                </tr>
+            </table>
         </div>
 
         <!-- Nilai Table -->
