@@ -28,9 +28,8 @@ class JalurSeleksiController extends AdminJalurSeleksiController
     /**
      * Show the form for editing the specified jalur seleksi (Operator view)
      */
-    public function edit(string $id)
+    public function edit(\App\Models\JalurSeleksi $jalurSeleksi)
     {
-        $jalurSeleksi = \App\Models\JalurSeleksi::findOrFail($id);
         return view('operator.jalur-seleksi.edit', compact('jalurSeleksi'));
     }
 

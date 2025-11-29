@@ -89,12 +89,12 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
-                                    <p class="font-semibold text-[#2D5F3F]">{{ $kurikulum->programStudi->nama ?? '-' }}</p>
-                                    <p class="text-xs text-gray-500">{{ $kurikulum->programStudi->kode ?? '-' }}</p>
+                                    <p class="font-semibold text-[#2D5F3F]">{{ $kurikulum->programStudi->nama_prodi ?? '-' }}</p>
+                                    <p class="text-xs text-gray-500">{{ $kurikulum->programStudi->kode_prodi ?? '-' }}</p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                {{ $kurikulum->nama }}
+                                {{ $kurikulum->nama_kurikulum }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                 <i class="fas fa-calendar mr-1"></i>
