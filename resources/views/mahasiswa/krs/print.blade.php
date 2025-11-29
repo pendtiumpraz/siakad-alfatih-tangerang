@@ -231,7 +231,7 @@
         <div class="header">
             <h1>STAI AL-FATIH CILEUNGSI</h1>
             <h2>KARTU RENCANA STUDI (KRS)</h2>
-            <p>Semester {{ $semester->semester }} - Tahun Akademik {{ $semester->tahun_akademik }}</p>
+            <p>Semester {{ $activeSemester->tahun_akademik }} - {{ ucfirst($activeSemester->jenis) }}</p>
             
             @php
                 $firstKrs = $krsItems->first();
@@ -266,7 +266,7 @@
                 <tr>
                     <td>Semester</td>
                     <td>:</td>
-                    <td>{{ $semester->semester }}</td>
+                    <td>{{ $activeSemester->tahun_akademik }} - {{ ucfirst($activeSemester->jenis) }}</td>
                 </tr>
                 <tr>
                     <td>Tanggal Cetak</td>
