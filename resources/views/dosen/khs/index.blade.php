@@ -31,7 +31,7 @@
                     <option value="">Semua Semester</option>
                     @foreach($semesters as $semester)
                         <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                            {{ $semester->nama_semester }}
+                            {{ $semester->nama_semester }}@if($semester->is_active) ⭐ (Aktif)@endif
                         </option>
                     @endforeach
                 </select>

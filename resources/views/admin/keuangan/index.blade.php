@@ -30,7 +30,7 @@
                 <select name="semester_id" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37]" onchange="this.form.submit()">
                     @foreach($semesters as $sem)
                         <option value="{{ $sem->id }}" {{ $semester->id == $sem->id ? 'selected' : '' }}>
-                            {{ $sem->nama_semester }}
+                            {{ $sem->nama_semester }}@if($sem->is_active) ⭐ (Aktif)@endif
                         </option>
                     @endforeach
                 </select>
