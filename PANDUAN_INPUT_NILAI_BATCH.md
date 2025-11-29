@@ -146,7 +146,7 @@ Ahmad:
 
 Budi:
 ├─ Pancasila: 94 [A] ✓ [🟢 Hijau]
-├─ B.Inggris: 70 [B] ✓ [🟢 Hijau]
+├─ B.Inggris: 72 [C+] ✓ [🟡 Kuning]
 └─ Semua lulus!
 ```
 
