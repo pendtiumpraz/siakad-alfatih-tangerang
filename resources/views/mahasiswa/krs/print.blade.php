@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRS - {{ $mahasiswa->nim }} - {{ $semester->semester }}</title>
+    <title>KRS - {{ $mahasiswa->nim }} - {{ $activeSemester->tahun_akademik }} {{ ucfirst($activeSemester->jenis) }}</title>
     <style>
         * {
             margin: 0;
