@@ -153,11 +153,17 @@ class NilaiKolektifController extends Controller
                         ]);
                         $updated++;
                     } else {
+                        // Get dosen_id from jadwal for this mata kuliah and semester
+                        $jadwal = \App\Models\Jadwal::where('semester_id', $request->semester_id)
+                            ->where('mata_kuliah_id', $mataKuliahId)
+                            ->first();
+                        
                         // Create new
                         Nilai::create([
                             'mahasiswa_id' => $mahasiswaId,
                             'semester_id' => $request->semester_id,
                             'mata_kuliah_id' => $mataKuliahId,
+                            'dosen_id' => $jadwal ? $jadwal->dosen_id : null,
                             'nilai' => $nilaiAngka,
                             'grade' => $gradeData['grade'],
                             'bobot' => $gradeData['bobot'],
