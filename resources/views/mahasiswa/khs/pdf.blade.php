@@ -20,13 +20,21 @@
             position: relative;
         }
 
-        /* Watermark Background Logo - DISABLED (requires GD extension) */
+        /* Watermark Background Logo */
         .watermark {
-            display: none !important; /* Completely disabled to avoid GD dependency */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .watermark img {
-            display: none !important;
+            width: 500px;
+            height: 500px;
+            object-fit: contain;
         }
 
         /* Content wrapper to stay above watermark */
@@ -210,12 +218,12 @@
     </style>
 </head>
 <body>
-    <!-- Watermark DISABLED to avoid GD dependency -->
-    {{-- <div class="watermark">
+    <!-- Watermark -->
+    <div class="watermark">
         @if($logoBase64)
         <img src="{{ $logoBase64 }}" alt="Logo STAI Al-Fatih">
         @endif
-    </div> --}}
+    </div>
 
     <!-- Content -->
     <div class="content">
