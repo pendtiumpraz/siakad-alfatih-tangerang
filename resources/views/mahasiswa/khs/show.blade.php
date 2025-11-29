@@ -25,21 +25,29 @@
         position: relative;
     }
 
-    /* Watermark Background Logo */
+    /* Watermark Background Logo - Hidden on web view for elegance */
     .watermark {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.25;
-        z-index: 0;
-        pointer-events: none;
+        display: none;
     }
 
-    .watermark img {
-        width: 700px;
-        height: 700px;
-        object-fit: contain;
+    /* Show watermark only on print */
+    @media print {
+        .watermark {
+            display: block;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.25;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .watermark img {
+            width: 700px;
+            height: 700px;
+            object-fit: contain;
+        }
     }
 
     /* Content wrapper to stay above watermark */
