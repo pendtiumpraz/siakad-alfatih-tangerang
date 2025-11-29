@@ -296,7 +296,8 @@ class PembayaranController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operator.pembayaran.index')
+            $viewPrefix = $this->getViewPrefix();
+            return redirect()->route($viewPrefix . '.pembayaran.index')
                 ->with('success', 'Payment created successfully.');
 
         } catch (\Exception $e) {
@@ -445,7 +446,8 @@ class PembayaranController extends Controller
 
             DB::commit();
 
-            return redirect()->route('operator.pembayaran.index')
+            $viewPrefix = $this->getViewPrefix();
+            return redirect()->route($viewPrefix . '.pembayaran.index')
                 ->with('success', 'Payment updated successfully.');
 
         } catch (\Exception $e) {
