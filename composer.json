@@ -8,7 +8,6 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "*",
-        "elibyy/tcpdf-laravel": "*",
         "google/apiclient": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
