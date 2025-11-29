@@ -254,14 +254,15 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 400px;
-        height: 400px;
+        width: 500px;
+        height: 500px;
         background-image: url('{{ asset('images/logo-alfatih.png') }}');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        opacity: 0.1;
+        opacity: 0.25;
         z-index: 0;
+        pointer-events: none;
     }
     
     /* Hide web card design */
