@@ -248,6 +248,45 @@
             margin: 0 !important;
             padding: 15px 25px !important;
         }
+
+        body {
+            background: white !important;
+        }
+
+        /* Ensure table is visible on print */
+        .nilai-table {
+            display: table !important;
+            width: 100% !important;
+            border-collapse: collapse !important;
+            page-break-inside: auto !important;
+        }
+
+        .nilai-table thead {
+            display: table-header-group !important;
+        }
+
+        .nilai-table tbody {
+            display: table-row-group !important;
+        }
+
+        .nilai-table tr {
+            display: table-row !important;
+            page-break-inside: avoid !important;
+        }
+
+        .nilai-table th,
+        .nilai-table td {
+            display: table-cell !important;
+            border: 1px solid #000 !important;
+        }
+
+        .nilai-table th {
+            background-color: #fff !important;
+            color: #000 !important;
+            font-weight: bold !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
     }
 </style>
 
