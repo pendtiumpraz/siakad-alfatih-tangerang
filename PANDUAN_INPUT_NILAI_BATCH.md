@@ -195,17 +195,21 @@ Created: 200, Updated: 15, Skipped: 10
 
 | Nilai Angka | Grade | Bobot | Status | Warna |
 |-------------|-------|-------|--------|-------|
-| 85-100 | A | 4.0 | ✓ Lulus | 🟢 Hijau |
-| 80-84 | A- | 3.7 | ✓ Lulus | 🟢 Hijau |
-| 75-79 | B+ | 3.3 | ✓ Lulus | 🟢 Hijau |
-| 70-74 | B | 3.0 | ✓ Lulus | 🟢 Biru |
-| 65-69 | B- | 2.7 | ✓ Lulus | 🟢 Biru |
-| 60-64 | C+ | 2.3 | ✓ Lulus | 🟡 Kuning |
-| 55-59 | C | 2.0 | ✓ Lulus | 🟡 Kuning |
-| 50-54 | D | 1.0 | ✗ Tidak Lulus | 🔴 Merah |
-| 0-49 | E | 0.0 | ✗ Tidak Lulus | 🔴 Merah |
+| 98-100 | A+ | 4.00 | ✓ Lulus | 🟢 Hijau |
+| 93-97 | A | 3.70 | ✓ Lulus | 🟢 Hijau |
+| 88-92 | B+ | 3.60 | ✓ Lulus | 🔵 Biru |
+| 80-87 | B | 2.95 | ✓ Lulus | 🔵 Biru |
+| 70-79 | C+ | 2.70 | ✓ Lulus | 🟡 Kuning |
+| 66-69 | C | 2.00 | ✓ Lulus | 🟡 Kuning |
+| 58-65 | D+ | 1.80 | ✓ Lulus | 🟠 Oranye |
+| 50-57 | D | 1.30 | ✓ Lulus | 🟠 Oranye |
+| 0-49 | E | 1.00 | ✗ Tidak Lulus | 🔴 Merah |
 
-**Batas Kelulusan:** Grade C (nilai ≥ 55)
+**Catatan Penting:**
+- **NO minus grades** (A-, B-, C-) hanya PLUS (A+, B+, C+, D+)
+- **Semua grade A+ sampai D = LULUS**
+- **Hanya E = TIDAK LULUS**
+- Berdasarkan **SISTEM PERKULIAHAN DARING STAI AL-FATIH**
 
 ---
 
