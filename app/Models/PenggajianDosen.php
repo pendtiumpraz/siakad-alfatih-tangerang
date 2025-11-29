@@ -38,34 +38,6 @@ class PenggajianDosen extends Model
     ];
 
     /**
-     * Boot method for model events
-     */
-    protected static function booted()
-    {
-        // Auto-create pembukuan keuangan when penggajian status becomes 'paid'
-        static::updated(function ($penggajian) {
-            // Check if status changed to 'paid'
-            if ($penggajian->isDirty('status') && $penggajian->status === 'paid') {
-                
-                // Create pembukuan entry
-                PembukuanKeuangan::create([
-                    'jenis' => 'pengeluaran',
-                    'kategori' => 'gaji_dosen',
-                    'sub_kategori' => null,
-                    'nominal' => $penggajian->jumlah_dibayar,
-                    'semester_id' => $penggajian->semester_id,
-                    'keterangan' => "Pembayaran gaji dosen - {$penggajian->dosen->nama_lengkap} (NIDN: {$penggajian->dosen->nidn}) - Periode {$penggajian->periode_formatted}",
-                    'tanggal' => $penggajian->paid_at ?? now(),
-                    'is_otomatis' => true,
-                    'reference_id' => $penggajian->id,
-                    'reference_type' => PenggajianDosen::class,
-                    'created_by' => $penggajian->paid_by ?? auth()->id() ?? 1,
-                ]);
-            }
-        });
-    }
-
-    /**
      * Relationship to Dosen
      */
     public function dosen(): BelongsTo
