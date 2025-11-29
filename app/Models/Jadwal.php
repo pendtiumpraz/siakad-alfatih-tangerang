@@ -28,7 +28,35 @@ class Jadwal extends Model
         'jenis_semester' => 'string',
     ];
 
+    /**
+     * Boot method to auto-set jenis_semester from mata kuliah
+     */
+    protected static function boot()
+    {
+        parent::boot();
 
+        // Auto-detect jenis_semester from mata kuliah's semester
+        static::creating(function ($jadwal) {
+            if (empty($jadwal->jenis_semester) && $jadwal->mata_kuliah_id) {
+                $mataKuliah = MataKuliah::find($jadwal->mata_kuliah_id);
+                if ($mataKuliah) {
+                    $semesterNumber = $mataKuliah->semester;
+                    $jadwal->jenis_semester = ($semesterNumber % 2 === 1) ? 'ganjil' : 'genap';
+                }
+            }
+        });
+
+        static::updating(function ($jadwal) {
+            // Jika mata_kuliah_id berubah, update jenis_semester
+            if ($jadwal->isDirty('mata_kuliah_id')) {
+                $mataKuliah = MataKuliah::find($jadwal->mata_kuliah_id);
+                if ($mataKuliah) {
+                    $semesterNumber = $mataKuliah->semester;
+                    $jadwal->jenis_semester = ($semesterNumber % 2 === 1) ? 'ganjil' : 'genap';
+                }
+            }
+        });
+    }
 
     /**
      * Relationships

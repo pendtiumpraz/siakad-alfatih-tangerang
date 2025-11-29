@@ -53,7 +53,7 @@ class MahasiswaDashboardController extends Controller
             'Kamis' => 'Kamis',
             'Jumat' => 'Jumat',
             'Sabtu' => 'Sabtu',
-            'Minggu' => 'Minggu'
+            'Ahad' => 'Ahad'
         ];
         $hari = $hariMapping[$hariIni] ?? 'Senin';
 

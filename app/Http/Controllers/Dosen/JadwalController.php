@@ -114,7 +114,7 @@ class JadwalController extends Controller
             'Kamis',
             'Jumat',
             'Sabtu',
-            'Minggu'
+            'Ahad'
         ];
 
         return view('dosen.jadwal.create', compact(
@@ -149,7 +149,7 @@ class JadwalController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
             'ruangan_id' => 'required|exists:ruangans,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10',
@@ -307,7 +307,7 @@ class JadwalController extends Controller
             'Kamis',
             'Jumat',
             'Sabtu',
-            'Minggu'
+            'Ahad'
         ];
 
         return view('dosen.jadwal.edit', compact(
@@ -350,7 +350,7 @@ class JadwalController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
             'ruangan_id' => 'required|exists:ruangans,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10',
@@ -476,7 +476,7 @@ class JadwalController extends Controller
         $request->validate([
             'semester_id' => 'required|exists:semesters,id',
             'ruangan_id' => 'required|exists:ruangans,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'jadwal_id' => 'nullable|exists:jadwals,id',

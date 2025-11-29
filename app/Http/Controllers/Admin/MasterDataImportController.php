@@ -257,7 +257,7 @@ class MasterDataImportController extends Controller
             'kode_mk' => 'required|exists:mata_kuliahs,kode_mk',
             'nidn_dosen' => 'required|exists:dosens,nidn',
             'kode_ruangan' => 'required|exists:ruangans,kode_ruangan',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10'

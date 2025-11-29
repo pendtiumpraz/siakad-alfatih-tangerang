@@ -45,7 +45,7 @@ class JadwalViewController extends Controller
             ->orderBy('jam_mulai')
             ->paginate(15)->withQueryString();
 
-        $hariOptions = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        $hariOptions = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Ahad'];
 
         return view('dosen.jadwal-mengajar.index', compact('jadwals', 'dosen', 'semesters', 'hariOptions'));
     }
@@ -93,7 +93,7 @@ class JadwalViewController extends Controller
 
         // Organize jadwal by day and time slot
         $calendar = [
-            'Minggu' => [],
+            'Ahad' => [],
             'Senin' => [],
             'Selasa' => [],
             'Rabu' => [],
@@ -112,7 +112,7 @@ class JadwalViewController extends Controller
         foreach ($jadwals as $jadwal) {
             $hari = $jadwal->hari;
             if ($hari === 'Ahad') {
-                $hari = 'Minggu';
+                $hari = 'Ahad';
             }
             
             if (isset($calendar[$hari])) {

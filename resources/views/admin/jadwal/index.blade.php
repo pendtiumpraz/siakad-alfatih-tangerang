@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">Jadwal Perkuliahan</h1>
-            <p class="text-gray-600 mt-1">Kelola seluruh jadwal perkuliahan</p>
+            <p class="text-gray-600 mt-1">Klik pada cell untuk edit langsung</p>
         </div>
         <div class="flex space-x-3">
             <a href="{{ route('admin.jadwal.calendar') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md flex items-center space-x-2">
@@ -47,7 +47,7 @@
                         <option value="Kamis" {{ request('hari') == 'Kamis' ? 'selected' : '' }}>Kamis</option>
                         <option value="Jumat" {{ request('hari') == 'Jumat' ? 'selected' : '' }}>Jumat</option>
                         <option value="Sabtu" {{ request('hari') == 'Sabtu' ? 'selected' : '' }}>Sabtu</option>
-                        <option value="Minggu" {{ request('hari') == 'Minggu' ? 'selected' : '' }}>Minggu</option>
+                        <option value="Ahad" {{ request('hari') == 'Ahad' ? 'selected' : '' }}>Ahad</option>
                     </select>
                 </div>
 
@@ -63,10 +63,10 @@
         </form>
     </x-islamic-card>
 
-    <!-- Jadwal Table -->
-    <x-islamic-card title="Daftar Jadwal">
+    <!-- Jadwal Table (EDITABLE) -->
+    <x-islamic-card title="Daftar Jadwal (Klik untuk Edit)">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-green-200 border border-green-200 rounded-lg">
+            <table class="min-w-full divide-y divide-green-200 border border-green-200 rounded-lg" id="jadwalTable">
                 <thead class="bg-gradient-to-r from-green-600 to-green-700">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
@@ -74,15 +74,16 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Mata Kuliah</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Dosen</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Hari</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam Mulai</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam Selesai</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Kelas</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Ruangan</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-32">Aksi</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">Hapus</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($jadwals as $index => $jadwal)
-                    <tr class="hover:bg-green-50 transition-colors">
+                    <tr class="hover:bg-green-50 transition-colors" data-id="{{ $jadwal->id }}">
                         <td class="px-4 py-3 text-sm text-gray-700 text-center">{{ $jadwals->firstItem() + $index }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $jadwal->jenis_semester == 'ganjil' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
@@ -90,33 +91,107 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $jadwal->mataKuliah->kode_mk }} - {{ $jadwal->mataKuliah->nama_mk }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->dosen->nama_lengkap ?? '-' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->hari }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->kelas }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-700">{{ $jadwal->ruangan->nama_ruangan }}</td>
+                        
+                        <!-- EDITABLE: Dosen -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="dosen_id" 
+                            data-value="{{ $jadwal->dosen_id }}"
+                            data-type="dropdown"
+                            title="Klik untuk edit">
+                            <span class="display-value">{{ $jadwal->dosen->nama_lengkap ?? '-' }}</span>
+                            <select class="edit-input hidden w-full px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500">
+                                @foreach($dosens as $dosen)
+                                    <option value="{{ $dosen->id }}" {{ $jadwal->dosen_id == $dosen->id ? 'selected' : '' }}>
+                                        {{ $dosen->nama_lengkap }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        
+                        <!-- EDITABLE: Hari -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="hari" 
+                            data-value="{{ $jadwal->hari }}"
+                            data-type="dropdown"
+                            title="Klik untuk edit">
+                            <span class="display-value">{{ $jadwal->hari }}</span>
+                            <select class="edit-input hidden w-full px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500">
+                                <option value="Senin" {{ $jadwal->hari == 'Senin' ? 'selected' : '' }}>Senin</option>
+                                <option value="Selasa" {{ $jadwal->hari == 'Selasa' ? 'selected' : '' }}>Selasa</option>
+                                <option value="Rabu" {{ $jadwal->hari == 'Rabu' ? 'selected' : '' }}>Rabu</option>
+                                <option value="Kamis" {{ $jadwal->hari == 'Kamis' ? 'selected' : '' }}>Kamis</option>
+                                <option value="Jumat" {{ $jadwal->hari == 'Jumat' ? 'selected' : '' }}>Jumat</option>
+                                <option value="Sabtu" {{ $jadwal->hari == 'Sabtu' ? 'selected' : '' }}>Sabtu</option>
+                                <option value="Ahad" {{ $jadwal->hari == 'Ahad' ? 'selected' : '' }}>Ahad</option>
+                            </select>
+                        </td>
+                        
+                        <!-- EDITABLE: Jam Mulai -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="jam_mulai" 
+                            data-value="{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}"
+                            data-type="text"
+                            title="Klik untuk edit (Format: HH:MM)">
+                            <span class="display-value">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}</span>
+                            <input type="text" class="edit-input hidden w-20 px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500" 
+                                   placeholder="HH:MM" 
+                                   value="{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}">
+                        </td>
+                        
+                        <!-- EDITABLE: Jam Selesai -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="jam_selesai" 
+                            data-value="{{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}"
+                            data-type="text"
+                            title="Klik untuk edit (Format: HH:MM)">
+                            <span class="display-value">{{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</span>
+                            <input type="text" class="edit-input hidden w-20 px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500" 
+                                   placeholder="HH:MM"
+                                   value="{{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}">
+                        </td>
+                        
+                        <!-- EDITABLE: Kelas -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="kelas" 
+                            data-value="{{ $jadwal->kelas }}"
+                            data-type="text"
+                            title="Klik untuk edit">
+                            <span class="display-value">{{ $jadwal->kelas }}</span>
+                            <input type="text" class="edit-input hidden w-16 px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500" 
+                                   value="{{ $jadwal->kelas }}">
+                        </td>
+                        
+                        <!-- EDITABLE: Ruangan -->
+                        <td class="px-4 py-3 text-sm editable-cell cursor-pointer hover:bg-yellow-50" 
+                            data-field="ruangan_id" 
+                            data-value="{{ $jadwal->ruangan_id }}"
+                            data-type="dropdown"
+                            title="Klik untuk edit">
+                            <span class="display-value">{{ $jadwal->ruangan->nama_ruangan }}</span>
+                            <select class="edit-input hidden w-full px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500">
+                                @foreach($ruangans as $ruangan)
+                                    <option value="{{ $ruangan->id }}" {{ $jadwal->ruangan_id == $ruangan->id ? 'selected' : '' }}>
+                                        {{ $ruangan->nama_ruangan }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
+                        
                         <td class="px-4 py-3 text-center">
-                            <div class="flex justify-center space-x-2">
-                                <a href="{{ route('admin.jadwal.edit', $jadwal->id) }}" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors" title="Edit">
+                            <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors" title="Hapus">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                     </svg>
-                                </a>
-                                <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors" title="Hapus">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="10" class="px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -139,4 +214,158 @@
         @endif
     </x-islamic-card>
 </div>
+
+<!-- AJAX Auto-Save Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editableCells = document.querySelectorAll('.editable-cell');
+    
+    editableCells.forEach(cell => {
+        // Click to edit
+        cell.addEventListener('click', function() {
+            if (this.classList.contains('editing')) return; // Already editing
+            
+            const displayValue = this.querySelector('.display-value');
+            const editInput = this.querySelector('.edit-input');
+            const type = this.dataset.type;
+            
+            // Hide display, show input
+            displayValue.classList.add('hidden');
+            editInput.classList.remove('hidden');
+            editInput.focus();
+            
+            if (type === 'text') {
+                editInput.select();
+            }
+            
+            this.classList.add('editing', 'bg-yellow-100');
+        });
+    });
+    
+    // Handle blur/change events for saving
+    document.querySelectorAll('.edit-input').forEach(input => {
+        const saveValue = function() {
+            const cell = input.closest('.editable-cell');
+            if (!cell.classList.contains('editing')) return;
+            
+            const jadwalId = cell.closest('tr').dataset.id;
+            const field = cell.dataset.field;
+            const newValue = input.value;
+            const oldValue = cell.dataset.value;
+            
+            // No change, just hide
+            if (newValue == oldValue) {
+                cancelEdit(cell);
+                return;
+            }
+            
+            // Save via AJAX
+            saveField(jadwalId, field, newValue, cell);
+        };
+        
+        if (input.tagName === 'SELECT') {
+            input.addEventListener('change', saveValue);
+        } else {
+            input.addEventListener('blur', saveValue);
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveValue();
+                }
+            });
+        }
+    });
+    
+    function cancelEdit(cell) {
+        const displayValue = cell.querySelector('.display-value');
+        const editInput = cell.querySelector('.edit-input');
+        
+        displayValue.classList.remove('hidden');
+        editInput.classList.add('hidden');
+        cell.classList.remove('editing', 'bg-yellow-100');
+    }
+    
+    function saveField(jadwalId, field, value, cell) {
+        // Show loading
+        cell.classList.add('opacity-50');
+        
+        fetch(`/admin/jadwal/${jadwalId}/update-field`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                field: field,
+                value: value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update display value
+                const displayValue = cell.querySelector('.display-value');
+                displayValue.textContent = data.display_value;
+                
+                // Update data-value
+                cell.dataset.value = value;
+                
+                // Hide input, show display
+                cancelEdit(cell);
+                
+                // Show success indicator
+                cell.classList.remove('opacity-50');
+                cell.classList.add('bg-green-100');
+                setTimeout(() => {
+                    cell.classList.remove('bg-green-100');
+                }, 1000);
+                
+                // Show toast notification
+                showToast('Berhasil diupdate!', 'success');
+            } else {
+                alert('Error: ' + data.message);
+                cell.classList.remove('opacity-50');
+                cancelEdit(cell);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat menyimpan.');
+            cell.classList.remove('opacity-50');
+            cancelEdit(cell);
+        });
+    }
+    
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+});
+</script>
+
+<style>
+.editable-cell {
+    position: relative;
+}
+
+.editable-cell:hover::after {
+    content: '✎';
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #059669;
+    font-size: 14px;
+}
+
+.editable-cell.editing:hover::after {
+    display: none;
+}
+</style>
 @endsection

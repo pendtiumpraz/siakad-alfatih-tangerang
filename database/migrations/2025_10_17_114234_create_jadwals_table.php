@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreignId('mata_kuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
             $table->foreignId('dosen_id')->constrained('dosens')->onDelete('cascade');
             $table->foreignId('ruangan_id')->constrained('ruangans')->onDelete('cascade');
-            $table->enum('hari', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']);
+            $table->enum('hari', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Ahad']);
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->string('kelas');
+            $table->string('kelas')->default('A');
             $table->timestamps();
 
             // Indexes

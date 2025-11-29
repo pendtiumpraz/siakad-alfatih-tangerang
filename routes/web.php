@@ -170,6 +170,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Jadwal Management (Admin creates ALL jadwal)
     Route::get('jadwal/calendar', [AdminJadwalController::class, 'calendar'])->name('jadwal.calendar');
     Route::post('jadwal/check-conflict', [AdminJadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
+    Route::post('jadwal/{id}/update-field', [AdminJadwalController::class, 'updateField'])->name('jadwal.updateField');
     Route::resource('jadwal', AdminJadwalController::class);
 
     // Penggajian Dosen Management

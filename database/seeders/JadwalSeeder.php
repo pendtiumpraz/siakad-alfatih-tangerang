@@ -136,6 +136,12 @@ class JadwalSeeder extends Seeder
         foreach ($jadwals as $jadwal) {
             // Only create if mata_kuliah_id exists
             if ($jadwal['mata_kuliah_id']) {
+                // Auto-detect jenis_semester from mata kuliah's semester field
+                $mataKuliah = MataKuliah::find($jadwal['mata_kuliah_id']);
+                if ($mataKuliah) {
+                    $jadwal['jenis_semester'] = ($mataKuliah->semester % 2 === 1) ? 'ganjil' : 'genap';
+                }
+                
                 Jadwal::create($jadwal);
             }
         }

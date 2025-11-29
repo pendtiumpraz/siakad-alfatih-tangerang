@@ -46,7 +46,11 @@ class JadwalController extends Controller
             ->orderBy('jam_mulai')
             ->paginate(20)->withQueryString();
 
-        return view('admin.jadwal.index', compact('jadwals'));
+        // Get all data for dropdowns
+        $dosens = Dosen::orderBy('nama_lengkap')->get();
+        $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
+
+        return view('admin.jadwal.index', compact('jadwals', 'dosens', 'ruangans'));
     }
 
     /**
@@ -68,7 +72,7 @@ class JadwalController extends Controller
             'Kamis',
             'Jumat',
             'Sabtu',
-            'Minggu'
+            'Ahad'
         ];
 
         return view('admin.jadwal.create', compact(
@@ -89,7 +93,7 @@ class JadwalController extends Controller
             'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
             'dosen_id' => 'required|exists:dosens,id',
             'ruangan_id' => 'required|exists:ruangans,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10',
@@ -216,7 +220,7 @@ class JadwalController extends Controller
             'Kamis',
             'Jumat',
             'Sabtu',
-            'Minggu'
+            'Ahad'
         ];
 
         return view('admin.jadwal.edit', compact(
@@ -240,7 +244,7 @@ class JadwalController extends Controller
             'mata_kuliah_id' => 'required|exists:mata_kuliahs,id',
             'dosen_id' => 'required|exists:dosens,id',
             'ruangan_id' => 'required|exists:ruangans,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'kelas' => 'required|string|max:10',
@@ -360,6 +364,90 @@ class JadwalController extends Controller
     }
 
     /**
+     * Update single field via AJAX (inline editing)
+     */
+    public function updateField(Request $request, $id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        
+        $field = $request->input('field');
+        $value = $request->input('value');
+        
+        // Validate field
+        $allowedFields = ['dosen_id', 'hari', 'jam_mulai', 'jam_selesai', 'kelas', 'ruangan_id'];
+        
+        if (!in_array($field, $allowedFields)) {
+            return response()->json(['success' => false, 'message' => 'Field tidak valid.'], 400);
+        }
+        
+        // Validate value based on field
+        try {
+            switch($field) {
+                case 'dosen_id':
+                    $request->validate(['value' => 'required|exists:dosens,id']);
+                    $jadwal->dosen_id = $value;
+                    break;
+                    
+                case 'hari':
+                    $request->validate(['value' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad']);
+                    $jadwal->hari = $value;
+                    break;
+                    
+                case 'jam_mulai':
+                case 'jam_selesai':
+                    $request->validate(['value' => 'required|date_format:H:i']);
+                    $jadwal->$field = $value;
+                    break;
+                    
+                case 'kelas':
+                    $request->validate(['value' => 'required|string|max:10']);
+                    $jadwal->kelas = $value;
+                    break;
+                    
+                case 'ruangan_id':
+                    $request->validate(['value' => 'required|exists:ruangans,id']);
+                    $jadwal->ruangan_id = $value;
+                    break;
+            }
+            
+            $jadwal->save();
+            
+            // Get updated display value
+            $displayValue = $this->getDisplayValue($jadwal, $field);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil diupdate.',
+                'display_value' => $displayValue
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal update: ' . $e->getMessage()
+            ], 400);
+        }
+    }
+    
+    /**
+     * Get display value for updated field
+     */
+    private function getDisplayValue($jadwal, $field)
+    {
+        switch($field) {
+            case 'dosen_id':
+                return $jadwal->dosen->nama_lengkap ?? '-';
+            case 'ruangan_id':
+                return $jadwal->ruangan->nama_ruangan ?? '-';
+            case 'jam_mulai':
+            case 'jam_selesai':
+                return \Carbon\Carbon::parse($jadwal->$field)->format('H:i');
+            default:
+                return $jadwal->$field;
+        }
+    }
+
+    /**
      * AUTO-ASSIGN DOSEN to Mata Kuliah & Program Studi
      * This method is called after creating or updating jadwal
      */
@@ -392,7 +480,7 @@ class JadwalController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'ruangan_id' => 'required|exists:ruangans,id',
             'dosen_id' => 'required|exists:dosens,id',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Ahad',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
             'jadwal_id' => 'nullable|exists:jadwals,id',
@@ -481,7 +569,7 @@ class JadwalController extends Controller
 
         // Organize jadwal by day and time slot
         $calendar = [
-            'Minggu' => [],
+            'Ahad' => [],
             'Senin' => [],
             'Selasa' => [],
             'Rabu' => [],
@@ -500,7 +588,7 @@ class JadwalController extends Controller
         foreach ($jadwals as $jadwal) {
             $hari = $jadwal->hari;
             if ($hari === 'Ahad') {
-                $hari = 'Minggu';
+                $hari = 'Ahad';
             }
             
             if (isset($calendar[$hari])) {
