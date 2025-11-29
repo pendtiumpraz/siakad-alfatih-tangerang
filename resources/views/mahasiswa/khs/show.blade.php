@@ -11,10 +11,16 @@
             <i class="fas fa-arrow-left mr-2"></i>
             Kembali
         </a>
-        <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-            <i class="fas fa-print mr-2"></i>
-            Print KHS
-        </button>
+        <div class="flex gap-3">
+            <a href="{{ route('mahasiswa.khs.download-pdf', $khs->id) }}" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                <i class="fas fa-file-pdf mr-2"></i>
+                Download PDF
+            </a>
+            <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                <i class="fas fa-print mr-2"></i>
+                Print KHS
+            </button>
+        </div>
     </div>
 
     <!-- Main KHS Card -->
