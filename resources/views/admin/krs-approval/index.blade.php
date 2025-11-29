@@ -60,7 +60,7 @@
             <div class="bg-white rounded-lg shadow-lg border overflow-hidden hover:shadow-xl transition-shadow duration-300" style="border-color: #D4AF37;">
                 <!-- Header -->
                 <div class="px-6 py-4" style="background: linear-gradient(to right, #2D5F3F, #4A7C59);">
-                    <h3 class="text-xl font-bold text-white">{{ $prodi->nama_prodi }}</h3>
+                    <h3 class="text-xl font-bold text-white">{{ $prodi->nama_prodi }} ({{ $prodi->jenjang }})</h3>
                     <p class="text-sm" style="color: #D1FAE5;">{{ $prodi->kode_prodi }}</p>
                 </div>
 
