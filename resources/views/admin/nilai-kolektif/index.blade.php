@@ -78,10 +78,7 @@
                         <option value="">-- Pilih Semester --</option>
                         @foreach($semesters as $semester)
                             <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
-                                {{ $semester->nama_semester }} {{ $semester->tahun_akademik }}
-                                @if($semester->is_active)
-                                    <span style="color: #16A34A;">● Aktif</span>
-                                @endif
+                                {{ $semester->nama_semester }}@if($semester->is_active) ⭐ (Aktif)@endif
                             </option>
                         @endforeach
                     </select>
