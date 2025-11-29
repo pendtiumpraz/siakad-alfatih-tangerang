@@ -396,6 +396,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('nilai/{semester_id}', [MahasiswaController::class, 'nilaiDetail'])->name('nilai.detail');
 
     Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
+    Route::get('khs/{id}/download-pdf', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'downloadPdf'])->name('khs.download-pdf');
     Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
     // KRS (Kartu Rencana Studi)
     Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
