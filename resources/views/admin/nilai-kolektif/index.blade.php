@@ -42,7 +42,7 @@
                         <option value="">-- Pilih Program Studi --</option>
                         @foreach($programStudis as $prodi)
                             <option value="{{ $prodi->id }}" {{ old('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                                {{ $prodi->nama_prodi }}
+                                {{ $prodi->nama_prodi }} ({{ $prodi->jenjang }})
                             </option>
                         @endforeach
                     </select>
