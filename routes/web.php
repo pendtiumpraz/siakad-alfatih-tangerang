@@ -277,7 +277,7 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     });
 
     // Jalur Seleksi Management
-    Route::resource('jalur-seleksi', \App\Http\Controllers\Admin\JalurSeleksiController::class);
+    Route::resource('jalur-seleksi', \App\Http\Controllers\Operator\JalurSeleksiController::class);
 
     // Penggajian Dosen Management (Operator can also verify and pay)
     Route::prefix('penggajian-dosen')->name('penggajian.')->group(function() {
