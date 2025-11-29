@@ -32,9 +32,12 @@ class KrsController extends Controller
         $activeSemester = Semester::where('is_active', true)->first();
         
         if (!$activeSemester) {
-            return view('mahasiswa.krs.blocked')
-                ->with('message', 'Tidak ada semester aktif saat ini.')
-                ->with('type', 'info');
+            return view('mahasiswa.krs.blocked', [
+                'reason' => 'Tidak ada semester aktif saat ini.',
+                'semester' => null,
+                'mahasiswa' => $mahasiswa,
+                'type' => 'info'
+            ]);
         }
 
         // Check if mahasiswa has paid SPP for this semester
@@ -45,10 +48,12 @@ class KrsController extends Controller
             ->exists();
 
         if (!$hasPaidSPP) {
-            return view('mahasiswa.krs.blocked')
-                ->with('message', 'Anda belum membayar SPP untuk semester ini. Silakan lunasi pembayaran SPP terlebih dahulu untuk mengisi KRS.')
-                ->with('type', 'warning')
-                ->with('semester', $activeSemester);
+            return view('mahasiswa.krs.blocked', [
+                'reason' => 'Anda belum membayar SPP untuk semester ini. Silakan lunasi pembayaran SPP terlebih dahulu untuk mengisi KRS.',
+                'semester' => $activeSemester,
+                'mahasiswa' => $mahasiswa,
+                'type' => 'warning'
+            ]);
         }
 
         // Get KRS for current semester

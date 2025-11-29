@@ -26,12 +26,14 @@
 
             <!-- Info -->
             <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Informasi Semester:</h3>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Informasi:</h3>
                 <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                    @if($semester)
                     <div class="flex justify-between">
                         <span class="text-gray-600">Semester Aktif:</span>
-                        <span class="font-semibold text-gray-800">{{ $semester->semester }} - {{ $semester->tahun_akademik }}</span>
+                        <span class="font-semibold text-gray-800">{{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}</span>
                     </div>
+                    @endif
                     <div class="flex justify-between">
                         <span class="text-gray-600">NIM:</span>
                         <span class="font-semibold text-gray-800">{{ $mahasiswa->nim }}</span>
