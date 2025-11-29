@@ -267,6 +267,15 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
     // Jalur Seleksi Management
     Route::resource('jalur-seleksi', \App\Http\Controllers\Admin\JalurSeleksiController::class);
 
+    // Penggajian Dosen Management (Operator can also verify and pay)
+    Route::prefix('penggajian-dosen')->name('penggajian.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'verify'])->name('verify');
+        Route::get('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'payment'])->name('payment');
+        Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
+    });
+
     // KRS Approval Management (Operator can also approve)
     Route::prefix('krs-approval')->name('krs-approval.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'index'])->name('index');
