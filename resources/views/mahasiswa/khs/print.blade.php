@@ -360,13 +360,15 @@
     <!-- Signature -->
     <div class="signature-section">
         <div class="signature-box">
-            <div>Tangerang, {{ now()->translatedFormat('d F Y') }}</div>
-            <div style="margin-top: 10px; font-weight: bold;">PUKET I</div>
-            <div>Bid. Akademik dan Pengembangan</div>
-            <div>STAI AL-FATIH</div>
-            <div class="signature-name">
-                Satrio Purnomo Hidayat, M.Pd.
-            </div>
+            @php
+                $tanggalSekarang = \Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');
+            @endphp
+            <p style="margin: 2px 0;">Tangerang, {{ $tanggalSekarang }}</p>
+            <p style="margin: 2px 0;">PUKET I</p>
+            <p style="margin: 2px 0;">Bid. Akademik dan Pengembangan</p>
+            <p style="margin: 2px 0;">STAI AL FATIH</p>
+            <br><br><br>
+            <p style="margin: 2px 0; font-weight: bold; text-decoration: underline;">Satrio Purnomo Hidayat, M.Pd.</p>
         </div>
     </div>
 </body>

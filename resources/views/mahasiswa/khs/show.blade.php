@@ -465,15 +465,12 @@
     @php
         $tanggalSekarang = \Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');
     @endphp
-    <p>Tangerang, {{ $tanggalSekarang }}</p>
-    <br>
-    <p>PUKET I</p>
-    <br>
-    <p>Bid. Akademik dan Pengembangan</p>
-    <br>
-    <p>STAI AL FATIH</p>
+    <p style="margin: 2px 0;">Tangerang, {{ $tanggalSekarang }}</p>
+    <p style="margin: 2px 0;">PUKET I</p>
+    <p style="margin: 2px 0;">Bid. Akademik dan Pengembangan</p>
+    <p style="margin: 2px 0;">STAI AL FATIH</p>
     <br><br><br>
-    <p style="font-weight: bold; text-decoration: underline;">Satrio Purnomo Hidayat, M.Pd.</p>
+    <p style="margin: 2px 0; font-weight: bold; text-decoration: underline;">Satrio Purnomo Hidayat, M.Pd.</p>
 </div>
 
 @endsection
