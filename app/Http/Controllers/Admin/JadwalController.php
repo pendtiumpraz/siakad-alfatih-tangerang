@@ -386,6 +386,8 @@ class JadwalController extends Controller
                 case 'dosen_id':
                     $request->validate(['value' => 'required|exists:dosens,id']);
                     $jadwal->dosen_id = $value;
+                    // Auto-assign dosen to mata kuliah and prodi
+                    $this->autoAssignDosen($value, $jadwal->mata_kuliah_id);
                     break;
                     
                 case 'hari':
