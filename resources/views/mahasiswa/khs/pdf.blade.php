@@ -71,16 +71,18 @@
         }
 
         .kop-text h1 {
-            font-size: 13pt;
+            font-size: 14pt;
             font-weight: bold;
             color: #2D5F3F;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            line-height: 1.1;
         }
 
         .kop-text p {
             font-size: 8pt;
-            color: #2D5F3F;
-            margin: 0;
+            color: #000;
+            margin: 1px 0;
+            line-height: 1.3;
         }
 
         .kop-divider {
@@ -223,9 +225,10 @@
                     <img src="{{ public_path('images/logo-alfatih.png') }}" alt="Logo STAI Al-Fatih">
                 </div>
                 <div class="kop-text">
-                    <h1>SEKOLAH TINGGI AGAMA ISLAM AL-FATIH TANGERANG</h1>
-                    <p>Jl. Raya Serang KM. 16 No. 10, Cikupa, Tangerang, Banten 15710</p>
-                    <p>Telp: (021) 5960607 | Email: info@staialfatih.ac.id | Website: www.staialfatih.ac.id</p>
+                    <h1>STAI AL FATIH TANGERANG</h1>
+                    <p>Jl. Raden Fatah, No. 5, RT. 004/RW. 006, Parung Serab, Kec. Ciledug, Kota</p>
+                    <p>Tangerang, Banten, Kode Pos 15153</p>
+                    <p>Email: info@staialfatih.or.id, Website: https://staialfatih.or.id</p>
                 </div>
             </div>
             <hr class="kop-divider">
