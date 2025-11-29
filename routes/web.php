@@ -182,9 +182,6 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
     });
 
-    // SPP Settings Management
-    Route::resource('spp-settings', \App\Http\Controllers\Admin\SppSettingController::class)->except(['show']);
-
     // Keuangan (Financial Accounting)
     Route::prefix('keuangan')->name('keuangan.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('index');

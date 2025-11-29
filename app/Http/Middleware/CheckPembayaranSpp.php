@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Models\Pembayaran;
 use App\Models\Semester;
-use App\Models\SppSetting;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,23 +50,10 @@ class CheckPembayaranSpp
         // If payment status is NOT 'lunas', block access
         if ($pembayaran->status !== 'lunas') {
             
-            // Get SPP setting for payment info
-            $sppSetting = SppSetting::getActiveForProdi($mahasiswa->program_studi_id) 
-                ?? SppSetting::getActiveForProdi(null);
-
-            // Redirect back with payment info
-            return redirect()->route('mahasiswa.dashboard')->with([
-                'error' => 'Anda harus melunasi pembayaran SPP terlebih dahulu untuk mengakses fitur ini.',
-                'pembayaran_info' => [
-                    'nominal' => $pembayaran->jumlah,
-                    'jatuh_tempo' => $pembayaran->tanggal_jatuh_tempo,
-                    'semester' => $activeSemester->nama_semester . ' ' . $activeSemester->tahun_akademik,
-                    'rekening_nama' => $sppSetting->rekening_nama ?? 'STAI AL-FATIH TANGERANG',
-                    'rekening_nomor' => $sppSetting->rekening_nomor ?? '-',
-                    'rekening_bank' => $sppSetting->rekening_bank ?? '-',
-                    'contact_wa' => $sppSetting->contact_whatsapp ?? '-',
-                    'contact_email' => $sppSetting->contact_email ?? '-',
-                ],
+            // Redirect back with payment info from keterangan pembayaran
+            return redirect()->route('mahasiswa.pembayaran.index')->with([
+                'error' => 'Anda harus melunasi pembayaran SPP terlebih dahulu untuk mengakses KHS/KRS.',
+                'highlight_pembayaran_id' => $pembayaran->id,
             ]);
         }
 

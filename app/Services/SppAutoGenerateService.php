@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Mahasiswa;
 use App\Models\Pembayaran;
 use App\Models\Semester;
-use App\Models\SppSetting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -65,21 +64,12 @@ class SppAutoGenerateService
                         continue; // Skip if already exists
                     }
 
-                    // Get SPP setting for this program studi
-                    $sppSetting = SppSetting::getActiveForProdi($mahasiswa->program_studi_id);
-                    
-                    if (!$sppSetting) {
-                        // Try to get default setting
-                        $sppSetting = SppSetting::getActiveForProdi(null);
-                    }
-
-                    if (!$sppSetting) {
-                        $errors[] = "No SPP setting found for mahasiswa: {$mahasiswa->nama_lengkap}";
-                        continue;
-                    }
+                    // SPP Settings (hardcoded - bisa dipindah ke config later)
+                    $nominalSpp = 250000; // Rp 250.000
+                    $jatuhTempoDays = 14; // 2 minggu
 
                     // Calculate due date
-                    $tanggalJatuhTempo = Carbon::now()->addDays($sppSetting->jatuh_tempo_hari);
+                    $tanggalJatuhTempo = Carbon::now()->addDays($jatuhTempoDays);
 
                     // Create pembayaran record
                     Pembayaran::create([
@@ -87,7 +77,7 @@ class SppAutoGenerateService
                         'semester_id' => $newSemester->id,
                         'operator_id' => null, // Auto-generated, no operator yet
                         'jenis_pembayaran' => 'spp',
-                        'jumlah' => $sppSetting->nominal,
+                        'jumlah' => $nominalSpp,
                         'tanggal_jatuh_tempo' => $tanggalJatuhTempo,
                         'tanggal_bayar' => null,
                         'status' => 'belum_lunas',
@@ -201,15 +191,9 @@ class SppAutoGenerateService
             return null;
         }
 
-        // Get SPP setting for payment details
-        $mahasiswa = Mahasiswa::find($mahasiswaId);
-        $sppSetting = SppSetting::getActiveForProdi($mahasiswa->program_studi_id) 
-            ?? SppSetting::getActiveForProdi(null);
-
         return [
             'pembayaran' => $pembayaran,
             'semester' => $activeSemester,
-            'spp_setting' => $sppSetting,
         ];
     }
 }
