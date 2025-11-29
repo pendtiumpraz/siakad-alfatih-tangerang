@@ -104,8 +104,19 @@
 
     <!-- Mahasiswa List -->
     <div class="card-islamic">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Daftar Mahasiswa</h2>
+        <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-gray-800">Daftar Mahasiswa</h2>
+                <p class="text-sm text-gray-600 mt-1">
+                    <i class="fas fa-users mr-1"></i>
+                    Total: <span class="font-semibold">{{ $mahasiswas->total() }}</span> mahasiswa
+                </p>
+            </div>
+            @if($mahasiswas->hasPages())
+                <div class="text-sm text-gray-600">
+                    Menampilkan {{ $mahasiswas->firstItem() }} - {{ $mahasiswas->lastItem() }} dari {{ $mahasiswas->total() }}
+                </div>
+            @endif
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full">
@@ -176,11 +187,24 @@
                 </tbody>
             </table>
         </div>
-        @if($mahasiswas->hasPages())
-            <div class="p-6 border-t border-gray-200">
-                {{ $mahasiswas->links() }}
+        
+        <!-- Pagination -->
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    @if($mahasiswas->total() > 0)
+                        Menampilkan <span class="font-semibold">{{ $mahasiswas->firstItem() }}</span> 
+                        sampai <span class="font-semibold">{{ $mahasiswas->lastItem() }}</span> 
+                        dari <span class="font-semibold">{{ $mahasiswas->total() }}</span> mahasiswa
+                    @else
+                        Tidak ada data
+                    @endif
+                </div>
+                <div>
+                    {{ $mahasiswas->links() }}
+                </div>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 
