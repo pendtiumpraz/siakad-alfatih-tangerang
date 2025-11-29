@@ -120,13 +120,13 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">No</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Kode</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Mata Kuliah</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">NO</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">KODE</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">MATA KULIAH</th>
                                 <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">SKS</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Nilai</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Bobot</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Mutu (B×K)</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">NILAI HURUF</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase screen-only">Bobot</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">NILAI ANGKA</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -158,8 +158,8 @@
                                             {{ str_replace('+', '', $nilai->grade ?? '-') }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobot, 2) }}</td>
-                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobotXSks, 2) }}</td>
+                                    <td class="px-4 py-3 text-center text-sm font-semibold screen-only">{{ number_format($bobot, 2) }}</td>
+                                    <td class="px-4 py-3 text-center text-sm font-semibold">{{ $bobot }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
