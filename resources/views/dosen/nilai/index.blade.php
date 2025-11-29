@@ -10,45 +10,46 @@
         </div>
     </div>
 
-    <!-- Filter Section -->
-    <x-islamic-card title="Filter Mata Kuliah">
-        <form method="GET" action="{{ route('dosen.nilai.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Semester</label>
-                    <select name="semester_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                        <option value="">Semua Semester</option>
-                        @foreach($semesters as $semester)
-                            <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                                {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+    <!-- Info & Filter Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <x-islamic-card title="Informasi Semester">
+            <div class="space-y-2">
+                <p class="text-sm text-gray-600">Input nilai untuk mahasiswa yang terdaftar di:</p>
+                <p class="text-lg font-bold text-green-700">
+                    @if($semesters->where('is_active', true)->first())
+                        {{ $semesters->where('is_active', true)->first()->tahun_akademik }} - 
+                        {{ ucfirst($semesters->where('is_active', true)->first()->jenis) }}
+                    @else
+                        Tidak ada semester aktif
+                    @endif
+                </p>
+            </div>
+        </x-islamic-card>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi</label>
-                    <select name="program_studi_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                        <option value="">Semua Program Studi</option>
-                        @foreach($programStudis as $prodi)
-                            <option value="{{ $prodi->id }}" {{ request('program_studi_id') == $prodi->id ? 'selected' : '' }}>
-                                {{ $prodi->nama_prodi }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
+        <x-islamic-card title="Filter Mata Kuliah">
+            <form method="GET" action="{{ route('dosen.nilai.index') }}" class="space-y-4">
                 <div class="flex items-end space-x-2">
-                    <button type="submit" class="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
-                        <i class="fas fa-filter mr-2"></i>Terapkan
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Program Studi</label>
+                        <select name="program_studi_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                            <option value="">Semua Program Studi</option>
+                            @foreach($programStudis as $prodi)
+                                <option value="{{ $prodi->id }}" {{ request('program_studi_id') == $prodi->id ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
+                        <i class="fas fa-filter mr-2"></i>Filter
                     </button>
                     <a href="{{ route('dosen.nilai.index') }}" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold">
                         <i class="fas fa-redo mr-2"></i>Reset
                     </a>
                 </div>
-            </div>
-        </form>
-    </x-islamic-card>
+            </form>
+        </x-islamic-card>
+    </div>
 
     <!-- Mata Kuliah Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

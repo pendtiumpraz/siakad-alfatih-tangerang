@@ -38,19 +38,18 @@ class NilaiController extends Controller
         $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
         $programStudis = \App\Models\ProgramStudi::whereIn('id', $prodiIds)->orderBy('nama_prodi')->get();
 
-        // Get mata kuliah from jadwal with filters - only from assigned program studi
+        // Get active semester for displaying mahasiswa count from active semester only
+        $activeSemester = Semester::where('is_active', true)->first();
+        
+        // Get mata kuliah from jadwal - jadwal is REUSABLE across semesters
+        // We show all jadwal assigned to dosen, regardless of semester
         $query = Jadwal::where('dosen_id', $dosen->id)
             ->with(['mataKuliah.kurikulum.programStudi', 'semester'])
             ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
                 $q->whereIn('program_studi_id', $prodiIds);
             })
-            ->select('mata_kuliah_id', 'semester_id')
+            ->select('mata_kuliah_id')
             ->distinct();
-
-        // Filter by semester
-        if ($request->filled('semester_id')) {
-            $query->where('semester_id', $request->semester_id);
-        }
 
         // Filter by program studi
         if ($request->filled('program_studi_id')) {
@@ -60,15 +59,23 @@ class NilaiController extends Controller
         }
 
         $mataKuliahs = $query->get()
-            ->map(function ($jadwal) use ($dosen) {
-                $mahasiswaCount = Nilai::where('mata_kuliah_id', $jadwal->mata_kuliah_id)
-                    ->where('semester_id', $jadwal->semester_id)
-                    ->where('dosen_id', $dosen->id)
-                    ->count();
+            ->map(function ($jadwal) use ($dosen, $activeSemester, $prodiIds) {
+                // Count mahasiswa with approved KRS in active semester
+                $mahasiswaCount = 0;
+                if ($activeSemester) {
+                    $mahasiswaCount = Mahasiswa::whereHas('krs', function($query) use ($jadwal, $activeSemester) {
+                            $query->where('mata_kuliah_id', $jadwal->mata_kuliah_id)
+                                  ->where('semester_id', $activeSemester->id)
+                                  ->where('status', 'approved');
+                        })
+                        ->where('status', 'aktif')
+                        ->whereIn('program_studi_id', $prodiIds)
+                        ->count();
+                }
 
                 return [
                     'mata_kuliah' => $jadwal->mataKuliah,
-                    'semester' => $jadwal->semester,
+                    'semester' => $activeSemester, // Always show active semester
                     'mahasiswa_count' => $mahasiswaCount,
                 ];
             });
@@ -95,7 +102,15 @@ class NilaiController extends Controller
             abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
         }
 
+        // Get active semester
+        $activeSemester = Semester::where('is_active', true)->first();
+        
+        if (!$activeSemester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif. Silakan hubungi admin.');
+        }
+
         // Verify dosen teaches this mata kuliah and it's from assigned program studi
+        // Jadwal is reusable, so we don't filter by semester
         $jadwal = Jadwal::where('dosen_id', $dosen->id)
             ->where('mata_kuliah_id', $mataKuliahId)
             ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
@@ -105,8 +120,10 @@ class NilaiController extends Controller
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
 
+        // Get nilai only for active semester
         $nilais = Nilai::where('mata_kuliah_id', $mataKuliahId)
             ->where('dosen_id', $dosen->id)
+            ->where('semester_id', $activeSemester->id)
             ->with(['mahasiswa', 'semester'])
             ->orderBy('created_at', 'desc')
             ->paginate(15)->withQueryString();
@@ -133,7 +150,15 @@ class NilaiController extends Controller
             abort(403, 'Anda belum di-assign ke program studi manapun. Silakan hubungi admin.');
         }
 
+        // Get active semester (otomatis)
+        $semester = Semester::where('is_active', true)->first();
+        
+        if (!$semester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif. Silakan hubungi admin.');
+        }
+
         // Verify dosen teaches this mata kuliah and it's from assigned program studi
+        // Jadwal is reusable across semesters
         $jadwal = Jadwal::where('dosen_id', $dosen->id)
             ->where('mata_kuliah_id', $mataKuliahId)
             ->whereHas('mataKuliah.kurikulum', function($q) use ($prodiIds) {
@@ -142,13 +167,6 @@ class NilaiController extends Controller
             ->firstOrFail();
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
-        
-        // Get active semester (otomatis)
-        $semester = Semester::where('is_active', true)->first();
-        
-        if (!$semester) {
-            return redirect()->back()->with('error', 'Tidak ada semester aktif. Silakan hubungi admin.');
-        }
         
         // Only get mahasiswa yang terdaftar di KRS untuk mata kuliah ini di semester aktif
         $mahasiswas = \App\Models\Mahasiswa::whereHas('krs', function($query) use ($mataKuliahId, $semester) {
