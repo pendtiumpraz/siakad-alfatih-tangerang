@@ -21,23 +21,19 @@
         <form action="{{ route('dosen.nilai.store') }}" method="POST" class="space-y-6">
             @csrf
             <input type="hidden" name="mata_kuliah_id" value="{{ $mataKuliah->id }}">
+            <input type="hidden" name="semester_id" value="{{ $semester->id }}">
 
-            <!-- Semester Selection -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Semester Akademik <span class="text-red-500">*</span>
-                </label>
-                <select name="semester_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                    <option value="">Pilih Semester Akademik</option>
-                    @foreach($semesters as $semester)
-                    <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
-                        {{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}
-                    </option>
-                    @endforeach
-                </select>
-                @error('semester_id')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+            <!-- Semester Info (Read-only) -->
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="text-sm text-green-800">
+                        <p class="font-semibold mb-1">Semester Akademik Aktif</p>
+                        <p class="text-lg font-bold">{{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Info -->
@@ -47,7 +43,9 @@
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                     </svg>
                     <div class="text-sm text-blue-700">
-                        <p class="font-semibold">Total Mahasiswa: {{ $mahasiswas->count() }}</p>
+                        <p class="font-semibold mb-1">Total Mahasiswa Terdaftar di KRS</p>
+                        <p class="text-lg font-bold">{{ $mahasiswas->count() }} Mahasiswa</p>
+                        <p class="text-xs mt-1 text-blue-600">Hanya mahasiswa yang mengambil mata kuliah ini di semester aktif</p>
                     </div>
                 </div>
             </div>

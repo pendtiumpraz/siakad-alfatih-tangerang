@@ -142,15 +142,26 @@ class NilaiController extends Controller
             ->firstOrFail();
 
         $mataKuliah = MataKuliah::findOrFail($mataKuliahId);
-        $semesters = Semester::where('is_active', true)->orderBy('tahun_akademik', 'desc')->get();
         
-        // Only show mahasiswa from assigned program studi
-        $mahasiswas = Mahasiswa::where('status', 'aktif')
+        // Get active semester (otomatis)
+        $semester = Semester::where('is_active', true)->first();
+        
+        if (!$semester) {
+            return redirect()->back()->with('error', 'Tidak ada semester aktif. Silakan hubungi admin.');
+        }
+        
+        // Only get mahasiswa yang terdaftar di KRS untuk mata kuliah ini di semester aktif
+        $mahasiswas = \App\Models\Mahasiswa::whereHas('krs', function($query) use ($mataKuliahId, $semester) {
+                $query->where('mata_kuliah_id', $mataKuliahId)
+                      ->where('semester_id', $semester->id)
+                      ->where('status', 'approved');
+            })
+            ->where('status', 'aktif')
             ->whereIn('program_studi_id', $prodiIds)
             ->orderBy('nama_lengkap')
             ->get();
 
-        return view('dosen.nilai.create', compact('mataKuliah', 'mahasiswas', 'semesters', 'dosen'));
+        return view('dosen.nilai.create', compact('mataKuliah', 'mahasiswas', 'semester', 'dosen'));
     }
 
     /**
