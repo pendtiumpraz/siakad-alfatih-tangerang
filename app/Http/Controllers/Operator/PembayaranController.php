@@ -181,6 +181,7 @@ class PembayaranController extends Controller
 
         // Get filter options
         $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_lengkap', 'status')
+            ->whereNotNull('status')
             ->orderBy('nama_lengkap')
             ->get();
 
@@ -212,6 +213,7 @@ class PembayaranController extends Controller
     public function create()
     {
         $mahasiswas = Mahasiswa::with('programStudi')
+            ->whereNotNull('status')
             ->orderBy('nama_lengkap')
             ->get();
 
