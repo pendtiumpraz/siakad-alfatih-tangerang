@@ -26,7 +26,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0.08;
+            opacity: 0.05;
             z-index: 0;
             pointer-events: none;
         }
