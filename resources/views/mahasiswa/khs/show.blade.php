@@ -379,16 +379,44 @@
         margin-top: 15px;
     }
     
-    /* Hide duplicate content */
+    /* Hide ALL duplicate web content */
     .grid.grid-cols-1.md\\:grid-cols-2,
     .flex.items-center.space-x-2,
-    h3.text-lg {
+    h3.text-lg,
+    .space-y-2 > div,
+    .overflow-x-auto:not(.print-table),
+    .mt-6.grid.grid-cols-1,
+    .flex.justify-between.items-center {
         display: none !important;
+    }
+    
+    /* Force hide web KHS content */
+    .space-y-6 {
+        display: block !important;
+    }
+    
+    .space-y-6 > * {
+        display: none !important;
+    }
+    
+    /* Only show print elements */
+    .kop-surat-print,
+    .print-title,
+    .print-info,
+    .print-table,
+    .print-summary,
+    .print-signature {
+        display: block !important;
     }
 }
 
 /* Elements only visible when printing */
 .kop-surat-print, .print-title, .print-info, .print-summary, .print-signature {
+    display: none;
+}
+
+/* Print table specific */
+.print-table {
     display: none;
 }
 </style>
