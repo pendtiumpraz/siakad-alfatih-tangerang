@@ -13,9 +13,9 @@
 
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
-            line-height: 1.4;
-            padding: 30px;
+            font-size: 9pt;
+            line-height: 1.2;
+            padding: 15px 25px;
             color: #000;
             position: relative;
         }
@@ -43,73 +43,73 @@
 
         /* Kop Surat */
         .kop-surat {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .kop-content {
             display: table;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .kop-logo {
             display: table-cell;
-            width: 80px;
+            width: 60px;
             vertical-align: top;
         }
 
         .kop-logo img {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
         }
 
         .kop-text {
             display: table-cell;
             text-align: center;
             vertical-align: top;
-            padding-left: 20px;
+            padding-left: 15px;
         }
 
         .kop-text h1 {
-            font-size: 16pt;
+            font-size: 13pt;
             font-weight: bold;
             color: #2D5F3F;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .kop-text p {
-            font-size: 9pt;
+            font-size: 8pt;
             color: #2D5F3F;
-            margin: 1px 0;
+            margin: 0;
         }
 
         .kop-divider {
             border: 0;
             border-top: 2px solid #2D5F3F;
-            margin: 10px 0 20px 0;
+            margin: 5px 0 10px 0;
         }
 
         /* Document Title */
         .doc-title {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
 
         .doc-title h2 {
-            font-size: 14pt;
+            font-size: 12pt;
             font-weight: bold;
             text-decoration: underline;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .doc-title p {
-            font-size: 10pt;
+            font-size: 9pt;
             color: #555;
         }
 
         /* Mahasiswa Info */
         .mhs-info {
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
 
         .info-table {
@@ -118,12 +118,12 @@
         }
 
         .info-table td {
-            padding: 3px 0;
-            font-size: 10pt;
+            padding: 1px 0;
+            font-size: 9pt;
         }
 
         .info-table td:first-child {
-            width: 150px;
+            width: 130px;
             font-weight: normal;
         }
 
@@ -139,22 +139,22 @@
         .nilai-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 8px;
         }
 
         .nilai-table th {
             background-color: #2D5F3F;
             color: white;
-            padding: 8px;
+            padding: 4px 5px;
             text-align: center;
-            font-size: 10pt;
+            font-size: 8pt;
             border: 1px solid #000;
         }
 
         .nilai-table td {
-            padding: 6px 8px;
+            padding: 3px 5px;
             border: 1px solid #000;
-            font-size: 10pt;
+            font-size: 8pt;
         }
 
         .nilai-table tbody tr:nth-child(even) {
@@ -175,8 +175,8 @@
 
         /* Summary Box */
         .summary-box {
-            margin-top: 20px;
-            padding: 15px;
+            margin-top: 8px;
+            padding: 8px;
             border: 2px solid #2D5F3F;
             background-color: #f0f7f4;
         }
@@ -184,13 +184,14 @@
         .summary-row {
             display: table;
             width: 100%;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .summary-label {
             display: table-cell;
-            width: 200px;
+            width: 180px;
             font-weight: bold;
+            font-size: 9pt;
         }
 
         .summary-value {
@@ -198,21 +199,23 @@
             text-align: left;
             font-weight: bold;
             color: #2D5F3F;
+            font-size: 9pt;
         }
 
         /* Signature */
         .signature {
-            margin-top: 40px;
+            margin-top: 15px;
         }
 
         .signature-box {
             float: right;
             text-align: center;
-            width: 200px;
+            width: 180px;
+            font-size: 9pt;
         }
 
         .signature-box p {
-            margin-bottom: 60px;
+            margin-bottom: 40px;
         }
 
         .signature-name {
@@ -223,14 +226,14 @@
         /* Footer */
         .footer {
             position: fixed;
-            bottom: 20px;
-            left: 30px;
-            right: 30px;
+            bottom: 10px;
+            left: 25px;
+            right: 25px;
             text-align: center;
-            font-size: 8pt;
+            font-size: 7pt;
             color: #666;
             border-top: 1px solid #ddd;
-            padding-top: 10px;
+            padding-top: 5px;
         }
 
         /* Page break */
@@ -365,7 +368,7 @@
             <div class="signature-box">
                 <p>Tangerang, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
                 <p>Ketua Program Studi</p>
-                <br><br><br>
+                <br><br>
                 <p class="signature-name">
                     @if($khs->mahasiswa->programStudi->ketuaProdi)
                         {{ $khs->mahasiswa->programStudi->ketuaProdi->nama_lengkap }}

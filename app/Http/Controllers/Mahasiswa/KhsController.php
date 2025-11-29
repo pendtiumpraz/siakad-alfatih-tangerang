@@ -52,4 +52,44 @@ class KhsController extends Controller
 
         return view('mahasiswa.khs.show', compact('khs'));
     }
+
+    /**
+     * Download KHS as PDF
+     */
+    public function downloadPdf($id)
+    {
+        $user = auth()->user();
+        $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+
+        // Ensure mahasiswa can only download their own KHS
+        $khs = Khs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('id', $id)
+            ->with([
+                'mahasiswa.programStudi.ketuaProdi',
+                'mahasiswa.dosenPa',
+                'semester',
+                'mahasiswa.nilais' => function($q) use ($id) {
+                    $khs = Khs::find($id);
+                    if ($khs) {
+                        $q->where('semester_id', $khs->semester_id)
+                          ->with('mataKuliah');
+                    }
+                }
+            ])
+            ->firstOrFail();
+
+        $khsService = new \App\Services\KhsService();
+
+        // Generate PDF using DomPDF
+        $pdf = \PDF::loadView('mahasiswa.khs.pdf', compact('khs', 'khsService'));
+        
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Generate filename
+        $filename = 'KHS_' . $mahasiswa->nim . '_' . str_replace('/', '-', $khs->semester->tahun_akademik) . '.pdf';
+        
+        // Download PDF
+        return $pdf->download($filename);
+    }
 }
