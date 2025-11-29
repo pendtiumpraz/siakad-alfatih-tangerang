@@ -60,7 +60,7 @@ class KrsController extends Controller
         $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $activeSemester->id)
             ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
-                $q->where('semester_id', $activeSemester->id);
+                $q->where('jenis_semester', $activeSemester->jenis);
             }])
             ->get();
 
@@ -76,7 +76,7 @@ class KrsController extends Controller
             $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
                 ->where('semester_id', $activeSemester->id)
                 ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
-                    $q->where('semester_id', $activeSemester->id);
+                    $q->where('jenis_semester', $activeSemester->jenis);
                 }])
                 ->get();
         }
@@ -85,7 +85,7 @@ class KrsController extends Controller
         $failedMataKuliahs = Nilai::where('mahasiswa_id', $mahasiswa->id)
             ->where('status', 'tidak_lulus')
             ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
-                $q->where('semester_id', $activeSemester->id);
+                $q->where('jenis_semester', $activeSemester->jenis);
             }])
             ->get()
             ->pluck('mataKuliah')
@@ -150,13 +150,13 @@ class KrsController extends Controller
                 ->get();
 
             foreach ($mataKuliahsWajib as $mataKuliah) {
-                // Check if jadwal exists for this mata kuliah
+                // Check if jadwal exists for this mata kuliah based on jenis_semester (not specific semester_id)
                 $jadwalExists = Jadwal::where('mata_kuliah_id', $mataKuliah->id)
-                    ->where('semester_id', $semester->id)
+                    ->where('jenis_semester', $semester->jenis)
                     ->exists();
 
                 if (!$jadwalExists) {
-                    Log::info("No jadwal found for mata kuliah {$mataKuliah->id}, skipping auto-populate");
+                    Log::info("No jadwal found for mata kuliah {$mataKuliah->id} for jenis_semester {$semester->jenis}, skipping auto-populate");
                     continue;
                 }
 
@@ -266,22 +266,25 @@ class KrsController extends Controller
      */
     private function checkScheduleConflict($mahasiswaId, $semesterId, $newMataKuliahId)
     {
-        // Get jadwal for new mata kuliah
+        // Get semester info to know jenis_semester
+        $semester = Semester::findOrFail($semesterId);
+        
+        // Get jadwal for new mata kuliah based on jenis_semester
         $newJadwal = Jadwal::where('mata_kuliah_id', $newMataKuliahId)
-            ->where('semester_id', $semesterId)
+            ->where('jenis_semester', $semester->jenis)
             ->first();
 
         if (!$newJadwal) {
             return false; // No jadwal, no conflict
         }
 
-        // Get all jadwal for current KRS
+        // Get all jadwal for current KRS based on jenis_semester
         $existingKrs = Krs::where('mahasiswa_id', $mahasiswaId)
             ->where('semester_id', $semesterId)
             ->pluck('mata_kuliah_id');
 
         $existingJadwals = Jadwal::whereIn('mata_kuliah_id', $existingKrs)
-            ->where('semester_id', $semesterId)
+            ->where('jenis_semester', $semester->jenis)
             ->with('mataKuliah')
             ->get();
 
@@ -422,7 +425,7 @@ class KrsController extends Controller
         $krsItems = Krs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $activeSemester->id)
             ->with(['mataKuliah.kurikulum', 'mataKuliah.jadwals' => function($q) use ($activeSemester) {
-                $q->where('semester_id', $activeSemester->id)->with(['dosen', 'ruangan']);
+                $q->where('jenis_semester', $activeSemester->jenis)->with(['dosen', 'ruangan']);
             }, 'approvedBy'])
             ->get();
 
