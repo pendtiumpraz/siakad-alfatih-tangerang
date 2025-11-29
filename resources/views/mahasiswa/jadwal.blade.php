@@ -19,7 +19,7 @@
                     <option value="">-- Pilih Semester --</option>
                     @foreach($semesters as $sem)
                         <option value="{{ $sem->id }}" {{ request('semester_id') == $sem->id || (!request('semester_id') && isset($semester) && $semester->id == $sem->id) ? 'selected' : '' }}>
-                            {{ $sem->nama_semester }} - {{ $sem->tahun_akademik }}
+                            {{ $sem->tahun_akademik }} - {{ ucfirst($sem->jenis) }}{{ $sem->is_active ? ' ⭐ Aktif' : '' }}
                         </option>
                     @endforeach
                 </select>
