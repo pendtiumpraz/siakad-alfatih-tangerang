@@ -488,14 +488,17 @@ class GoogleDriveService
     public function uploadKeuangan($file, string $jenis, string $subKategori): array
     {
         // Get or create Keuangan folder
-        $keuanganFolderId = $this->getOrCreateFolder('Keuangan', $this->rootFolderId);
+        $keuanganFolderId = $this->findFolder('Keuangan', $this->rootFolderId)
+            ?? $this->createFolder('Keuangan', $this->rootFolderId);
         
         // Create subfolder by year
         $year = now()->year;
-        $yearFolderId = $this->getOrCreateFolder($year, $keuanganFolderId);
+        $yearFolderId = $this->findFolder((string)$year, $keuanganFolderId)
+            ?? $this->createFolder((string)$year, $keuanganFolderId);
         
         // Create subfolder by jenis
-        $jenisFolderId = $this->getOrCreateFolder(ucfirst($jenis), $yearFolderId);
+        $jenisFolderId = $this->findFolder(ucfirst($jenis), $yearFolderId)
+            ?? $this->createFolder(ucfirst($jenis), $yearFolderId);
         
         // Generate filename
         $extension = $file->getClientOriginalExtension();
