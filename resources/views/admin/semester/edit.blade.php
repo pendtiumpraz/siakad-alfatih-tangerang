@@ -240,45 +240,37 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const submitBtn = document.getElementById('submitBtn');
     const isActiveCheckbox = document.querySelector('input[name="is_active"]');
     const wasActive = {{ $semester->is_active ? 'true' : 'false' }};
     
-    form.addEventListener('submit', function(e) {
-        // Show confirmation if:
-        // 1. Activating semester (wasActive = false, now checked)
-        // 2. OR updating semester that's already active (wasActive = true, still checked)
-        if (isActiveCheckbox.checked) {
-            e.preventDefault();
-            
+    // Alert muncul saat checkbox DIKLIK/DIUBAH (bukan saat submit)
+    isActiveCheckbox.addEventListener('change', function(e) {
+        // Hanya tampilkan alert jika checkbox dicentang (mengaktifkan)
+        if (this.checked) {
             let message = "⚠️ PERHATIAN PENTING!\n\n";
             
             if (!wasActive) {
-                // Activating semester
+                // Mengaktifkan semester yang sebelumnya tidak aktif
                 message += "Mengaktifkan semester ini akan:\n\n" +
                     "✓ Menonaktifkan semester yang sedang aktif\n" +
                     "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
                     "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n";
             } else {
-                // Updating active semester
-                message += "Anda mengupdate semester yang SEDANG AKTIF!\n\n" +
-                    "Perubahan pada semester aktif dapat:\n\n" +
-                    "✓ Mempengaruhi akses mahasiswa ke KRS dan KHS\n" +
-                    "✓ Mempengaruhi pembayaran SPP yang sudah ada\n" +
-                    "✓ Mengubah periode akademik yang sedang berjalan\n\n" +
-                    "CATATAN: Mahasiswa yang belum lunas SPP TIDAK BISA mengakses KRS dan KHS\n\n";
+                // Semester sudah aktif, di-uncheck lalu di-check lagi
+                message += "Anda tetap mengaktifkan semester ini!\n\n" +
+                    "PERHATIAN:\n\n" +
+                    "✓ Perubahan pada semester aktif dapat mempengaruhi akses mahasiswa\n" +
+                    "✓ Mahasiswa yang belum lunas SPP TIDAK BISA mengakses KRS dan KHS\n" +
+                    "✓ Pastikan semua perubahan sudah benar sebelum menyimpan\n\n";
             }
             
             message += "Apakah Anda yakin ingin melanjutkan?";
             
             const confirmed = confirm(message);
             
-            if (confirmed) {
-                // Submit the form
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
-                form.submit();
+            if (!confirmed) {
+                // User membatalkan, uncheck checkbox
+                this.checked = false;
             }
         }
     });

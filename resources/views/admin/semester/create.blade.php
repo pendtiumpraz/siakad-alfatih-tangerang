@@ -152,16 +152,12 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const submitBtn = document.getElementById('submitBtn');
     const isActiveCheckbox = document.querySelector('input[name="is_active"]');
     
-    form.addEventListener('submit', function(e) {
-        // Only show confirmation if "Aktif" checkbox is checked
-        if (isActiveCheckbox.checked) {
-            e.preventDefault();
-            
-            // Custom styled confirmation dialog
+    // Alert muncul saat checkbox DIKLIK/DIUBAH (bukan saat submit)
+    isActiveCheckbox.addEventListener('change', function(e) {
+        // Hanya tampilkan alert jika checkbox dicentang (mengaktifkan)
+        if (this.checked) {
             const confirmed = confirm(
                 "⚠️ PERHATIAN PENTING!\n\n" +
                 "Mengaktifkan semester baru akan:\n\n" +
@@ -171,11 +167,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 "Apakah Anda yakin ingin melanjutkan?"
             );
             
-            if (confirmed) {
-                // Submit the form
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
-                form.submit();
+            if (!confirmed) {
+                // User membatalkan, uncheck checkbox
+                this.checked = false;
             }
         }
     });
