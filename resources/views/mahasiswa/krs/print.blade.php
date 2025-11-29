@@ -65,8 +65,9 @@
         }
 
         .info-table td {
-            padding: 2px 5px;
+            padding: 1px 5px;
             font-size: 11px;
+            line-height: 1.4;
         }
 
         .info-table td:first-child {
@@ -138,7 +139,7 @@
         }
 
         .signature-box p {
-            margin-bottom: 50px;
+            margin-bottom: 65px;
             font-size: 11px;
         }
 
@@ -148,11 +149,13 @@
             display: inline-block;
             min-width: 200px;
             padding-bottom: 2px;
+            margin-bottom: 5px;
         }
 
         .signature-box .title {
-            font-size: 12px;
-            margin-top: 5px;
+            font-size: 11px;
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         /* Status Badge */
@@ -199,7 +202,15 @@
             }
             
             .signature-box p {
-                margin-bottom: 40px;
+                margin-bottom: 55px;
+            }
+            
+            .signature-box .name {
+                margin-bottom: 3px;
+            }
+            
+            .signature-box .title {
+                margin-top: 0;
             }
             
             .info-box {
