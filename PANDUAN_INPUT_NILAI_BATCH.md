@@ -145,7 +145,7 @@ Ahmad:
 └─ Fiqih: 45 [E] ✗ [🔴 Merah] ← Akan muncul di mengulang!
 
 Budi:
-├─ Pancasila: 80 [A-] ✓ [🟢 Hijau]
+├─ Pancasila: 94 [A] ✓ [🟢 Hijau]
 ├─ B.Inggris: 70 [B] ✓ [🟢 Hijau]
 └─ Semua lulus!
 ```
