@@ -244,7 +244,7 @@ class MahasiswaController extends Controller
             ])->with('error', 'Tidak ada kurikulum aktif untuk program studi Anda');
         }
 
-        $jadwals = Jadwal::where('semester_id', $semester->id)
+        $jadwals = Jadwal::where('jenis_semester', $semester->jenis)
             ->whereHas('mataKuliah', function($query) use ($kurikulum, $mahasiswa) {
                 $query->where('kurikulum_id', $kurikulum->id)
                       ->where('semester', '=', $mahasiswa->semester_aktif);
