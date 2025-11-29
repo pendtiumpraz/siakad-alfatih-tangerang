@@ -112,27 +112,10 @@
             margin-bottom: 8px;
         }
 
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .info-table td {
-            padding: 1px 0;
+        .mhs-info p {
+            margin: 2px 0;
             font-size: 9pt;
-        }
-
-        .info-table td:first-child {
-            width: 130px;
-            font-weight: normal;
-        }
-
-        .info-table td:nth-child(2) {
-            width: 10px;
-        }
-
-        .info-table td:last-child {
-            font-weight: bold;
+            line-height: 1.3;
         }
 
         /* Nilai Table */
@@ -173,33 +156,16 @@
             font-weight: bold;
         }
 
-        /* Summary Box */
-        .summary-box {
-            margin-top: 8px;
-            padding: 8px;
-            border: 2px solid #2D5F3F;
-            background-color: #f0f7f4;
+        /* Summary Info */
+        .summary-info {
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
 
-        .summary-row {
-            display: table;
-            width: 100%;
-            margin-bottom: 4px;
-        }
-
-        .summary-label {
-            display: table-cell;
-            width: 180px;
-            font-weight: bold;
+        .summary-info p {
+            margin: 2px 0;
             font-size: 9pt;
-        }
-
-        .summary-value {
-            display: table-cell;
-            text-align: left;
-            font-weight: bold;
-            color: #2D5F3F;
-            font-size: 9pt;
+            line-height: 1.4;
         }
 
         /* Signature */
@@ -265,120 +231,120 @@
             <hr class="kop-divider">
         </div>
 
-        <!-- Document Title -->
+        <!-- Document Title & Info -->
         <div class="doc-title">
-            <h2>KARTU HASIL STUDI (KHS)</h2>
-            <p>{{ $khs->semester->nama_semester }}</p>
+            <h2>KARTU HASIL STUDI (KHS) MAHASISWA</h2>
         </div>
 
-        <!-- Mahasiswa Info -->
+        <!-- Mahasiswa Info (Inline) -->
         <div class="mhs-info">
-            <table class="info-table">
-                <tr>
-                    <td>NIM</td>
-                    <td>:</td>
-                    <td>{{ $khs->mahasiswa->nim }}</td>
-                </tr>
-                <tr>
-                    <td>Nama Mahasiswa</td>
-                    <td>:</td>
-                    <td>{{ $khs->mahasiswa->nama_lengkap }}</td>
-                </tr>
-                <tr>
-                    <td>Program Studi</td>
-                    <td>:</td>
-                    <td>{{ $khs->mahasiswa->programStudi->nama_prodi }}</td>
-                </tr>
-                <tr>
-                    <td>Angkatan</td>
-                    <td>:</td>
-                    <td>{{ $khs->mahasiswa->angkatan }}</td>
-                </tr>
-            </table>
+            <p><strong>Nama</strong> : {{ $khs->mahasiswa->nama_lengkap }}</p>
+            <p><strong>NIM</strong> : {{ $khs->mahasiswa->nim ?? '-' }}</p>
+            @php
+                // Calculate semester number
+                $tahunAkademik = (int) substr($khs->semester->tahun_akademik, 0, 4);
+                $angkatan = $khs->mahasiswa->angkatan;
+                $yearDiff = $tahunAkademik - $angkatan;
+                $jenisSemester = strpos(strtolower($khs->semester->nama_semester), 'ganjil') !== false ? 'ganjil' : 'genap';
+                $semesterNumber = ($yearDiff * 2) + ($jenisSemester === 'genap' ? 2 : 1);
+                
+                // Convert to roman
+                $romanNumerals = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                $roman = $romanNumerals[$semesterNumber] ?? $semesterNumber;
+                
+                // Terbilang
+                $terbilang = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas', 'dua belas'];
+                $terbilangSemester = $terbilang[$semesterNumber] ?? $semesterNumber;
+            @endphp
+            <p><strong>Semester</strong> : {{ $roman }} ({{ $terbilangSemester }})</p>
+            <p><strong>Program Studi</strong> : {{ $khs->mahasiswa->programStudi->nama_prodi }}</p>
         </div>
 
         <!-- Nilai Table -->
         <table class="nilai-table">
             <thead>
                 <tr>
-                    <th style="width: 40px;">No</th>
-                    <th style="width: 80px;">Kode MK</th>
-                    <th>Mata Kuliah</th>
-                    <th style="width: 50px;">SKS</th>
-                    <th style="width: 60px;">Nilai</th>
-                    <th style="width: 60px;">Grade</th>
-                    <th style="width: 60px;">Bobot</th>
-                    <th style="width: 80px;">Bobot×SKS</th>
+                    <th style="width: 35px;">NO</th>
+                    <th style="width: 80px;">KODE</th>
+                    <th>MATA KULIAH</th>
+                    <th style="width: 45px;">SKS</th>
+                    <th style="width: 70px;">NILAI HURUF</th>
+                    <th style="width: 70px;">NILAI ANGKA</th>
                 </tr>
             </thead>
             <tbody>
                 @php
                     $totalSks = 0;
-                    $totalBobotXSks = 0;
+                    $totalSksLulus = 0;
                 @endphp
                 @foreach($khs->mahasiswa->nilais->where('semester_id', $khs->semester_id) as $index => $nilai)
                     @php
-                        $bobot = $nilai->bobot ?? $khsService->getBobot($nilai->grade ?? 'E');
-                        $bobotXSks = $bobot * ($nilai->mataKuliah->sks ?? 0);
-                        $totalSks += $nilai->mataKuliah->sks ?? 0;
-                        $totalBobotXSks += $bobotXSks;
+                        $sks = $nilai->mataKuliah->sks ?? 0;
+                        $totalSks += $sks;
+                        if ($nilai->status === 'lulus') {
+                            $totalSksLulus += $sks;
+                        }
                     @endphp
                     <tr>
                         <td class="text-center">{{ $index + 1 }}</td>
-                        <td class="text-center font-bold">{{ $nilai->mataKuliah->kode_mk }}</td>
+                        <td class="text-center">{{ $nilai->mataKuliah->kode_mk }}</td>
                         <td>{{ $nilai->mataKuliah->nama_mk }}</td>
-                        <td class="text-center font-bold">{{ $nilai->mataKuliah->sks }}</td>
-                        <td class="text-center">{{ $nilai->nilai_akhir ?? '-' }}</td>
-                        <td class="text-center font-bold">{{ str_replace('+', '', $nilai->grade ?? '-') }}</td>
-                        <td class="text-center">{{ number_format($bobot, 2) }}</td>
-                        <td class="text-center font-bold">{{ number_format($bobotXSks, 2) }}</td>
+                        <td class="text-center">{{ $sks }}</td>
+                        <td class="text-center">{{ str_replace('+', '', $nilai->grade ?? '-') }}</td>
+                        <td class="text-center">{{ $nilai->bobot ?? '-' }}</td>
                     </tr>
                 @endforeach
-                <tr style="background-color: #e0e0e0; font-weight: bold;">
-                    <td colspan="3" class="text-right">TOTAL</td>
-                    <td class="text-center">{{ $totalSks }}</td>
-                    <td colspan="3"></td>
-                    <td class="text-center">{{ number_format($totalBobotXSks, 2) }}</td>
-                </tr>
             </tbody>
         </table>
 
-        <!-- Summary Box -->
-        <div class="summary-box">
-            <div class="summary-row">
-                <div class="summary-label">Indeks Prestasi (IP) Semester Ini</div>
-                <div class="summary-value">: {{ number_format($khs->ip, 2) }}</div>
-            </div>
-            <div class="summary-row">
-                <div class="summary-label">Indeks Prestasi Kumulatif (IPK)</div>
-                <div class="summary-value">: {{ number_format($khs->ipk, 2) }}</div>
-            </div>
-            <div class="summary-row">
-                <div class="summary-label">Total SKS Semester Ini</div>
-                <div class="summary-value">: {{ $khs->total_sks_semester }} SKS</div>
-            </div>
-            <div class="summary-row">
-                <div class="summary-label">Total SKS Kumulatif</div>
-                <div class="summary-value">: {{ $khs->total_sks_kumulatif }} SKS</div>
-            </div>
+        <!-- Summary Info -->
+        <div class="summary-info">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 50%;">
+                        <p><strong>Jumlah SKS Semester</strong> : {{ $totalSks }}</p>
+                        <p><strong>SKS yang diluluskan</strong> : {{ $totalSksLulus }}</p>
+                        <p><strong>Indeks Prestasi Kumulatif (IPK) lalu</strong> : -</p>
+                    </td>
+                    <td style="width: 50%;">
+                        <p><strong>Indeks Prestasi (IP)</strong> : {{ str_replace('.', ',', number_format($khs->ip, 2)) }}</p>
+                        <p><strong>Indeks Prestasi Kumulatif (IPK)</strong> : {{ str_replace('.', ',', number_format($khs->ipk, 2)) }}</p>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Signature -->
         <div class="signature">
             <div class="signature-box">
-                <p>Tangerang, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</p>
-                <p>Ketua Program Studi</p>
+                @php
+                    // Tanggal Hijriah dan Masehi
+                    $carbon = \Carbon\Carbon::now();
+                    $masehi = $carbon->isoFormat('DD MMMM YYYY');
+                    
+                    // Simple Hijri conversion (approximate)
+                    $hijriMonths = [
+                        1 => 'Muharram', 2 => 'Safar', 3 => 'Rabiul Awal', 4 => 'Rabiul Akhir',
+                        5 => 'Jumadil Awal', 6 => 'Jumadil Akhir', 7 => 'Rajab', 8 => "Sya'ban",
+                        9 => 'Ramadhan', 10 => 'Syawal', 11 => 'Dzulqaidah', 12 => 'Dzulhijjah'
+                    ];
+                    
+                    // Approximate Hijri date (simplified calculation)
+                    $gregorianYear = $carbon->year;
+                    $hijriYear = $gregorianYear - 579; // Rough approximation
+                    $hijriMonth = $carbon->month;
+                    $hijriDay = $carbon->day;
+                    
+                    $hijriDate = $hijriDay . ' ' . $hijriMonths[$hijriMonth] . ' ' . $hijriYear . ' H';
+                @endphp
+                <p>Tangerang, {{ $hijriDate }}</p>
+                <p>{{ $masehi }} M</p>
+                <br>
+                <p>PUKET I</p>
+                <p>Bid. Akademik dan Pengembangan</p>
+                <p>STAI AL FATIH</p>
                 <br><br>
-                <p class="signature-name">
-                    @if($khs->mahasiswa->programStudi->ketuaProdi)
-                        {{ $khs->mahasiswa->programStudi->ketuaProdi->nama_lengkap }}
-                    @else
-                        (_________________________)
-                    @endif
-                </p>
-                @if($khs->mahasiswa->programStudi->ketuaProdi)
-                    <p style="font-size: 9pt;">NIDN: {{ $khs->mahasiswa->programStudi->ketuaProdi->nidn }}</p>
-                @endif
+                <p class="signature-name">Satrio Purnomo Hidayat, M.Pd.</p>
             </div>
             <div style="clear: both;"></div>
         </div>
