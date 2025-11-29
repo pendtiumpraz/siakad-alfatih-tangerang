@@ -80,8 +80,16 @@ class KhsController extends Controller
 
         $khsService = new \App\Services\KhsService();
 
+        // Generate base64 logo (no GD extension required!)
+        $logoPath = public_path('images/logo-alfatih.png');
+        $logoBase64 = '';
+        if (file_exists($logoPath)) {
+            $logoData = file_get_contents($logoPath);
+            $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
+        }
+
         // Generate PDF using DomPDF
-        $pdf = \PDF::loadView('mahasiswa.khs.pdf', compact('khs', 'khsService'));
+        $pdf = \PDF::loadView('mahasiswa.khs.pdf', compact('khs', 'khsService', 'logoBase64'));
         
         // Set paper size and orientation
         $pdf->setPaper('A4', 'portrait');

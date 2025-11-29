@@ -22,20 +22,11 @@
 
         /* Watermark Background Logo - DISABLED (requires GD extension) */
         .watermark {
-            display: none; /* Disabled to avoid GD dependency */
-            /*
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.1;
-            z-index: 0;
-            */
+            display: none !important; /* Completely disabled to avoid GD dependency */
         }
 
         .watermark img {
-            width: 400px;
-            height: 400px;
+            display: none !important;
         }
 
         /* Content wrapper to stay above watermark */
@@ -219,10 +210,12 @@
     </style>
 </head>
 <body>
-    <!-- Watermark -->
-    <div class="watermark">
-        <img src="{{ public_path('images/logo-alfatih.png') }}" alt="Logo STAI Al-Fatih">
-    </div>
+    <!-- Watermark DISABLED to avoid GD dependency -->
+    {{-- <div class="watermark">
+        @if($logoBase64)
+        <img src="{{ $logoBase64 }}" alt="Logo STAI Al-Fatih">
+        @endif
+    </div> --}}
 
     <!-- Content -->
     <div class="content">
@@ -230,7 +223,9 @@
         <div class="kop-surat">
             <div class="kop-content">
                 <div class="kop-logo">
-                    <img src="{{ public_path('images/logo-alfatih.png') }}" alt="Logo STAI Al-Fatih">
+                    @if($logoBase64)
+                    <img src="{{ $logoBase64 }}" alt="Logo STAI Al-Fatih">
+                    @endif
                 </div>
                 <div class="kop-text">
                     <h1>STAI AL FATIH TANGERANG</h1>
