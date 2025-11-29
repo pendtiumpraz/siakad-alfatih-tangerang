@@ -24,7 +24,7 @@
             <div class="text-center text-white">
                 <h1 class="text-3xl font-bold mb-2">KARTU HASIL STUDI (KHS)</h1>
                 <p class="text-emerald-100">STAI Al-Fatih Tangerang</p>
-                <p class="text-emerald-100 text-sm">Semester {{ $khs->semester->tahun_akademik }}</p>
+                <p class="text-emerald-100 text-sm">Semester {{ $khs->semester ? $khs->semester->tahun_akademik . ' - ' . ucfirst($khs->semester->jenis) : '-' }}</p>
             </div>
         </div>
 

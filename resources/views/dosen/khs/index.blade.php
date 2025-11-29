@@ -141,7 +141,7 @@
                                     <span class="text-sm text-gray-700">{{ $khs->mahasiswa->programStudi->kode_prodi }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="text-sm text-gray-700">{{ $khs->semester->tahun_akademik }}</span>
+                                    <span class="text-sm text-gray-700">{{ $khs->semester ? $khs->semester->tahun_akademik . ' - ' . ucfirst($khs->semester->jenis) : '-' }}</span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @php

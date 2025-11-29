@@ -33,7 +33,7 @@
             </div>
             <div>
                 <p class="text-sm text-gray-600 mb-1">Semester</p>
-                <p class="font-semibold text-gray-900">{{ $nilai->semester->tahun_akademik }} - {{ $nilai->semester->periode }}</p>
+                <p class="font-semibold text-gray-900">{{ $nilai->semester ? $nilai->semester->tahun_akademik . ' - ' . ucfirst($nilai->semester->jenis) : '-' }}</p>
             </div>
         </div>
     </x-islamic-card>

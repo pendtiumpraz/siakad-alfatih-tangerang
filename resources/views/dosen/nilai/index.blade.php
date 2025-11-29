@@ -64,7 +64,7 @@
                         <strong>SKS:</strong> {{ $item['mata_kuliah']->sks }}
                     </p>
                     <p class="text-sm text-gray-600">
-                        <strong>Semester:</strong> {{ $item['semester']->tahun_akademik }} - {{ ucfirst($item['semester']->jenis) }}
+                        <strong>Semester:</strong> {{ $item['semester'] ? $item['semester']->tahun_akademik . ' - ' . ucfirst($item['semester']->jenis) : '-' }}
                     </p>
                 </div>
 
