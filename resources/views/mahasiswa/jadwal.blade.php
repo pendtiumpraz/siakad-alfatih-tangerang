@@ -6,29 +6,33 @@
 <div class="space-y-6">
     <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold text-gray-800">Jadwal Kuliah</h1>
+        @if(isset($semester))
+            <div class="text-right">
+                <p class="text-sm text-gray-600">Semester Aktif</p>
+                <p class="text-lg font-semibold text-[#D4AF37]">{{ $semester->tahun_akademik }} - {{ ucfirst($semester->jenis) }}</p>
+            </div>
+        @endif
     </div>
 
     <div class="islamic-divider"></div>
 
-    <!-- Filter Semester -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form method="GET" action="{{ route('mahasiswa.jadwal.index') }}" class="flex items-end gap-4">
-            <div class="flex-1">
-                <label for="semester_id" class="block text-sm font-medium text-gray-700 mb-2">Semester</label>
-                <select name="semester_id" id="semester_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent">
-                    <option value="">-- Pilih Semester --</option>
-                    @foreach($semesters as $sem)
-                        <option value="{{ $sem->id }}" {{ request('semester_id') == $sem->id || (!request('semester_id') && isset($semester) && $semester->id == $sem->id) ? 'selected' : '' }}>
-                            {{ $sem->tahun_akademik }} - {{ ucfirst($sem->jenis) }}{{ $sem->is_active ? ' ⭐ Aktif' : '' }}
-                        </option>
-                    @endforeach
-                </select>
+    @if(isset($mataKuliahKrs) && $mataKuliahKrs->count() > 0)
+        <!-- Info Box -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        Menampilkan jadwal untuk <strong>{{ $mataKuliahKrs->count() }} mata kuliah</strong> yang sudah disetujui di KRS Anda.
+                    </p>
+                </div>
             </div>
-            <button type="submit" class="px-6 py-2 bg-[#D4AF37] text-white rounded-lg hover:bg-[#C4A137] transition-colors">
-                Tampilkan
-            </button>
-        </form>
-    </div>
+        </div>
+    @endif
 
     @if(isset($jadwals) && $jadwals->count() > 0)
         <!-- Jadwal Table -->
@@ -60,13 +64,31 @@
         </div>
     @else
         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-            <p class="text-yellow-700">
-                @if(isset($semester))
-                    Tidak ada jadwal untuk semester {{ $semester->nama_semester }}.
-                @else
-                    Tidak ada semester aktif. Silakan pilih semester.
-                @endif
-            </p>
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        @if(session('info'))
+                            {{ session('info') }}
+                        @elseif(isset($semester))
+                            Belum ada jadwal yang tersedia. Pastikan KRS Anda sudah disetujui.
+                        @else
+                            Tidak ada semester aktif saat ini.
+                        @endif
+                    </p>
+                    @if(!session('info') && isset($semester))
+                        <p class="text-sm text-yellow-700 mt-2">
+                            <a href="{{ route('mahasiswa.krs.index') }}" class="font-medium underline hover:text-yellow-800">
+                                Klik di sini untuk mengisi KRS
+                            </a>
+                        </p>
+                    @endif
+                </div>
+            </div>
         </div>
     @endif
 </div>

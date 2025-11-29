@@ -200,14 +200,8 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = $this->getAuthMahasiswa();
 
-        // Get active semester or specified semester
-        $semesterId = $request->input('semester_id');
-
-        if ($semesterId) {
-            $semester = Semester::findOrFail($semesterId);
-        } else {
-            $semester = Semester::where('is_active', true)->first();
-        }
+        // Get active semester
+        $semester = Semester::where('is_active', true)->first();
 
         if (!$semester) {
             if ($request->expectsJson()) {
@@ -220,35 +214,39 @@ class MahasiswaController extends Controller
             return view('mahasiswa.jadwal', [
                 'jadwals' => collect(),
                 'semester' => null,
-                'semesters' => Semester::orderBy('tahun_akademik', 'desc')->get()
+                'mataKuliahKrs' => collect()
             ])->with('error', 'Tidak ada semester aktif');
         }
 
-        // Get jadwal based on mahasiswa's kurikulum
-        $kurikulum = $mahasiswa->programStudi->kurikulums()
-            ->where('is_active', true)
-            ->first();
+        // Get approved KRS for active semester
+        $krsApproved = \App\Models\Krs::where('mahasiswa_id', $mahasiswa->id)
+            ->where('semester_id', $semester->id)
+            ->where('status', 'approved')
+            ->with('mataKuliah')
+            ->get();
 
-        if (!$kurikulum) {
+        if ($krsApproved->isEmpty()) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tidak ada kurikulum aktif untuk program studi Anda'
+                    'message' => 'Belum ada KRS yang disetujui untuk semester ini'
                 ], 404);
             }
 
             return view('mahasiswa.jadwal', [
                 'jadwals' => collect(),
                 'semester' => $semester,
-                'semesters' => Semester::orderBy('tahun_akademik', 'desc')->get()
-            ])->with('error', 'Tidak ada kurikulum aktif untuk program studi Anda');
+                'mataKuliahKrs' => collect()
+            ])->with('info', 'Belum ada KRS yang disetujui. Silakan lengkapi KRS Anda terlebih dahulu.');
         }
 
+        // Get mata kuliah IDs from approved KRS
+        $mataKuliahIds = $krsApproved->pluck('mata_kuliah_id')->toArray();
+        $mataKuliahKrs = $krsApproved->pluck('mataKuliah')->keyBy('id');
+
+        // Get jadwal for those mata kuliah with matching jenis_semester
         $jadwals = Jadwal::where('jenis_semester', $semester->jenis)
-            ->whereHas('mataKuliah', function($query) use ($kurikulum, $mahasiswa) {
-                $query->where('kurikulum_id', $kurikulum->id)
-                      ->where('semester', '=', $mahasiswa->semester_aktif);
-            })
+            ->whereIn('mata_kuliah_id', $mataKuliahIds)
             ->with(['mataKuliah', 'dosen', 'ruangan'])
             ->orderBy('hari')
             ->orderBy('jam_mulai')
@@ -259,14 +257,13 @@ class MahasiswaController extends Controller
                 'success' => true,
                 'data' => [
                     'semester' => $semester,
-                    'jadwals' => $jadwals
+                    'jadwals' => $jadwals,
+                    'total_mk' => $krsApproved->count()
                 ]
             ]);
         }
 
-        $semesters = Semester::orderBy('tahun_akademik', 'desc')->get();
-
-        return view('mahasiswa.jadwal', compact('jadwals', 'semester', 'semesters'));
+        return view('mahasiswa.jadwal', compact('jadwals', 'semester', 'mataKuliahKrs'));
     }
 
     /**
