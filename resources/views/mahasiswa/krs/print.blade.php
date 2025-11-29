@@ -13,9 +13,14 @@
 
         body {
             font-family: 'Times New Roman', Times, serif;
-            line-height: 1.6;
+            line-height: 1.3;
             color: #000;
-            padding: 20px;
+            padding: 15px;
+        }
+        
+        @page {
+            size: A4;
+            margin: 10mm;
         }
 
         .container {
@@ -26,42 +31,42 @@
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #000;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
         }
 
         .header h1 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-transform: uppercase;
         }
 
         .header h2 {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .header p {
-            font-size: 14px;
-            margin: 3px 0;
+            font-size: 12px;
+            margin: 2px 0;
         }
 
         /* Info Section */
         .info-section {
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .info-table {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .info-table td {
-            padding: 5px;
-            font-size: 13px;
+            padding: 2px 5px;
+            font-size: 11px;
         }
 
         .info-table td:first-child {
@@ -77,14 +82,14 @@
         .krs-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .krs-table th,
         .krs-table td {
             border: 1px solid #000;
-            padding: 8px;
-            font-size: 12px;
+            padding: 4px 6px;
+            font-size: 10px;
         }
 
         .krs-table th {
@@ -122,7 +127,7 @@
 
         /* Signature Section */
         .signature-section {
-            margin-top: 40px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
         }
@@ -133,8 +138,8 @@
         }
 
         .signature-box p {
-            margin-bottom: 80px;
-            font-size: 13px;
+            margin-bottom: 50px;
+            font-size: 11px;
         }
 
         .signature-box .name {
@@ -176,6 +181,7 @@
         @media print {
             body {
                 padding: 0;
+                line-height: 1.2;
             }
 
             .no-print {
@@ -183,7 +189,22 @@
             }
 
             @page {
-                margin: 1.5cm;
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            
+            .header {
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+            }
+            
+            .signature-box p {
+                margin-bottom: 40px;
+            }
+            
+            .info-box {
+                padding: 5px;
+                margin: 8px 0;
             }
         }
 
@@ -209,10 +230,10 @@
 
         .info-box {
             background-color: #f8f9fa;
-            border-left: 4px solid #4A7C59;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 12px;
+            border-left: 3px solid #4A7C59;
+            padding: 8px;
+            margin: 10px 0;
+            font-size: 10px;
         }
 
         .info-box strong {
