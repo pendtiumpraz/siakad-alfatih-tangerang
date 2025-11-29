@@ -139,11 +139,11 @@
                             <div class="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-300">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center space-x-2">
-                                        <i class="fas fa-file text-gray-500"></i>
-                                        <span class="text-sm text-gray-700">File saat ini: {{ basename($pembukuan->bukti_file) }}</span>
+                                        <i class="fas fa-cloud text-blue-500"></i>
+                                        <span class="text-sm text-gray-700">File saat ini (Google Drive)</span>
                                     </div>
-                                    <a href="{{ asset('storage/' . $pembukuan->bukti_file) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
-                                        <i class="fas fa-download mr-1"></i>Lihat
+                                    <a href="{{ $pembukuan->bukti_file }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">
+                                        <i class="fas fa-external-link-alt mr-1"></i>Lihat di Google Drive
                                     </a>
                                 </div>
                             </div>
