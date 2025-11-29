@@ -93,10 +93,11 @@
                         <option value="">Pilih Dosen</option>
                         @foreach($dosens as $dosen)
                             <option value="{{ $dosen->id }}" {{ old('dosen_id') == $dosen->id ? 'selected' : '' }}>
-                                {{ $dosen->nidn }} - {{ $dosen->nama_lengkap }}
+                                {{ $dosen->nama_lengkap }} (NIDN: {{ $dosen->nidn }})
                             </option>
                         @endforeach
                     </select>
+                    <p class="mt-1 text-xs text-gray-500">Total {{ $dosens->count() }} dosen tersedia</p>
                     @error('dosen_id')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

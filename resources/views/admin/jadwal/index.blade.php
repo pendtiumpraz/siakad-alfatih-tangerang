@@ -102,7 +102,7 @@
                             <select class="edit-input hidden w-full px-2 py-1 border border-green-500 rounded focus:ring-2 focus:ring-green-500">
                                 @foreach($dosens as $dosen)
                                     <option value="{{ $dosen->id }}" {{ $jadwal->dosen_id == $dosen->id ? 'selected' : '' }}>
-                                        {{ $dosen->nama_lengkap }}
+                                        {{ $dosen->nama_lengkap }} (NIDN: {{ $dosen->nidn }})
                                     </option>
                                 @endforeach
                             </select>
