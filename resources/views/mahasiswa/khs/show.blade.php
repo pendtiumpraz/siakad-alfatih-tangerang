@@ -130,12 +130,12 @@
                             @endphp
                             @foreach($khs->mahasiswa->nilais as $index => $nilai)
                                 @php
-                                    $bobot = $khsService->getBobot($nilai->nilai_huruf ?? 'E');
+                                    $bobot = $nilai->bobot ?? $khsService->getBobot($nilai->grade ?? 'E');
                                     $bobotXSks = $bobot * ($nilai->mataKuliah->sks ?? 0);
                                     $totalBobotXSks += $bobotXSks;
-                                    $nilaiColor = match($nilai->nilai_huruf) {
-                                        'A', 'A-' => 'bg-green-100 text-green-800',
-                                        'B+', 'B', 'B-' => 'bg-blue-100 text-blue-800',
+                                    $nilaiColor = match($nilai->grade) {
+                                        'A+', 'A' => 'bg-green-100 text-green-800',
+                                        'B+', 'B' => 'bg-blue-100 text-blue-800',
                                         'C+', 'C' => 'bg-yellow-100 text-yellow-800',
                                         'D' => 'bg-orange-100 text-orange-800',
                                         'E' => 'bg-red-100 text-red-800',
@@ -149,7 +149,7 @@
                                     <td class="px-4 py-3 text-center text-sm font-semibold">{{ $nilai->mataKuliah->sks }}</td>
                                     <td class="px-4 py-3 text-center">
                                         <span class="px-3 py-1 {{ $nilaiColor }} text-sm font-bold rounded-full">
-                                            {{ str_replace('+', '', $nilai->nilai_huruf ?? '-') }}
+                                            {{ str_replace('+', '', $nilai->grade ?? '-') }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-3 text-center text-sm font-semibold">{{ number_format($bobot, 2) }}</td>

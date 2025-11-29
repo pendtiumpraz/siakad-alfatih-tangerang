@@ -146,7 +146,7 @@ class NilaiKolektifController extends Controller
                     if ($existingNilai) {
                         // Update existing
                         $existingNilai->update([
-                            'nilai' => $nilaiAngka,
+                            'nilai_akhir' => $nilaiAngka,
                             'grade' => $gradeData['grade'],
                             'bobot' => $gradeData['bobot'],
                             'status' => $gradeData['status'],
@@ -164,7 +164,7 @@ class NilaiKolektifController extends Controller
                             'semester_id' => $request->semester_id,
                             'mata_kuliah_id' => $mataKuliahId,
                             'dosen_id' => $jadwal ? $jadwal->dosen_id : null,
-                            'nilai' => $nilaiAngka,
+                            'nilai_akhir' => $nilaiAngka,
                             'grade' => $gradeData['grade'],
                             'bobot' => $gradeData['bobot'],
                             'status' => $gradeData['status'],

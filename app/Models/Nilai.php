@@ -19,6 +19,7 @@ class Nilai extends Model
         'nilai_uas',
         'nilai_akhir',
         'grade',
+        'bobot',
         'status',
     ];
 

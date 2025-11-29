@@ -46,10 +46,10 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $nilai->semester->nama_semester ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $nilai->mataKuliah->nama_mk ?? '-' }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $nilai->nilai_angka ?? '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $nilai->nilai_akhir ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <span class="px-2 py-1 rounded font-medium {{ $nilai->nilai_huruf == 'A' ? 'bg-green-100 text-green-800' : ($nilai->nilai_huruf == 'B' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
-                                    {{ $nilai->nilai_huruf ?? '-' }}
+                                <span class="px-2 py-1 rounded font-medium {{ in_array($nilai->grade, ['A+', 'A']) ? 'bg-green-100 text-green-800' : (in_array($nilai->grade, ['B+', 'B']) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
+                                    {{ $nilai->grade ?? '-' }}
                                 </span>
                             </td>
                         </tr>

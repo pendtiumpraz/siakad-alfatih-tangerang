@@ -83,7 +83,7 @@
                                                    min="0" 
                                                    max="100" 
                                                    step="0.01"
-                                                   value="{{ $existingNilaiItem ? $existingNilaiItem->nilai : '' }}"
+                                                   value="{{ $existingNilaiItem ? $existingNilaiItem->nilai_akhir : '' }}"
                                                    class="nilai-input w-full px-2 py-2 text-center border rounded focus:ring-2 focus:outline-none text-lg font-bold"
                                                    style="border-color: #D1D5DB;"
                                                    placeholder="0-100"
