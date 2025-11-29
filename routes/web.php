@@ -281,33 +281,33 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
 
     // Penggajian Dosen Management (Operator can also verify and pay)
     Route::prefix('penggajian-dosen')->name('penggajian.')->group(function() {
-        Route::get('/', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'index'])->name('index');
-        Route::get('/{id}', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'show'])->name('show');
-        Route::post('/{id}/verify', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'verify'])->name('verify');
-        Route::get('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'payment'])->name('payment');
-        Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
+        Route::get('/', [\App\Http\Controllers\Operator\PenggajianDosenController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\Operator\PenggajianDosenController::class, 'show'])->name('show');
+        Route::post('/{id}/verify', [\App\Http\Controllers\Operator\PenggajianDosenController::class, 'verify'])->name('verify');
+        Route::get('/{id}/payment', [\App\Http\Controllers\Operator\PenggajianDosenController::class, 'payment'])->name('payment');
+        Route::post('/{id}/payment', [\App\Http\Controllers\Operator\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
     });
 
     // Keuangan (Financial Accounting) - Operator can also manage
     Route::prefix('keuangan')->name('keuangan.')->group(function() {
-        Route::get('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('index');
-        Route::get('/create', [\App\Http\Controllers\Admin\KeuanganController::class, 'create'])->name('create');
-        Route::post('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'store'])->name('store');
-        Route::get('/semester/{semester}', [\App\Http\Controllers\Admin\KeuanganController::class, 'show'])->name('show');
-        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\KeuanganController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'update'])->name('update');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'destroy'])->name('destroy');
+        Route::get('/', [\App\Http\Controllers\Operator\KeuanganController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Operator\KeuanganController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Operator\KeuanganController::class, 'store'])->name('store');
+        Route::get('/semester/{semester}', [\App\Http\Controllers\Operator\KeuanganController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Operator\KeuanganController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\Http\Controllers\Operator\KeuanganController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Operator\KeuanganController::class, 'destroy'])->name('destroy');
     });
 
     // KRS Approval Management (Operator can also approve)
     Route::prefix('krs-approval')->name('krs-approval.')->group(function() {
-        Route::get('/', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'index'])->name('index');
-        Route::get('/prodi/{prodiId}', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'detail'])->name('detail');
-        Route::get('/mahasiswa/{mahasiswaId}', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'show'])->name('show');
-        Route::post('/prodi/{prodiId}/mass-approve', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'massApproveProdi'])->name('mass-approve-prodi');
-        Route::post('/mass-approve-selected', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'massApproveSelected'])->name('mass-approve-selected');
-        Route::post('/mahasiswa/{mahasiswaId}/approve', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'approve'])->name('approve');
-        Route::post('/mahasiswa/{mahasiswaId}/reject', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'reject'])->name('reject');
+        Route::get('/', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'index'])->name('index');
+        Route::get('/prodi/{prodiId}', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'detail'])->name('detail');
+        Route::get('/mahasiswa/{mahasiswaId}', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'show'])->name('show');
+        Route::post('/prodi/{prodiId}/mass-approve', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'massApproveProdi'])->name('mass-approve-prodi');
+        Route::post('/mass-approve-selected', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'massApproveSelected'])->name('mass-approve-selected');
+        Route::post('/mahasiswa/{mahasiswaId}/approve', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'approve'])->name('approve');
+        Route::post('/mahasiswa/{mahasiswaId}/reject', [\App\Http\Controllers\Operator\KrsApprovalController::class, 'reject'])->name('reject');
     });
 
     // Documentation
