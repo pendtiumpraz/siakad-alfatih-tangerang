@@ -180,8 +180,7 @@ class PembayaranController extends Controller
         $pembayarans = $query->paginate(20)->withQueryString();
 
         // Get filter options
-        $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_lengkap')
-            ->where('status', 'aktif')
+        $mahasiswas = Mahasiswa::select('id', 'nim', 'nama_lengkap', 'status')
             ->orderBy('nama_lengkap')
             ->get();
 
@@ -213,7 +212,6 @@ class PembayaranController extends Controller
     public function create()
     {
         $mahasiswas = Mahasiswa::with('programStudi')
-            ->where('status', 'aktif')
             ->orderBy('nama_lengkap')
             ->get();
 
