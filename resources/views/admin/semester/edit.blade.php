@@ -246,20 +246,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const wasActive = {{ $semester->is_active ? 'true' : 'false' }};
     
     form.addEventListener('submit', function(e) {
-        // Only show confirmation if checkbox is being checked (activating semester)
-        // AND it wasn't active before (changing from inactive to active)
-        if (isActiveCheckbox.checked && !wasActive) {
+        // Show confirmation if:
+        // 1. Activating semester (wasActive = false, now checked)
+        // 2. OR updating semester that's already active (wasActive = true, still checked)
+        if (isActiveCheckbox.checked) {
             e.preventDefault();
             
-            // Custom styled confirmation dialog
-            const confirmed = confirm(
-                "⚠️ PERHATIAN PENTING!\n\n" +
-                "Mengaktifkan semester ini akan:\n\n" +
-                "✓ Menonaktifkan semester yang sedang aktif\n" +
-                "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
-                "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n" +
-                "Apakah Anda yakin ingin melanjutkan?"
-            );
+            let message = "⚠️ PERHATIAN PENTING!\n\n";
+            
+            if (!wasActive) {
+                // Activating semester
+                message += "Mengaktifkan semester ini akan:\n\n" +
+                    "✓ Menonaktifkan semester yang sedang aktif\n" +
+                    "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
+                    "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n";
+            } else {
+                // Updating active semester
+                message += "Anda mengupdate semester yang SEDANG AKTIF!\n\n" +
+                    "Perubahan pada semester aktif dapat:\n\n" +
+                    "✓ Mempengaruhi akses mahasiswa ke KRS dan KHS\n" +
+                    "✓ Mempengaruhi pembayaran SPP yang sudah ada\n" +
+                    "✓ Mengubah periode akademik yang sedang berjalan\n\n" +
+                    "CATATAN: Mahasiswa yang belum lunas SPP TIDAK BISA mengakses KRS dan KHS\n\n";
+            }
+            
+            message += "Apakah Anda yakin ingin melanjutkan?";
+            
+            const confirmed = confirm(message);
             
             if (confirmed) {
                 // Submit the form
