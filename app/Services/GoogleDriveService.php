@@ -479,6 +479,34 @@ class GoogleDriveService
     }
 
     /**
+     * Upload bukti transaksi keuangan to Google Drive
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $jenis (pemasukan/pengeluaran)
+     * @param string $subKategori
+     * @return array
+     */
+    public function uploadKeuangan($file, string $jenis, string $subKategori): array
+    {
+        // Get or create Keuangan folder
+        $keuanganFolderId = $this->getOrCreateFolder('Keuangan', $this->rootFolderId);
+        
+        // Create subfolder by year
+        $year = now()->year;
+        $yearFolderId = $this->getOrCreateFolder($year, $keuanganFolderId);
+        
+        // Create subfolder by jenis
+        $jenisFolderId = $this->getOrCreateFolder(ucfirst($jenis), $yearFolderId);
+        
+        // Generate filename
+        $extension = $file->getClientOriginalExtension();
+        $timestamp = time();
+        $sanitizedSubKategori = preg_replace('/[^a-zA-Z0-9-_]/', '_', $subKategori);
+        $fileName = "Keuangan_{$jenis}_{$sanitizedSubKategori}_{$timestamp}.{$extension}";
+
+        return $this->uploadFileFromUploadedFile($file, $fileName, $jenisFolderId);
+    }
+
+    /**
      * Make file publicly accessible
      *
      * @param string $fileId
