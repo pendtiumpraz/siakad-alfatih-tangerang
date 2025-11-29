@@ -195,40 +195,44 @@
         text-decoration: underline;
     }
 
-    /* Action Buttons */
+    /* Floating Action Buttons - Pojok kanan bawah */
     .action-buttons {
-        margin-bottom: 20px;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
         display: flex;
+        flex-direction: column;
         gap: 12px;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 0 20px;
+        z-index: 1000;
     }
 
     .btn {
-        padding: 12px 24px;
-        border-radius: 8px;
+        padding: 14px 20px;
+        border-radius: 50px;
         text-decoration: none;
         color: white;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 500;
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
         cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        white-space: nowrap;
+        min-width: 160px;
+        justify-content: center;
     }
 
     .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        transform: scale(1.05) translateX(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     .btn:active {
-        transform: translateY(0);
+        transform: scale(0.98) translateX(-5px);
     }
 
     .btn i {
@@ -259,14 +263,26 @@
         background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
     }
 
-    @media (max-width: 640px) {
+    /* Mobile responsive */
+    @media (max-width: 768px) {
         .action-buttons {
-            flex-direction: column;
+            bottom: 20px;
+            right: 20px;
+            gap: 10px;
         }
 
         .btn {
-            width: 100%;
-            justify-content: center;
+            padding: 12px 16px;
+            font-size: 13px;
+            min-width: 140px;
+        }
+
+        .btn span {
+            display: none;
+        }
+
+        .btn i {
+            margin: 0;
         }
     }
 
@@ -344,22 +360,6 @@
         }
     }
 </style>
-
-<!-- Action Buttons (hidden on print) -->
-<div class="action-buttons">
-    <a href="{{ route('mahasiswa.khs.index') }}" class="btn btn-back">
-        <i class="fas fa-arrow-left"></i>
-        Kembali
-    </a>
-    <a href="{{ route('mahasiswa.khs.download-pdf', $khs->id) }}" class="btn btn-pdf">
-        <i class="fas fa-file-pdf"></i>
-        Download PDF
-    </a>
-    <button onclick="window.print()" class="btn btn-print">
-        <i class="fas fa-print"></i>
-        Print KHS
-    </button>
-</div>
 
 <!-- PDF Wrapper -->
 <div class="pdf-wrapper">
@@ -522,6 +522,22 @@
             <div style="clear: both;"></div>
         </div>
     </div>
+</div>
+
+<!-- Floating Action Buttons (hidden on print) -->
+<div class="action-buttons">
+    <a href="{{ route('mahasiswa.khs.index') }}" class="btn btn-back" title="Kembali ke Daftar KHS">
+        <i class="fas fa-arrow-left"></i>
+        <span>Kembali</span>
+    </a>
+    <a href="{{ route('mahasiswa.khs.download-pdf', $khs->id) }}" class="btn btn-pdf" title="Download KHS PDF">
+        <i class="fas fa-file-pdf"></i>
+        <span>Download PDF</span>
+    </a>
+    <button onclick="window.print()" class="btn btn-print" title="Print KHS">
+        <i class="fas fa-print"></i>
+        <span>Print KHS</span>
+    </button>
 </div>
 
 @endsection
