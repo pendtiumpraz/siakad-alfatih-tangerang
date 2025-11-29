@@ -506,7 +506,9 @@ class GoogleDriveService
         $sanitizedSubKategori = preg_replace('/[^a-zA-Z0-9-_]/', '_', $subKategori);
         $fileName = "Keuangan_{$jenis}_{$sanitizedSubKategori}_{$timestamp}.{$extension}";
 
-        return $this->uploadFileFromUploadedFile($file, $fileName, $jenisFolderId);
+        // Upload file
+        $tempPath = $file->getRealPath();
+        return $this->uploadFile($tempPath, $fileName, $jenisFolderId, $file->getMimeType());
     }
 
     /**
