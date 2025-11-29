@@ -23,7 +23,6 @@
         line-height: 1.2;
         color: #000;
         position: relative;
-        min-height: 297mm;
     }
 
     /* Watermark Background Logo */
@@ -38,8 +37,8 @@
     }
 
     .watermark img {
-        width: 500px;
-        height: 500px;
+        width: 700px;
+        height: 700px;
         object-fit: contain;
     }
 
@@ -262,6 +261,13 @@
             box-shadow: none !important;
             margin: 0 !important;
             padding: 15px 25px !important;
+            min-height: auto !important;
+        }
+
+        /* Ensure single page print */
+        @page {
+            size: A4 portrait;
+            margin: 0;
         }
 
         /* Ensure table is visible on print */
