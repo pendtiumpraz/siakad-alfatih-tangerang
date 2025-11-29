@@ -463,26 +463,16 @@
 <!-- Print Signature -->
 <div class="print-signature">
     @php
-        $carbon = \Carbon\Carbon::now();
-        $masehi = $carbon->isoFormat('DD MMMM YYYY');
-        $hijriMonths = [
-            1 => 'Muharram', 2 => 'Safar', 3 => 'Rabiul Awal', 4 => 'Rabiul Akhir',
-            5 => 'Jumadil Awal', 6 => 'Jumadil Akhir', 7 => 'Rajab', 8 => "Sya'ban",
-            9 => 'Ramadhan', 10 => 'Syawal', 11 => 'Dzulqaidah', 12 => 'Dzulhijjah'
-        ];
-        $gregorianYear = $carbon->year;
-        $hijriYear = $gregorianYear - 579;
-        $hijriMonth = $carbon->month;
-        $hijriDay = $carbon->day;
-        $hijriDate = $hijriDay . ' ' . $hijriMonths[$hijriMonth] . ' ' . $hijriYear . ' H';
+        $tanggalSekarang = \Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');
     @endphp
-    <p>Tangerang, {{ $hijriDate }}</p>
-    <p>{{ $masehi }} M</p>
+    <p>Tangerang, {{ $tanggalSekarang }}</p>
     <br>
     <p>PUKET I</p>
+    <br>
     <p>Bid. Akademik dan Pengembangan</p>
+    <br>
     <p>STAI AL FATIH</p>
-    <br><br>
+    <br><br><br>
     <p style="font-weight: bold; text-decoration: underline;">Satrio Purnomo Hidayat, M.Pd.</p>
 </div>
 
