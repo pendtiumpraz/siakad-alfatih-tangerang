@@ -128,10 +128,6 @@
                             id="approveSelectedBtn"
                             disabled
                             class="px-6 py-2 text-white rounded-lg transition font-semibold flex items-center gap-2"
-                            style="background-color: #16A34A;"
-                            onmouseover="if(!this.disabled) this.style.backgroundColor='#15803D'"
-                            onmouseout="if(!this.disabled) this.style.backgroundColor='#16A34A'"
-                            disabled style="background-color: #D1D5DB; cursor: not-allowed;"
                             onclick="return confirm('Approve KRS yang dipilih?\n\nHanya mahasiswa yang sudah bayar SPP yang akan di-approve.')">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -295,8 +291,31 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateSelectedCount() {
         const checkedCount = document.querySelectorAll('.mahasiswa-checkbox:checked').length;
         selectedCountSpan.textContent = `${checkedCount} dipilih`;
-        approveBtn.disabled = checkedCount === 0;
+        
+        // Enable/disable button and update styling
+        if (checkedCount === 0) {
+            approveBtn.disabled = true;
+            approveBtn.style.backgroundColor = '#D1D5DB';
+            approveBtn.style.cursor = 'not-allowed';
+        } else {
+            approveBtn.disabled = false;
+            approveBtn.style.backgroundColor = '#16A34A';
+            approveBtn.style.cursor = 'pointer';
+        }
     }
+
+    // Hover effect for enabled button
+    approveBtn.addEventListener('mouseenter', function() {
+        if (!this.disabled) {
+            this.style.backgroundColor = '#15803D';
+        }
+    });
+
+    approveBtn.addEventListener('mouseleave', function() {
+        if (!this.disabled) {
+            this.style.backgroundColor = '#16A34A';
+        }
+    });
 
     selectAllCheckbox.addEventListener('change', function() {
         mahasiswaCheckboxes.forEach(checkbox => {
@@ -317,6 +336,9 @@ document.addEventListener('DOMContentLoaded', function() {
             selectAllCheckbox.indeterminate = someChecked && !allChecked;
         });
     });
+
+    // Initialize on page load
+    updateSelectedCount();
 });
 </script>
 @endpush
