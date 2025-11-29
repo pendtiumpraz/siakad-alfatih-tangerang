@@ -251,6 +251,12 @@
                     <span class="ml-3">Penggajian Dosen</span>
                 </a>
 
+                <!-- Keuangan -->
+                <a href="{{ route('admin.keuangan.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.keuangan.*') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="ml-3">Keuangan</span>
+                </a>
+
                 <!-- SPMB -->
                 <a href="{{ route('admin.spmb.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.spmb.*') ? 'active' : '' }}">
                     <i class="fas fa-user-graduate w-5"></i>

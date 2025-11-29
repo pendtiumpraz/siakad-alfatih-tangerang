@@ -181,6 +181,17 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
         Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
     });
 
+    // Keuangan (Financial Accounting)
+    Route::prefix('keuangan')->name('keuangan.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\KeuanganController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'store'])->name('store');
+        Route::get('/semester/{semester}', [\App\Http\Controllers\Admin\KeuanganController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\KeuanganController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'destroy'])->name('destroy');
+    });
+
     // KRS Approval Management
     Route::prefix('krs-approval')->name('krs-approval.')->group(function() {
         Route::get('/', [\App\Http\Controllers\Admin\KrsApprovalController::class, 'index'])->name('index');
@@ -274,6 +285,17 @@ Route::middleware(['auth', 'role:operator'])->prefix('operator')->name('operator
         Route::post('/{id}/verify', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'verify'])->name('verify');
         Route::get('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'payment'])->name('payment');
         Route::post('/{id}/payment', [\App\Http\Controllers\Admin\PenggajianDosenController::class, 'storePayment'])->name('storePayment');
+    });
+
+    // Keuangan (Financial Accounting) - Operator can also manage
+    Route::prefix('keuangan')->name('keuangan.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\KeuanganController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\KeuanganController::class, 'store'])->name('store');
+        Route::get('/semester/{semester}', [\App\Http\Controllers\Admin\KeuanganController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\KeuanganController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'update'])->name('update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\KeuanganController::class, 'destroy'])->name('destroy');
     });
 
     // KRS Approval Management (Operator can also approve)
