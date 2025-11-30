@@ -29,8 +29,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 700px;
-            height: 700px;
+            width: 900px;
+            height: 900px;
             background-image: url('{{ asset('images/logo-alfatih.png') }}');
             background-size: contain;
             background-repeat: no-repeat;
@@ -48,19 +48,19 @@
 
         /* Kop Surat */
         .kop-surat {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .kop-content {
             display: flex;
             align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 10px;
+            gap: 25px;
+            margin-bottom: 15px;
         }
 
         .kop-logo {
-            width: 80px;
-            height: 80px;
+            width: 150px;
+            height: 150px;
             flex-shrink: 0;
         }
 
@@ -70,20 +70,22 @@
         }
 
         .kop-text h1 {
-            font-size: 18pt;
+            font-size: 28pt;
             font-weight: bold;
             color: #2D5F3F;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
 
         .kop-text p {
-            font-size: 10pt;
+            font-size: 15pt;
             color: #2D5F3F;
-            margin: 2px 0;
+            margin: 1px 0;
+            line-height: 1.3;
         }
 
         .garis-double {
-            margin-top: 10px;
+            margin-top: 2px;
         }
 
         .garis-tipis {
@@ -92,7 +94,7 @@
         }
 
         .garis-tebal {
-            border-top: 3px solid #000;
+            border-top: 4px solid #000;
         }
 
         /* Header Title KHS */

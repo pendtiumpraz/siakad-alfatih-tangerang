@@ -32,8 +32,8 @@
         }
 
         .watermark img {
-            width: 500px;
-            height: 500px;
+            width: 600px;
+            height: 600px;
             object-fit: contain;
         }
 
@@ -45,24 +45,24 @@
 
         /* Kop Surat */
         .kop-surat {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .kop-content {
             display: table;
             width: 100%;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .kop-logo {
             display: table-cell;
-            width: 60px;
+            width: 140px;
             vertical-align: top;
         }
 
         .kop-logo img {
-            width: 60px;
-            height: 60px;
+            width: 140px;
+            height: 140px;
         }
 
         .kop-text {
@@ -73,15 +73,16 @@
         }
 
         .kop-text h1 {
-            font-size: 14pt;
+            font-size: 26pt;
             font-weight: bold;
             color: #2D5F3F;
-            margin-bottom: 3px;
-            line-height: 1.1;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
         }
 
         .kop-text p {
-            font-size: 8pt;
+            font-size: 14pt;
             color: #000;
             margin: 1px 0;
             line-height: 1.3;
@@ -89,8 +90,8 @@
 
         .kop-divider {
             border: 0;
-            border-top: 2px solid #2D5F3F;
-            margin: 5px 0 10px 0;
+            border-top: 3px solid #2D5F3F;
+            margin: 1px 0 12px 0;
         }
 
         /* Document Title */
