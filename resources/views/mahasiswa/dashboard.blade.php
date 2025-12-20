@@ -154,8 +154,19 @@
                     <div class="flex-1">
                         <h4 class="font-semibold text-gray-800">{{ $jadwal->mataKuliah->nama_mk ?? 'Mata Kuliah' }}</h4>
                         <p class="text-sm text-gray-600">
-                            {{ $jadwal->ruangan->nama_ruangan ?? '-' }} |
-                            {{ $jadwal->dosen->nama_lengkap ?? '-' }}
+                            @if($jadwal->ruangan && ($jadwal->ruangan->tipe ?? 'luring') === 'daring')
+                                <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">
+                                    <i class="fas fa-globe mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                </span>
+                                @if($jadwal->ruangan->url)
+                                    <a href="{{ $jadwal->ruangan->url }}" target="_blank" class="text-blue-600 hover:underline ml-1">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                @endif
+                            @else
+                                {{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                            @endif
+                            | {{ $jadwal->dosen->nama_lengkap ?? '-' }}
                         </p>
                     </div>
                 </div>

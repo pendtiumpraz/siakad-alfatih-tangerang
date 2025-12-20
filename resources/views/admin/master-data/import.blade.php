@@ -193,7 +193,8 @@
             
             <div class="mt-3 pt-3 border-t border-gray-200">
                 <p class="text-xs text-gray-600 font-semibold mb-1">Format CSV:</p>
-                <code class="text-xs bg-gray-100 px-2 py-1 rounded block overflow-x-auto">kode_ruangan, nama_ruangan, kapasitas, jenis, fasilitas, is_available</code>
+                <code class="text-xs bg-gray-100 px-2 py-1 rounded block overflow-x-auto">kode_ruangan, nama_ruangan, kapasitas, tipe, url, fasilitas, is_available</code>
+                <p class="text-xs text-gray-500 mt-1">tipe: daring/luring | url: link meeting (untuk daring)</p>
             </div>
         </div>
 

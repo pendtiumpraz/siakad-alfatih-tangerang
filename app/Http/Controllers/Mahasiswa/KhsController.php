@@ -17,6 +17,29 @@ class KhsController extends Controller
         $user = auth()->user();
         $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
+        // Check if mahasiswa has paid SPP
+        // Allow both 'lunas' (fully paid) and 'belum_lunas' (negotiated/partial) to access KHS
+        // Only block if payment is still 'pending' (not paid at all)
+        $activeSemester = \App\Models\Semester::where('is_active', true)->first();
+        
+        if ($activeSemester) {
+            $sppPayment = \App\Models\Pembayaran::where('mahasiswa_id', $mahasiswa->id)
+                ->where('semester_id', $activeSemester->id)
+                ->where('jenis_pembayaran', 'spp')
+                ->first();
+
+            $hasPaidOrNegotiated = $sppPayment && in_array($sppPayment->status, ['lunas', 'belum_lunas']);
+
+            if (!$hasPaidOrNegotiated) {
+                return view('mahasiswa.khs.blocked', [
+                    'reason' => 'Anda belum melakukan pembayaran SPP untuk semester ini. Silakan lakukan pembayaran atau hubungi bagian keuangan untuk negosiasi pembayaran.',
+                    'semester' => $activeSemester,
+                    'mahasiswa' => $mahasiswa,
+                    'type' => 'warning'
+                ]);
+            }
+        }
+
         $khsList = Khs::where('mahasiswa_id', $mahasiswa->id)
             ->with('semester')
             ->orderBy('created_at', 'desc')

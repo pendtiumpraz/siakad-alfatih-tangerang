@@ -75,8 +75,21 @@ class KurikulumController extends Controller
         // Load relations with counts
         $query->with('programStudi')->withCount('mataKuliahs');
 
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['nama_kurikulum', 'tahun_mulai', 'tahun_selesai', 'total_sks', 'is_active', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
         // Pagination
-        $kurikulums = $query->orderBy('tahun_mulai', 'desc')->paginate(15)->withQueryString();
+        $kurikulums = $query->orderBy($sortColumn, $sortDirection)->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalKurikulum = Kurikulum::count();
@@ -92,7 +105,9 @@ class KurikulumController extends Controller
             'programStudis',
             'totalKurikulum',
             'totalAktif',
-            'totalTidakAktif'
+            'totalTidakAktif',
+            'sortColumn',
+            'sortDirection'
         ));
     }
 

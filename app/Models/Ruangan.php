@@ -14,7 +14,9 @@ class Ruangan extends Model
         'kode_ruangan',
         'nama_ruangan',
         'kapasitas',
-        'jenis', // offline or online
+        'jenis', // offline or online (legacy)
+        'tipe', // daring or luring
+        'url', // for daring rooms
         'fasilitas',
         'is_available',
     ];
@@ -23,6 +25,22 @@ class Ruangan extends Model
         'kapasitas' => 'integer',
         'is_available' => 'boolean',
     ];
+
+    /**
+     * Check if room is online/daring
+     */
+    public function isDaring(): bool
+    {
+        return $this->tipe === 'daring';
+    }
+
+    /**
+     * Check if room is offline/luring
+     */
+    public function isLuring(): bool
+    {
+        return $this->tipe === 'luring';
+    }
 
     /**
      * Relationships

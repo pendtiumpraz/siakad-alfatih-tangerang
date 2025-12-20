@@ -95,11 +95,12 @@
                         </th>
                         @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Kode Ruangan</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama Ruangan</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Kapasitas</th>
+                        <x-sortable-header column="kode_ruangan" label="Kode Ruangan" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="nama_ruangan" label="Nama Ruangan" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="tipe" label="Tipe" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
+                        <x-sortable-header column="kapasitas" label="Kapasitas" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Fasilitas</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Status</th>
+                        <x-sortable-header column="is_available" label="Status" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
                         <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -123,6 +124,24 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                 {{ $ruangan->nama_ruangan }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                @if(($ruangan->tipe ?? 'luring') === 'daring')
+                                    <div class="flex flex-col items-center">
+                                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                                            <i class="fas fa-globe mr-1"></i> Daring
+                                        </span>
+                                        @if($ruangan->url)
+                                            <a href="{{ $ruangan->url }}" target="_blank" class="text-xs text-blue-600 hover:underline mt-1" title="{{ $ruangan->url }}">
+                                                <i class="fas fa-external-link-alt mr-1"></i>Link
+                                            </a>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                                        <i class="fas fa-building mr-1"></i> Luring
+                                    </span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                 <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">

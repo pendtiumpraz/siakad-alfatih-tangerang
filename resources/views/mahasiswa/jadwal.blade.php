@@ -56,7 +56,26 @@
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $jadwal->mataKuliah->nama_mk }}</td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $jadwal->dosen->nama_lengkap ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $jadwal->kelas }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500">{{ $jadwal->ruangan->nama_ruangan ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                @if($jadwal->ruangan)
+                                    @if(($jadwal->ruangan->tipe ?? 'luring') === 'daring')
+                                        <div class="flex flex-col">
+                                            <span class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded mb-1 w-fit">
+                                                <i class="fas fa-globe mr-1"></i> {{ $jadwal->ruangan->nama_ruangan }}
+                                            </span>
+                                            @if($jadwal->ruangan->url)
+                                                <a href="{{ $jadwal->ruangan->url }}" target="_blank" class="text-xs text-blue-600 hover:underline">
+                                                    <i class="fas fa-external-link-alt mr-1"></i>Buka Link Meeting
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-gray-500">{{ $jadwal->ruangan->nama_ruangan }}</span>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

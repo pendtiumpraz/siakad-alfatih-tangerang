@@ -68,6 +68,48 @@
                         @enderror
                     </div>
 
+                    <!-- Tipe Ruangan & URL -->
+                    <div class="md:col-span-2" x-data="{ tipe: '{{ old('tipe', $ruangan->tipe ?? 'luring') }}' }">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Tipe Ruangan -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Tipe Ruangan <span class="text-red-500">*</span>
+                                </label>
+                                <div class="flex space-x-4">
+                                    <label class="flex items-center px-4 py-3 bg-gray-50 border-2 rounded-lg cursor-pointer hover:bg-gray-100 transition" :class="tipe === 'luring' ? 'border-[#2D5F3F] bg-green-50' : 'border-gray-200'">
+                                        <input type="radio" name="tipe" value="luring" x-model="tipe" class="mr-2" required>
+                                        <span class="font-medium" :class="tipe === 'luring' ? 'text-[#2D5F3F]' : 'text-gray-700'">
+                                            <i class="fas fa-building mr-1"></i> Luring
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center px-4 py-3 bg-gray-50 border-2 rounded-lg cursor-pointer hover:bg-gray-100 transition" :class="tipe === 'daring' ? 'border-blue-500 bg-blue-50' : 'border-gray-200'">
+                                        <input type="radio" name="tipe" value="daring" x-model="tipe" class="mr-2" required>
+                                        <span class="font-medium" :class="tipe === 'daring' ? 'text-blue-600' : 'text-gray-700'">
+                                            <i class="fas fa-globe mr-1"></i> Daring
+                                        </span>
+                                    </label>
+                                </div>
+                                @error('tipe')
+                                    <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
+                                @enderror
+                                <p class="mt-1 text-xs text-gray-500">Luring = Tatap Muka, Daring = Online</p>
+                            </div>
+
+                            <!-- URL (for Daring) -->
+                            <div x-show="tipe === 'daring'" x-cloak>
+                                <label for="url" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    URL Meeting <span class="text-red-500">*</span>
+                                </label>
+                                <input type="url" name="url" id="url" value="{{ old('url', $ruangan->url) }}" class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('url') border-red-500 @enderror" placeholder="https://meet.google.com/xxx">
+                                @error('url')
+                                    <p class="mt-1 text-sm text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
+                                @enderror
+                                <p class="mt-1 text-xs text-gray-500">Link Zoom, Google Meet, dll</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Fasilitas -->
                     <div class="md:col-span-2">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">

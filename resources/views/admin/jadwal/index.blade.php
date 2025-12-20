@@ -27,7 +27,14 @@
     <!-- Filter Section -->
     <x-islamic-card title="Filter">
         <form method="GET" action="{{ route('admin.jadwal.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Search -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Cari Mata Kuliah</label>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Kode/Nama MK..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                </div>
+
+                <!-- Jenis Semester -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Semester</label>
                     <select name="jenis_semester" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
@@ -37,6 +44,7 @@
                     </select>
                 </div>
 
+                <!-- Hari -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Hari</label>
                     <select name="hari" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
@@ -51,7 +59,41 @@
                     </select>
                 </div>
 
-                <div class="flex items-end space-x-2">
+                <!-- Dosen -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Dosen</label>
+                    <select name="dosen_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="">Semua Dosen</option>
+                        @foreach($dosens as $dosen)
+                            <option value="{{ $dosen->id }}" {{ request('dosen_id') == $dosen->id ? 'selected' : '' }}>{{ $dosen->nama_lengkap }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Mata Kuliah -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Mata Kuliah</label>
+                    <select name="mata_kuliah_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="">Semua Mata Kuliah</option>
+                        @foreach($mataKuliahs as $mk)
+                            <option value="{{ $mk->id }}" {{ request('mata_kuliah_id') == $mk->id ? 'selected' : '' }}>{{ $mk->kode_mk }} - {{ $mk->nama_mk }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Ruangan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ruangan</label>
+                    <select name="ruangan_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option value="">Semua Ruangan</option>
+                        @foreach($ruangans as $ruangan)
+                            <option value="{{ $ruangan->id }}" {{ request('ruangan_id') == $ruangan->id ? 'selected' : '' }}>{{ $ruangan->nama_ruangan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="flex items-end space-x-2 lg:col-span-2">
                     <button type="submit" class="flex-1 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold">
                         <i class="fas fa-filter mr-2"></i>Terapkan
                     </button>
@@ -70,21 +112,21 @@
     <x-islamic-card title="Daftar Jadwal (Klik untuk Edit)">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-green-200 border border-green-200 rounded-lg" id="jadwalTable">
-                <thead class="bg-gradient-to-r from-green-600 to-green-700">
+                <thead class="bg-gradient-to-r from-green-600 to-green-700 text-white">
                     <tr>
                         <th class="px-4 py-3 text-left">
                             <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
                         </th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jenis Semester</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Mata Kuliah</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Dosen</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Hari</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam Mulai</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jam Selesai</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Kelas</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Ruangan</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">Hapus</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold uppercase w-16">No</th>
+                        <x-sortable-header column="jenis_semester" label="Jenis Semester" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Mata Kuliah</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Dosen</th>
+                        <x-sortable-header column="hari" label="Hari" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="jam_mulai" label="Jam Mulai" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="jam_selesai" label="Jam Selesai" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="kelas" label="Kelas" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Ruangan</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold uppercase w-24">Hapus</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

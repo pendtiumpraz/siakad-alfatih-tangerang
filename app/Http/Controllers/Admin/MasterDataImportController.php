@@ -171,7 +171,8 @@ class MasterDataImportController extends Controller
             'kode_ruangan' => 'required|string|max:20|unique:ruangans,kode_ruangan',
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1',
-            'jenis' => 'required|in:offline,online',
+            'tipe' => 'required|in:daring,luring,Daring,Luring',
+            'url' => 'nullable|url|max:500',
             'fasilitas' => 'nullable|string',
             'is_available' => 'required|in:1,0,Ya,Tidak,TRUE,FALSE'
         ];
@@ -181,11 +182,13 @@ class MasterDataImportController extends Controller
             Ruangan::class,
             $validationRules,
             function($row) {
+                $tipe = strtolower($row['tipe']);
                 return [
                     'kode_ruangan' => $row['kode_ruangan'],
                     'nama_ruangan' => $row['nama_ruangan'],
                     'kapasitas' => $row['kapasitas'],
-                    'jenis' => strtolower($row['jenis']),
+                    'tipe' => $tipe,
+                    'url' => $tipe === 'daring' ? ($row['url'] ?? null) : null,
                     'fasilitas' => $row['fasilitas'] ?? null,
                     'is_available' => in_array(strtolower($row['is_available']), ['1', 'ya', 'true']) ? 1 : 0,
                 ];
@@ -360,7 +363,7 @@ class MasterDataImportController extends Controller
      */
     public function downloadTemplateRuangan()
     {
-        $headers = ['kode_ruangan', 'nama_ruangan', 'kapasitas', 'jenis', 'fasilitas', 'is_available'];
+        $headers = ['kode_ruangan', 'nama_ruangan', 'kapasitas', 'tipe', 'url', 'fasilitas', 'is_available'];
         
         // Get sample data
         $sample = Ruangan::first();
@@ -368,10 +371,11 @@ class MasterDataImportController extends Controller
             $sample->kode_ruangan,
             $sample->nama_ruangan,
             $sample->kapasitas,
-            $sample->jenis,
+            $sample->tipe ?? 'luring',
+            $sample->url ?? '',
             $sample->fasilitas ?? '',
             $sample->is_available ? '1' : '0'
-        ] : ['R101', 'Ruang Kuliah 101', '40', 'offline', 'Proyektor, AC, Whiteboard', '1'];
+        ] : ['R101', 'Ruang Kuliah 101', '40', 'luring', '', 'Proyektor, AC, Whiteboard', '1'];
         
         return $this->csvService->generateTemplateWithExample($headers, $exampleRow, 'template_ruangan.csv');
     }

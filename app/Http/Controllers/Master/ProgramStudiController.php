@@ -85,14 +85,27 @@ class ProgramStudiController extends Controller
         // Load relations with counts
         $query->withCount(['kurikulums', 'mahasiswas']);
 
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['kode_prodi', 'nama_prodi', 'jenjang', 'akreditasi', 'is_active', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
         // Pagination
-        $programStudis = $query->orderBy('kode_prodi', 'asc')->paginate(15)->withQueryString();
+        $programStudis = $query->orderBy($sortColumn, $sortDirection)->paginate(15)->withQueryString();
 
         // Statistics
         $totalProgramStudi = ProgramStudi::count();
 
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.program-studi.index", compact('programStudis', 'totalProgramStudi'));
+        return view("{$viewPrefix}.program-studi.index", compact('programStudis', 'totalProgramStudi', 'sortColumn', 'sortDirection'));
     }
 
     /**

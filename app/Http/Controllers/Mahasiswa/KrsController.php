@@ -41,15 +41,18 @@ class KrsController extends Controller
         }
 
         // Check if mahasiswa has paid SPP for this semester
-        $hasPaidSPP = Pembayaran::where('mahasiswa_id', $mahasiswa->id)
+        // Allow both 'lunas' (fully paid) and 'belum_lunas' (negotiated/partial) to access KRS
+        // Only block if payment is still 'pending' (not paid at all)
+        $sppPayment = Pembayaran::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $activeSemester->id)
             ->where('jenis_pembayaran', 'spp')
-            ->where('status', 'lunas')
-            ->exists();
+            ->first();
 
-        if (!$hasPaidSPP) {
+        $hasPaidOrNegotiated = $sppPayment && in_array($sppPayment->status, ['lunas', 'belum_lunas']);
+
+        if (!$hasPaidOrNegotiated) {
             return view('mahasiswa.krs.blocked', [
-                'reason' => 'Anda belum membayar SPP untuk semester ini. Silakan lunasi pembayaran SPP terlebih dahulu untuk mengisi KRS.',
+                'reason' => 'Anda belum melakukan pembayaran SPP untuk semester ini. Silakan lakukan pembayaran atau hubungi bagian keuangan untuk negosiasi pembayaran.',
                 'semester' => $activeSemester,
                 'mahasiswa' => $mahasiswa,
                 'type' => 'warning'

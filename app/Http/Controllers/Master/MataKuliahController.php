@@ -85,8 +85,21 @@ class MataKuliahController extends Controller
         $query->with('kurikulum.programStudi')
             ->withCount(['jadwals', 'nilais']);
 
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['kode_mk', 'nama_mk', 'sks', 'semester', 'jenis', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
         // Pagination
-        $mataKuliahs = $query->orderBy('kode_mk', 'asc')->paginate(15)->withQueryString();
+        $mataKuliahs = $query->orderBy($sortColumn, $sortDirection)->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalMataKuliah = MataKuliah::count();
@@ -106,7 +119,9 @@ class MataKuliahController extends Controller
             'totalMataKuliah',
             'totalSKS',
             'totalWajib',
-            'totalPilihan'
+            'totalPilihan',
+            'sortColumn',
+            'sortDirection'
         ));
     }
 

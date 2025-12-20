@@ -33,6 +33,21 @@ class JadwalController extends Controller
             $query->where('hari', $request->hari);
         }
 
+        // Filter by dosen
+        if ($request->filled('dosen_id')) {
+            $query->where('dosen_id', $request->dosen_id);
+        }
+
+        // Filter by mata kuliah
+        if ($request->filled('mata_kuliah_id')) {
+            $query->where('mata_kuliah_id', $request->mata_kuliah_id);
+        }
+
+        // Filter by ruangan
+        if ($request->filled('ruangan_id')) {
+            $query->where('ruangan_id', $request->ruangan_id);
+        }
+
         // Search by mata kuliah name
         if ($request->filled('search')) {
             $query->whereHas('mataKuliah', function($q) use ($request) {
@@ -41,16 +56,28 @@ class JadwalController extends Controller
             });
         }
 
-        $jadwals = $query->orderBy('jenis_semester', 'asc') // ganjil first, genap second
-            ->orderBy('hari')
-            ->orderBy('jam_mulai')
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['jenis_semester', 'hari', 'jam_mulai', 'jam_selesai', 'kelas', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
+        $jadwals = $query->orderBy($sortColumn, $sortDirection)
             ->paginate(20)->withQueryString();
 
         // Get all data for dropdowns
         $dosens = Dosen::orderBy('nama_lengkap')->get();
-        $ruangans = Ruangan::where('is_available', true)->orderBy('nama_ruangan')->get();
+        $ruangans = Ruangan::orderBy('nama_ruangan')->get();
+        $mataKuliahs = MataKuliah::with('kurikulum.programStudi')->orderBy('nama_mk')->get();
 
-        return view('admin.jadwal.index', compact('jadwals', 'dosens', 'ruangans'));
+        return view('admin.jadwal.index', compact('jadwals', 'dosens', 'ruangans', 'mataKuliahs', 'sortColumn', 'sortDirection'));
     }
 
     /**

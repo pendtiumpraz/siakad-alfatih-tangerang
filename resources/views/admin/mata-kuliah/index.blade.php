@@ -164,12 +164,12 @@
                         </th>
                         @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Kode MK</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama Mata Kuliah</th>
+                        <x-sortable-header column="kode_mk" label="Kode MK" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="nama_mk" label="Nama Mata Kuliah" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Kurikulum</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">SKS</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Semester</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Jenis</th>
+                        <x-sortable-header column="sks" label="SKS" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
+                        <x-sortable-header column="semester" label="Semester" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
+                        <x-sortable-header column="jenis" label="Jenis" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
                         <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>

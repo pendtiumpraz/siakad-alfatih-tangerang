@@ -110,10 +110,10 @@
                         @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Program Studi</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama Kurikulum</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Periode</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Total SKS</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
+                        <x-sortable-header column="nama_kurikulum" label="Nama Kurikulum" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="tahun_mulai" label="Periode" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="total_sks" label="Total SKS" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="is_active" label="Status" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
                         <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>

@@ -111,12 +111,27 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ date('H:i', strtotime($jadwal->jam_mulai)) }} - {{ date('H:i', strtotime($jadwal->jam_selesai)) }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                <td class="px-6 py-4 text-sm text-gray-900">
                                     @if($jadwal->ruangan)
-                                        <span class="text-xs text-gray-500 block">
-                                            {{ ucfirst($jadwal->ruangan->jenis) }} ({{ $jadwal->ruangan->kapasitas }} orang)
-                                        </span>
+                                        @if(($jadwal->ruangan->tipe ?? 'luring') === 'daring')
+                                            <div class="flex flex-col">
+                                                <span class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded w-fit">
+                                                    <i class="fas fa-globe mr-1"></i> {{ $jadwal->ruangan->nama_ruangan }}
+                                                </span>
+                                                @if($jadwal->ruangan->url)
+                                                    <a href="{{ $jadwal->ruangan->url }}" target="_blank" class="text-xs text-blue-600 hover:underline mt-1">
+                                                        <i class="fas fa-external-link-alt mr-1"></i>Buka Link Meeting
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span>{{ $jadwal->ruangan->nama_ruangan }}</span>
+                                            <span class="text-xs text-gray-500 block">
+                                                Luring ({{ $jadwal->ruangan->kapasitas }} orang)
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="text-gray-400">-</span>
                                     @endif
                                 </td>
                             </tr>

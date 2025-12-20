@@ -53,6 +53,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Kode</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Nama Ruangan</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase">Tipe</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase">Kapasitas</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Fasilitas</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase">Status</th>
@@ -67,6 +68,24 @@
                         </td>
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $ruangan->kode_ruangan }}</td>
                         <td class="px-4 py-3 text-sm text-gray-800">{{ $ruangan->nama_ruangan }}</td>
+                        <td class="px-4 py-3 text-center">
+                            @if(($ruangan->tipe ?? 'luring') === 'daring')
+                                <div class="flex flex-col items-center">
+                                    <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                                        <i class="fas fa-globe mr-1"></i> Daring
+                                    </span>
+                                    @if($ruangan->url)
+                                        <a href="{{ $ruangan->url }}" target="_blank" class="text-xs text-blue-600 hover:underline mt-1">
+                                            <i class="fas fa-external-link-alt mr-1"></i>Link
+                                        </a>
+                                    @endif
+                                </div>
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                                    <i class="fas fa-building mr-1"></i> Luring
+                                </span>
+                            @endif
+                        </td>
                         <td class="px-4 py-3 text-center">
                             <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +142,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>

@@ -96,10 +96,10 @@
                             <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Semester</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Tahun Akademik</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Periode</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Status</th>
+                        <x-sortable-header column="nama_semester" label="Semester" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="tahun_akademik" label="Tahun Akademik" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="tanggal_mulai" label="Periode" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" />
+                        <x-sortable-header column="is_active" label="Status" :currentSort="$sortColumn ?? 'updated_at'" :currentDirection="$sortDirection ?? 'desc'" class="text-center" />
                         <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>

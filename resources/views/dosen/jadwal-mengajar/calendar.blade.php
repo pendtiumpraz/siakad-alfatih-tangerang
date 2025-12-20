@@ -110,7 +110,19 @@
                                                     <i class="fas fa-clock mr-1"></i>{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
                                                 </div>
                                                 <div class="text-gray-600">
-                                                    <i class="fas fa-door-open mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }} | Kelas {{ $jadwal->kelas }}
+                                                    @if($jadwal->ruangan && ($jadwal->ruangan->tipe ?? 'luring') === 'daring')
+                                                        <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">
+                                                            <i class="fas fa-globe mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                                        </span>
+                                                        @if($jadwal->ruangan->url)
+                                                            <a href="{{ $jadwal->ruangan->url }}" target="_blank" class="block text-blue-600 hover:underline mt-1">
+                                                                <i class="fas fa-external-link-alt mr-1"></i>Link Meeting
+                                                            </a>
+                                                        @endif
+                                                    @else
+                                                        <i class="fas fa-door-open mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                                    @endif
+                                                    | Kelas {{ $jadwal->kelas }}
                                                 </div>
                                                 @if($jadwal->mataKuliah && $jadwal->mataKuliah->kurikulum && $jadwal->mataKuliah->kurikulum->programStudi)
                                                     <div class="text-green-600 mt-1 font-semibold">

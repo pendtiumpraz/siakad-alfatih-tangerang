@@ -105,7 +105,17 @@
                                                     <i class="fas fa-clock mr-1"></i>{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
                                                 </div>
                                                 <div class="text-gray-600">
-                                                    <i class="fas fa-door-open mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }} | Kelas {{ $jadwal->kelas }}
+                                                    @if($jadwal->ruangan && ($jadwal->ruangan->tipe ?? 'luring') === 'daring')
+                                                        <i class="fas fa-globe mr-1 text-blue-600"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                                        @if($jadwal->ruangan->url)
+                                                            <a href="{{ $jadwal->ruangan->url }}" target="_blank" class="text-blue-600 hover:underline ml-1" title="Buka Link Meeting">
+                                                                <i class="fas fa-external-link-alt"></i>
+                                                            </a>
+                                                        @endif
+                                                    @else
+                                                        <i class="fas fa-door-open mr-1"></i>{{ $jadwal->ruangan->nama_ruangan ?? '-' }}
+                                                    @endif
+                                                    | Kelas {{ $jadwal->kelas }}
                                                 </div>
                                                 @if($jadwal->mataKuliah && $jadwal->mataKuliah->kurikulum && $jadwal->mataKuliah->kurikulum->programStudi)
                                                     <div class="text-green-600 mt-1 font-semibold">

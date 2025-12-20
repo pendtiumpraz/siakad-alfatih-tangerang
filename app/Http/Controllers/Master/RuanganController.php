@@ -83,8 +83,21 @@ class RuanganController extends Controller
         // Load relations with counts
         $query->withCount('jadwals');
 
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['kode_ruangan', 'nama_ruangan', 'kapasitas', 'tipe', 'is_available', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
         // Pagination
-        $ruangans = $query->orderBy('kode_ruangan', 'asc')->paginate(15)->withQueryString();
+        $ruangans = $query->orderBy($sortColumn, $sortDirection)->paginate(15)->withQueryString();
 
         // Calculate statistics (only for non-trashed)
         $totalRuangan = Ruangan::count();
@@ -98,7 +111,9 @@ class RuanganController extends Controller
             'totalRuangan',
             'totalTersedia',
             'totalTidakTersedia',
-            'totalKapasitas'
+            'totalKapasitas',
+            'sortColumn',
+            'sortDirection'
         ));
     }
 
@@ -126,6 +141,8 @@ class RuanganController extends Controller
             ],
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1|max:500',
+            'tipe' => 'required|in:daring,luring',
+            'url' => 'nullable|url|max:500|required_if:tipe,daring',
             'fasilitas' => 'nullable|string',
             'is_available' => 'boolean'
         ]);
@@ -136,6 +153,11 @@ class RuanganController extends Controller
             // Set default value for is_available if not provided
             if (!isset($validated['is_available'])) {
                 $validated['is_available'] = true;
+            }
+
+            // Clear URL if not daring
+            if ($validated['tipe'] !== 'daring') {
+                $validated['url'] = null;
             }
 
             Ruangan::create($validated);
@@ -195,12 +217,19 @@ class RuanganController extends Controller
             ],
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1|max:500',
+            'tipe' => 'required|in:daring,luring',
+            'url' => 'nullable|url|max:500|required_if:tipe,daring',
             'fasilitas' => 'nullable|string',
             'is_available' => 'boolean'
         ]);
 
         try {
             DB::beginTransaction();
+
+            // Clear URL if not daring
+            if ($validated['tipe'] !== 'daring') {
+                $validated['url'] = null;
+            }
 
             $ruangan->update($validated);
 

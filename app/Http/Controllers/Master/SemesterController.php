@@ -53,13 +53,25 @@ class SemesterController extends Controller
         // Load relations with counts
         $query->withCount(['jadwals', 'khs']);
 
+        // Sorting - default by updated_at desc
+        $sortColumn = $request->get('sort', 'updated_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        // Validate sort column to prevent SQL injection
+        $allowedSortColumns = ['nama_semester', 'tahun_akademik', 'jenis', 'tanggal_mulai', 'tanggal_selesai', 'is_active', 'created_at', 'updated_at'];
+        if (!in_array($sortColumn, $allowedSortColumns)) {
+            $sortColumn = 'updated_at';
+        }
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'desc';
+        }
+
         // Pagination
-        $semesters = $query->orderBy('tahun_akademik', 'desc')
-            ->orderBy('jenis', 'asc')
+        $semesters = $query->orderBy($sortColumn, $sortDirection)
             ->paginate(15)->withQueryString();
 
         $viewPrefix = $this->getViewPrefix();
-        return view("{$viewPrefix}.semester.index", compact('semesters'));
+        return view("{$viewPrefix}.semester.index", compact('semesters', 'sortColumn', 'sortDirection'));
     }
 
     /**
