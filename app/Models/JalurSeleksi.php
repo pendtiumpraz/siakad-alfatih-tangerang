@@ -8,17 +8,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class JalurSeleksi extends Model
 {
     protected $fillable = [
+        'kode_jalur',
         'nama',
         'deskripsi',
         'biaya_pendaftaran',
         'is_active',
         'kuota_total',
+        'tanggal_mulai',
+        'tanggal_selesai',
     ];
 
     protected $casts = [
         'biaya_pendaftaran' => 'decimal:2',
         'is_active' => 'boolean',
         'kuota_total' => 'integer',
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
     ];
 
     /**
