@@ -247,7 +247,7 @@
                         <div class="flex-1">
                             <h3 class="text-lg font-bold text-gray-900 mb-2">Surat Keterangan RT - Yatim</h3>
                             <p class="text-sm text-gray-600 mb-4">Template surat keterangan dari RT untuk kategori yatim</p>
-                            <a href="{{ route('public.spmb.template.rt-yatim') }}" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded-lg transition duration-200">
+                            <a href="{{ route('public.spmb.template.rt-yatim') }}" class="inline-flex items-center gap-2 font-semibold px-4 py-2 rounded-lg transition duration-200" style="background-color: #9333EA; color: #FFFFFF;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
@@ -268,7 +268,7 @@
                         <div class="flex-1">
                             <h3 class="text-lg font-bold text-gray-900 mb-2">Surat Keterangan RT - Dhuafa</h3>
                             <p class="text-sm text-gray-600 mb-4">Template surat keterangan dari RT untuk kategori dhuafa</p>
-                            <a href="{{ route('public.spmb.template.rt-dhuafa') }}" class="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2 rounded-lg transition duration-200">
+                            <a href="{{ route('public.spmb.template.rt-dhuafa') }}" class="inline-flex items-center gap-2 font-semibold px-4 py-2 rounded-lg transition duration-200" style="background-color: #EA580C; color: #FFFFFF;">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
