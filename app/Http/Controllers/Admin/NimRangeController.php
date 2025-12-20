@@ -215,4 +215,39 @@ class NimRangeController extends Controller
                 ->withErrors(['bulk' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
     }
+
+    /**
+     * Batch delete multiple NIM ranges
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            // Check if any of the selected NIM ranges are in use
+            $usedRanges = NimRange::whereIn('id', $request->ids)->where('current_number', '>', 0)->count();
+            if ($usedRanges > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat menghapus NIM Range yang sudah digunakan.',
+                ], 400);
+            }
+
+            $count = NimRange::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} NIM Range berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

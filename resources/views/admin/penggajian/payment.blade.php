@@ -87,13 +87,13 @@
                         <div class="bg-gray-50 rounded-lg p-4">
                             <p class="text-sm text-gray-600 mb-1">Semester:</p>
                             <p class="text-lg font-semibold text-gray-800">
-                                {{ $penggajian->semester ? $penggajian->semester->jenis . ' ' . $penggajian->semester->tahun_ajaran : '-' }}
+                                {{ $penggajian->semester ? $penggajian->semester->nama_semester : '-' }}
                             </p>
                         </div>
                         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <p class="text-sm text-gray-600 mb-1">Jam Disetujui:</p>
-                            <p class="text-2xl font-bold text-green-600">{{ $penggajian->total_jam_disetujui }}</p>
-                            <p class="text-sm text-gray-500">jam</p>
+                            <p class="text-sm text-gray-600 mb-1">JP Disetujui:</p>
+                            <p class="text-2xl font-bold text-green-600">{{ (int) $penggajian->total_jam_disetujui }}</p>
+                            <p class="text-sm text-gray-500">JP</p>
                         </div>
                     </div>
                 </div>

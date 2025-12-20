@@ -35,8 +35,8 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Periode</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Semester</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Jam Diajukan</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Jam Disetujui</th>
+                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">JP Diajukan</th>
+                        <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">JP Disetujui</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Status</th>
                         <th class="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wider">Jumlah Dibayar</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider">Aksi</th>
@@ -50,13 +50,13 @@
                                 {{ $penggajian->periode_formatted }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">
-                                {{ $penggajian->semester ? $penggajian->semester->jenis . ' ' . $penggajian->semester->tahun_ajaran : '-' }}
+                                {{ $penggajian->semester ? $penggajian->semester->nama_semester : '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-900 text-center font-medium">
-                                {{ $penggajian->total_jam_diajukan }} jam
+                                {{ (int) $penggajian->total_jam_diajukan }} JP
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-900 text-center font-medium">
-                                {{ $penggajian->total_jam_disetujui ? $penggajian->total_jam_disetujui . ' jam' : '-' }}
+                                {{ $penggajian->total_jam_disetujui ? (int) $penggajian->total_jam_disetujui . ' JP' : '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 {!! $penggajian->status_badge !!}

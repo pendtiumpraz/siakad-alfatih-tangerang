@@ -83,12 +83,18 @@
     </div>
     @endif
 
+    <!-- Batch Delete Actions -->
+    @include('components.batch-delete-actions', ['routeName' => route('admin.semester.batch-delete')])
+
     <!-- Semester Table -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white">
                     <tr>
+                        <th class="px-4 py-4 text-left">
+                            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Semester</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Tahun Akademik</th>
@@ -100,6 +106,9 @@
                 <tbody class="divide-y divide-gray-200">
                     @forelse($semesters ?? [] as $index => $semester)
                         <tr class="hover:bg-[#F4E5C3] hover:bg-opacity-30 transition {{ $semester->is_active ? 'bg-[#F4E5C3] bg-opacity-20 border-l-4 border-[#D4AF37]' : '' }}">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $semester->id }}" onchange="updateSelectedIds()" {{ $semester->is_active ? 'disabled title="Tidak bisa menghapus semester aktif"' : '' }}>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($semesters->currentPage() - 1) * $semesters->perPage() + $index + 1 }}
                             </td>
@@ -153,7 +162,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                 <i class="fas fa-calendar-alt text-4xl mb-2 text-gray-300"></i>
                                 <p>Tidak ada data semester</p>
                             </td>

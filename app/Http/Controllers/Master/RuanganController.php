@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class RuanganController extends Controller
 {
@@ -115,9 +116,14 @@ class RuanganController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation rules
+        // Validation rules - unique ignores soft deleted records
         $validated = $request->validate([
-            'kode_ruangan' => 'required|string|max:20|unique:ruangans,kode_ruangan',
+            'kode_ruangan' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('ruangans', 'kode_ruangan')->whereNull('deleted_at'),
+            ],
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1|max:500',
             'fasilitas' => 'nullable|string',
@@ -179,9 +185,14 @@ class RuanganController extends Controller
     {
         $ruangan = Ruangan::withTrashed()->findOrFail($id);
 
-        // Validation rules
+        // Validation rules - unique ignores soft deleted records
         $validated = $request->validate([
-            'kode_ruangan' => 'required|string|max:20|unique:ruangans,kode_ruangan,' . $id,
+            'kode_ruangan' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('ruangans', 'kode_ruangan')->whereNull('deleted_at')->ignore($id),
+            ],
             'nama_ruangan' => 'required|string|max:255',
             'kapasitas' => 'required|integer|min:1|max:500',
             'fasilitas' => 'nullable|string',
@@ -231,6 +242,14 @@ class RuanganController extends Controller
     {
         try {
             $ruangan = Ruangan::withTrashed()->findOrFail($id);
+
+            // Check if kode_ruangan already exists in active records
+            $existingRecord = Ruangan::where('kode_ruangan', $ruangan->kode_ruangan)->first();
+            if ($existingRecord) {
+                return redirect()->back()
+                    ->with('error', "Tidak dapat me-restore: Kode Ruangan '{$ruangan->kode_ruangan}' sudah digunakan oleh data lain.");
+            }
+
             $ruangan->restore();
 
             $routePrefix = $this->getRoutePrefix();
@@ -257,6 +276,87 @@ class RuanganController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to permanently delete Ruangan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Batch delete (soft delete) multiple ruangan
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $count = Ruangan::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Ruangan berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Batch restore multiple soft-deleted ruangan
+     */
+    public function batchRestore(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $restoredCount = 0;
+            $failedCount = 0;
+            $failedItems = [];
+
+            $trashedItems = Ruangan::onlyTrashed()->whereIn('id', $request->ids)->get();
+
+            foreach ($trashedItems as $item) {
+                // Check if kode_ruangan already exists in active records
+                $existingRecord = Ruangan::where('kode_ruangan', $item->kode_ruangan)->first();
+                if ($existingRecord) {
+                    $failedCount++;
+                    $failedItems[] = $item->kode_ruangan;
+                } else {
+                    $item->restore();
+                    $restoredCount++;
+                }
+            }
+
+            if ($failedCount > 0 && $restoredCount > 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "{$restoredCount} Ruangan berhasil di-restore. {$failedCount} gagal karena kode sudah digunakan: " . implode(', ', $failedItems),
+                    'count' => $restoredCount,
+                ]);
+            } elseif ($failedCount > 0 && $restoredCount == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Semua gagal di-restore karena kode sudah digunakan: " . implode(', ', $failedItems),
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$restoredCount} Ruangan berhasil di-restore.",
+                'count' => $restoredCount,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal me-restore data: ' . $e->getMessage(),
+            ], 500);
         }
     }
 }

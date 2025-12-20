@@ -83,12 +83,28 @@
         </div>
     </div>
 
+    <!-- Batch Delete Actions -->
+    @if(!request('trashed'))
+        @include('components.batch-delete-actions', ['routeName' => route('admin.program-studi.batch-delete')])
+    @else
+        @include('components.batch-restore-actions', ['routeName' => route('admin.program-studi.batch-restore')])
+    @endif
+
     <!-- Program Studi Table -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white">
                     <tr>
+                        @if(!request('trashed'))
+                        <th class="px-4 py-4 text-left">
+                            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
+                        @else
+                        <th class="px-4 py-4 text-left">
+                            <input type="checkbox" id="restore-select-all" onchange="toggleRestoreSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
+                        @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama Program Studi</th>
@@ -100,6 +116,15 @@
                 <tbody class="divide-y divide-gray-200">
                     @forelse($programStudis ?? [] as $index => $prodi)
                         <tr class="{{ $prodi->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[#F4E5C3] hover:bg-opacity-30' }} transition">
+                            @if(!request('trashed'))
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $prodi->id }}" onchange="updateSelectedIds()">
+                            </td>
+                            @else
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="restore-row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $prodi->id }}" onchange="updateRestoreSelectedIds()">
+                            </td>
+                            @endif
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($programStudis->currentPage() - 1) * $programStudis->perPage() + $index + 1 }}
                             </td>
@@ -158,7 +183,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="{{ request('trashed') ? 6 : 7 }}" class="px-6 py-8 text-center text-gray-500">
                                 <i class="fas fa-graduation-cap text-4xl mb-2 text-gray-300"></i>
                                 <p>Tidak ada data program studi</p>
                             </td>

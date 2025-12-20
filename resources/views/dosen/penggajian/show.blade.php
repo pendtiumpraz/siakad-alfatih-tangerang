@@ -75,7 +75,7 @@
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-sm text-gray-600 mb-1">Semester</p>
                         <p class="text-lg font-semibold text-gray-800">
-                            {{ $penggajian->semester ? $penggajian->semester->jenis . ' ' . $penggajian->semester->tahun_ajaran : '-' }}
+                            {{ $penggajian->semester ? $penggajian->semester->nama_semester : '-' }}
                         </p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
@@ -85,23 +85,23 @@
                 </div>
             </div>
 
-            <!-- Jam Mengajar -->
+            <!-- Jam Pelajaran -->
             <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                     <i class="fas fa-clock mr-2 text-[#2D5F3F]"></i>
-                    Total Jam Mengajar
+                    Total Jam Pelajaran (JP)
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-gray-600 mb-1">Jam Diajukan</p>
-                        <p class="text-3xl font-bold text-blue-600">{{ $penggajian->total_jam_diajukan }}</p>
-                        <p class="text-sm text-gray-500">jam</p>
+                        <p class="text-sm text-gray-600 mb-1">JP Diajukan</p>
+                        <p class="text-3xl font-bold text-blue-600">{{ (int) $penggajian->total_jam_diajukan }}</p>
+                        <p class="text-sm text-gray-500">JP</p>
                     </div>
                     @if($penggajian->total_jam_disetujui)
                         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <p class="text-sm text-gray-600 mb-1">Jam Disetujui</p>
-                            <p class="text-3xl font-bold text-green-600">{{ $penggajian->total_jam_disetujui }}</p>
-                            <p class="text-sm text-gray-500">jam</p>
+                            <p class="text-sm text-gray-600 mb-1">JP Disetujui</p>
+                            <p class="text-3xl font-bold text-green-600">{{ (int) $penggajian->total_jam_disetujui }}</p>
+                            <p class="text-sm text-gray-500">JP</p>
                         </div>
                     @else
                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-center">

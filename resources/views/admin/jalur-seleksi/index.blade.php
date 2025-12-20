@@ -13,12 +13,18 @@
         </a>
     </div>
 
+    <!-- Batch Delete Actions -->
+    @include('components.batch-delete-actions', ['routeName' => route('admin.jalur-seleksi.batch-delete')])
+
     <!-- Table -->
     <div class="bg-white rounded-lg shadow-md border border-gray-200">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
+                        <th class="px-4 py-3 text-left">
+                            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Jalur</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Biaya Pendaftaran</th>
@@ -31,6 +37,9 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($jalurSeleksis as $jalur)
                         <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $jalur->id }}" onchange="updateSelectedIds()">
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <code class="text-sm font-semibold text-gray-900">{{ $jalur->kode_jalur }}</code>
                             </td>
@@ -62,14 +71,23 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <a href="{{ route('admin.jalur-seleksi.edit', $jalur) }}" class="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                                    <i class="fas fa-edit mr-1"></i> Edit
-                                </a>
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('admin.jalur-seleksi.edit', $jalur) }}" class="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </a>
+                                    <form action="{{ route('admin.jalur-seleksi.destroy', $jalur) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus jalur seleksi ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                                            <i class="fas fa-trash mr-1"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center">
+                            <td colspan="8" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-400">
                                     <i class="fas fa-inbox text-6xl mb-4"></i>
                                     <p class="text-lg font-medium">Belum ada jalur seleksi</p>

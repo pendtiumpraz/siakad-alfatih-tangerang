@@ -112,7 +112,7 @@
                     <div class="bg-gray-50 rounded-lg p-4">
                         <p class="text-sm text-gray-600 mb-1">Semester</p>
                         <p class="text-lg font-semibold text-gray-800">
-                            {{ $penggajian->semester ? $penggajian->semester->jenis . ' ' . $penggajian->semester->tahun_ajaran : '-' }}
+                            {{ $penggajian->semester ? $penggajian->semester->nama_semester : '-' }}
                         </p>
                     </div>
                     <div class="bg-gray-50 rounded-lg p-4">
@@ -123,15 +123,15 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <p class="text-sm text-gray-600 mb-1">Total Jam Diajukan</p>
-                        <p class="text-3xl font-bold text-blue-600">{{ $penggajian->total_jam_diajukan }}</p>
-                        <p class="text-sm text-gray-500">jam</p>
+                        <p class="text-sm text-gray-600 mb-1">Total JP Diajukan</p>
+                        <p class="text-3xl font-bold text-blue-600">{{ (int) $penggajian->total_jam_diajukan }}</p>
+                        <p class="text-sm text-gray-500">JP</p>
                     </div>
                     @if($penggajian->total_jam_disetujui)
                         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <p class="text-sm text-gray-600 mb-1">Total Jam Disetujui</p>
-                            <p class="text-3xl font-bold text-green-600">{{ $penggajian->total_jam_disetujui }}</p>
-                            <p class="text-sm text-gray-500">jam</p>
+                            <p class="text-sm text-gray-600 mb-1">Total JP Disetujui</p>
+                            <p class="text-3xl font-bold text-green-600">{{ (int) $penggajian->total_jam_disetujui }}</p>
+                            <p class="text-sm text-gray-500">JP</p>
                         </div>
                     @endif
                 </div>
@@ -222,13 +222,13 @@
 
                         <div id="approve-fields" style="display: none;">
                             <label for="total_jam_disetujui" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Total Jam yang Disetujui <span class="text-red-500">*</span>
+                                Total JP yang Disetujui <span class="text-red-500">*</span>
                             </label>
-                            <input type="number" step="0.5" min="0" name="total_jam_disetujui" id="total_jam_disetujui" 
+                            <input type="number" step="1" min="1" name="total_jam_disetujui" id="total_jam_disetujui" 
                                 value="{{ old('total_jam_disetujui', $penggajian->total_jam_diajukan) }}" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5F3F] focus:border-transparent" 
                                 placeholder="Contoh: 24">
-                            <p class="text-xs text-gray-500 mt-1">Dapat berbeda dengan jam yang diajukan jika ada penyesuaian</p>
+                            <p class="text-xs text-gray-500 mt-1">Dapat berbeda dengan JP yang diajukan jika ada penyesuaian</p>
                         </div>
 
                         <div>

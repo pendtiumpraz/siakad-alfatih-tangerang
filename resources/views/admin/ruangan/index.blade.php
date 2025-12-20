@@ -72,12 +72,28 @@
         </div>
     </div>
 
+    <!-- Batch Delete Actions -->
+    @if(!request('trashed'))
+        @include('components.batch-delete-actions', ['routeName' => route('admin.ruangan.batch-delete')])
+    @else
+        @include('components.batch-restore-actions', ['routeName' => route('admin.ruangan.batch-restore')])
+    @endif
+
     <!-- Ruangan Table -->
     <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white">
                     <tr>
+                        @if(!request('trashed'))
+                        <th class="px-4 py-4 text-left">
+                            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
+                        @else
+                        <th class="px-4 py-4 text-left">
+                            <input type="checkbox" id="restore-select-all" onchange="toggleRestoreSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
+                        @endif
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Kode Ruangan</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Nama Ruangan</th>
@@ -90,6 +106,15 @@
                 <tbody class="divide-y divide-gray-200">
                     @forelse($ruangans ?? [] as $index => $ruangan)
                         <tr class="{{ $ruangan->trashed() ? 'bg-red-50 hover:bg-red-100' : 'hover:bg-[#F4E5C3] hover:bg-opacity-30' }} transition">
+                            @if(!request('trashed'))
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $ruangan->id }}" onchange="updateSelectedIds()">
+                            </td>
+                            @else
+                            <td class="px-4 py-4">
+                                <input type="checkbox" class="restore-row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $ruangan->id }}" onchange="updateRestoreSelectedIds()">
+                            </td>
+                            @endif
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ ($ruangans->currentPage() - 1) * $ruangans->perPage() + $index + 1 }}
                             </td>
@@ -162,7 +187,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="{{ request('trashed') ? 7 : 8 }}" class="px-6 py-8 text-center text-gray-500">
                                 <i class="fas fa-door-open text-4xl mb-2 text-gray-300"></i>
                                 <p>Tidak ada data ruangan</p>
                             </td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\JalurSeleksi;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class JalurSeleksiController extends Controller
 {
@@ -32,7 +33,12 @@ class JalurSeleksiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode_jalur' => 'required|string|max:20|unique:jalur_seleksis,kode_jalur',
+            'kode_jalur' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('jalur_seleksis', 'kode_jalur'),
+            ],
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'biaya_pendaftaran' => 'required|numeric|min:0',
@@ -64,7 +70,12 @@ class JalurSeleksiController extends Controller
     public function update(Request $request, JalurSeleksi $jalurSeleksi)
     {
         $validated = $request->validate([
-            'kode_jalur' => 'required|string|max:20|unique:jalur_seleksis,kode_jalur,' . $jalurSeleksi->id,
+            'kode_jalur' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('jalur_seleksis', 'kode_jalur')->ignore($jalurSeleksi->id),
+            ],
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'biaya_pendaftaran' => 'required|numeric|min:0',
@@ -82,4 +93,40 @@ class JalurSeleksiController extends Controller
             ->with('success', 'Jalur seleksi berhasil diperbarui.');
     }
 
+    /**
+     * Remove the specified jalur seleksi from storage
+     */
+    public function destroy(JalurSeleksi $jalurSeleksi)
+    {
+        $jalurSeleksi->delete();
+
+        return redirect()->route('admin.jalur-seleksi.index')
+            ->with('success', 'Jalur seleksi berhasil dihapus.');
+    }
+
+    /**
+     * Batch delete multiple jalur seleksi
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $count = JalurSeleksi::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Jalur Seleksi berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

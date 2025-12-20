@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ProgramStudiController extends Controller
 {
@@ -108,9 +109,14 @@ class ProgramStudiController extends Controller
      */
     public function store(Request $request)
     {
-        // Validation rules
+        // Validation rules - unique ignores soft deleted records
         $validated = $request->validate([
-            'kode_prodi' => 'required|string|max:10|unique:program_studis,kode_prodi',
+            'kode_prodi' => [
+                'required',
+                'string',
+                'max:10',
+                Rule::unique('program_studis', 'kode_prodi')->whereNull('deleted_at'),
+            ],
             'nama_prodi' => 'required|string|max:255',
             'jenjang' => 'required|in:D3,D4,S1,S2,S3',
             'is_active' => 'boolean'
@@ -171,9 +177,14 @@ class ProgramStudiController extends Controller
     {
         $programStudi = ProgramStudi::withTrashed()->findOrFail($id);
 
-        // Validation rules
+        // Validation rules - unique ignores soft deleted records
         $validated = $request->validate([
-            'kode_prodi' => 'required|string|max:10|unique:program_studis,kode_prodi,' . $id,
+            'kode_prodi' => [
+                'required',
+                'string',
+                'max:10',
+                Rule::unique('program_studis', 'kode_prodi')->whereNull('deleted_at')->ignore($id),
+            ],
             'nama_prodi' => 'required|string|max:255',
             'jenjang' => 'required|in:D3,D4,S1,S2,S3',
             'is_active' => 'boolean'
@@ -222,6 +233,14 @@ class ProgramStudiController extends Controller
     {
         try {
             $programStudi = ProgramStudi::withTrashed()->findOrFail($id);
+
+            // Check if kode_prodi already exists in active records
+            $existingRecord = ProgramStudi::where('kode_prodi', $programStudi->kode_prodi)->first();
+            if ($existingRecord) {
+                return redirect()->back()
+                    ->with('error', "Tidak dapat me-restore: Kode Program Studi '{$programStudi->kode_prodi}' sudah digunakan oleh data lain.");
+            }
+
             $programStudi->restore();
 
             $routePrefix = $this->getRoutePrefix();
@@ -248,6 +267,87 @@ class ProgramStudiController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to permanently delete Program Studi: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Batch delete (soft delete) multiple program studi
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $count = ProgramStudi::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Program Studi berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Batch restore multiple soft-deleted program studi
+     */
+    public function batchRestore(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $restoredCount = 0;
+            $failedCount = 0;
+            $failedItems = [];
+
+            $trashedItems = ProgramStudi::onlyTrashed()->whereIn('id', $request->ids)->get();
+
+            foreach ($trashedItems as $item) {
+                // Check if kode_prodi already exists in active records
+                $existingRecord = ProgramStudi::where('kode_prodi', $item->kode_prodi)->first();
+                if ($existingRecord) {
+                    $failedCount++;
+                    $failedItems[] = $item->kode_prodi;
+                } else {
+                    $item->restore();
+                    $restoredCount++;
+                }
+            }
+
+            if ($failedCount > 0 && $restoredCount > 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "{$restoredCount} Program Studi berhasil di-restore. {$failedCount} gagal karena kode sudah digunakan: " . implode(', ', $failedItems),
+                    'count' => $restoredCount,
+                ]);
+            } elseif ($failedCount > 0 && $restoredCount == 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Semua gagal di-restore karena kode sudah digunakan: " . implode(', ', $failedItems),
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$restoredCount} Program Studi berhasil di-restore.",
+                'count' => $restoredCount,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal me-restore data: ' . $e->getMessage(),
+            ], 500);
         }
     }
 }

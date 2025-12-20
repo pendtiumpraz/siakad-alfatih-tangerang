@@ -50,49 +50,32 @@
                     <option value="">-- Pilih Semester --</option>
                     @foreach($semesters as $semester)
                         <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
-                            {{ $semester->jenis }} {{ $semester->tahun_ajaran }}
+                            {{ $semester->nama_semester }}
                         </option>
                     @endforeach
                 </select>
             </div>
         </div>
 
-        <!-- Total Jam -->
+        <!-- Total Jam Pelajaran -->
         <div>
             <label for="total_jam_diajukan" class="block text-sm font-semibold text-gray-700 mb-2">
-                Total Jam Mengajar <span class="text-red-500">*</span>
+                Total Jam Pelajaran (JP) <span class="text-red-500">*</span>
             </label>
-            <input type="number" step="0.5" min="0.5" id="total_jam_diajukan" name="total_jam_diajukan" 
+            <input type="number" step="1" min="1" id="total_jam_diajukan" name="total_jam_diajukan" 
                 value="{{ old('total_jam_diajukan') }}" 
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2D5F3F] focus:border-transparent text-lg font-semibold" 
                 placeholder="24" required>
             
-            <!-- Help Text with Examples -->
+            <!-- Help Text -->
             <div class="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p class="text-sm font-semibold text-blue-800 mb-2">
+                <p class="text-sm font-semibold text-blue-800 mb-1">
                     <i class="fas fa-info-circle mr-1"></i>
-                    Format Penulisan Jam (gunakan desimal):
+                    Keterangan:
                 </p>
-                <div class="grid grid-cols-2 gap-2 text-xs text-blue-700">
-                    <div class="flex items-center">
-                        <i class="fas fa-check text-green-500 mr-1"></i>
-                        <span><strong>21 jam</strong> → tulis <strong>21</strong> atau <strong>21.0</strong></span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-check text-green-500 mr-1"></i>
-                        <span><strong>21 jam 30 menit</strong> → tulis <strong>21.5</strong></span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-check text-green-500 mr-1"></i>
-                        <span><strong>20 jam 15 menit</strong> → tulis <strong>20.25</strong></span>
-                    </div>
-                    <div class="flex items-center">
-                        <i class="fas fa-check text-green-500 mr-1"></i>
-                        <span><strong>20 jam 45 menit</strong> → tulis <strong>20.75</strong></span>
-                    </div>
-                </div>
-                <p class="text-xs text-blue-600 mt-2 italic">
-                    💡 Tip: 15 menit = 0.25 | 30 menit = 0.5 | 45 menit = 0.75
+                <p class="text-sm text-blue-700">
+                    Masukkan jumlah Jam Pelajaran (JP) dalam bilangan bulat.<br>
+                    Contoh: 12 JP, 24 JP, 36 JP, dst.
                 </p>
             </div>
         </div>

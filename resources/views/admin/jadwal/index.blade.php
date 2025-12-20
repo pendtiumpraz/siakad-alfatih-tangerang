@@ -63,12 +63,18 @@
         </form>
     </x-islamic-card>
 
+    <!-- Batch Delete Actions -->
+    @include('components.batch-delete-actions', ['routeName' => route('admin.jadwal.batch-delete')])
+
     <!-- Jadwal Table (EDITABLE) -->
     <x-islamic-card title="Daftar Jadwal (Klik untuk Edit)">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-green-200 border border-green-200 rounded-lg" id="jadwalTable">
                 <thead class="bg-gradient-to-r from-green-600 to-green-700">
                     <tr>
+                        <th class="px-4 py-3 text-left">
+                            <input type="checkbox" id="select-all" onchange="toggleSelectAll(this)" class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                        </th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Jenis Semester</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Mata Kuliah</th>
@@ -84,6 +90,9 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($jadwals as $index => $jadwal)
                     <tr class="hover:bg-green-50 transition-colors" data-id="{{ $jadwal->id }}">
+                        <td class="px-4 py-3">
+                            <input type="checkbox" class="row-checkbox w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $jadwal->id }}" onchange="updateSelectedIds()">
+                        </td>
                         <td class="px-4 py-3 text-sm text-gray-700 text-center">{{ $jadwals->firstItem() + $index }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">
                             <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $jadwal->jenis_semester == 'ganjil' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
@@ -191,7 +200,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="10" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="11" class="px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>

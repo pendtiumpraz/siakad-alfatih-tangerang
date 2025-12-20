@@ -99,9 +99,9 @@
                             <td class="px-6 py-4 text-sm text-center">
                                 <div class="flex flex-col">
                                     <span class="text-gray-600 text-xs">Diajukan:</span>
-                                    <span class="font-semibold text-gray-900">{{ $penggajian->total_jam_diajukan }} jam</span>
+                                    <span class="font-semibold text-gray-900">{{ (int) $penggajian->total_jam_diajukan }} JP</span>
                                     @if($penggajian->total_jam_disetujui)
-                                        <span class="text-green-600 text-xs mt-1">Disetujui: {{ $penggajian->total_jam_disetujui }} jam</span>
+                                        <span class="text-green-600 text-xs mt-1">Disetujui: {{ (int) $penggajian->total_jam_disetujui }} JP</span>
                                     @endif
                                 </div>
                             </td>

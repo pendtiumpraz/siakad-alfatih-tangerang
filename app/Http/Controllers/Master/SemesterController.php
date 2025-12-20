@@ -235,4 +235,39 @@ class SemesterController extends Controller
                 ->with('error', 'Failed to delete Semester: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Batch delete multiple semester
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            // Check if any of the selected semesters are active
+            $activeSemesters = Semester::whereIn('id', $request->ids)->where('is_active', true)->count();
+            if ($activeSemesters > 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak dapat menghapus semester yang sedang aktif.',
+                ], 400);
+            }
+
+            $count = Semester::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Semester berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }

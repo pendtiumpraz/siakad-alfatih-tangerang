@@ -100,18 +100,27 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Master Data Management (Admin has full access)
     Route::resource('program-studi', ProgramStudiController::class);
     Route::post('program-studi/{id}/restore', [ProgramStudiController::class, 'restore'])->name('program-studi.restore');
+    Route::post('program-studi/batch-delete', [ProgramStudiController::class, 'batchDelete'])->name('program-studi.batch-delete');
+    Route::post('program-studi/batch-restore', [ProgramStudiController::class, 'batchRestore'])->name('program-studi.batch-restore');
 
     Route::resource('kurikulum', KurikulumController::class);
     Route::post('kurikulum/{id}/restore', [KurikulumController::class, 'restore'])->name('kurikulum.restore');
+    Route::post('kurikulum/batch-delete', [KurikulumController::class, 'batchDelete'])->name('kurikulum.batch-delete');
+    Route::post('kurikulum/batch-restore', [KurikulumController::class, 'batchRestore'])->name('kurikulum.batch-restore');
 
     Route::resource('mata-kuliah', MataKuliahController::class);
     Route::post('mata-kuliah/{id}/restore', [MataKuliahController::class, 'restore'])->name('mata-kuliah.restore');
+    Route::post('mata-kuliah/batch-delete', [MataKuliahController::class, 'batchDelete'])->name('mata-kuliah.batch-delete');
+    Route::post('mata-kuliah/batch-restore', [MataKuliahController::class, 'batchRestore'])->name('mata-kuliah.batch-restore');
 
     Route::resource('ruangan', RuanganController::class);
     Route::post('ruangan/{id}/restore', [RuanganController::class, 'restore'])->name('ruangan.restore');
+    Route::post('ruangan/batch-delete', [RuanganController::class, 'batchDelete'])->name('ruangan.batch-delete');
+    Route::post('ruangan/batch-restore', [RuanganController::class, 'batchRestore'])->name('ruangan.batch-restore');
 
     Route::resource('semester', SemesterController::class);
     Route::post('semester/{id}/generate-khs', [SemesterController::class, 'generateKhs'])->name('semester.generate-khs');
+    Route::post('semester/batch-delete', [SemesterController::class, 'batchDelete'])->name('semester.batch-delete');
     
     // KHS Management
     Route::get('khs', [\App\Http\Controllers\Admin\KhsController::class, 'index'])->name('khs.index');
@@ -130,10 +139,12 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::resource('pengumuman', \App\Http\Controllers\Admin\PengumumanController::class);
 
     // NIM Range Management
+    Route::post('nim-ranges/batch-delete', [NimRangeController::class, 'batchDelete'])->name('nim-ranges.batch-delete');
     Route::resource('nim-ranges', NimRangeController::class);
     Route::post('nim-ranges/bulk-create', [NimRangeController::class, 'bulkCreate'])->name('nim-ranges.bulk-create');
 
     // Jalur Seleksi Management
+    Route::post('jalur-seleksi/batch-delete', [\App\Http\Controllers\Admin\JalurSeleksiController::class, 'batchDelete'])->name('jalur-seleksi.batch-delete');
     Route::resource('jalur-seleksi', \App\Http\Controllers\Admin\JalurSeleksiController::class);
 
     // SPMB Management
@@ -170,6 +181,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Jadwal Management (Admin creates ALL jadwal)
     Route::get('jadwal/calendar', [AdminJadwalController::class, 'calendar'])->name('jadwal.calendar');
     Route::post('jadwal/check-conflict', [AdminJadwalController::class, 'checkConflict'])->name('jadwal.check-conflict');
+    Route::post('jadwal/batch-delete', [AdminJadwalController::class, 'batchDelete'])->name('jadwal.batch-delete');
     Route::post('jadwal/{id}/update-field', [AdminJadwalController::class, 'updateField'])->name('jadwal.updateField');
     Route::resource('jadwal', AdminJadwalController::class);
 

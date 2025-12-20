@@ -65,6 +65,9 @@
         </div>
     </div>
 
+    <!-- Batch Delete Actions -->
+    @include('components.batch-delete-actions', ['routeName' => route('admin.nim-ranges.batch-delete')])
+
     <!-- NIM Range Table by Year -->
     @forelse($nimRanges as $year => $ranges)
         <div class="bg-white rounded-lg shadow-md border border-[#D4AF37] overflow-hidden">
@@ -80,6 +83,9 @@
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b-2 border-[#D4AF37]">
                         <tr>
+                            <th class="px-4 py-4 text-left">
+                                <input type="checkbox" class="select-year-{{ $year }} w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" onchange="toggleSelectYear(this, {{ $year }})">
+                            </th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">No</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">Program Studi</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">Prefix</th>
@@ -92,6 +98,9 @@
                     <tbody class="divide-y divide-gray-200">
                         @foreach($ranges as $index => $range)
                             <tr class="hover:bg-[#F4E5C3] hover:bg-opacity-30 transition">
+                                <td class="px-4 py-4">
+                                    <input type="checkbox" class="row-checkbox year-{{ $year }} w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" value="{{ $range->id }}" onchange="updateSelectedIds()" {{ $range->current_number > 0 ? 'disabled title="Tidak dapat dihapus karena sudah digunakan"' : '' }}>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ $index + 1 }}
                                 </td>
@@ -289,4 +298,16 @@
         display: none !important;
     }
 </style>
+
+@push('scripts')
+<script>
+    function toggleSelectYear(checkbox, year) {
+        const checkboxes = document.querySelectorAll('.year-' + year + ':not(:disabled)');
+        checkboxes.forEach(cb => {
+            cb.checked = checkbox.checked;
+        });
+        updateSelectedIds();
+    }
+</script>
+@endpush
 @endsection

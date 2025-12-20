@@ -266,4 +266,56 @@ class KurikulumController extends Controller
                 ->with('error', 'Failed to permanently delete Kurikulum: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Batch delete (soft delete) multiple kurikulum
+     */
+    public function batchDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $count = Kurikulum::whereIn('id', $request->ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Kurikulum berhasil dihapus.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Batch restore multiple soft-deleted kurikulum
+     */
+    public function batchRestore(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+        ]);
+
+        try {
+            $count = Kurikulum::onlyTrashed()->whereIn('id', $request->ids)->restore();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} Kurikulum berhasil di-restore.",
+                'count' => $count,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal me-restore data: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 }
