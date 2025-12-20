@@ -122,6 +122,57 @@
                         <span class="font-medium">Dokumentasi</span>
                     </a>
                 </div>
+                
+                <!-- Helpdesk Section -->
+                <div class="pt-4 mt-4 border-t border-green-700">
+                    @php
+                        // Helper function to format phone for WhatsApp
+                        $formatWaNumber = function($phone) {
+                            if (!$phone) return null;
+                            $clean = preg_replace('/[^0-9]/', '', $phone);
+                            if (str_starts_with($clean, '0')) {
+                                $clean = '62' . substr($clean, 1);
+                            }
+                            if (!str_starts_with($clean, '62')) {
+                                $clean = '62' . $clean;
+                            }
+                            return $clean;
+                        };
+                        
+                        // Get superadmin for academic helpdesk
+                        $superadmin = \App\Models\User::where('role', 'super_admin')->first();
+                        $adminPhone = $superadmin?->phone ?? null;
+                        $adminWaNumber = $formatWaNumber($adminPhone);
+                        
+                        // Get operator for finance helpdesk
+                        $operator = \App\Models\User::where('role', 'operator')->with('operator')->first();
+                        $operatorPhone = $operator?->phone ?? $operator?->operator?->no_telepon ?? null;
+                        $operatorWaNumber = $formatWaNumber($operatorPhone);
+                    @endphp
+                    
+                    <p class="text-yellow-400 font-semibold text-sm mb-2 flex items-center px-4">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Helpdesk
+                    </p>
+                    
+                    <!-- Akademik -->
+                    @if($adminWaNumber)
+                        <a href="https://wa.me/{{ $adminWaNumber }}" target="_blank" class="flex items-center px-4 py-3 text-white rounded-lg transition-colors duration-200 hover:bg-green-700">
+                            <svg class="w-5 h-5 mr-3 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                            <span class="font-medium">Akademik</span>
+                        </a>
+                    @endif
+                    
+                    <!-- Keuangan -->
+                    @if($operatorWaNumber)
+                        <a href="https://wa.me/{{ $operatorWaNumber }}" target="_blank" class="flex items-center px-4 py-3 text-white rounded-lg transition-colors duration-200 hover:bg-green-700">
+                            <svg class="w-5 h-5 mr-3 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                            <span class="font-medium">Keuangan</span>
+                        </a>
+                    @endif
+                </div>
             </nav>
         </aside>
 
