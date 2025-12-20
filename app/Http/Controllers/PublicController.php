@@ -119,12 +119,21 @@ class PublicController extends Controller
     {
         $jalurSeleksis = JalurSeleksi::active()->get();
 
-        // Load SPMB contact settings
-        $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
-        $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
-        $spmbWhatsapp = \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890');
+        // Get admin contact from superadmin user
+        $superadmin = \App\Models\User::where('role', 'super_admin')->first();
+        $rawPhone = $superadmin?->phone ?? '6281234567890';
+        $spmbEmail = $superadmin?->email ?? 'info@siakad.staialfatih.or.id';
+        
+        // Clean and format WhatsApp number (08xx -> 628xx)
+        $spmbWhatsapp = preg_replace('/[^0-9]/', '', $rawPhone);
+        if (str_starts_with($spmbWhatsapp, '0')) {
+            $spmbWhatsapp = '62' . substr($spmbWhatsapp, 1);
+        }
+        if (!str_starts_with($spmbWhatsapp, '62')) {
+            $spmbWhatsapp = '62' . $spmbWhatsapp;
+        }
 
-        return view('public.spmb.index', compact('jalurSeleksis', 'spmbPhone', 'spmbEmail', 'spmbWhatsapp'));
+        return view('public.spmb.index', compact('jalurSeleksis', 'spmbEmail', 'spmbWhatsapp'));
     }
 
     /**
@@ -545,9 +554,10 @@ class PublicController extends Controller
             ->with(['jurusan', 'jalurSeleksi'])
             ->firstOrFail();
 
-        // Load SPMB settings for PDF
-        $spmbPhone = \App\Models\SystemSetting::get('spmb_phone', '021-12345678');
-        $spmbEmail = \App\Models\SystemSetting::get('spmb_email', 'info@staialfatih.ac.id');
+        // Get admin contact from superadmin user
+        $superadmin = \App\Models\User::where('role', 'superadmin')->first();
+        $spmbWhatsapp = preg_replace('/[^0-9]/', '', $superadmin?->dosen?->phone ?? $superadmin?->phone ?? '6281234567890');
+        $spmbEmail = $superadmin?->email ?? 'info@siakad.staialfatih.or.id';
 
         // Convert foto to base64 for PDF (DomPDF can't load external images)
         $fotoBase64 = null;
@@ -604,7 +614,7 @@ class PublicController extends Controller
         }
 
         // Create PDF from view
-        $pdf = \PDF::loadView('public.spmb.pdf', compact('pendaftar', 'spmbPhone', 'spmbEmail', 'fotoBase64'));
+        $pdf = \PDF::loadView('public.spmb.pdf', compact('pendaftar', 'spmbWhatsapp', 'spmbEmail', 'fotoBase64'));
 
         // Set paper size and orientation
         $pdf->setPaper('A4', 'portrait');

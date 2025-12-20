@@ -193,13 +193,70 @@
                         </ul>
                     </div>
 
-                    <!-- Contact -->
+                    <!-- Contact / Helpdesk -->
                     <div>
-                        <h3 class="text-islamic-gold font-semibold text-lg mb-3">Kontak</h3>
-                        <ul class="space-y-2 text-sm text-white/80">
-                            <li>Email: info@staialfatih.ac.id</li>
-                            <li>Telp: (021) 1234-5678</li>
-                            <li>WhatsApp: +62 812-3456-7890</li>
+                        <h3 class="text-islamic-gold font-semibold text-lg mb-3">Helpdesk</h3>
+                        @php
+                            // Helper function to format phone for WhatsApp
+                            $formatWaNumber = function($phone) {
+                                if (!$phone) return null;
+                                // Remove all non-numeric
+                                $clean = preg_replace('/[^0-9]/', '', $phone);
+                                // Convert 08xx to 628xx
+                                if (str_starts_with($clean, '0')) {
+                                    $clean = '62' . substr($clean, 1);
+                                }
+                                // Add 62 if not present
+                                if (!str_starts_with($clean, '62')) {
+                                    $clean = '62' . $clean;
+                                }
+                                return $clean;
+                            };
+                            
+                            // Get first superadmin for academic helpdesk
+                            $superadmin = \App\Models\User::where('role', 'super_admin')->first();
+                            $adminPhone = $superadmin?->phone ?? null;
+                            $adminWaNumber = $formatWaNumber($adminPhone);
+                            $adminEmail = $superadmin?->email ?? null;
+                            
+                            // Get first operator for finance helpdesk
+                            $operator = \App\Models\User::where('role', 'operator')->with('operator')->first();
+                            // Fallback: check User.phone first, then Operator.no_telepon
+                            $operatorPhone = $operator?->phone ?? $operator?->operator?->no_telepon ?? null;
+                            $operatorWaNumber = $formatWaNumber($operatorPhone);
+                            $operatorEmail = $operator?->email ?? null;
+                            
+                            // Default values
+                            $defaultPhone = '6281234567890';
+                            $defaultEmail = 'info@siakad.staialfatih.or.id';
+                        @endphp
+                        <ul class="space-y-3 text-sm text-white/80">
+                            <li>
+                                <span class="text-islamic-gold font-medium block mb-1">Akademik:</span>
+                                @if($adminWaNumber)
+                                    <a href="https://wa.me/{{ $adminWaNumber }}" target="_blank" class="hover:text-islamic-gold flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                                        WA: {{ $adminPhone }}
+                                    </a>
+                                @endif
+                                <a href="mailto:{{ $adminEmail ?? $defaultEmail }}" class="hover:text-islamic-gold flex items-center mt-1">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    {{ $adminEmail ?? $defaultEmail }}
+                                </a>
+                            </li>
+                            <li>
+                                <span class="text-islamic-gold font-medium block mb-1">Keuangan:</span>
+                                @if($operatorWaNumber)
+                                    <a href="https://wa.me/{{ $operatorWaNumber }}" target="_blank" class="hover:text-islamic-gold flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                                        WA: {{ $operatorPhone }}
+                                    </a>
+                                @endif
+                                <a href="mailto:{{ $operatorEmail ?? $defaultEmail }}" class="hover:text-islamic-gold flex items-center mt-1">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    {{ $operatorEmail ?? $defaultEmail }}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

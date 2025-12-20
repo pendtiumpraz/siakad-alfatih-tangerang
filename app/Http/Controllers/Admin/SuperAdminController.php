@@ -315,6 +315,7 @@ class SuperAdminController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:super_admin,operator,dosen,mahasiswa'],
             'is_active' => ['boolean'],
+            'phone' => ['nullable', 'string', 'max:20'], // Direct to User model for helpdesk
 
             // Mahasiswa fields
             'nim' => ['required_if:role,mahasiswa', 'nullable', 'string', 'max:255', Rule::unique('mahasiswas')->ignore($user->mahasiswa->id ?? null)],
@@ -351,6 +352,7 @@ class SuperAdminController extends Controller
                 'username' => $validated['username'],
                 'email' => $validated['email'],
                 'role' => $validated['role'],
+                'phone' => $validated['phone'] ?? null, // Save phone directly to User
             ];
 
             // Only update is_active for non-mahasiswa roles

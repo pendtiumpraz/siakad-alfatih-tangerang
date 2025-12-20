@@ -61,22 +61,23 @@
                         @enderror
                     </div>
 
-                    <!-- Nomor HP -->
+                    <!-- Nomor HP (Direct to User model) -->
                     <div>
-                        <label for="no_telepon" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">
                             Nomor HP
                         </label>
                         <input
                             type="text"
-                            id="no_telepon"
-                            name="no_telepon"
-                            value="{{ old('no_telepon', optional($user->mahasiswa)->no_telepon ?? optional($user->dosen)->no_telepon ?? optional($user->operator)->no_telepon ?? '') }}"
+                            id="phone"
+                            name="phone"
+                            value="{{ old('phone', $user->phone ?? '') }}"
                             placeholder="08xx-xxxx-xxxx"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('no_telepon') border-red-500 @enderror"
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:border-[#D4AF37] transition @error('phone') border-red-500 @enderror"
                         >
-                        @error('no_telepon')
+                        @error('phone')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
+                        <p class="mt-1 text-xs text-gray-500">Nomor HP akan digunakan untuk WhatsApp helpdesk (untuk role admin/operator)</p>
                     </div>
 
                     <!-- Password (Optional) -->
