@@ -64,7 +64,7 @@
                     Kembali
                 </a>
             @else
-                <a href="{{ route('admin.program-studi.index', ['trashed' => 1]) }}" class="px-6 py-2 bg-[#D4AF37] text-white font-semibold rounded-lg hover:shadow-lg transition text-center">
+                <a href="{{ route('admin.program-studi.index', ['trashed' => 'only']) }}" class="px-6 py-2 bg-[#D4AF37] text-white font-semibold rounded-lg hover:shadow-lg transition text-center">
                     <i class="fas fa-trash-restore mr-2"></i>
                     Data Terhapus
                 </a>
