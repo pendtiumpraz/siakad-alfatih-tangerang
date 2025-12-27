@@ -247,23 +247,51 @@ function confirmSubmit() {
         .filter(input => input.value !== '').length;
     
     if (filledCount === 0) {
-        alert('Belum ada nilai yang diinput!');
+        Swal.fire({ icon: 'warning', title: 'Peringatan', text: 'Belum ada nilai yang diinput!', confirmButtonColor: '#1B4D3E' });
         return false;
     }
     
-    return confirm(`Simpan ${filledCount} nilai?\n\nNilai akan disimpan dan KHS akan di-generate otomatis.`);
+    // Show SweetAlert confirmation - return false first, then submit via Swal
+    Swal.fire({
+        icon: 'question',
+        title: 'Simpan Nilai?',
+        html: `Simpan <strong>${filledCount}</strong> nilai?<br><br><small>Nilai akan disimpan dan KHS akan di-generate otomatis.</small>`,
+        showCancelButton: true,
+        confirmButtonColor: '#1B4D3E',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: '<i class="fas fa-save mr-1"></i> Ya, Simpan!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('nilaiForm').submit();
+        }
+    });
+    
+    return false; // Prevent default form submission
 }
 
 // Reset form
 function resetForm() {
-    if (confirm('Reset semua input nilai?')) {
-        document.querySelectorAll('.nilai-input').forEach(input => {
-            input.value = '';
-            input.style.backgroundColor = '';
-            input.style.color = '';
-            input.parentElement.querySelector('.grade-display').innerHTML = '';
-        });
-    }
+    Swal.fire({
+        icon: 'warning',
+        title: 'Reset Nilai?',
+        text: 'Reset semua input nilai?',
+        showCancelButton: true,
+        confirmButtonColor: '#F59E0B',
+        cancelButtonColor: '#6B7280',
+        confirmButtonText: '<i class="fas fa-redo mr-1"></i> Ya, Reset!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.querySelectorAll('.nilai-input').forEach(input => {
+                input.value = '';
+                input.style.backgroundColor = '';
+                input.style.color = '';
+                input.parentElement.querySelector('.grade-display').innerHTML = '';
+            });
+            Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Semua input nilai telah di-reset!', timer: 1500, showConfirmButton: false });
+        }
+    });
 }
 </script>
 @endsection

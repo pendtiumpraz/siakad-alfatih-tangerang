@@ -91,7 +91,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </a>
-                                <form action="{{ route('dosen.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                                <form action="{{ route('dosen.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirmDelete(this, 'jadwal ini')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors" title="Hapus">

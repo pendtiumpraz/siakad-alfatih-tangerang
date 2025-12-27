@@ -97,7 +97,7 @@
                                             <p class="text-sm text-gray-600">NIP: {{ $prodi->ketuaProdi->nidn }}</p>
                                         </div>
                                     </div>
-                                    <form method="POST" action="{{ route('admin.pengurus.remove-ketua-prodi', $prodi->id) }}" onsubmit="return confirm('Yakin ingin menghapus ketua prodi ini?')">
+                                    <form method="POST" action="{{ route('admin.pengurus.remove-ketua-prodi', $prodi->id) }}" onsubmit="return confirmDelete(this, 'ketua prodi ini')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800 transition">

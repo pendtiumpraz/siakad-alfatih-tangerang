@@ -66,7 +66,7 @@
                                     <a href="{{ route('dosen.pengumuman.edit', $pengumuman->id) }}" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('dosen.pengumuman.destroy', $pengumuman->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus pengumuman ini?')">
+                                    <form action="{{ route('dosen.pengumuman.destroy', $pengumuman->id) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, 'pengumuman ini')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition">

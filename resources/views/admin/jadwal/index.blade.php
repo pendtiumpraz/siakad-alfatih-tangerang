@@ -229,7 +229,7 @@
                         </td>
                         
                         <td class="px-4 py-3 text-center">
-                            <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                            <form action="{{ route('admin.jadwal.destroy', $jadwal->id) }}" method="POST" onsubmit="return confirmDelete(this, 'jadwal ini')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors" title="Hapus">
@@ -374,14 +374,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show toast notification
                 showToast('Berhasil diupdate!', 'success');
             } else {
-                alert('Error: ' + data.message);
+                Swal.fire({ icon: 'error', title: 'Error', text: data.message, confirmButtonColor: '#1B4D3E' });
                 cell.classList.remove('opacity-50');
                 cancelEdit(cell);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat menyimpan.');
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menyimpan.', confirmButtonColor: '#1B4D3E' });
             cell.classList.remove('opacity-50');
             cancelEdit(cell);
         });

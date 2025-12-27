@@ -158,7 +158,7 @@
                         
                         <!-- Manual Generate Button -->
                         <div class="mt-4">
-                            <form action="{{ route('admin.semester.generate-khs', $semester->id) }}" method="POST" onsubmit="return confirm('Generate KHS untuk semester ini? Proses ini mungkin memakan waktu beberapa menit.')">
+                            <form action="{{ route('admin.semester.generate-khs', $semester->id) }}" method="POST" onsubmit="return confirmGenerate(this, 'Generate KHS untuk semester ini? Proses ini mungkin memakan waktu beberapa menit.')">
                                 @csrf
                                 <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:shadow-lg hover:from-blue-700 hover:to-blue-800 transition">
                                     <i class="fas fa-cogs mr-2"></i>

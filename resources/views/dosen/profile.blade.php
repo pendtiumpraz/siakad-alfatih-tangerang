@@ -643,14 +643,14 @@ function previewNewFoto(event) {
     if (file) {
         // Validate file size (max 2MB)
         if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran file terlalu besar! Maksimal 2MB');
+            Swal.fire({ icon: 'error', title: 'File Terlalu Besar', text: 'Ukuran file terlalu besar! Maksimal 2MB', confirmButtonColor: '#1B4D3E' });
             event.target.value = '';
             return;
         }
         
         // Validate file type
         if (!file.type.match('image/jpeg') && !file.type.match('image/jpg') && !file.type.match('image/png')) {
-            alert('Format file tidak valid! Hanya JPG dan PNG yang diperbolehkan');
+            Swal.fire({ icon: 'error', title: 'Format Tidak Valid', text: 'Format file tidak valid! Hanya JPG dan PNG yang diperbolehkan', confirmButtonColor: '#1B4D3E' });
             event.target.value = '';
             return;
         }

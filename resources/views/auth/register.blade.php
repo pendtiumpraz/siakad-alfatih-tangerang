@@ -155,17 +155,17 @@
                     const passwordConfirmation = document.getElementById('password_confirmation').value;
 
                     if (!username || !name || !email || !password || !passwordConfirmation) {
-                        alert('Mohon lengkapi semua field yang wajib diisi');
+                        Swal.fire({ icon: 'warning', title: 'Form Tidak Lengkap', text: 'Mohon lengkapi semua field yang wajib diisi', confirmButtonColor: '#1B4D3E' });
                         return;
                     }
 
                     if (password !== passwordConfirmation) {
-                        alert('Password dan konfirmasi password tidak cocok');
+                        Swal.fire({ icon: 'error', title: 'Password Tidak Cocok', text: 'Password dan konfirmasi password tidak cocok', confirmButtonColor: '#1B4D3E' });
                         return;
                     }
 
                     if (password.length < 8) {
-                        alert('Password minimal 8 karakter');
+                        Swal.fire({ icon: 'warning', title: 'Password Terlalu Pendek', text: 'Password minimal 8 karakter', confirmButtonColor: '#1B4D3E' });
                         return;
                     }
 

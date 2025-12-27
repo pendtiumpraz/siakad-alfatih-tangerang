@@ -247,31 +247,46 @@ document.addEventListener('DOMContentLoaded', function() {
     isActiveCheckbox.addEventListener('change', function(e) {
         // Hanya tampilkan alert jika checkbox dicentang (mengaktifkan)
         if (this.checked) {
-            let message = "⚠️ PERHATIAN PENTING!\n\n";
+            let message = '';
             
             if (!wasActive) {
                 // Mengaktifkan semester yang sebelumnya tidak aktif
-                message += "Mengaktifkan semester ini akan:\n\n" +
-                    "✓ Menonaktifkan semester yang sedang aktif\n" +
-                    "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
-                    "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n";
+                message = `<div class="text-left">
+                    <p class="font-semibold mb-2">Mengaktifkan semester ini akan:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Menonaktifkan semester yang sedang aktif</li>
+                        <li>Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif</li>
+                        <li>Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP</li>
+                    </ul>
+                </div>`;
             } else {
                 // Semester sudah aktif, di-uncheck lalu di-check lagi
-                message += "Anda tetap mengaktifkan semester ini!\n\n" +
-                    "PERHATIAN:\n\n" +
-                    "✓ Perubahan pada semester aktif dapat mempengaruhi akses mahasiswa\n" +
-                    "✓ Mahasiswa yang belum lunas SPP TIDAK BISA mengakses KRS dan KHS\n" +
-                    "✓ Pastikan semua perubahan sudah benar sebelum menyimpan\n\n";
+                message = `<div class="text-left">
+                    <p class="font-semibold mb-2">PERHATIAN:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Perubahan pada semester aktif dapat mempengaruhi akses mahasiswa</li>
+                        <li>Mahasiswa yang belum lunas SPP TIDAK BISA mengakses KRS dan KHS</li>
+                        <li>Pastikan semua perubahan sudah benar sebelum menyimpan</li>
+                    </ul>
+                </div>`;
             }
             
-            message += "Apakah Anda yakin ingin melanjutkan?";
-            
-            const confirmed = confirm(message);
-            
-            if (!confirmed) {
-                // User membatalkan, uncheck checkbox
-                this.checked = false;
-            }
+            const checkbox = this;
+            Swal.fire({
+                icon: 'warning',
+                title: '⚠️ PERHATIAN PENTING!',
+                html: message,
+                showCancelButton: true,
+                confirmButtonColor: '#1B4D3E',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Ya, Lanjutkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    // User membatalkan, uncheck checkbox
+                    checkbox.checked = false;
+                }
+            });
         }
     });
 });

@@ -141,7 +141,7 @@
                             <form action="{{ route('operator.krs-approval.mass-approve-prodi', $prodi->id) }}" 
                                   method="POST" 
                                   class="flex-1"
-                                  onsubmit="return confirm('Approve SEMUA KRS yang sudah bayar SPP untuk {{ $prodi->nama_prodi }}?\n\nHanya mahasiswa yang sudah bayar SPP yang akan di-approve.\nYang belum bayar akan di-skip otomatis.')">
+                                  onsubmit="return confirmBatchApprove(this, '{{ $prodi->nama_prodi }}')">
                                 @csrf
                                 <input type="hidden" name="semester_id" value="{{ $semester->id }}">
                                 <button type="submit" 

@@ -330,7 +330,20 @@
         <div class="flex items-center justify-between bg-white rounded-lg shadow-md border border-[#D4AF37] p-6">
             <button
                 type="button"
-                onclick="if(confirm('Apakah Anda yakin ingin reset permission ke default?')) { alert('Fitur reset akan segera ditambahkan'); }"
+                onclick="Swal.fire({
+                    icon: 'warning',
+                    title: 'Reset Permission?',
+                    text: 'Apakah Anda yakin ingin reset permission ke default?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D4AF37',
+                    cancelButtonColor: '#6B7280',
+                    confirmButtonText: 'Ya, Reset!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({ icon: 'info', title: 'Info', text: 'Fitur reset akan segera ditambahkan', confirmButtonColor: '#1B4D3E' });
+                    }
+                });"
                 class="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
             >
                 <i class="fas fa-undo mr-2"></i>

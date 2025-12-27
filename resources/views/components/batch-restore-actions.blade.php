@@ -109,17 +109,16 @@
             closeBatchRestoreModal();
             if (data.success) {
                 // Show success message and reload
-                alert(data.message);
-                window.location.reload();
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: data.message, confirmButtonColor: '#1B4D3E' }).then(() => { window.location.reload(); });
             } else {
-                alert('Error: ' + data.message);
+                Swal.fire({ icon: 'error', title: 'Error', text: data.message, confirmButtonColor: '#1B4D3E' });
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-undo mr-2"></i>Restore';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan. Silakan coba lagi.');
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan. Silakan coba lagi.', confirmButtonColor: '#1B4D3E' });
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-undo mr-2"></i>Restore';
             closeBatchRestoreModal();

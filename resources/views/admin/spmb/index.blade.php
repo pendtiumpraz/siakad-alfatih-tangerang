@@ -278,7 +278,7 @@
         const checked = Array.from(document.querySelectorAll('.pendaftar-checkbox:checked')).map(cb => cb.value);
 
         if (checked.length === 0) {
-            alert('Pilih minimal 1 pendaftar');
+            Swal.fire({ icon: 'warning', title: 'Tidak Ada Pilihan', text: 'Pilih minimal 1 pendaftar', confirmButtonColor: '#1B4D3E' });
             return;
         }
 
@@ -319,14 +319,14 @@
         const checked = Array.from(document.querySelectorAll('.pendaftar-checkbox:checked')).map(cb => cb.value);
 
         if (checked.length === 0) {
-            alert('Pilih minimal 1 pendaftar');
+            Swal.fire({ icon: 'warning', title: 'Tidak Ada Pilihan', text: 'Pilih minimal 1 pendaftar', confirmButtonColor: '#1B4D3E' });
             return;
         }
 
         const keterangan = prompt('Masukkan alasan penolakan (wajib):');
 
         if (!keterangan || keterangan.trim() === '') {
-            alert('Alasan penolakan wajib diisi');
+            Swal.fire({ icon: 'warning', title: 'Field Wajib', text: 'Alasan penolakan wajib diisi', confirmButtonColor: '#1B4D3E' });
             return;
         }
 

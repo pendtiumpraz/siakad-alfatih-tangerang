@@ -694,7 +694,14 @@
                                 console.log('✅ Auto-restored from localStorage, saved at:', savedDate);
 
                                 // Show subtle notification
-                                alert(`📋 Data pendaftaran Anda dipulihkan dari sesi terakhir (${savedDate}).`);
+                                Swal.fire({ 
+                                    icon: 'info', 
+                                    title: 'Data Dipulihkan', 
+                                    html: `📋 Data pendaftaran Anda dipulihkan dari sesi terakhir (${savedDate}).`,
+                                    confirmButtonColor: '#1B4D3E',
+                                    timer: 4000,
+                                    timerProgressBar: true
+                                });
                             } else {
                                 // Clear old data (>24 hours)
                                 localStorage.removeItem('spmb_draft');

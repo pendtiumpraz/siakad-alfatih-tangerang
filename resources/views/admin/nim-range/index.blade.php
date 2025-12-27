@@ -168,7 +168,7 @@
                                                   method="POST"
                                                   class="inline"
                                                   x-data
-                                                  @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus NIM Range ini?')) $el.submit()">
+                                                  @submit.prevent="window.swalConfirmDelete($event, 'NIM Range ini')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"

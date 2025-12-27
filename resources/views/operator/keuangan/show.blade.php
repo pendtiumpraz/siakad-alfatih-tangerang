@@ -253,7 +253,7 @@
                                     <a href="{{ route('operator.keuangan.edit', $transaction->id) }}" class="text-blue-600 hover:text-blue-800 mr-2" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('operator.keuangan.destroy', $transaction->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus transaksi ini?')">
+                                    <form action="{{ route('operator.keuangan.destroy', $transaction->id) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, 'transaksi ini')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800" title="Hapus (Soft Delete)">

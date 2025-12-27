@@ -389,7 +389,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-sm">
                                     @if($pembayaran->status === 'pending' && $pembayaran->bukti_pembayaran)
-                                        <form action="{{ route('admin.pembayaran.verify', $pembayaran->id) }}" method="POST" class="inline" onsubmit="return confirm('Verifikasi pembayaran ini sebagai LUNAS?')">
+                                        <form action="{{ route('admin.pembayaran.verify', $pembayaran->id) }}" method="POST" class="inline" onsubmit="return confirmVerify(this, 'pembayaran ini')">
                                             @csrf
                                             <button type="submit" class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition font-medium">
                                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

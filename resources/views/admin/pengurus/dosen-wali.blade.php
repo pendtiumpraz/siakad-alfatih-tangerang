@@ -163,7 +163,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                 @if($mahasiswa->dosenWali)
-                                    <form method="POST" action="{{ route('admin.pengurus.remove-dosen-wali', $mahasiswa->id) }}" onsubmit="return confirm('Yakin ingin menghapus dosen wali?')" class="inline">
+                                    <form method="POST" action="{{ route('admin.pengurus.remove-dosen-wali', $mahasiswa->id) }}" onsubmit="return confirmDelete(this, 'dosen wali ini')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800 mr-3" title="Hapus Dosen Wali">

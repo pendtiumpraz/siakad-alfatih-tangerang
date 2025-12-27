@@ -75,7 +75,7 @@
                                     <a href="{{ route('admin.jalur-seleksi.edit', $jalur) }}" class="inline-flex items-center px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </a>
-                                    <form action="{{ route('admin.jalur-seleksi.destroy', $jalur) }}" method="POST" class="inline" onsubmit="return confirm('Yakin ingin menghapus jalur seleksi ini?')">
+                                    <form action="{{ route('admin.jalur-seleksi.destroy', $jalur) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, 'jalur seleksi ini')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">

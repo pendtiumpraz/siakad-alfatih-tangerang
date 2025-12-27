@@ -158,19 +158,29 @@ document.addEventListener('DOMContentLoaded', function() {
     isActiveCheckbox.addEventListener('change', function(e) {
         // Hanya tampilkan alert jika checkbox dicentang (mengaktifkan)
         if (this.checked) {
-            const confirmed = confirm(
-                "⚠️ PERHATIAN PENTING!\n\n" +
-                "Mengaktifkan semester baru akan:\n\n" +
-                "✓ Menonaktifkan semester yang sedang aktif\n" +
-                "✓ Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif\n" +
-                "✓ Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP\n\n" +
-                "Apakah Anda yakin ingin melanjutkan?"
-            );
-            
-            if (!confirmed) {
-                // User membatalkan, uncheck checkbox
-                this.checked = false;
-            }
+            const checkbox = this;
+            Swal.fire({
+                icon: 'warning',
+                title: '⚠️ PERHATIAN PENTING!',
+                html: `<div class="text-left">
+                    <p class="font-semibold mb-2">Mengaktifkan semester baru akan:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Menonaktifkan semester yang sedang aktif</li>
+                        <li>Mengirim tagihan pembayaran SPP ke SELURUH mahasiswa aktif</li>
+                        <li>Mahasiswa TIDAK BISA mengakses KRS dan KHS sebelum lunas SPP</li>
+                    </ul>
+                </div>`,
+                showCancelButton: true,
+                confirmButtonColor: '#1B4D3E',
+                cancelButtonColor: '#6B7280',
+                confirmButtonText: 'Ya, Lanjutkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    // User membatalkan, uncheck checkbox
+                    checkbox.checked = false;
+                }
+            });
         }
     });
 });

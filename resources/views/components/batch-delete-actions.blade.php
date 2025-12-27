@@ -117,14 +117,14 @@
                 // Reload page to show updated data
                 window.location.reload();
             } else {
-                alert(data.message || 'Terjadi kesalahan saat menghapus data.');
+                Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'Terjadi kesalahan saat menghapus data.', confirmButtonColor: '#1B4D3E' });
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-trash mr-2"></i>Ya, Hapus';
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat menghapus data.');
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menghapus data.', confirmButtonColor: '#1B4D3E' });
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-trash mr-2"></i>Ya, Hapus';
         });

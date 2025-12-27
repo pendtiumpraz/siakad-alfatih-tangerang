@@ -70,7 +70,7 @@
 
                 <!-- Actions -->
                 <div class="border-t border-gray-200 p-6">
-                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
+                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirmDelete(this, 'user ini')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">

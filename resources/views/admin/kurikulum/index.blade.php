@@ -182,7 +182,7 @@
                                         </a>
                                         <form action="{{ route('admin.kurikulum.destroy', $kurikulum->id) }}" method="POST" class="inline"
                                             x-data
-                                            @submit.prevent="if(confirm('Apakah Anda yakin ingin menghapus kurikulum ini?')) $el.submit()">
+                                            @submit.prevent="window.swalConfirmDelete($event, 'kurikulum ini')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-800 transition" title="Delete">
