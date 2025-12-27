@@ -39,7 +39,7 @@
                             name="kode_prodi"
                             id="kode_prodi"
                             value="{{ old('kode_prodi') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error("kode_prodi")
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('kode_prodi') border-red-500 @enderror"
                             placeholder="Contoh: S1-TI"
                             required
                         >
@@ -87,7 +87,7 @@
                             name="nama_prodi"
                             id="nama_prodi"
                             value="{{ old('nama_prodi') }}"
-                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error("nama_prodi")
+                            class="w-full px-4 py-2 border-2 border-[#2D5F3F] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D4AF37] transition @error('nama_prodi') border-red-500 @enderror"
                             placeholder="Contoh: Teknik Informatika"
                             required
                         >
