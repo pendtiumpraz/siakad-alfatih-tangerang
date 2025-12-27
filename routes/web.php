@@ -434,9 +434,9 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
         // KRS (Kartu Rencana Studi)
         Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
         Route::post('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'store'])->name('krs.store');
-        Route::delete('krs/{id}', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'destroy'])->name('krs.destroy');
         Route::post('krs/submit', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'submit'])->name('krs.submit');
         Route::get('krs/print', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'print'])->name('krs.print');
+        Route::delete('krs/{id}', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'destroy'])->name('krs.destroy');
     });
 
     Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
