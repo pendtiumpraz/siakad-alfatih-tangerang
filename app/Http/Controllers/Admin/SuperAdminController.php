@@ -542,16 +542,38 @@ class SuperAdminController extends Controller
             'institution_address' => 'nullable|string',
         ]);
 
+        // Define settings metadata
+        $settingsMetadata = [
+            'spmb_email' => ['group' => 'spmb', 'type' => 'text', 'description' => 'Email kontak untuk pendaftaran mahasiswa baru'],
+            'spmb_phone' => ['group' => 'spmb', 'type' => 'text', 'description' => 'Nomor telepon kontak SPMB'],
+            'spmb_whatsapp' => ['group' => 'spmb', 'type' => 'text', 'description' => 'Nomor WhatsApp untuk informasi SPMB'],
+            'bank_name' => ['group' => 'payment', 'type' => 'text', 'description' => 'Nama bank untuk pembayaran'],
+            'bank_account_number' => ['group' => 'payment', 'type' => 'text', 'description' => 'Nomor rekening bank'],
+            'bank_account_name' => ['group' => 'payment', 'type' => 'text', 'description' => 'Nama pemilik rekening'],
+            'biaya_uang_gedung' => ['group' => 'pricing', 'type' => 'number', 'description' => 'Biaya uang gedung default'],
+            'biaya_spp_semester' => ['group' => 'pricing', 'type' => 'number', 'description' => 'Biaya SPP per semester default'],
+            'biaya_wisuda' => ['group' => 'pricing', 'type' => 'number', 'description' => 'Biaya wisuda'],
+            'biaya_daftar_ulang' => ['group' => 'pricing', 'type' => 'number', 'description' => 'Biaya daftar ulang setelah diterima'],
+            'institution_name' => ['group' => 'general', 'type' => 'text', 'description' => 'Nama institusi'],
+            'institution_address' => ['group' => 'general', 'type' => 'text', 'description' => 'Alamat institusi'],
+        ];
+
         try {
             DB::beginTransaction();
 
-            // Update all settings
+            // Update or create all settings
             foreach ($validated as $key => $value) {
-                $setting = SystemSetting::where('key', $key)->first();
-
-                if ($setting) {
-                    $setting->update(['value' => $value]);
-                }
+                $metadata = $settingsMetadata[$key] ?? ['group' => 'general', 'type' => 'text', 'description' => ''];
+                
+                SystemSetting::updateOrCreate(
+                    ['key' => $key],
+                    [
+                        'value' => $value ?? '',
+                        'group' => $metadata['group'],
+                        'type' => $metadata['type'],
+                        'description' => $metadata['description'],
+                    ]
+                );
             }
 
             // Clear settings cache
@@ -560,13 +582,13 @@ class SuperAdminController extends Controller
             DB::commit();
 
             return redirect()->route('admin.settings.index')
-                ->with('success', 'Pengaturan berhasil diperbarui.');
+                ->with('success', 'Pengaturan berhasil disimpan.');
 
         } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->withInput()
-                ->with('error', 'Gagal memperbarui pengaturan: ' . $e->getMessage());
+                ->with('error', 'Gagal menyimpan pengaturan: ' . $e->getMessage());
         }
     }
 

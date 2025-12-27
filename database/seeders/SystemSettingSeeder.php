@@ -15,7 +15,7 @@ class SystemSettingSeeder extends Seeder
     public function run(): void
     {
         // Get first superadmin email
-        $superadmin = User::role('super_admin')->first();
+        $superadmin = User::where('role', 'super_admin')->first();
         $adminEmail = $superadmin->email ?? 'admin@staialfatih.ac.id';
 
         $settings = [
