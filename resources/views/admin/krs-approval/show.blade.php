@@ -108,7 +108,7 @@
                     <!-- Approve Button (Normal) -->
                     @if($sppPayment && $sppPayment->status === 'lunas')
                         <form action="{{ route('admin.krs-approval.approve', $mahasiswa->id) }}" method="POST"
-                              onsubmit="return confirm('Approve KRS mahasiswa ini?')">
+                              onsubmit="return confirmApprove(this, 'KRS mahasiswa ini')">
                             @csrf
                             <input type="hidden" name="semester_id" value="{{ $semester->id }}">
                             <button type="submit" 
@@ -142,7 +142,7 @@
                                 Force Approve (Override)
                             </h4>
                             <form action="{{ route('admin.krs-approval.approve', $mahasiswa->id) }}" method="POST"
-                                  onsubmit="return confirm('FORCE APPROVE KRS meskipun belum bayar SPP?\n\nGunakan hanya untuk kasus khusus:\n- Mahasiswa terlambat\n- Beasiswa\n- Cicilan\n- Darurat\n\nLanjutkan?')">
+                                  onsubmit="return confirmForceApprove(this)">
                                 @csrf
                                 <input type="hidden" name="semester_id" value="{{ $semester->id }}">
                                 <input type="hidden" name="force_approve" value="1">

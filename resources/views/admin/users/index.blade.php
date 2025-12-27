@@ -281,7 +281,7 @@
                                     <a href="{{ route('admin.users.edit', $user->id) }}" class="text-[#D4AF37] hover:text-[#b8941f] transition" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus user ini?')">
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, 'user ini')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800 transition" title="Delete">
