@@ -34,6 +34,15 @@ class GoogleDriveOAuthController extends Controller
      */
     public function callback(Request $request)
     {
+        // Log all request parameters for debugging
+        \Log::info('Google OAuth Callback received', [
+            'all_params' => $request->all(),
+            'has_code' => $request->has('code'),
+            'has_error' => $request->has('error'),
+            'full_url' => $request->fullUrl(),
+            'redirect_uri_config' => config('google-drive.redirect_uri'),
+        ]);
+
         // Determine redirect route
         if (auth()->check()) {
             $role = auth()->user()->role === 'super_admin' ? 'admin' : auth()->user()->role;
@@ -43,13 +52,20 @@ class GoogleDriveOAuthController extends Controller
         }
 
         if ($request->has('error')) {
+            \Log::error('Google OAuth error response', [
+                'error' => $request->error,
+                'error_description' => $request->error_description ?? 'No description',
+            ]);
             return redirect()->route($redirectRoute)
-                ->with('error', 'Google Drive connection was denied or failed.');
+                ->with('error', 'Google Drive connection was denied: ' . ($request->error_description ?? $request->error));
         }
 
         if (!$request->has('code')) {
+            \Log::error('No authorization code in callback', [
+                'request_params' => $request->all(),
+            ]);
             return redirect()->route($redirectRoute)
-                ->with('error', 'No authorization code received from Google.');
+                ->with('error', 'No authorization code received from Google. Please check redirect URI configuration.');
         }
 
         try {

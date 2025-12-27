@@ -93,6 +93,11 @@
                     <p class="text-sm text-white/80">
                         &copy; {{ date('Y') }} STAI AL-FATIH. All rights reserved.
                     </p>
+                    <p class="text-xs text-white/60 mt-2">
+                        <a href="{{ route('privacy-policy') }}" class="hover:text-white hover:underline">Privacy Policy</a>
+                        <span class="mx-2">|</span>
+                        <a href="{{ route('terms') }}" class="hover:text-white hover:underline">Terms of Service</a>
+                    </p>
                 </div>
             </div>
         </div>

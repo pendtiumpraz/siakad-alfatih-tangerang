@@ -85,5 +85,16 @@
                 </a>
             </p>
         </div>
+
+        <!-- Legal Links -->
+        <div class="text-center mt-4">
+            <p class="text-xs text-gray-500">
+                Dengan masuk, Anda menyetujui 
+                <a href="{{ route('privacy-policy') }}" class="text-[#2D5F3F] hover:underline">Kebijakan Privasi</a>
+                dan 
+                <a href="{{ route('terms') }}" class="text-[#2D5F3F] hover:underline">Syarat Ketentuan</a>
+                kami.
+            </p>
+        </div>
     </form>
 </x-guest-layout>

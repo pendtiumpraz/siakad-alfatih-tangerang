@@ -28,6 +28,7 @@ use App\Http\Controllers\GoogleDriveOAuthController;
 use App\Http\Controllers\ImageProxyController;
 use Illuminate\Support\Facades\Route;
 
+
 // Public routes
 Route::get('/', function () {
     return redirect()->route('login');
@@ -35,6 +36,15 @@ Route::get('/', function () {
 
 // Image Proxy for Google Drive (bypass CORS)
 Route::get('/image-proxy', [ImageProxyController::class, 'proxy'])->name('image.proxy');
+
+// Legal Pages (Public - No authentication required)
+Route::get('/privacy-policy', function () {
+    return view('legal.privacy-policy');
+})->name('privacy-policy');
+
+Route::get('/terms', function () {
+    return view('legal.terms');
+})->name('terms');
 
 // Public SPMB Routes (No authentication required)
 Route::prefix('spmb')->name('public.spmb.')->group(function() {
