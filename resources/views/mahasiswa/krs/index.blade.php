@@ -102,7 +102,7 @@
                         @if(!$isSubmitted)
                             <form action="{{ route('mahasiswa.krs.submit') }}" method="POST" onsubmit="return confirm('Submit KRS? Setelah submit, KRS tidak bisa diubah lagi.')">
                                 @csrf
-                                <button type="submit" class="px-4 py-2 bg-[#4A7C59] text-white rounded-lg hover:bg-[#3d6849] transition font-semibold">
+                                <button type="submit" class="px-4 py-2 bg-[#4A7C59] text-white rounded-lg hover:bg-[#3d6849] transition font-semibold cursor-pointer" style="position: relative; z-index: 10;">
                                     📤 Submit KRS
                                 </button>
                             </form>
