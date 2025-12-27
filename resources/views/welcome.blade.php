@@ -338,8 +338,12 @@
                 </div>
             </div>
 
-            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; font-size: 13px; color: #64748b;">
-                <p>&copy; {{ date('Y') }} STAI Al-Fatih Tangerang. All rights reserved.</p>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; display: flex; flex-direction: column; md:flex-row; justify-content: space-between; align-items: center; gap: 15px; font-size: 13px; color: #64748b; flex-wrap: wrap;">
+                <p style="margin: 0; text-align: center;">&copy; {{ date('Y') }} STAI Al-Fatih Tangerang. All rights reserved.</p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <a href="{{ route('privacy-policy') }}" style="color: #64748b; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#D4AF37'" onmouseout="this.style.color='#64748b'">Privacy Policy</a>
+                    <a href="{{ route('terms') }}" style="color: #64748b; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#D4AF37'" onmouseout="this.style.color='#64748b'">Terms of Service</a>
+                </div>
             </div>
         </div>
     </footer>

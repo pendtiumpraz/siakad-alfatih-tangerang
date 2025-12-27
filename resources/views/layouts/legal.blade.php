@@ -151,9 +151,9 @@
         <!-- Header Navigation -->
         <div class="legal-container mb-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <a href="{{ route('login') }}" class="back-link">
+                <a href="{{ url('/') }}" class="back-link">
                     <i class="fas fa-arrow-left"></i>
-                    Kembali ke Login
+                    Kembali ke Beranda
                 </a>
                 <div class="nav-links">
                     <a href="{{ route('privacy-policy') }}" class="{{ request()->routeIs('privacy-policy') ? 'active' : '' }}">
