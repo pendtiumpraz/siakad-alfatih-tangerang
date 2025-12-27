@@ -20,7 +20,7 @@
         @if(session('success'))
             Toast.fire({
                 icon: 'success',
-                title: '{{ session("success") }}'
+                title: '{!! addslashes(session("success")) !!}'
             });
         @endif
 
@@ -28,7 +28,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: '{{ session("error") }}',
+                text: '{!! addslashes(session("error")) !!}',
                 confirmButtonColor: '#2D5F3F'
             });
         @endif
@@ -37,7 +37,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Perhatian!',
-                text: '{{ session("warning") }}',
+                text: '{!! addslashes(session("warning")) !!}',
                 confirmButtonColor: '#D4AF37'
             });
         @endif
@@ -45,12 +45,15 @@
         @if(session('info'))
             Toast.fire({
                 icon: 'info',
-                title: '{{ session("info") }}'
+                title: '{!! addslashes(session("info")) !!}'
             });
         @endif
     });
 
-    // Custom confirm function for forms
+    // =====================================================
+    // GLOBAL SWAL CONFIRM FUNCTIONS
+    // =====================================================
+
     function confirmAction(form, title, text, confirmButtonText = 'Ya, Lanjutkan!') {
         Swal.fire({
             title: title,
@@ -58,7 +61,7 @@
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#2D5F3F',
-            cancelButtonColor: '#d33',
+            cancelButtonColor: '#6b7280',
             confirmButtonText: confirmButtonText,
             cancelButtonText: 'Batal'
         }).then((result) => {
@@ -69,14 +72,13 @@
         return false;
     }
 
-    // Custom confirm for delete actions
     function confirmDelete(form, itemName = 'data ini') {
         Swal.fire({
             title: 'Hapus Data?',
             text: `Apakah Anda yakin ingin menghapus ${itemName}?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#dc2626',
             cancelButtonColor: '#6b7280',
             confirmButtonText: 'Ya, Hapus!',
             cancelButtonText: 'Batal'
@@ -88,7 +90,6 @@
         return false;
     }
 
-    // Custom confirm for approve actions
     function confirmApprove(form, itemName = 'data ini') {
         Swal.fire({
             title: 'Setujui Data?',
@@ -107,7 +108,6 @@
         return false;
     }
 
-    // Custom confirm for submit actions
     function confirmSubmit(form, title = 'Submit Data?', text = 'Data yang sudah disubmit tidak bisa diubah lagi.') {
         Swal.fire({
             title: title,
@@ -126,7 +126,6 @@
         return false;
     }
 
-    // Custom confirm for restore actions
     function confirmRestore(form, itemName = 'data ini') {
         Swal.fire({
             title: 'Restore Data?',
@@ -145,7 +144,6 @@
         return false;
     }
 
-    // Custom confirm for verify actions
     function confirmVerify(form, itemName = 'pembayaran ini') {
         Swal.fire({
             title: 'Verifikasi Pembayaran?',
@@ -164,15 +162,64 @@
         return false;
     }
 
-    // Show success alert
-    function showSuccess(message) {
-        Toast.fire({
-            icon: 'success',
-            title: message
+    function confirmForceApprove(form) {
+        Swal.fire({
+            title: 'Force Approve KRS?',
+            html: '<p>PERINGATAN: Approve KRS meskipun mahasiswa belum bayar SPP.</p><p class="text-sm mt-2">Gunakan hanya untuk kasus khusus (beasiswa, cicilan, darurat).</p>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Force Approve!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
         });
+        return false;
     }
 
-    // Show error alert
+    function confirmBatchApprove(form, prodiName) {
+        Swal.fire({
+            title: 'Approve Semua KRS?',
+            html: `<p>Approve semua KRS yang sudah bayar SPP untuk <strong>${prodiName}</strong>?</p><p class="text-sm text-gray-500 mt-2">Yang belum bayar akan di-skip otomatis.</p>`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2D5F3F',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Approve Semua!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmGenerate(form, text = 'Proses ini mungkin memakan waktu beberapa menit.') {
+        Swal.fire({
+            title: 'Generate Data?',
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2D5F3F',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Generate!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function showSuccess(message) {
+        Toast.fire({ icon: 'success', title: message });
+    }
+
     function showError(message) {
         Swal.fire({
             icon: 'error',
@@ -182,11 +229,50 @@
         });
     }
 
-    // Show info alert
     function showInfo(message) {
-        Toast.fire({
-            icon: 'info',
-            title: message
-        });
+        Toast.fire({ icon: 'info', title: message });
     }
+
+    // =====================================================
+    // ALPINE.JS COMPATIBLE - Window Object
+    // =====================================================
+    window.swalConfirmDelete = function(event, itemName = 'data ini') {
+        event.preventDefault();
+        confirmDelete(event.target, itemName);
+    };
+
+    window.swalConfirmRestore = function(event, itemName = 'data ini') {
+        event.preventDefault();
+        confirmRestore(event.target, itemName);
+    };
+
+    window.swalConfirmApprove = function(event, itemName = 'data ini') {
+        event.preventDefault();
+        confirmApprove(event.target, itemName);
+    };
+
+    window.swalConfirmAction = function(event, title, text) {
+        event.preventDefault();
+        confirmAction(event.target, title, text);
+    };
+
+    window.swalConfirmVerify = function(event, itemName = 'pembayaran ini') {
+        event.preventDefault();
+        confirmVerify(event.target, itemName);
+    };
+
+    window.swalConfirmGenerate = function(event, text) {
+        event.preventDefault();
+        confirmGenerate(event.target, text);
+    };
+
+    window.swalConfirmForceApprove = function(event) {
+        event.preventDefault();
+        confirmForceApprove(event.target);
+    };
+
+    window.swalConfirmBatchApprove = function(event, prodiName) {
+        event.preventDefault();
+        confirmBatchApprove(event.target, prodiName);
+    };
 </script>
