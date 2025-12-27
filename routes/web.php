@@ -29,10 +29,13 @@ use App\Http\Controllers\ImageProxyController;
 use Illuminate\Support\Facades\Route;
 
 
-// Public routes
+// Public routes - Landing Page
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    $programStudis = \App\Models\ProgramStudi::where('is_active', true)
+        ->orderBy('nama_prodi')
+        ->get();
+    return view('welcome', compact('programStudis'));
+})->name('home');
 
 // Image Proxy for Google Drive (bypass CORS)
 Route::get('/image-proxy', [ImageProxyController::class, 'proxy'])->name('image.proxy');
