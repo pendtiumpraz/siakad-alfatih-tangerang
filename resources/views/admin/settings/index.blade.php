@@ -24,7 +24,7 @@
             <!-- SPMB Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] px-6 py-4">
-                    <h3 class="text-lg font-bold text-white flex items-center">
+                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
                         <i class="fas fa-comments mr-3"></i>
                         Informasi Kontak SPMB
                     </h3>
@@ -91,7 +91,7 @@
             <!-- Payment Settings (Bank) -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="bg-gradient-to-r from-[#2563eb] to-[#3b82f6] px-6 py-4">
-                    <h3 class="text-lg font-bold text-white flex items-center">
+                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
                         <i class="fas fa-credit-card mr-3"></i>
                         Informasi Rekening Bank
                     </h3>
@@ -169,7 +169,7 @@
             <!-- Pricing Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="bg-gradient-to-r from-[#D4AF37] to-[#eab308] px-6 py-4">
-                    <h3 class="text-lg font-bold text-white flex items-center">
+                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
                         <i class="fas fa-money-bill-wave mr-3"></i>
                         Pengaturan Biaya (Default)
                     </h3>
@@ -269,7 +269,7 @@
             <!-- General/Institution Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div class="bg-gradient-to-r from-[#4b5563] to-[#6b7280] px-6 py-4">
-                    <h3 class="text-lg font-bold text-white flex items-center">
+                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
                         <i class="fas fa-university mr-3"></i>
                         Informasi Institusi
                     </h3>
@@ -320,7 +320,7 @@
                     <p class="text-sm">Pastikan semua informasi sudah benar sebelum menyimpan</p>
                 </div>
                 <button type="submit"
-                        class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] hover:from-[#234a30] hover:to-[#3d6849] text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+                        class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] hover:from-[#234a30] hover:to-[#3d6849] text-[#FFFFFF] font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
                     <i class="fas fa-save"></i>
                     <span>Simpan Pengaturan</span>
                 </button>
