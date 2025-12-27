@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        {{-- Google Site Verification - Ganti dengan kode dari Google --}}
+        <meta name="google-site-verification" content="D8MnsoKB8CGE--qTmPL2wOC87jUVwS7O6lZl9VaZwM8" />
+
         <title>{{ config('app.name', 'SIAKAD STAI AL-FATIH') }} - Sistem Informasi Akademik</title>
     
     <!-- Favicon -->
