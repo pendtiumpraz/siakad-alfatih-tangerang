@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,156 +9,205 @@
     <title>SIAKAD STAI AL FATIH - Sistem Informasi Akademik</title>
 
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Tailwind (Tetap dipakai) -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ config('app.asset_version', '1.0') }}">
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
         h1, h2, h3, h4, .serif { font-family: 'Playfair Display', serif; }
         
+        .section-padding { padding: 100px 20px; }
+        .container-custom { max-width: 1200px; margin: 0 auto; width: 100%; }
+        
+        /* Hero */
         .hero-section {
             background-image: linear-gradient(rgba(18, 28, 24, 0.85), rgba(27, 77, 62, 0.8)), url('https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=2000&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px; /* Offset navbar */
         }
 
-        /* Hover Effects */
-        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        /* Nav */
+        nav {
+            background-color: #ffffff;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #f0f0f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Spacing Helpers (Fallback) */
+        .mb-10 { margin-bottom: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+        .mb-30 { margin-bottom: 30px; }
+        .mb-40 { margin-bottom: 40px; }
+        .mb-50 { margin-bottom: 50px; }
+        
+        .gap-20 { gap: 20px; }
+        .gap-30 { gap: 30px; }
+
+        /* Colors */
+        .text-gold { color: #D4AF37; }
+        .bg-gold { background-color: #D4AF37; }
+        .text-green { color: #1B4D3E; }
+        .bg-green { background-color: #1B4D3E; }
+
+        /* Custom Grid for Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-padding { padding: 60px 20px; }
+        }
+
+        /* Buttons */
+        .btn-custom {
+            display: inline-block;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-gold { background-color: #D4AF37; color: white; border: none; }
+        .btn-gold:hover { background-color: #b89628; transform: translateY(-3px); }
+        
+        .btn-outline-white { border: 1px solid rgba(255,255,255,0.5); color: white; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+        .btn-outline-white:hover { background: rgba(255,255,255,0.2); }
+
+        .btn-green { background-color: #1B4D3E; color: white; }
+        .btn-green:hover { background-color: #12352a; }
+
+        .image-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
-<body class="antialiased bg-white text-gray-800">
+<body class="bg-white">
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-white shadow-md border-b border-gray-100 h-24 flex items-center">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 w-full flex justify-between items-center">
-            <!-- Logo -->
-            <a href="/" class="flex items-center gap-4">
-                <img class="h-12 w-auto" src="{{ asset('images/logo-alfatih.png') }}" alt="Logo">
+    <nav>
+        <div class="container-custom" style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+            <a href="/" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">
+                <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo" style="height: 50px; width: auto;">
                 <div class="hidden md:block">
-                    <div class="text-xl font-bold text-gray-900 leading-none font-serif tracking-tight">SIAKAD</div>
-                    <div class="text-xs font-semibold uppercase tracking-widest mt-1" style="color: #D4AF37;">STAI Al-Fatih</div>
+                    <div style="font-size: 24px; font-weight: 800; color: #1B4D3E; line-height: 1; font-family: 'Playfair Display', serif;">SIAKAD</div>
+                    <div style="font-size: 11px; font-weight: 600; color: #D4AF37; letter-spacing: 2px; text-transform: uppercase;">STAI Al-Fatih</div>
                 </div>
             </a>
 
-            <!-- Menu -->
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="#" class="font-bold" style="color: #1B4D3E;">Beranda</a>
-                <a href="#tentang" class="text-gray-600 hover:text-black transition-colors">Tentang</a>
-                <a href="#prodi" class="text-gray-600 hover:text-black transition-colors">Program Studi</a>
-                <a href="#fasilitas" class="text-gray-600 hover:text-black transition-colors">Fasilitas</a>
+            <div class="hidden md:flex" style="gap: 30px; align-items: center;">
+                <a href="#" style="color: #1B4D3E; font-weight: 700; text-decoration: none;">Beranda</a>
+                <a href="#tentang" style="color: #666; font-weight: 500; text-decoration: none;">Tentang</a>
+                <a href="#prodi" style="color: #666; font-weight: 500; text-decoration: none;">Program Studi</a>
+                <a href="#fasilitas" style="color: #666; font-weight: 500; text-decoration: none;">Fasilitas</a>
             </div>
 
-            <!-- Buttons -->
-            <div class="hidden md:flex items-center gap-4">
-                <a href="{{ route('public.spmb.index') }}" class="px-6 py-2.5 rounded-full border-2 text-sm font-bold transition-all hover:bg-gray-50" style="color: #1B4D3E; border-color: #1B4D3E;">
-                    SPMB Online
-                </a>
-                <a href="{{ route('login') }}" class="px-6 py-2.5 rounded-full text-white text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2" style="background-color: #1B4D3E;">
-                    <i class="fas fa-lock text-xs"></i> Login Portal
-                </a>
+            <div class="hidden md:flex" style="gap: 15px; align-items: center;">
+                <a href="{{ route('public.spmb.index') }}" style="padding: 10px 25px; border-radius: 50px; font-weight: 700; font-size: 14px; color: #1B4D3E; border: 2px solid #1B4D3E; text-decoration: none;">SPMB Online</a>
+                <a href="{{ route('login') }}" style="padding: 12px 25px; border-radius: 50px; font-weight: 700; font-size: 14px; color: white; background-color: #1B4D3E; text-decoration: none; box-shadow: 0 10px 20px rgba(27, 77, 62, 0.2);">Login Portal</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section min-h-screen flex items-center justify-center text-center px-4 pt-24">
-        <div class="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
-            <div class="inline-block px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-                <span class="text-sm font-semibold tracking-wider uppercase text-white"><i class="fas fa-star text-xs mr-2" style="color: #D4AF37;"></i>Platform Akademik Digital</span>
+    <!-- Hero -->
+    <section class="hero-section">
+        <div class="container-custom" style="padding: 0 20px;">
+            <div style="display: inline-block; padding: 8px 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50px; margin-bottom: 30px; backdrop-filter: blur(10px);">
+                <span style="color: white; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                    <i class="fas fa-star" style="color: #D4AF37; margin-right: 8px;"></i>Platform Akademik Digital
+                </span>
             </div>
             
-            <h1 class="text-5xl md:text-7xl font-bold text-white tracking-tight leading-[1.1] drop-shadow-lg">
+            <h1 style="color: white; font-size: clamp(40px, 5vw, 70px); font-weight: 700; line-height: 1.1; margin-bottom: 30px; text-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                 Generasi Unggul & <br>
-                <span class="italic font-serif" style="color: #D4AF37;">Berakhlak Mulia</span>
+                <span style="color: #D4AF37; font-style: italic; font-family: 'Playfair Display', serif;">Berakhlak Mulia</span>
             </h1>
             
-            <p class="text-xl text-gray-200 max-w-2xl mx-auto font-light leading-relaxed">
-                Sistem Informasi Akademik Terintegrasi STAI Al-Fatih Tangerang. Memudahkan akses layanan pendidikan bagi mahasiswa, dosen, dan staf secara real-time.
+            <p style="color: #e2e8f0; font-size: 18px; line-height: 1.8; max-width: 700px; margin: 0 auto 50px auto;">
+                Sistem Informasi Akademik Terintegrasi STAI Al-Fatih Tangerang. Memudahkan akses layanan pendidikan bagi mahasiswa, dosen, dan staf.
             </p>
             
-            <div class="flex flex-col sm:flex-row gap-5 justify-center items-center pt-8">
-                <a href="{{ route('login') }}" class="w-full sm:w-auto px-10 py-4 text-white font-bold rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1" style="background-color: #D4AF37;">
-                    Masuk SIAKAD
-                </a>
-                <a href="{{ route('public.spmb.index') }}" class="w-full sm:w-auto px-10 py-4 bg-transparent border border-white/50 text-white font-bold rounded-full hover:bg-white/10 transition-all backdrop-blur-sm">
-                    Daftar Mahasiswa Baru
-                </a>
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ route('login') }}" class="btn-custom btn-gold">Masuk SIAKAD</a>
+                <a href="{{ route('public.spmb.index') }}" class="btn-custom btn-outline-white">Daftar Mahasiswa Baru</a>
             </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-20" style="background-color: #1B4D3E;">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-12 text-center text-white">
-                <div>
-                    <div class="text-5xl font-bold font-serif mb-2" style="color: #D4AF37;">{{ $programStudis->count() }}</div>
-                    <div class="text-sm opacity-80 uppercase tracking-widest font-medium">Program Studi</div>
+    <!-- Stats -->
+    <section style="background-color: #1B4D3E; padding: 60px 20px;">
+        <div class="container-custom">
+            <div class="stats-grid">
+                <div style="text-align: center;">
+                    <div style="color: #D4AF37; font-size: 48px; font-weight: 700; margin-bottom: 10px; font-family:serif;">{{ $programStudis->count() }}</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Program Studi</div>
                 </div>
-                <div>
-                    <div class="text-5xl font-bold font-serif mb-2" style="color: #D4AF37;">A</div>
-                    <div class="text-sm opacity-80 uppercase tracking-widest font-medium">Akreditasi</div>
+                <div style="text-align: center;">
+                    <div style="color: #D4AF37; font-size: 48px; font-weight: 700; margin-bottom: 10px; font-family:serif;">A</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Akreditasi</div>
                 </div>
-                <div>
-                    <div class="text-5xl font-bold font-serif mb-2" style="color: #D4AF37;">24/7</div>
-                    <div class="text-sm opacity-80 uppercase tracking-widest font-medium">Akses Online</div>
+                <div style="text-align: center;">
+                    <div style="color: #D4AF37; font-size: 48px; font-weight: 700; margin-bottom: 10px; font-family:serif;">24/7</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Akses Online</div>
                 </div>
-                <div>
-                    <div class="text-5xl font-bold font-serif mb-2" style="color: #D4AF37;">100%</div>
-                    <div class="text-sm opacity-80 uppercase tracking-widest font-medium">Digital</div>
+                <div style="text-align: center;">
+                    <div style="color: #D4AF37; font-size: 48px; font-weight: 700; margin-bottom: 10px; font-family:serif;">100%</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Digital</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="tentang" class="py-28 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
-                <!-- Image -->
-                <div class="relative rounded-3xl overflow-hidden shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1590076215667-875d4ef2d7fe?q=80&w=800&auto=format&fit=crop" class="w-full h-[600px] object-cover hover:scale-105 transition-transform duration-700" alt="Islamic Architecture">
-                    <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
-                        <p class="text-white italic font-serif text-lg">"Mencetak sarjana muslim yang kompeten dan berintegritas."</p>
-                    </div>
+    <!-- About -->
+    <section id="tentang" class="section-padding">
+        <div class="container-custom">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; align-items: center;">
+                <div class="image-card">
+                    <img src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?q=80&w=800&auto=format&fit=crop" style="width: 100%; height: 500px; object-fit: cover; display: block;" alt="Architecture">
                 </div>
-                
-                <!-- Content -->
-                <div class="space-y-8">
-                    <div>
-                        <span class="font-bold uppercase tracking-widest text-sm" style="color: #D4AF37;">Tentang Kampus</span>
-                        <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mt-4 leading-tight font-serif">
-                            Transformasi Digital <br>
-                            <span class="italic" style="color: #1B4D3E;">Pendidikan Islam</span>
-                        </h2>
-                    </div>
-                    
-                    <p class="text-lg text-gray-600 leading-relaxed">
+                <div>
+                    <span style="color: #D4AF37; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 15px;">Tentang Kampus</span>
+                    <h2 style="font-size: 42px; color: #1f2937; line-height: 1.2; margin-bottom: 30px;">
+                        Transformasi Digital <br>
+                        <span style="color: #1B4D3E; font-style: italic;">Pendidikan Islam</span>
+                    </h2>
+                    <p style="color: #4b5563; font-size: 18px; line-height: 1.7; margin-bottom: 30px;">
                         SIAKAD STAI Al-Fatih hadir sebagai solusi modern untuk mendukung proses pembelajaran yang efektif dan efisien. Kami berkomitmen untuk menyediakan layanan akademik terbaik dengan dukungan teknologi informasi terkini.
                     </p>
-                    
-                    <div class="space-y-4 pt-4">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white flex-shrink-0" style="background-color: #1B4D3E;">
-                                <i class="fas fa-check"></i>
-                            </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 15px; display: flex; gap: 15px; align-items: start;">
+                            <i class="fas fa-check-circle" style="color: #1B4D3E; font-size: 24px; margin-top: 5px;"></i>
                             <div>
-                                <h4 class="font-bold text-gray-900 text-lg">Kurikulum Terintegrasi</h4>
-                                <p class="text-gray-500">Standar pendidikan nasional dan nilai keislaman.</p>
+                                <h4 style="margin: 0 0 5px 0; font-size: 18px; font-weight: 700;">Integrated System</h4>
+                                <p style="margin: 0; font-size: 14px; color: #64748b;">Semua data terpusat</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-white flex-shrink-0" style="background-color: #D4AF37;">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 15px; display: flex; gap: 15px; align-items: start;">
+                            <i class="fas fa-shield-alt" style="color: #D4AF37; font-size: 24px; margin-top: 5px;"></i>
                             <div>
-                                <h4 class="font-bold text-gray-900 text-lg">Sistem Aman & Handal</h4>
-                                <p class="text-gray-500">Keamanan data prioritas utama kami.</p>
+                                <h4 style="margin: 0 0 5px 0; font-size: 18px; font-weight: 700;">Secure Data</h4>
+                                <p style="margin: 0; font-size: 14px; color: #64748b;">Keamanan terjamin</p>
                             </div>
                         </div>
                     </div>
@@ -167,111 +216,55 @@
         </div>
     </section>
 
-    <!-- Prodi Section -->
-    <section id="prodi" class="py-28 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-20">
-                <span class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest bg-green-100" style="color: #1B4D3E;">Fakultas Agama Islam</span>
-                <h2 class="text-4xl font-bold text-gray-900 mt-6 mb-4 font-serif">Program Studi Pilihan</h2>
-                <div class="w-24 h-1 mx-auto rounded-full" style="background-color: #D4AF37;"></div>
+    <!-- Prodi -->
+    <section id="prodi" class="section-padding" style="background-color: #f8fafc;">
+        <div class="container-custom">
+            <div style="text-align: center; max-width: 700px; margin: 0 auto 60px auto;">
+                <span style="background-color: #dcfce7; color: #166534; padding: 8px 15px; border-radius: 50px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Fakultas Agama Islam</span>
+                <h2 style="font-size: 40px; margin-top: 20px; margin-bottom: 20px; color: #1f2937;">Program Studi Pilihan</h2>
+                <div style="width: 80px; height: 4px; background: #D4AF37; margin: 0 auto; border-radius: 2px;"></div>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
                 @forelse($programStudis as $prodi)
-                <div class="bg-white rounded-2xl p-8 hover-lift border border-gray-100 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-24 h-24 rounded-bl-full transition-colors opacity-10 group-hover:opacity-20" style="background-color: #1B4D3E;"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6 shadow-sm border border-gray-100 group-hover:scale-110 transition-transform" style="color: #1B4D3E;">
+                <div style="background: white; padding: 35px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: all 0.3s; border: 1px solid #f1f5f9; position: relative; overflow: hidden;">
+                    <div style="background: #1B4D3E; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-bottom: 25px;">
                         <i class="fas fa-book-reader"></i>
                     </div>
-
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="px-3 py-1 rounded-md text-white text-xs font-bold" style="background-color: #1B4D3E;">
-                            {{ $prodi->jenjang }}
-                        </span>
-                        <span class="text-sm text-gray-500 font-mono">{{ $prodi->kode_prodi }}</span>
+                    
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px;">
+                        <span style="background: #1B4D3E; color: white; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 700;">{{ $prodi->jenjang }}</span>
+                        <span style="border: 1px solid #e2e8f0; color: #94a3b8; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-family: monospace;">{{ $prodi->kode_prodi }}</span>
                     </div>
 
-                    <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-800 transition-colors">
-                        {{ $prodi->nama_prodi }}
-                    </h3>
+                    <h3 style="font-size: 22px; font-weight: 700; color: #1f2937; margin-bottom: 10px; line-height: 1.4;">{{ $prodi->nama_prodi }}</h3>
                     
-                    <div class="pt-6 mt-6 border-t border-gray-100 flex justify-between items-center text-sm">
-                        <span class="text-gray-500">Status: Aktif</span>
-                        <span class="font-bold flex items-center gap-2" style="color: #D4AF37;">Detail <i class="fas fa-arrow-right"></i></span>
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; color: #64748b; font-weight: 500;">Status: Aktif</span>
+                        <a href="#" style="color: #D4AF37; font-weight: 700; font-size: 13px; text-decoration: none;">Detail <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></a>
                     </div>
                 </div>
                 @empty
-                <div class="col-span-full py-16 text-center bg-white rounded-2xl border-2 border-dashed border-gray-200">
-                    <i class="fas fa-folder-open text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500">Belum ada data program studi.</p>
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 20px; border: 2px dashed #cbd5e1;">
+                    <p style="color: #64748b;">Belum ada data program studi.</p>
                 </div>
                 @endforelse
             </div>
         </div>
     </section>
 
-    <!-- Fasilitas Section -->
-    <section id="fasilitas" class="py-28 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                <div>
-                    <span class="font-bold uppercase tracking-widest text-sm" style="color: #D4AF37;">Fasilitas Digital</span>
-                    <h2 class="text-4xl font-bold text-gray-900 mt-4 font-serif">Fitur Layanan Utama</h2>
-                </div>
-                <a href="{{ route('public.spmb.index') }}" class="font-bold flex items-center gap-2 hover:opacity-80 transition-opacity" style="color: #1B4D3E; border-bottom: 2px solid #1B4D3E;">
-                    Lihat Selengkapnya <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-10">
-                <!-- Card -->
-                <div class="p-10 rounded-3xl bg-gray-50 hover:bg-[#1B4D3E] group transition-all duration-300">
-                    <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-2xl mb-8 shadow-sm group-hover:mb-10 transition-all" style="color: #1B4D3E;">
-                        <i class="fas fa-user-graduate"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-white">Portal Mahasiswa</h3>
-                    <p class="text-gray-600 group-hover:text-gray-200 leading-relaxed">
-                        Layanan akademik mandiri untuk KRS, KHS, Transkrip, dan Jadwal Kuliah dalam satu dashboard.
-                    </p>
-                </div>
-                <!-- Card -->
-                <div class="p-10 rounded-3xl bg-gray-50 hover:bg-[#1B4D3E] group transition-all duration-300">
-                    <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-2xl mb-8 shadow-sm group-hover:mb-10 transition-all" style="color: #D4AF37;">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-white">Portal Dosen</h3>
-                    <p class="text-gray-600 group-hover:text-gray-200 leading-relaxed">
-                        Manajemen perkuliahan, input nilai, dan validasi akademik yang mudah dan terintegrasi.
-                    </p>
-                </div>
-                <!-- Card -->
-                <div class="p-10 rounded-3xl bg-gray-50 hover:bg-[#1B4D3E] group transition-all duration-300">
-                    <div class="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-2xl mb-8 shadow-sm group-hover:mb-10 transition-all" style="color: #1B4D3E;">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-white">E-Finance</h3>
-                    <p class="text-gray-600 group-hover:text-gray-200 leading-relaxed">
-                        Sistem pembayaran kuliah yang transparan, aman, dan tercatat otomatis.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
-    <footer class="text-white pt-24 pb-12" style="background-color: #102A23;">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
-                <div class="space-y-8">
-                    <div class="flex items-center gap-3">
-                        <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo" class="h-14 w-auto brightness-200 grayscale opacity-90">
+    <footer style="background-color: #102A23; color: white; padding: 80px 20px 30px 20px;">
+        <div class="container-custom">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 60px; margin-bottom: 60px;">
+                <div>
+                     <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+                        <img src="{{ asset('images/logo-alfatih.png') }}" style="height: 50px; filter: brightness(0) invert(1) opacity(0.8);">
                         <div>
-                            <span class="block font-bold text-xl tracking-wide font-serif">SIAKAD</span>
-                            <span class="block text-xs uppercase tracking-widest opacity-60">STAI Al-Fatih</span>
+                            <div style="font-size: 20px; font-weight: 800; text-transform: uppercase;">SIAKAD</div>
                         </div>
                     </div>
-                    <p class="text-gray-400 text-sm leading-8">
+                    <p style="color: #94a3b8; font-size: 14px; line-height: 1.8;">
                         Jalan KH. Hasyim Ashari No. 123,<br>
                         Kota Tangerang, Banten, Indonesia.<br>
                         Email: {{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}
@@ -279,56 +272,29 @@
                 </div>
 
                 <div>
-                    <h4 class="font-bold mb-8 text-sm uppercase tracking-widest" style="color: #D4AF37;">Akademik</h4>
-                    <ul class="space-y-4 text-sm text-gray-400">
-                        <li><a href="#prodi" class="hover:text-white transition-colors">Program Studi</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Kalender Akademik</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Fasilitas Kampus</a></li>
-                        <li><a href="{{ route('public.spmb.index') }}" class="hover:text-white transition-colors">Pendaftaran Maba</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-bold mb-8 text-sm uppercase tracking-widest" style="color: #D4AF37;">Akses Cepat</h4>
-                    <ul class="space-y-4 text-sm text-gray-400">
-                        <li><a href="{{ route('login') }}" class="hover:text-white transition-colors">Portal Mahasiswa</a></li>
-                        <li><a href="{{ route('login') }}" class="hover:text-white transition-colors">Portal Dosen</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">E-Journal</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Perpustakaan</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-bold mb-8 text-sm uppercase tracking-widest" style="color: #D4AF37;">Hubungi Kami</h4>
-                    <ul class="space-y-4 text-sm text-gray-400">
-                        <li class="flex items-center gap-3">
-                            <i class="fas fa-phone text-gray-500"></i>
+                    <h4 style="color: #D4AF37; margin-bottom: 30px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Hubungi Kami</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 15px; display: flex; gap: 15px; color: #cbd5e1;">
+                            <i class="fas fa-phone" style="color: #D4AF37; margin-top: 5px;"></i>
                             <span>{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fab fa-whatsapp text-gray-500"></i>
+                        <li style="margin-bottom: 15px; display: flex; gap: 15px; color: #cbd5e1;">
+                            <i class="fab fa-whatsapp" style="color: #D4AF37; margin-top: 5px;"></i>
                             <span>{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; font-size: 13px; color: #64748b;">
                 <p>&copy; {{ date('Y') }} STAI Al-Fatih Tangerang. All rights reserved.</p>
-                <div class="flex gap-8">
-                    <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="{{ route('terms') }}" class="hover:text-white transition-colors">Terms of Service</a>
-                </div>
             </div>
         </div>
     </footer>
 
-    <!-- Floating WhatsApp -->
-    <a href="https://wa.me/{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}" target="_blank" class="fixed bottom-8 right-8 z-[60] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-all flex items-center justify-center group" style="background-color: #25D366;">
-        <i class="fab fa-whatsapp text-3xl"></i>
-        <div class="absolute right-full mr-4 bg-white text-gray-800 px-4 py-2 rounded-xl shadow-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all invisible group-hover:visible whitespace-nowrap">
-            Hubungi Admin
-        </div>
+    <!-- Floating WA -->
+    <a href="https://wa.me/{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}" target="_blank" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none;">
+        <i class="fab fa-whatsapp"></i>
     </a>
 
 </body>
