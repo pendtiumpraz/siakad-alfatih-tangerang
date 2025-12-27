@@ -427,7 +427,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     });
 
     Route::get('pembayaran', [MahasiswaController::class, 'pembayaran'])->name('pembayaran.index');
-    Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.detail');
+    Route::get('pembayaran/{id}', [MahasiswaController::class, 'pembayaranDetail'])->name('pembayaran.show');
     Route::post('pembayaran/{id}/upload', [MahasiswaController::class, 'uploadBukti'])->name('pembayaran.upload');
 
     // Notifications

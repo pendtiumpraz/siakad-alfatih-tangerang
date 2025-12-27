@@ -262,15 +262,22 @@
             <div>
                 <h4 class="font-bold text-gray-800 mb-3">Rekening Transfer:</h4>
                 <div class="space-y-3">
-                    <div class="bg-blue-50 p-4 rounded-lg">
-                        <p class="text-sm text-gray-600 mb-1">Bank BNI</p>
-                        <p class="text-lg font-bold text-gray-800">1234567890</p>
-                        <p class="text-sm text-gray-600">a.n. STAI AL-FATIH</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-lg">
-                        <p class="text-sm text-gray-600 mb-1">Bank Mandiri</p>
-                        <p class="text-lg font-bold text-gray-800">0987654321</p>
-                        <p class="text-sm text-gray-600">a.n. STAI AL-FATIH</p>
+                    @php
+                        $bankName = \App\Models\SystemSetting::get('bank_name', 'BCA');
+                        $bankAccountNumber = \App\Models\SystemSetting::get('bank_account_number', '1234567890');
+                        $bankAccountName = \App\Models\SystemSetting::get('bank_account_name', 'STAI AL-FATIH');
+                    @endphp
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border-l-4 border-blue-500">
+                        <p class="text-sm text-gray-600 mb-1">{{ $bankName }}</p>
+                        <div class="flex items-center justify-between">
+                            <p class="text-xl font-bold text-gray-800">{{ $bankAccountNumber }}</p>
+                            <button onclick="copyToClipboard('{{ $bankAccountNumber }}')" class="text-blue-600 hover:text-blue-800 p-1" title="Salin nomor rekening">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-600">a.n. {{ $bankAccountName }}</p>
                     </div>
                 </div>
             </div>
@@ -302,3 +309,25 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success toast
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2';
+        toast.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <span>Nomor rekening berhasil disalin!</span>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+</script>
+@endpush

@@ -286,6 +286,12 @@
                     <i class="fas fa-book w-5"></i>
                     <span class="ml-3">Dokumentasi</span>
                 </a>
+
+                <!-- Pengaturan Sistem -->
+                <a href="{{ route('admin.settings.index') }}" class="sidebar-link flex items-center px-4 py-3 mb-2 text-white rounded-lg {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                    <i class="fas fa-cog w-5"></i>
+                    <span class="ml-3">Pengaturan Sistem</span>
+                </a>
             </nav>
         </aside>
 
