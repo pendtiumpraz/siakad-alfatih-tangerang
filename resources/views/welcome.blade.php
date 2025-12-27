@@ -319,7 +319,7 @@
                         <strong>Alamat Kantor Sekretariat:</strong><br>
                         Jl. Raden Fatah, No. 5 RT 004 / RW 006, Parung Serab Kec Ciledug Kota Tangerang, Banten, Kode Pos 15153<br>
                         <br>
-                        <strong>Email:</strong> {{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}
+                        <strong>Email:</strong> helpdesk@siakad.staialfatih.or.id
                     </p>
                 </div>
 
