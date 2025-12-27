@@ -23,12 +23,12 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- SPMB Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] px-6 py-4">
-                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #2D5F3F, #4A7C59);">
+                    <h3 class="text-lg font-bold flex items-center" style="color: #FFFFFF;">
                         <i class="fas fa-comments mr-3"></i>
                         Informasi Kontak SPMB
                     </h3>
-                    <p class="text-sm text-[#d4f5dc] mt-1">Kontak yang akan ditampilkan di halaman pendaftaran mahasiswa baru</p>
+                    <p class="text-sm mt-1" style="color: #d4f5dc;">Kontak yang akan ditampilkan di halaman pendaftaran mahasiswa baru</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <!-- Email SPMB -->
@@ -90,12 +90,12 @@
 
             <!-- Payment Settings (Bank) -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-[#2563eb] to-[#3b82f6] px-6 py-4">
-                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #2563eb, #3b82f6);">
+                    <h3 class="text-lg font-bold flex items-center" style="color: #FFFFFF;">
                         <i class="fas fa-credit-card mr-3"></i>
                         Informasi Rekening Bank
                     </h3>
-                    <p class="text-sm text-[#d4e6f5] mt-1">Rekening yang akan ditampilkan untuk pembayaran SPP mahasiswa</p>
+                    <p class="text-sm mt-1" style="color: #d4e6f5;">Rekening yang akan ditampilkan untuk pembayaran SPP mahasiswa</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <!-- Bank Name -->
@@ -168,12 +168,12 @@
 
             <!-- Pricing Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-[#D4AF37] to-[#eab308] px-6 py-4">
-                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #D4AF37, #eab308);">
+                    <h3 class="text-lg font-bold flex items-center" style="color: #FFFFFF;">
                         <i class="fas fa-money-bill-wave mr-3"></i>
                         Pengaturan Biaya (Default)
                     </h3>
-                    <p class="text-sm text-[#fffacd] mt-1">Biaya default untuk mahasiswa (dapat diatur per jalur seleksi)</p>
+                    <p class="text-sm mt-1" style="color: #fffacd;">Biaya default untuk mahasiswa (dapat diatur per jalur seleksi)</p>
                 </div>
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Uang Gedung -->
@@ -268,12 +268,12 @@
 
             <!-- General/Institution Settings -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                <div class="bg-gradient-to-r from-[#4b5563] to-[#6b7280] px-6 py-4">
-                    <h3 class="text-lg font-bold text-[#FFFFFF] flex items-center">
+                <div class="px-6 py-4" style="background: linear-gradient(to right, #4b5563, #6b7280);">
+                    <h3 class="text-lg font-bold flex items-center" style="color: #FFFFFF;">
                         <i class="fas fa-university mr-3"></i>
                         Informasi Institusi
                     </h3>
-                    <p class="text-sm text-[#d4d4d4] mt-1">Informasi umum tentang institusi</p>
+                    <p class="text-sm mt-1" style="color: #d4d4d4;">Informasi umum tentang institusi</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <!-- Institution Name -->
@@ -320,7 +320,8 @@
                     <p class="text-sm">Pastikan semua informasi sudah benar sebelum menyimpan</p>
                 </div>
                 <button type="submit"
-                        class="bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] hover:from-[#234a30] hover:to-[#3d6849] text-[#FFFFFF] font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+                        class="font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg"
+                        style="background: linear-gradient(to right, #2D5F3F, #4A7C59); color: #FFFFFF;">
                     <i class="fas fa-save"></i>
                     <span>Simpan Pengaturan</span>
                 </button>
