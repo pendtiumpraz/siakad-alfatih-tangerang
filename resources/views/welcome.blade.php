@@ -4,57 +4,168 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    {{-- Google Site Verification --}}
     <meta name="google-site-verification" content="D8MnsoKB8CGE--qTmPL2wOC87jUVwS7O6lZl9VaZwM8" />
-
-    {{-- SEO Meta Tags --}}
     <meta name="description" content="SIAKAD STAI AL FATIH - Sistem Informasi Akademik untuk mengelola data mahasiswa, dosen, jadwal kuliah, KRS, KHS, dan pembayaran SPP secara online.">
-    <meta name="keywords" content="SIAKAD, STAI AL FATIH, sistem informasi akademik, perguruan tinggi islam, mahasiswa, dosen, KRS, KHS">
-    <meta name="author" content="STAI AL FATIH">
-
-    {{-- Open Graph --}}
-    <meta property="og:title" content="SIAKAD STAI AL FATIH - Sistem Informasi Akademik">
-    <meta property="og:description" content="Platform digital untuk mengelola seluruh aktivitas akademik mahasiswa dan dosen STAI AL FATIH.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ config('app.url') }}">
 
     <title>SIAKAD STAI AL FATIH - Sistem Informasi Akademik</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon.png') }}">
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ config('app.asset_version', '1.0') }}">
+
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+        .animate-fadeInLeft { animation: fadeInLeft 0.8s ease-out forwards; }
+        .animate-fadeInRight { animation: fadeInRight 0.8s ease-out forwards; }
+        .animate-pulse-slow { animation: pulse 3s ease-in-out infinite; }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-dark {
+            background: rgba(45, 95, 63, 0.9);
+            backdrop-filter: blur(20px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .shimmer-btn {
+            background: linear-gradient(90deg, #D4AF37 0%, #eab308 50%, #D4AF37 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+
+        .hover-lift {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hover-lift:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        .feature-card:hover {
+            border-color: #D4AF37;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(45, 95, 63, 0.15);
+        }
+
+        .prodi-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .prodi-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2D5F3F, #D4AF37);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        .prodi-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .scroll-indicator {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
 </head>
-<body class="font-sans antialiased bg-white text-gray-900">
+<body class="font-sans antialiased bg-white overflow-x-hidden">
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 shadow-lg" style="background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <a href="/" class="flex items-center gap-3 text-white no-underline">
-                    <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo STAI AL FATIH" class="h-12 w-12 object-contain">
-                    <div>
-                        <h1 class="text-lg font-bold">SIAKAD STAI AL FATIH</h1>
-                        <p class="text-xs opacity-90">Sistem Informasi Akademik</p>
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-5">
+            <div class="flex justify-between items-center">
+                <a href="/" class="flex items-center gap-4 group">
+                    <div class="relative">
+                        <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo" class="h-14 w-14 object-contain transition-transform duration-300 group-hover:scale-110">
+                        <div class="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-150 transition-transform duration-500 opacity-0 group-hover:opacity-100"></div>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-xl font-bold text-white leading-tight">SIAKAD STAI AL FATIH</h1>
+                        <p class="text-sm text-white/70">Sistem Informasi Akademik</p>
                     </div>
                 </a>
-                <nav class="flex flex-wrap items-center gap-2">
-                    <a href="#tentang" class="text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/20 transition">Tentang</a>
-                    <a href="#prodi" class="text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/20 transition">Program Studi</a>
-                    <a href="#fitur" class="text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/20 transition">Fitur</a>
-                    <a href="{{ route('public.spmb.index') }}" class="text-white text-sm font-medium px-3 py-2 rounded-lg hover:bg-white/20 transition">Pendaftaran</a>
-                    <a href="{{ route('login') }}" class="text-gray-900 text-sm font-semibold px-4 py-2 rounded-lg transition" style="background: #D4AF37;">
-                        <i class="fas fa-sign-in-alt mr-1"></i> Masuk
+                <nav class="flex items-center gap-3">
+                    <a href="#tentang" class="hidden lg:inline-block text-white/80 hover:text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-white/10 transition-all duration-300">Tentang</a>
+                    <a href="#prodi" class="hidden lg:inline-block text-white/80 hover:text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-white/10 transition-all duration-300">Program Studi</a>
+                    <a href="#fitur" class="hidden lg:inline-block text-white/80 hover:text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-white/10 transition-all duration-300">Fitur</a>
+                    <a href="{{ route('login') }}" class="shimmer-btn text-sm font-bold px-6 py-3 rounded-xl text-gray-900 transition-all duration-300 hover:shadow-lg hover:scale-105">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Masuk
                     </a>
                 </nav>
             </div>
@@ -62,128 +173,150 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="min-h-screen flex items-center pt-24 pb-16 px-4 relative overflow-hidden" style="background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 50%, #2D5F3F 100%);">
-        <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80');"></div>
-        <div class="max-w-7xl mx-auto w-full relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section class="min-h-screen flex items-center relative overflow-hidden bg-pattern" style="background: linear-gradient(135deg, #1a3d2a 0%, #2D5F3F 30%, #4A7C59 70%, #2D5F3F 100%);">
+        <!-- Floating Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 rounded-full bg-white/5 animate-float"></div>
+        <div class="absolute top-40 right-20 w-32 h-32 rounded-full bg-yellow-500/10 animate-float delay-200"></div>
+        <div class="absolute bottom-40 left-1/4 w-24 h-24 rounded-full bg-white/5 animate-float delay-400"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 py-32 w-full relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="text-center lg:text-left">
-                    <div class="inline-block px-4 py-2 rounded-full text-sm font-medium mb-6 border" style="background: rgba(212, 175, 55, 0.2); color: #D4AF37; border-color: rgba(212, 175, 55, 0.3);">
-                        <i class="fas fa-mosque mr-2"></i> Sekolah Tinggi Agama Islam
-                    </div>
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-                        Selamat Datang di <span style="color: #D4AF37;">SIAKAD STAI AL FATIH</span>
+                    <span class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold mb-8 animate-fadeInUp glass-dark text-white border border-white/20">
+                        <i class="fas fa-mosque"></i>Sekolah Tinggi Agama Islam
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-8 leading-tight animate-fadeInUp delay-100">
+                        Wujudkan<br>
+                        <span class="relative">
+                            <span style="color: #D4AF37;">Masa Depan Gemilang</span>
+                            <svg class="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
+                                <path d="M0 4C50 0 150 8 200 4" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </span>
                     </h1>
-                    <p class="text-white/90 text-lg mb-8 leading-relaxed">
-                        Sistem Informasi Akademik terpadu untuk mengelola seluruh aktivitas akademik 
-                        mahasiswa dan dosen STAI AL FATIH. Akses data akademik Anda kapan saja, di mana saja.
+                    <p class="text-lg md:text-xl text-white/80 mb-12 leading-relaxed max-w-xl animate-fadeInUp delay-200">
+                        SIAKAD STAI AL FATIH hadir sebagai solusi digital untuk mengelola aktivitas akademik dengan lebih efisien, transparan, dan modern.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-gray-900 transition transform hover:-translate-y-1 hover:shadow-lg" style="background: #D4AF37;">
-                            <i class="fas fa-sign-in-alt"></i> Masuk ke SIAKAD
+                    <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start animate-fadeInUp delay-300">
+                        <a href="{{ route('login') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 shimmer-btn text-gray-900">
+                            <i class="fas fa-sign-in-alt group-hover:rotate-12 transition-transform"></i>Masuk ke SIAKAD
                         </a>
-                        <a href="{{ route('public.spmb.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white/50 transition">
-                            <i class="fas fa-user-plus"></i> Daftar Mahasiswa Baru
+                        <a href="{{ route('public.spmb.index') }}" class="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-bold text-lg text-white border-2 border-white/30 bg-white/5 hover:bg-white/15 hover:border-white/60 transition-all duration-300 backdrop-blur-sm">
+                            <i class="fas fa-user-plus group-hover:scale-110 transition-transform"></i>Daftar Sekarang
                         </a>
                     </div>
                 </div>
-                <div class="flex justify-center">
-                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Mahasiswa Belajar" class="w-full max-w-md rounded-2xl shadow-2xl" loading="lazy">
+                <div class="hidden lg:flex justify-center animate-fadeInRight">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-r from-yellow-500/20 to-green-500/20 rounded-3xl blur-2xl animate-pulse-slow"></div>
+                        <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&q=80" alt="Al-Quran dan Kitab" class="relative w-full max-w-lg rounded-3xl shadow-2xl">
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 scroll-indicator">
+            <a href="#tentang" class="flex flex-col items-center text-white/60 hover:text-white transition-colors">
+                <span class="text-xs mb-2">Scroll</span>
+                <i class="fas fa-chevron-down"></i>
+            </a>
         </div>
     </section>
 
     <!-- Stats Section -->
-    <section class="py-12 px-4" style="background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);">
-        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-                <h3 class="text-4xl font-bold" style="color: #D4AF37;">{{ $programStudis->count() }}</h3>
-                <p class="text-white/90">Program Studi</p>
-            </div>
-            <div>
-                <h3 class="text-4xl font-bold" style="color: #D4AF37;">8</h3>
-                <p class="text-white/90">Semester Studi</p>
-            </div>
-            <div>
-                <h3 class="text-4xl font-bold" style="color: #D4AF37;">24/7</h3>
-                <p class="text-white/90">Akses Online</p>
-            </div>
-            <div>
-                <h3 class="text-4xl font-bold" style="color: #D4AF37;">100%</h3>
-                <p class="text-white/90">Data Aman</p>
+    <section class="py-20 relative overflow-hidden" style="background: linear-gradient(135deg, #1a3d2a 0%, #234a30 100%);">
+        <div class="max-w-6xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                @php
+                $stats = [
+                    ['value' => $programStudis->count(), 'label' => 'Program Studi', 'icon' => 'fa-graduation-cap'],
+                    ['value' => '8', 'label' => 'Semester', 'icon' => 'fa-book'],
+                    ['value' => '24/7', 'label' => 'Akses Online', 'icon' => 'fa-clock'],
+                    ['value' => '100%', 'label' => 'Data Aman', 'icon' => 'fa-shield-alt'],
+                ];
+                @endphp
+                @foreach($stats as $index => $stat)
+                <div class="text-center group animate-fadeInUp delay-{{ ($index + 1) * 100 }}">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6" style="background: rgba(212, 175, 55, 0.2); color: #D4AF37;">
+                        <i class="fas {{ $stat['icon'] }}"></i>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-bold mb-2" style="color: #D4AF37;">{{ $stat['value'] }}</h3>
+                    <p class="text-white/70 text-base">{{ $stat['label'] }}</p>
+                </div>
+                @endforeach
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section class="py-20 px-4 bg-white" id="tentang">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80" alt="Kampus" class="w-full rounded-2xl shadow-xl" loading="lazy">
+    <section class="py-28 bg-white relative bg-pattern" id="tentang">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <div class="order-2 lg:order-1 animate-fadeInLeft">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-br from-green-500/20 to-yellow-500/20 rounded-3xl blur-2xl"></div>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Masjid dan Arsitektur Islam" class="relative w-full rounded-3xl shadow-2xl">
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-3xl font-bold mb-2" style="color: #2D5F3F;">Tentang SIAKAD</h2>
-                    <div class="w-20 h-1 rounded mb-6" style="background: linear-gradient(to right, #D4AF37, #eab308);"></div>
-                    <h3 class="text-xl font-semibold mb-4" style="color: #2D5F3F;">Apa itu SIAKAD?</h3>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        SIAKAD (Sistem Informasi Akademik) adalah platform digital yang mengintegrasikan 
-                        seluruh proses akademik di STAI AL FATIH. Mulai dari pendaftaran mahasiswa baru, 
-                        pengelolaan kurikulum, pengisian KRS, input nilai, hingga pencetakan transkrip.
+                <div class="order-1 lg:order-2 animate-fadeInRight">
+                    <span class="inline-block text-sm font-bold uppercase tracking-widest mb-4 px-4 py-2 rounded-full" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">Tentang Kami</span>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-8 leading-tight" style="color: #2D5F3F;">
+                        Mengapa Memilih<br>STAI AL FATIH?
+                    </h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-8">
+                        SIAKAD (Sistem Informasi Akademik) adalah platform digital modern yang mengintegrasikan seluruh proses akademik. Dirancang untuk memudahkan mahasiswa dan dosen dalam menjalankan aktivitas akademik.
                     </p>
-                    <ul class="space-y-3 mt-6">
-                        <li class="flex items-start gap-3 text-gray-700">
-                            <i class="fas fa-check-circle mt-1" style="color: #D4AF37;"></i>
-                            <span>Akses data akademik kapan saja dan di mana saja</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-gray-700">
-                            <i class="fas fa-check-circle mt-1" style="color: #D4AF37;"></i>
-                            <span>Proses akademik terintegrasi dan transparan</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-gray-700">
-                            <i class="fas fa-check-circle mt-1" style="color: #D4AF37;"></i>
-                            <span>Keamanan data dengan enkripsi modern</span>
-                        </li>
-                        <li class="flex items-start gap-3 text-gray-700">
-                            <i class="fas fa-check-circle mt-1" style="color: #D4AF37;"></i>
-                            <span>Interface yang mudah digunakan</span>
-                        </li>
-                    </ul>
+                    <div class="space-y-5">
+                        @php
+                        $benefits = [
+                            ['icon' => 'fa-globe', 'title' => 'Akses 24/7', 'desc' => 'Kapan saja, di mana saja'],
+                            ['icon' => 'fa-lock', 'title' => 'Keamanan Terjamin', 'desc' => 'Data terenkripsi modern'],
+                            ['icon' => 'fa-bolt', 'title' => 'Proses Cepat', 'desc' => 'Efisien dan terintegrasi'],
+                            ['icon' => 'fa-mobile-alt', 'title' => 'Mobile Friendly', 'desc' => 'Responsif di semua perangkat'],
+                        ];
+                        @endphp
+                        @foreach($benefits as $benefit)
+                        <div class="flex items-center gap-5 p-4 rounded-2xl transition-all duration-300 hover:bg-gray-50 hover:shadow-lg group cursor-pointer">
+                            <div class="w-14 h-14 rounded-xl flex items-center justify-center text-xl transition-all duration-300 group-hover:scale-110" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #D4AF37;">
+                                <i class="fas {{ $benefit['icon'] }}"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-lg">{{ $benefit['title'] }}</h4>
+                                <p class="text-gray-500">{{ $benefit['desc'] }}</p>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Program Studi Section -->
-    <section class="py-20 px-4 bg-gray-50" id="prodi">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-2" style="color: #2D5F3F;">Program Studi</h2>
-                <div class="w-20 h-1 rounded mx-auto mb-4" style="background: linear-gradient(to right, #D4AF37, #eab308);"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto">Pilihan program studi yang tersedia di STAI AL FATIH untuk mencetak lulusan yang kompeten dan berakhlak mulia</p>
+    <section class="py-28 bg-gray-50" id="prodi">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 animate-fadeInUp">
+                <span class="inline-block text-sm font-bold uppercase tracking-widest mb-4 px-4 py-2 rounded-full" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">Akademik</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-6" style="color: #2D5F3F;">Program Studi Kami</h2>
+                <p class="text-gray-600 text-xl max-w-2xl mx-auto">Pilihan program studi berkualitas untuk masa depan cerah</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse($programStudis as $prodi)
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:border-green-600 transition transform hover:-translate-y-1 flex items-start gap-4">
-                    <div class="w-14 h-14 rounded-xl flex items-center justify-center text-white text-xl flex-shrink-0" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59);">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @forelse($programStudis as $index => $prodi)
+                <div class="prodi-card glass-card p-8 rounded-3xl shadow-xl hover-lift animate-fadeInUp delay-{{ (($index % 3) + 1) * 100 }}">
+                    <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl mb-6 transition-all duration-300" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #FFFFFF;">
                         <i class="fas fa-book-reader"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $prodi->nama_prodi }}</h3>
-                        <div class="text-sm font-semibold" style="color: #D4AF37;">{{ $prodi->jenjang }} - {{ $prodi->kode_prodi }}</div>
-                        @if($prodi->akreditasi)
-                        <div class="text-sm text-gray-600 mt-2 flex items-center gap-2">
-                            <i class="fas fa-award" style="color: #D4AF37;"></i> 
-                            Akreditasi: <strong>{{ $prodi->akreditasi }}</strong>
-                        </div>
-                        @endif
-                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ $prodi->nama_prodi }}</h3>
+                    <p class="text-lg font-semibold" style="color: #D4AF37;">{{ $prodi->jenjang }} - {{ $prodi->kode_prodi }}</p>
                 </div>
                 @empty
-                <div class="bg-white p-6 rounded-2xl shadow-md border border-gray-100 col-span-full text-center">
-                    <i class="fas fa-info-circle text-4xl mb-4" style="color: #D4AF37;"></i>
-                    <h3 class="text-lg font-semibold text-gray-900">Segera Hadir</h3>
-                    <p class="text-gray-600">Informasi program studi akan segera tersedia.</p>
+                <div class="col-span-full glass-card p-12 rounded-3xl shadow-xl text-center">
+                    <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center text-4xl mb-6" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Segera Hadir</h3>
+                    <p class="text-gray-600 text-lg">Informasi program studi akan segera tersedia.</p>
                 </div>
                 @endforelse
             </div>
@@ -191,189 +324,163 @@
     </section>
 
     <!-- Gallery Section -->
-    <section class="py-8 px-4 bg-gray-100">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="rounded-2xl overflow-hidden h-64">
-                <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80" alt="Kelas Perkuliahan" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
-            </div>
-            <div class="rounded-2xl overflow-hidden h-64">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=80" alt="Diskusi Mahasiswa" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
-            </div>
-            <div class="rounded-2xl overflow-hidden h-64">
-                <img src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=400&q=80" alt="Perpustakaan" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="rounded-3xl overflow-hidden h-80 shadow-xl hover-lift">
+                    <img src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=500&q=80" alt="Al-Quran" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-3xl overflow-hidden h-80 shadow-xl hover-lift delay-100">
+                    <img src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=500&q=80" alt="Buku dan Pena" class="w-full h-full object-cover">
+                </div>
+                <div class="rounded-3xl overflow-hidden h-80 shadow-xl hover-lift delay-200">
+                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=500&q=80" alt="Laptop dan Teknologi" class="w-full h-full object-cover">
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 px-4 bg-white" id="fitur">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-2" style="color: #2D5F3F;">Fitur SIAKAD</h2>
-                <div class="w-20 h-1 rounded mx-auto mb-4" style="background: linear-gradient(to right, #D4AF37, #eab308);"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto">Berbagai fitur yang tersedia untuk mendukung aktivitas akademik mahasiswa dan dosen</p>
+    <section class="py-28 bg-gray-50 bg-pattern" id="fitur">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-16 animate-fadeInUp">
+                <span class="inline-block text-sm font-bold uppercase tracking-widest mb-4 px-4 py-2 rounded-full" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">Layanan</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-6" style="color: #2D5F3F;">Fitur Lengkap SIAKAD</h2>
+                <p class="text-gray-600 text-xl max-w-2xl mx-auto">Semua yang Anda butuhkan dalam satu platform</p>
             </div>
 
-            <!-- Fitur Mahasiswa -->
-            <div class="mb-12">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #D4AF37;">
+            <!-- Mahasiswa Features -->
+            <div class="mb-20">
+                <div class="flex items-center gap-5 mb-10">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #D4AF37;">
                         <i class="fas fa-user-graduate"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold" style="color: #2D5F3F;">Fitur untuk Mahasiswa</h3>
+                    <h3 class="text-3xl font-bold" style="color: #2D5F3F;">Untuk Mahasiswa</h3>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #2D5F3F;">
-                            <i class="fas fa-book-open"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @php
+                    $mahasiswaFeatures = [
+                        ['icon' => 'fa-book-open', 'bg' => 'bg-green-100', 'color' => 'text-green-700', 'title' => 'Pengisian KRS', 'desc' => 'Isi KRS secara online dengan mudah'],
+                        ['icon' => 'fa-chart-line', 'bg' => 'bg-amber-100', 'color' => 'text-amber-700', 'title' => 'KHS & Transkrip', 'desc' => 'Akses nilai secara real-time'],
+                        ['icon' => 'fa-calendar-alt', 'bg' => 'bg-blue-100', 'color' => 'text-blue-700', 'title' => 'Jadwal Kuliah', 'desc' => 'Lihat jadwal dan ruangan'],
+                        ['icon' => 'fa-wallet', 'bg' => 'bg-green-100', 'color' => 'text-green-700', 'title' => 'Pembayaran', 'desc' => 'Kelola SPP dengan riwayat lengkap'],
+                        ['icon' => 'fa-user-circle', 'bg' => 'bg-amber-100', 'color' => 'text-amber-700', 'title' => 'Profil', 'desc' => 'Kelola data pribadi'],
+                        ['icon' => 'fa-bell', 'bg' => 'bg-blue-100', 'color' => 'text-blue-700', 'title' => 'Notifikasi', 'desc' => 'Terima pengumuman penting'],
+                    ];
+                    @endphp
+                    @foreach($mahasiswaFeatures as $index => $feature)
+                    <div class="feature-card glass-card p-7 rounded-2xl border border-gray-100 animate-fadeInUp delay-{{ (($index % 3) + 1) * 100 }}">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-5 {{ $feature['bg'] }} {{ $feature['color'] }}">
+                            <i class="fas {{ $feature['icon'] }}"></i>
                         </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Pengisian KRS Online</h4>
-                        <p class="text-gray-600 text-sm">Isi Kartu Rencana Studi secara online sesuai kurikulum dan dosen pembimbing akademik.</p>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">{{ $feature['title'] }}</h4>
+                        <p class="text-gray-600 text-base">{{ $feature['desc'] }}</p>
                     </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309;">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Lihat KHS & Transkrip</h4>
-                        <p class="text-gray-600 text-sm">Akses Kartu Hasil Studi dan transkrip nilai secara real-time setelah nilai diinput dosen.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1d4ed8;">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Jadwal Perkuliahan</h4>
-                        <p class="text-gray-600 text-sm">Lihat jadwal kuliah, ruangan, dan informasi dosen pengampu setiap mata kuliah.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #2D5F3F;">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Pembayaran SPP</h4>
-                        <p class="text-gray-600 text-sm">Kelola pembayaran SPP dengan history yang tercatat dan upload bukti pembayaran.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309;">
-                            <i class="fas fa-user-edit"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Profil & Biodata</h4>
-                        <p class="text-gray-600 text-sm">Kelola data pribadi, foto profil, dan informasi kontak yang up-to-date.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1d4ed8;">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Pengumuman</h4>
-                        <p class="text-gray-600 text-sm">Terima notifikasi dan pengumuman penting seputar kegiatan akademik.</p>
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
-            <!-- Fitur Dosen -->
+            <!-- Dosen Features -->
             <div>
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #D4AF37;">
+                <div class="flex items-center gap-5 mb-10">
+                    <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #2D5F3F, #4A7C59); color: #D4AF37;">
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
-                    <h3 class="text-2xl font-semibold" style="color: #2D5F3F;">Fitur untuk Dosen</h3>
+                    <h3 class="text-3xl font-bold" style="color: #2D5F3F;">Untuk Dosen</h3>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #2D5F3F;">
-                            <i class="fas fa-tasks"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @php
+                    $dosenFeatures = [
+                        ['icon' => 'fa-edit', 'bg' => 'bg-green-100', 'color' => 'text-green-700', 'title' => 'Input Nilai', 'desc' => 'Input nilai dengan mudah'],
+                        ['icon' => 'fa-calendar-check', 'bg' => 'bg-amber-100', 'color' => 'text-amber-700', 'title' => 'Jadwal Mengajar', 'desc' => 'Akses jadwal dan ruangan'],
+                        ['icon' => 'fa-users', 'bg' => 'bg-blue-100', 'color' => 'text-blue-700', 'title' => 'Daftar Mahasiswa', 'desc' => 'Lihat mahasiswa per matkul'],
+                        ['icon' => 'fa-user-tie', 'bg' => 'bg-green-100', 'color' => 'text-green-700', 'title' => 'Perwalian', 'desc' => 'Kelola mahasiswa bimbingan'],
+                        ['icon' => 'fa-file-pdf', 'bg' => 'bg-amber-100', 'color' => 'text-amber-700', 'title' => 'Cetak Laporan', 'desc' => 'Export laporan akademik'],
+                        ['icon' => 'fa-id-badge', 'bg' => 'bg-blue-100', 'color' => 'text-blue-700', 'title' => 'Profil Dosen', 'desc' => 'Kelola data dan NIDN'],
+                    ];
+                    @endphp
+                    @foreach($dosenFeatures as $index => $feature)
+                    <div class="feature-card glass-card p-7 rounded-2xl border border-gray-100 animate-fadeInUp delay-{{ (($index % 3) + 1) * 100 }}">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-5 {{ $feature['bg'] }} {{ $feature['color'] }}">
+                            <i class="fas {{ $feature['icon'] }}"></i>
                         </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Input Nilai</h4>
-                        <p class="text-gray-600 text-sm">Input nilai mahasiswa per mata kuliah dengan mudah dan terintegrasi dengan sistem.</p>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">{{ $feature['title'] }}</h4>
+                        <p class="text-gray-600 text-base">{{ $feature['desc'] }}</p>
                     </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309;">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Lihat Jadwal Mengajar</h4>
-                        <p class="text-gray-600 text-sm">Akses jadwal mengajar, ruangan, dan daftar mahasiswa yang mengambil mata kuliah.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1d4ed8;">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Daftar Mahasiswa</h4>
-                        <p class="text-gray-600 text-sm">Lihat daftar mahasiswa yang mengambil mata kuliah yang diampu.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #2D5F3F;">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Perwalian Akademik</h4>
-                        <p class="text-gray-600 text-sm">Kelola mahasiswa perwalian dan approve pengisian KRS mahasiswa bimbingan.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #b45309;">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Cetak Laporan</h4>
-                        <p class="text-gray-600 text-sm">Cetak berbagai laporan akademik seperti daftar nilai dan presensi.</p>
-                    </div>
-                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:bg-white transition">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-lg mb-4" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1d4ed8;">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <h4 class="font-semibold text-gray-900 mb-2">Profil Dosen</h4>
-                        <p class="text-gray-600 text-sm">Kelola data dosen, NIDN, dan informasi akademik lainnya.</p>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-20 px-4 relative overflow-hidden" style="background: linear-gradient(135deg, #2D5F3F 0%, #4A7C59 100%);">
-        <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1920&q=80');"></div>
-        <div class="max-w-3xl mx-auto text-center relative z-10">
-            <h2 class="text-3xl font-bold text-white mb-4">Siap Menggunakan SIAKAD?</h2>
-            <p class="text-white/90 text-lg mb-8">Masuk ke akun Anda atau daftar sebagai mahasiswa baru untuk mulai mengakses layanan akademik STAI AL FATIH.</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('login') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-gray-900 transition transform hover:-translate-y-1 hover:shadow-lg" style="background: #D4AF37;">
-                    <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+    <section class="py-28 relative overflow-hidden" style="background: linear-gradient(135deg, #1a3d2a 0%, #2D5F3F 50%, #4A7C59 100%);">
+        <div class="absolute inset-0 bg-pattern opacity-30"></div>
+        <div class="absolute top-10 right-10 w-40 h-40 rounded-full bg-yellow-500/10 animate-float"></div>
+        <div class="absolute bottom-10 left-10 w-32 h-32 rounded-full bg-white/5 animate-float delay-300"></div>
+
+        <div class="max-w-4xl mx-auto px-6 lg:px-12 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-8 animate-fadeInUp">Siap Memulai?</h2>
+            <p class="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed animate-fadeInUp delay-100">
+                Bergabunglah dengan STAI AL FATIH dan wujudkan cita-cita akademik Anda bersama kami.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-5 justify-center animate-fadeInUp delay-200">
+                <a href="{{ route('login') }}" class="group inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 shimmer-btn text-gray-900">
+                    <i class="fas fa-sign-in-alt group-hover:rotate-12 transition-transform"></i>Masuk Sekarang
                 </a>
-                <a href="{{ route('public.spmb.index') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white/50 transition">
-                    <i class="fas fa-user-plus"></i> Pendaftaran Mahasiswa Baru
+                <a href="{{ route('public.spmb.index') }}" class="group inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl font-bold text-xl text-white border-2 border-white/30 bg-white/10 hover:bg-white/20 hover:border-white/50 transition-all duration-300 backdrop-blur-sm">
+                    <i class="fas fa-user-plus group-hover:scale-110 transition-transform"></i>Daftar Mahasiswa Baru
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-16 px-4">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-                <h4 class="text-lg font-semibold mb-4" style="color: #D4AF37;">SIAKAD STAI AL FATIH</h4>
-                <p class="text-white/70 mb-4 text-sm leading-relaxed">Sistem Informasi Akademik untuk mengelola data akademik mahasiswa dan dosen secara online, efisien, dan terintegrasi.</p>
-                <p class="text-white/70 text-sm"><i class="fas fa-map-marker-alt mr-2" style="color: #D4AF37;"></i>{{ \App\Models\SystemSetting::get('institution_address', 'Tangerang, Banten') }}</p>
+    <footer class="bg-gray-900 py-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="{{ asset('images/logo-alfatih.png') }}" alt="Logo" class="h-12 w-12">
+                        <span class="text-xl font-bold" style="color: #D4AF37;">SIAKAD</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">Sistem Informasi Akademik untuk pengelolaan data akademik yang modern dan terintegrasi.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-6">Kontak</h4>
+                    <div class="space-y-4">
+                        <a href="mailto:{{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}" class="text-gray-400 hover:text-white flex items-center gap-3 transition-colors">
+                            <i class="fas fa-envelope" style="color: #D4AF37;"></i>{{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}
+                        </a>
+                        <a href="tel:{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}" class="text-gray-400 hover:text-white flex items-center gap-3 transition-colors">
+                            <i class="fas fa-phone" style="color: #D4AF37;"></i>{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}
+                        </a>
+                        <a href="https://wa.me/{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}" class="text-gray-400 hover:text-white flex items-center gap-3 transition-colors">
+                            <i class="fab fa-whatsapp text-green-500"></i>WhatsApp
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-6">Tautan</h4>
+                    <div class="space-y-3">
+                        <a href="{{ route('login') }}" class="text-gray-400 hover:text-white block transition-colors">Masuk</a>
+                        <a href="{{ route('public.spmb.index') }}" class="text-gray-400 hover:text-white block transition-colors">Pendaftaran</a>
+                        <a href="#prodi" class="text-gray-400 hover:text-white block transition-colors">Program Studi</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white mb-6">Legal</h4>
+                    <div class="space-y-3">
+                        <a href="{{ route('privacy-policy') }}" class="text-gray-400 hover:text-white block transition-colors">Kebijakan Privasi</a>
+                        <a href="{{ route('terms') }}" class="text-gray-400 hover:text-white block transition-colors">Syarat & Ketentuan</a>
+                    </div>
+                </div>
             </div>
-            <div>
-                <h4 class="text-lg font-semibold mb-4" style="color: #D4AF37;">Kontak</h4>
-                <a href="mailto:{{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-envelope mr-2" style="color: #D4AF37;"></i>{{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}</a>
-                <a href="tel:{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-phone mr-2" style="color: #D4AF37;"></i>{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}</a>
-                <a href="https://wa.me/{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}" target="_blank" class="text-white/70 text-sm block mb-2 hover:text-green-400 transition"><i class="fab fa-whatsapp mr-2 text-green-500"></i>WhatsApp</a>
+            <div class="pt-8 border-t border-gray-800 text-center">
+                <p class="text-gray-500">&copy; {{ date('Y') }} STAI AL FATIH. All rights reserved.</p>
             </div>
-            <div>
-                <h4 class="text-lg font-semibold mb-4" style="color: #D4AF37;">Tautan</h4>
-                <a href="{{ route('login') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-sign-in-alt mr-2"></i>Masuk</a>
-                <a href="{{ route('public.spmb.index') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-user-plus mr-2"></i>Pendaftaran</a>
-                <a href="#prodi" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-graduation-cap mr-2"></i>Program Studi</a>
-            </div>
-            <div>
-                <h4 class="text-lg font-semibold mb-4" style="color: #D4AF37;">Legal</h4>
-                <a href="{{ route('privacy-policy') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-shield-alt mr-2"></i>Kebijakan Privasi</a>
-                <a href="{{ route('terms') }}" class="text-white/70 text-sm block mb-2 hover:text-yellow-400 transition"><i class="fas fa-file-contract mr-2"></i>Syarat & Ketentuan</a>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-white/10 text-center text-white/50 text-sm">
-            <p>
-                &copy; {{ date('Y') }} STAI AL FATIH. All rights reserved.
-                <a href="{{ route('privacy-policy') }}" class="hover:text-yellow-400 transition mx-2">Privacy Policy</a> |
-                <a href="{{ route('terms') }}" class="hover:text-yellow-400 transition mx-2">Terms of Service</a>
-            </p>
         </div>
     </footer>
+
 </body>
 </html>
