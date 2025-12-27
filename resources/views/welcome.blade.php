@@ -253,13 +253,61 @@
         </div>
     </section>
 
+    <!-- Fasilitas -->
+    <section id="fasilitas" class="section-padding" style="background-color: white;">
+        <div class="container-custom">
+            <div style="display: flex; justify-content: space-between; align-items: end; margin-bottom: 50px; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <span style="color: #D4AF37; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Fasilitas Digital</span>
+                    <h2 style="font-size: 40px; color: #1f2937; margin-top: 15px; margin-bottom: 0;">Fitur & Layanan</h2>
+                </div>
+                <a href="{{ route('public.spmb.index') }}" style="color: #1B4D3E; font-weight: 700; text-decoration: none; border-bottom: 2px solid #1B4D3E; padding-bottom: 2px;">Lihat Selengkapnya <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <!-- Card 1 -->
+                <div style="padding: 40px; border-radius: 20px; background-color: #f8fafc; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#1B4D3E'; this.querySelector('h3').style.color='white'; this.querySelector('p').style.color='rgba(255,255,255,0.8)';" onmouseout="this.style.backgroundColor='#f8fafc'; this.querySelector('h3').style.color='#1f2937'; this.querySelector('p').style.color='#4b5563';">
+                    <div style="width: 60px; height: 60px; background: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1B4D3E; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 700; color: #1f2937; margin-bottom: 15px; transition: color 0.3s;">Portal Mahasiswa</h3>
+                    <p style="color: #4b5563; line-height: 1.6; margin: 0; transition: color 0.3s;">
+                        Layanan akademik mandiri untuk KRS, KHS, Transkrip, dan Jadwal Kuliah dalam satu dashboard.
+                    </p>
+                </div>
+                 <!-- Card 2 -->
+                 <div style="padding: 40px; border-radius: 20px; background-color: #f8fafc; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#1B4D3E'; this.querySelector('h3').style.color='white'; this.querySelector('p').style.color='rgba(255,255,255,0.8)';" onmouseout="this.style.backgroundColor='#f8fafc'; this.querySelector('h3').style.color='#1f2937'; this.querySelector('p').style.color='#4b5563';">
+                    <div style="width: 60px; height: 60px; background: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #D4AF37; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 700; color: #1f2937; margin-bottom: 15px; transition: color 0.3s;">Portal Dosen</h3>
+                    <p style="color: #4b5563; line-height: 1.6; margin: 0; transition: color 0.3s;">
+                        Manajemen perkuliahan, input nilai, dan validasi akademik yang mudah dan terintegrasi.
+                    </p>
+                </div>
+                 <!-- Card 3 -->
+                 <div style="padding: 40px; border-radius: 20px; background-color: #f8fafc; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#1B4D3E'; this.querySelector('h3').style.color='white'; this.querySelector('p').style.color='rgba(255,255,255,0.8)';" onmouseout="this.style.backgroundColor='#f8fafc'; this.querySelector('h3').style.color='#1f2937'; this.querySelector('p').style.color='#4b5563';">
+                    <div style="width: 60px; height: 60px; background: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #1B4D3E; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 style="font-size: 24px; font-weight: 700; color: #1f2937; margin-bottom: 15px; transition: color 0.3s;">E-Finance</h3>
+                    <p style="color: #4b5563; line-height: 1.6; margin: 0; transition: color 0.3s;">
+                        Sistem pembayaran kuliah yang transparan, aman, dan tercatat otomatis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer style="background-color: #102A23; color: white; padding: 80px 20px 30px 20px;">
         <div class="container-custom">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 60px; margin-bottom: 60px;">
                 <div>
                      <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
-                        <img src="{{ asset('images/logo-alfatih.png') }}" style="height: 50px; filter: brightness(0) invert(1) opacity(0.8);">
+                        <div style="background: white; padding: 5px; border-radius: 8px; display: inline-flex;">
+                            <img src="{{ asset('images/logo-alfatih.png') }}" style="height: 40px; width: auto;">
+                        </div>
                         <div>
                             <div style="font-size: 20px; font-weight: 800; text-transform: uppercase;">SIAKAD</div>
                         </div>
