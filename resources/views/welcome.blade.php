@@ -261,7 +261,7 @@
                     <span style="color: #D4AF37; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Fasilitas Digital</span>
                     <h2 style="font-size: 40px; color: #1f2937; margin-top: 15px; margin-bottom: 0;">Fitur & Layanan</h2>
                 </div>
-                <a href="{{ route('public.spmb.index') }}" style="color: #1B4D3E; font-weight: 700; text-decoration: none; border-bottom: 2px solid #1B4D3E; padding-bottom: 2px;">Lihat Selengkapnya <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></a>
+                <a href="{{ route('login') }}" style="color: #1B4D3E; font-weight: 700; text-decoration: none; border-bottom: 2px solid #1B4D3E; padding-bottom: 2px;">Lihat Selengkapnya <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></a>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
@@ -309,13 +309,17 @@
                             <img src="{{ asset('images/logo-alfatih.png') }}" style="height: 40px; width: auto;">
                         </div>
                         <div>
-                            <div style="font-size: 20px; font-weight: 800; text-transform: uppercase;">SIAKAD</div>
+                            <div style="font-size: 20px; font-weight: 800; text-transform: uppercase; color: #D4AF37;">SIAKAD</div>
                         </div>
                     </div>
-                    <p style="color: #94a3b8; font-size: 14px; line-height: 1.8;">
-                        Jalan KH. Hasyim Ashari No. 123,<br>
-                        Kota Tangerang, Banten, Indonesia.<br>
-                        Email: {{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}
+                    <p style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin-bottom: 15px;">
+                        STAI ALFATIH Tangerang berada dibawah Naungan Yayasan Insan Alfatih Syamil Tangerang dengan Akte Notaris : Nomor 07 Tanggal 29 Agustus 2023 dan Keputusan Menkumham RI Nomor : AHU-0013909.AH.01.04.Tahun 2023
+                    </p>
+                    <p style="color: #94a3b8; font-size: 13px; line-height: 1.6;">
+                        <strong>Alamat Kantor Sekretariat:</strong><br>
+                        Jl. Raden Fatah, No. 5 RT 004 / RW 006, Parung Serab Kec Ciledug Kota Tangerang, Banten, Kode Pos 15153<br>
+                        <br>
+                        <strong>Email:</strong> {{ \App\Models\SystemSetting::get('spmb_email', 'admin@staialfatih.ac.id') }}
                     </p>
                 </div>
 
