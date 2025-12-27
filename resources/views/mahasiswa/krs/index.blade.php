@@ -100,7 +100,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">Mata Kuliah yang Diambil</h3>
                         @if(!$isSubmitted)
-                            <form action="{{ route('mahasiswa.krs.submit') }}" method="POST" onsubmit="return confirm('Submit KRS? Setelah submit, KRS tidak bisa diubah lagi.')">
+                            <form id="submit-krs-form" action="{{ route('mahasiswa.krs.submit') }}" method="POST" onsubmit="return confirmSubmit(this, 'Submit KRS?', 'Setelah submit, KRS tidak bisa diubah lagi.')">
                                 @csrf
                                 <button type="submit" class="px-4 py-2 bg-[#4A7C59] text-white rounded-lg hover:bg-[#3d6849] transition font-semibold cursor-pointer" style="position: relative; z-index: 10;">
                                     📤 Submit KRS
@@ -148,10 +148,10 @@
                                         @if(!$isSubmitted)
                                             <td class="px-4 py-3 text-center">
                                                 @if($krs->is_mengulang)
-                                                    <form action="{{ route('mahasiswa.krs.destroy', $krs->id) }}" method="POST" class="inline">
+                                                    <form action="{{ route('mahasiswa.krs.destroy', $krs->id) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, 'mata kuliah ini dari KRS')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" onclick="return confirm('Hapus mata kuliah ini dari KRS?')"
+                                                        <button type="submit"
                                                                 class="text-red-600 hover:text-red-800 text-sm font-semibold">
                                                             Hapus
                                                         </button>

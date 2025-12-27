@@ -296,5 +296,8 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
+
+    @include('partials.sweetalert')
+    @stack('scripts')
 </body>
 </html>

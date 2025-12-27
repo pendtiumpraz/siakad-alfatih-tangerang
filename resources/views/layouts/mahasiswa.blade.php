@@ -423,6 +423,7 @@
         </div>
     </div>
 
+    @include('partials.sweetalert')
     @stack('scripts')
 </body>
 </html>

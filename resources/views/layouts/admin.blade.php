@@ -397,6 +397,7 @@
     ></div>
 
     <!-- Scripts Stack -->
+    @include('partials.sweetalert')
     @stack('scripts')
 </body>
 </html>
