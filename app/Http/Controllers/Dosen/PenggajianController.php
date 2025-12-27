@@ -142,11 +142,16 @@ class PenggajianController extends Controller
     {
         $dosen = auth()->user()->dosen;
         
+        if (!$dosen) {
+            return redirect()->route('dosen.dashboard')
+                ->with('error', 'Data dosen tidak ditemukan.');
+        }
+        
         $penggajian = PenggajianDosen::with(['semester', 'verifier', 'payer'])
             ->findOrFail($id);
 
         // Authorization check
-        if ($penggajian->dosen_id !== $dosen->id) {
+        if ($penggajian->dosen_id != $dosen->id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -160,10 +165,15 @@ class PenggajianController extends Controller
     {
         $dosen = auth()->user()->dosen;
         
+        if (!$dosen) {
+            return redirect()->route('dosen.dashboard')
+                ->with('error', 'Data dosen tidak ditemukan.');
+        }
+        
         $penggajian = PenggajianDosen::findOrFail($id);
 
         // Authorization check
-        if ($penggajian->dosen_id !== $dosen->id) {
+        if ($penggajian->dosen_id != $dosen->id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -197,7 +207,7 @@ class PenggajianController extends Controller
         $penggajian = PenggajianDosen::findOrFail($id);
 
         // Authorization check
-        if ($penggajian->dosen_id !== $dosen->id) {
+        if ($penggajian->dosen_id != $dosen->id) {
             abort(403, 'Unauthorized access.');
         }
 
@@ -277,10 +287,15 @@ class PenggajianController extends Controller
     {
         $dosen = auth()->user()->dosen;
         
+        if (!$dosen) {
+            return redirect()->route('dosen.dashboard')
+                ->with('error', 'Data dosen tidak ditemukan.');
+        }
+        
         $penggajian = PenggajianDosen::findOrFail($id);
 
         // Authorization check
-        if ($penggajian->dosen_id !== $dosen->id) {
+        if ($penggajian->dosen_id != $dosen->id) {
             abort(403, 'Unauthorized access.');
         }
 
