@@ -127,28 +127,26 @@
                     Quick Actions
                 </h3>
                 <div class="space-y-3">
-                    {{-- Temporary hidden until user management implemented
-                    <a href="{{ route('admin.users.create') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition">
+                    <a href="{{ route('admin.keuangan.index') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#2D5F3F] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition transform hover:scale-[1.02]">
                         <span class="text-sm font-medium">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Tambah User Baru
+                            <i class="fas fa-money-bill-wave mr-2"></i>
+                            Keuangan
                         </span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
 
-                    <a href="{{ route('admin.roles.permissions.index') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E5C3] text-[#2D5F3F] rounded-lg hover:shadow-lg transition">
+                    <a href="{{ route('admin.users.index') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#D4AF37] to-[#F4E5C3] text-[#2D5F3F] rounded-lg hover:shadow-lg transition transform hover:scale-[1.02]">
                         <span class="text-sm font-medium">
-                            <i class="fas fa-shield-alt mr-2"></i>
-                            Kelola Permission
+                            <i class="fas fa-users-cog mr-2"></i>
+                            Management User
                         </span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
-                    --}}
 
-                    <a href="#" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#6B9E78] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition">
+                    <a href="{{ route('admin.docs') }}" class="flex items-center justify-between p-3 bg-gradient-to-r from-[#6B9E78] to-[#4A7C59] text-white rounded-lg hover:shadow-lg transition transform hover:scale-[1.02]">
                         <span class="text-sm font-medium">
-                            <i class="fas fa-file-alt mr-2"></i>
-                            Lihat Laporan
+                            <i class="fas fa-book mr-2"></i>
+                            Dokumentasi
                         </span>
                         <i class="fas fa-chevron-right"></i>
                     </a>
