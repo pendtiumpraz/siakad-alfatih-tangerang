@@ -1,3 +1,17 @@
+@php
+    // Get admin contact from superadmin user (same source as SPMB)
+    $superadmin = \App\Models\User::where('role', 'super_admin')->first();
+    $rawPhone = $superadmin?->phone ?? '6281234567890';
+
+    // Clean and format WhatsApp number (08xx -> 628xx)
+    $adminWhatsapp = preg_replace('/[^0-9]/', '', $rawPhone);
+    if (str_starts_with($adminWhatsapp, '0')) {
+        $adminWhatsapp = '62' . substr($adminWhatsapp, 1);
+    }
+    if (!str_starts_with($adminWhatsapp, '62')) {
+        $adminWhatsapp = '62' . $adminWhatsapp;
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -328,11 +342,11 @@
                     <ul style="list-style: none; padding: 0; margin: 0;">
                         <li style="margin-bottom: 15px; display: flex; gap: 15px; color: #cbd5e1;">
                             <i class="fas fa-phone" style="color: #D4AF37; margin-top: 5px;"></i>
-                            <span>{{ \App\Models\SystemSetting::get('spmb_phone', '021-12345678') }}</span>
+                            <span>{{ $adminWhatsapp }}</span>
                         </li>
                         <li style="margin-bottom: 15px; display: flex; gap: 15px; color: #cbd5e1;">
                             <i class="fab fa-whatsapp" style="color: #D4AF37; margin-top: 5px;"></i>
-                            <span>{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}</span>
+                            <span>{{ $adminWhatsapp }}</span>
                         </li>
                     </ul>
                 </div>
@@ -349,7 +363,7 @@
     </footer>
 
     <!-- Floating WA -->
-    <a href="https://wa.me/{{ \App\Models\SystemSetting::get('spmb_whatsapp', '6281234567890') }}" target="_blank" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none;">
+    <a href="https://wa.me/{{ $adminWhatsapp }}" target="_blank" style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 1000; text-decoration: none;">
         <i class="fab fa-whatsapp"></i>
     </a>
 
