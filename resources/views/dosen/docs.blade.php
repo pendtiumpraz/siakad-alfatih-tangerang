@@ -146,7 +146,7 @@
                             </div>
                             <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
                                 <h4 class="font-bold text-green-700 mb-2">✍️ Input Nilai</h4>
-                                <p class="text-sm text-gray-600">Input nilai mahasiswa (Tugas, UTS, UAS)</p>
+                                <p class="text-sm text-gray-600">Input nilai mahasiswa (Kehadiran, Tugas, UTS, UAS)</p>
                             </div>
                             <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
                                 <h4 class="font-bold text-purple-700 mb-2">📊 Generate KHS</h4>
@@ -247,19 +247,19 @@
                                         <div class="bg-gray-50 p-4 rounded mt-2">
                                             <table class="w-full text-sm">
                                                 <tr>
-                                                    <td class="py-1 font-semibold">Kehadiran:</td>
-                                                    <td class="py-1">0-100%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="py-1 font-semibold">Tugas:</td>
+                                                    <td class="py-1 font-semibold">Kehadiran (15%):</td>
                                                     <td class="py-1">0-100</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="py-1 font-semibold">UTS:</td>
+                                                    <td class="py-1 font-semibold">Tugas Individu/Kelompok/Presentasi (15%):</td>
                                                     <td class="py-1">0-100</td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="py-1 font-semibold">UAS:</td>
+                                                    <td class="py-1 font-semibold">UTS (30%):</td>
+                                                    <td class="py-1">0-100</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="py-1 font-semibold">UAS (40%):</td>
                                                     <td class="py-1">0-100</td>
                                                 </tr>
                                             </table>
@@ -272,67 +272,59 @@
                                         <h5 class="font-bold">Sistem Hitung Otomatis</h5>
                                         <p class="text-sm text-gray-600 mb-2">Formula:</p>
                                         <div class="bg-blue-50 p-3 rounded text-sm">
-                                            <strong>Nilai Akhir</strong> = (Kehadiran × 10%) + (Tugas × 20%) + (UTS × 30%) + (UAS × 40%)
+                                            <strong>Nilai Akhir</strong> = (Kehadiran × 15%) + (Tugas × 15%) + (UTS × 30%) + (UAS × 40%)
                                         </div>
                                     </div>
                                 </li>
                                 <li class="flex items-start">
                                     <span class="flex-shrink-0 w-10 h-10 bg-[#2D5F3F] text-white rounded-full flex items-center justify-center font-bold mr-4">5</span>
                                     <div>
-                                        <h5 class="font-bold mb-3">Grade Otomatis</h5>
+                                        <h5 class="font-bold mb-3">Konversi Grade & Bobot</h5>
                                         <div class="bg-white border-2 border-gray-200 rounded-lg p-4 mt-2">
                                             <p class="text-xs text-gray-600 mb-3 font-semibold">Sistem Penilaian:</p>
-                                            <div class="grid grid-cols-2 gap-3">
-                                                <!-- A Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #10B981; color: #1F2937;">
-                                                    <span class="text-xl font-bold">A</span>
-                                                    <span class="text-sm font-semibold">90-100</span>
-                                                </div>
-                                                <!-- A- Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #34D399; color: #1F2937;">
-                                                    <span class="text-xl font-bold">A-</span>
-                                                    <span class="text-sm font-semibold">85-89</span>
-                                                </div>
-                                                <!-- B+ Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #3B82F6; color: #FFFFFF;">
-                                                    <span class="text-xl font-bold">B+</span>
-                                                    <span class="text-sm font-semibold">80-84</span>
-                                                </div>
-                                                <!-- B Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #60A5FA; color: #1F2937;">
-                                                    <span class="text-xl font-bold">B</span>
-                                                    <span class="text-sm font-semibold">75-79</span>
-                                                </div>
-                                                <!-- B- Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #06B6D4; color: #FFFFFF;">
-                                                    <span class="text-xl font-bold">B-</span>
-                                                    <span class="text-sm font-semibold">70-74</span>
-                                                </div>
-                                                <!-- C+ Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #EAB308; color: #1F2937;">
-                                                    <span class="text-xl font-bold">C+</span>
-                                                    <span class="text-sm font-semibold">65-69</span>
-                                                </div>
-                                                <!-- C Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #FBBF24; color: #1F2937;">
-                                                    <span class="text-xl font-bold">C</span>
-                                                    <span class="text-sm font-semibold">60-64</span>
-                                                </div>
-                                                <!-- C- Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #FB923C; color: #1F2937;">
-                                                    <span class="text-xl font-bold">C-</span>
-                                                    <span class="text-sm font-semibold">55-59</span>
-                                                </div>
-                                                <!-- D Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #F97316; color: #FFFFFF;">
-                                                    <span class="text-xl font-bold">D</span>
-                                                    <span class="text-sm font-semibold">45-54</span>
-                                                </div>
-                                                <!-- E Grade -->
-                                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #EF4444; color: #FFFFFF;">
-                                                    <span class="text-xl font-bold">E</span>
-                                                    <span class="text-sm font-semibold">0-44</span>
-                                                </div>
+                                            <div class="overflow-x-auto">
+                                                <table class="w-full text-sm border border-gray-200 rounded">
+                                                    <thead class="bg-gray-50">
+                                                        <tr>
+                                                            <th class="px-3 py-2 text-left font-semibold">Rentang Nilai</th>
+                                                            <th class="px-3 py-2 text-center font-semibold">Grade</th>
+                                                            <th class="px-3 py-2 text-center font-semibold">Bobot</th>
+                                                            <th class="px-3 py-2 text-left font-semibold">Keterangan</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="divide-y divide-gray-200">
+                                                        <tr style="background-color: #DCFCE7;">
+                                                            <td class="px-3 py-2 font-semibold">80 - 100</td>
+                                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #15803d;">A</span></td>
+                                                            <td class="px-3 py-2 text-center font-semibold">4.00</td>
+                                                            <td class="px-3 py-2">Sangat Baik</td>
+                                                        </tr>
+                                                        <tr style="background-color: #D1FAE5;">
+                                                            <td class="px-3 py-2 font-semibold">70 - 79</td>
+                                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #22c55e;">B</span></td>
+                                                            <td class="px-3 py-2 text-center font-semibold">3.00</td>
+                                                            <td class="px-3 py-2">Baik</td>
+                                                        </tr>
+                                                        <tr style="background-color: #FEF3C7;">
+                                                            <td class="px-3 py-2 font-semibold">60 - 69</td>
+                                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #eab308;">C</span></td>
+                                                            <td class="px-3 py-2 text-center font-semibold">2.00</td>
+                                                            <td class="px-3 py-2">Cukup</td>
+                                                        </tr>
+                                                        <tr style="background-color: #FED7AA;">
+                                                            <td class="px-3 py-2 font-semibold">50 - 59</td>
+                                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #f97316;">D</span></td>
+                                                            <td class="px-3 py-2 text-center font-semibold">1.00</td>
+                                                            <td class="px-3 py-2 text-red-700">Tidak Lulus</td>
+                                                        </tr>
+                                                        <tr style="background-color: #FEE2E2;">
+                                                            <td class="px-3 py-2 font-semibold">0 - 49</td>
+                                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #ef4444;">E</span></td>
+                                                            <td class="px-3 py-2 text-center font-semibold">0.00</td>
+                                                            <td class="px-3 py-2 text-red-700">Tidak Lulus</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>

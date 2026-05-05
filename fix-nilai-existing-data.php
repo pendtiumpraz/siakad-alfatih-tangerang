@@ -30,17 +30,14 @@ if ($nilais->isEmpty()) {
 
 echo "Found {$nilais->count()} records to fix...\n\n";
 
-// Grading system mapping (reverse engineer dari grade ke nilai range)
+// Grading system mapping (reverse engineer dari grade ke nilai range).
+// Skala penilaian: A 80-100 (4.00), B 70-79 (3.00), C 60-69 (2.00), D 50-59 (1.00), E 0-49 (0.00).
 $gradeToNilaiBobot = [
-    'A+' => ['nilai' => 98, 'bobot' => 4.00],
-    'A'  => ['nilai' => 93, 'bobot' => 3.70],
-    'B+' => ['nilai' => 88, 'bobot' => 3.60],
-    'B'  => ['nilai' => 80, 'bobot' => 2.95],
-    'C+' => ['nilai' => 70, 'bobot' => 2.70],
-    'C'  => ['nilai' => 66, 'bobot' => 2.00],
-    'D+' => ['nilai' => 58, 'bobot' => 1.80],
-    'D'  => ['nilai' => 50, 'bobot' => 1.30],
-    'E'  => ['nilai' => 40, 'bobot' => 1.00],
+    'A' => ['nilai' => 90, 'bobot' => 4.00],
+    'B' => ['nilai' => 75, 'bobot' => 3.00],
+    'C' => ['nilai' => 65, 'bobot' => 2.00],
+    'D' => ['nilai' => 55, 'bobot' => 1.00],
+    'E' => ['nilai' => 25, 'bobot' => 0.00],
 ];
 
 $updated = 0;

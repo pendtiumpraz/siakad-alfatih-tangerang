@@ -103,11 +103,11 @@ Grid berbentuk table dengan:
 ┌───────────┬──────────┬──────────┬─────────┐
 │ Mahasiswa │Pancasila │ B.Inggris│ Aqidah  │
 ├───────────┼──────────┼──────────┼─────────┤
-│ 2022010001│ [  95  ] │ [  85  ] │ [  70 ] │
-│ Ahmad     │A+(4.00)✓│ B (2.95)✓│C+(2.70)✓│
+│ 2022010001│ [  95  ] │ [  85  ] │ [  72 ] │
+│ Ahmad     │ A (4.00)✓│ A (4.00)✓│ B (3.00)✓│
 ├───────────┼──────────┼──────────┼─────────┤
-│ 2022010002│ [  94  ] │ [  72  ] │ [  45 ] │
-│ Budi      │A (3.70)✓ │C+(2.70)✓│ E (1.0)✗│
+│ 2022010002│ [  78  ] │ [  65  ] │ [  45 ] │
+│ Budi      │ B (3.00)✓│ C (2.00)✓│ E (0.00)✗│
 └───────────┴──────────┴──────────┴─────────┘
 ```
 
@@ -117,12 +117,12 @@ Grid berbentuk table dengan:
 2. **Ketik nilai angka** (0-100)
 3. **Tekan Tab** atau **Enter** untuk pindah ke cell berikutnya
 4. **Otomatis muncul:**
-   - Grade (A, B+, B, C, D, E)
-   - Bobot (4.0, 3.3, 3.0, dst)
+   - Grade (A, B, C, D, E)
+   - Bobot (4.00, 3.00, 2.00, 1.00, 0.00)
    - Status (✓ Lulus / ✗ Tidak Lulus)
    - Warna background:
-     - 🟢 **Hijau:** Lulus (Grade ≥ C)
-     - 🔴 **Merah:** Tidak Lulus (Grade < C / D & E)
+     - 🟢 **Hijau:** Lulus (Grade A, B, C)
+     - 🔴 **Merah / Oranye:** Tidak Lulus (Grade D & E)
 
 **Tips:**
 - ✅ Scroll **horizontal** untuk lihat MK lainnya
@@ -141,12 +141,12 @@ Grid berbentuk table dengan:
 ```
 Ahmad:
 ├─ Pancasila: 85 [A] ✓ [🟢 Hijau]
-├─ B.Inggris: 75 [B+] ✓ [🟢 Hijau]
+├─ B.Inggris: 75 [B] ✓ [🟢 Hijau]
 └─ Fiqih: 45 [E] ✗ [🔴 Merah] ← Akan muncul di mengulang!
 
 Budi:
 ├─ Pancasila: 94 [A] ✓ [🟢 Hijau]
-├─ B.Inggris: 72 [C+] ✓ [🟡 Kuning]
+├─ B.Inggris: 72 [B] ✓ [🟢 Hijau]
 └─ Semua lulus!
 ```
 
@@ -193,23 +193,27 @@ Created: 200, Updated: 15, Skipped: 10
 
 **Patokan Nilai:**
 
-| Nilai Angka | Grade | Bobot | Status | Warna |
-|-------------|-------|-------|--------|-------|
-| 98-100 | A+ | 4.00 | ✓ Lulus | 🟢 Hijau |
-| 93-97 | A | 3.70 | ✓ Lulus | 🟢 Hijau |
-| 88-92 | B+ | 3.60 | ✓ Lulus | 🔵 Biru |
-| 80-87 | B | 2.95 | ✓ Lulus | 🔵 Biru |
-| 70-79 | C+ | 2.70 | ✓ Lulus | 🟡 Kuning |
-| 66-69 | C | 2.00 | ✓ Lulus | 🟡 Kuning |
-| 58-65 | D+ | 1.80 | ✓ Lulus | 🟠 Oranye |
-| 50-57 | D | 1.30 | ✓ Lulus | 🟠 Oranye |
-| 0-49 | E | 1.00 | ✗ Tidak Lulus | 🔴 Merah |
+| Nilai Angka | Grade | Bobot | Keterangan | Status | Warna |
+|-------------|-------|-------|------------|--------|-------|
+| 80 - 100 | A | 4.00 | Sangat Baik | ✓ Lulus | 🟢 Hijau |
+| 70 - 79  | B | 3.00 | Baik        | ✓ Lulus | 🟢 Hijau |
+| 60 - 69  | C | 2.00 | Cukup       | ✓ Lulus | 🟡 Kuning |
+| 50 - 59  | D | 1.00 | Tidak Lulus | ✗ Tidak Lulus | 🟠 Oranye |
+| 0 - 49   | E | 0.00 | Tidak Lulus | ✗ Tidak Lulus | 🔴 Merah |
+
+**Bobot Komponen Nilai Akhir:**
+
+| Komponen | Bobot |
+|----------|-------|
+| Kehadiran | 15% |
+| Tugas Individu / Kelompok / Presentasi | 15% |
+| UTS | 30% |
+| UAS | 40% |
 
 **Catatan Penting:**
-- **NO minus grades** (A-, B-, C-) hanya PLUS (A+, B+, C+, D+)
-- **Semua grade A+ sampai D = LULUS**
-- **Hanya E = TIDAK LULUS**
-- Berdasarkan **SISTEM PERKULIAHAN DARING STAI AL-FATIH**
+- **Hanya 5 grade**: A, B, C, D, E (tidak ada plus/minus)
+- **LULUS**: Grade A, B, C
+- **TIDAK LULUS**: Grade D, E (mahasiswa wajib mengulang mata kuliah)
 
 ---
 

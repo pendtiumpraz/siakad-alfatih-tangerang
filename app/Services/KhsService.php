@@ -5,24 +5,20 @@ namespace App\Services;
 class KhsService
 {
     /**
-     * Get bobot (nilai angka) from grade huruf
-     * Based on official STAI AL-FATIH grading system
-     * 
+     * Get bobot (nilai angka) from grade huruf.
+     * Skala penilaian: A 4.00, B 3.00, C 2.00, D 1.00, E 0.00.
+     *
      * @param string $grade
      * @return float
      */
     public function getBobot($grade)
     {
         $gradeMap = [
-            'A+' => 4.00,
-            'A'  => 3.70,
-            'B+' => 3.60,
-            'B'  => 2.95,
-            'C+' => 2.70,
-            'C'  => 2.00,
-            'D+' => 1.80,
-            'D'  => 1.30,
-            'E'  => 1.00,
+            'A' => 4.00,
+            'B' => 3.00,
+            'C' => 2.00,
+            'D' => 1.00,
+            'E' => 0.00,
         ];
 
         return $gradeMap[$grade] ?? 0.00;
@@ -157,23 +153,20 @@ class KhsService
     }
 
     /**
-     * Get grade color for display
-     * 
+     * Get grade color for display.
+     * A Sangat Baik (hijau), B Baik (emerald), C Cukup (kuning), D/E Tidak Lulus (orange/merah).
+     *
      * @param string $grade
      * @return string
      */
     public function getGradeColor($grade)
     {
         $colorMap = [
-            'A+' => 'bg-green-100 text-green-800',
-            'A'  => 'bg-green-100 text-green-800',
-            'B+' => 'bg-blue-100 text-blue-800',
-            'B'  => 'bg-blue-100 text-blue-800',
-            'C+' => 'bg-yellow-100 text-yellow-800',
-            'C'  => 'bg-yellow-100 text-yellow-800',
-            'D+' => 'bg-orange-100 text-orange-800',
-            'D'  => 'bg-orange-100 text-orange-800',
-            'E'  => 'bg-red-100 text-red-800',
+            'A' => 'bg-green-100 text-green-800',
+            'B' => 'bg-emerald-100 text-emerald-800',
+            'C' => 'bg-yellow-100 text-yellow-800',
+            'D' => 'bg-orange-100 text-orange-800',
+            'E' => 'bg-red-100 text-red-800',
         ];
 
         return $colorMap[$grade] ?? 'bg-gray-100 text-gray-800';

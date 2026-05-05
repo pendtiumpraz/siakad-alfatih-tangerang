@@ -278,12 +278,12 @@
                                 </h4>
                                 <p class="text-sm text-gray-700 mb-2">Menampilkan detail nilai per mata kuliah:</p>
                                 <ul class="text-xs text-gray-600 space-y-1 list-disc ml-4">
-                                    <li>Kehadiran</li>
-                                    <li>Tugas</li>
-                                    <li>UTS</li>
-                                    <li>UAS</li>
+                                    <li>Kehadiran (15%)</li>
+                                    <li>Tugas / Presentasi (15%)</li>
+                                    <li>UTS (30%)</li>
+                                    <li>UAS (40%)</li>
                                     <li>Nilai Akhir</li>
-                                    <li>Grade (A, B, C, dll)</li>
+                                    <li>Grade (A, B, C, D, E)</li>
                                 </ul>
                             </div>
 
@@ -309,63 +309,64 @@
 
                         <div class="bg-white border-2 border-gray-200 rounded-lg p-6 mb-6">
                             <p class="text-sm text-gray-700 mb-4">
-                                Berikut adalah sistem grade yang digunakan di STAI AL-FATIH berdasarkan nilai akhir Anda:
+                                Berikut adalah sistem grade yang digunakan berdasarkan nilai akhir Anda:
                             </p>
-                            <div class="grid grid-cols-2 gap-3">
-                                <!-- A Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #10B981; color: #1F2937;">
-                                    <span class="text-xl font-bold">A</span>
-                                    <span class="text-sm font-semibold">90-100</span>
-                                </div>
-                                <!-- A- Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #34D399; color: #1F2937;">
-                                    <span class="text-xl font-bold">A-</span>
-                                    <span class="text-sm font-semibold">85-89</span>
-                                </div>
-                                <!-- B+ Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #3B82F6; color: #FFFFFF;">
-                                    <span class="text-xl font-bold">B+</span>
-                                    <span class="text-sm font-semibold">80-84</span>
-                                </div>
-                                <!-- B Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #60A5FA; color: #1F2937;">
-                                    <span class="text-xl font-bold">B</span>
-                                    <span class="text-sm font-semibold">75-79</span>
-                                </div>
-                                <!-- B- Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #06B6D4; color: #FFFFFF;">
-                                    <span class="text-xl font-bold">B-</span>
-                                    <span class="text-sm font-semibold">70-74</span>
-                                </div>
-                                <!-- C+ Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #EAB308; color: #1F2937;">
-                                    <span class="text-xl font-bold">C+</span>
-                                    <span class="text-sm font-semibold">65-69</span>
-                                </div>
-                                <!-- C Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #FBBF24; color: #1F2937;">
-                                    <span class="text-xl font-bold">C</span>
-                                    <span class="text-sm font-semibold">60-64</span>
-                                </div>
-                                <!-- C- Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #FB923C; color: #1F2937;">
-                                    <span class="text-xl font-bold">C-</span>
-                                    <span class="text-sm font-semibold">55-59</span>
-                                </div>
-                                <!-- D Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #F97316; color: #FFFFFF;">
-                                    <span class="text-xl font-bold">D</span>
-                                    <span class="text-sm font-semibold">45-54</span>
-                                </div>
-                                <!-- E Grade -->
-                                <div class="flex items-center justify-between rounded-lg px-4 py-2.5 shadow-md" style="background-color: #EF4444; color: #FFFFFF;">
-                                    <span class="text-xl font-bold">E</span>
-                                    <span class="text-sm font-semibold">0-44</span>
-                                </div>
+
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                <p class="text-sm font-semibold text-blue-800 mb-1">Komposisi Nilai Akhir</p>
+                                <p class="text-xs text-blue-700">
+                                    Kehadiran 15% + Tugas Individu/Kelompok/Presentasi 15% + UTS 30% + UAS 40%
+                                </p>
                             </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm border border-gray-200 rounded">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-2 text-left font-semibold">Rentang Nilai</th>
+                                            <th class="px-3 py-2 text-center font-semibold">Grade</th>
+                                            <th class="px-3 py-2 text-center font-semibold">Bobot</th>
+                                            <th class="px-3 py-2 text-left font-semibold">Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr style="background-color: #DCFCE7;">
+                                            <td class="px-3 py-2 font-semibold">80 - 100</td>
+                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #15803d;">A</span></td>
+                                            <td class="px-3 py-2 text-center font-semibold">4.00</td>
+                                            <td class="px-3 py-2">Sangat Baik</td>
+                                        </tr>
+                                        <tr style="background-color: #D1FAE5;">
+                                            <td class="px-3 py-2 font-semibold">70 - 79</td>
+                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #22c55e;">B</span></td>
+                                            <td class="px-3 py-2 text-center font-semibold">3.00</td>
+                                            <td class="px-3 py-2">Baik</td>
+                                        </tr>
+                                        <tr style="background-color: #FEF3C7;">
+                                            <td class="px-3 py-2 font-semibold">60 - 69</td>
+                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #eab308;">C</span></td>
+                                            <td class="px-3 py-2 text-center font-semibold">2.00</td>
+                                            <td class="px-3 py-2">Cukup</td>
+                                        </tr>
+                                        <tr style="background-color: #FED7AA;">
+                                            <td class="px-3 py-2 font-semibold">50 - 59</td>
+                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #f97316;">D</span></td>
+                                            <td class="px-3 py-2 text-center font-semibold">1.00</td>
+                                            <td class="px-3 py-2 text-red-700">Tidak Lulus</td>
+                                        </tr>
+                                        <tr style="background-color: #FEE2E2;">
+                                            <td class="px-3 py-2 font-semibold">0 - 49</td>
+                                            <td class="px-3 py-2 text-center"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-white" style="background-color: #ef4444;">E</span></td>
+                                            <td class="px-3 py-2 text-center font-semibold">0.00</td>
+                                            <td class="px-3 py-2 text-red-700">Tidak Lulus</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div class="mt-4 p-3 bg-blue-50 rounded-lg">
                                 <p class="text-xs text-gray-600">
-                                    <strong>Catatan:</strong> Grade E menunjukkan nilai tidak lulus. Mahasiswa harus mengulang mata kuliah tersebut.
+                                    <strong>Catatan:</strong> Grade D dan E dihitung tidak lulus. Mahasiswa harus mengulang mata kuliah dengan grade tersebut.
                                 </p>
                             </div>
                         </div>

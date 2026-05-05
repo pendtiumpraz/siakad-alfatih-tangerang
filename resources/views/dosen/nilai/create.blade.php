@@ -58,7 +58,8 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase w-16">No</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">NIM</th>
                             <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Nama Mahasiswa</th>
-                            <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">Tugas (30%)</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">Kehadiran (15%)</th>
+                            <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">Tugas (15%)</th>
                             <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">UTS (30%)</th>
                             <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-24">UAS (40%)</th>
                         </tr>
@@ -71,6 +72,20 @@
                             <td class="px-4 py-3 text-sm text-gray-800">{{ $mahasiswa->nama_lengkap }}</td>
                             <td class="px-4 py-3 text-center">
                                 <input type="hidden" name="nilai[{{ $index }}][mahasiswa_id]" value="{{ $mahasiswa->id }}">
+                                <input
+                                    type="number"
+                                    name="nilai[{{ $index }}][nilai_kehadiran]"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    required
+                                    placeholder="0-100"
+                                    class="w-24 px-2 py-1 text-center border border-gray-300 rounded focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                    value="{{ old('nilai.'.$index.'.nilai_kehadiran') }}"
+                                    oninput="if(this.value < 0) this.value = 0; if(this.value > 100) this.value = 100;"
+                                >
+                            </td>
+                            <td class="px-4 py-3 text-center">
                                 <input
                                     type="number"
                                     name="nilai[{{ $index }}][nilai_tugas]"
@@ -115,7 +130,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                            <td colspan="7" class="px-4 py-8 text-center text-gray-500">
                                 <div class="flex flex-col items-center">
                                     <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -149,11 +164,13 @@
                     <div class="text-sm text-blue-700">
                         <p class="font-semibold mb-1">Catatan:</p>
                         <ul class="list-disc list-inside space-y-1">
-                            <li>Nilai Tugas: 30% dari nilai akhir</li>
-                            <li>Nilai UTS: 30% dari nilai akhir</li>
-                            <li>Nilai UAS: 40% dari nilai akhir</li>
+                            <li>Kehadiran: 15% dari nilai akhir</li>
+                            <li>Tugas Individu/Kelompok/Presentasi: 15% dari nilai akhir</li>
+                            <li>UTS: 30% dari nilai akhir</li>
+                            <li>UAS: 40% dari nilai akhir</li>
                             <li>Nilai akhir dan grade akan dihitung otomatis</li>
                             <li>Rentang nilai: 0-100</li>
+                            <li>Konversi: A (80-100) Sangat Baik, B (70-79) Baik, C (60-69) Cukup, D (50-59) Tidak Lulus, E (0-49) Tidak Lulus</li>
                         </ul>
                     </div>
                 </div>

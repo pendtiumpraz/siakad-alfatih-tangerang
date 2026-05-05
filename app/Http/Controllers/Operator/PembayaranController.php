@@ -297,6 +297,12 @@ class PembayaranController extends Controller
             DB::commit();
 
             $viewPrefix = $this->getViewPrefix();
+
+            if ($request->input('action') === 'save_print') {
+                return redirect()->route($viewPrefix . '.pembayaran.kwitansi', $pembayaran->id)
+                    ->with('success', 'Pembayaran tersimpan. Silakan cetak kwitansi.');
+            }
+
             return redirect()->route($viewPrefix . '.pembayaran.index')
                 ->with('success', 'Payment created successfully.');
 

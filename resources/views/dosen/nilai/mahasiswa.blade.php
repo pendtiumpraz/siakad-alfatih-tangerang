@@ -93,6 +93,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">NIM</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Nama Mahasiswa</th>
                         <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase">Semester</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-20">Hadir</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-20">Tugas</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-20">UTS</th>
                         <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase w-20">UAS</th>
@@ -109,6 +110,7 @@
                         <td class="px-4 py-3 text-sm font-semibold text-gray-900">{{ $nilai->mahasiswa->nim }}</td>
                         <td class="px-4 py-3 text-sm text-gray-800">{{ $nilai->mahasiswa->nama_lengkap }}</td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $nilai->semester ? $nilai->semester->tahun_akademik . ' - ' . ucfirst($nilai->semester->jenis) : '-' }}</td>
+                        <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ $nilai->nilai_kehadiran !== null ? number_format($nilai->nilai_kehadiran, 2) : '-' }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_tugas, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_uts, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-center font-medium text-gray-900">{{ number_format($nilai->nilai_uas, 2) }}</td>
@@ -144,7 +146,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="11" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="12" class="px-4 py-8 text-center text-gray-500">
                             <div class="flex flex-col items-center">
                                 <svg class="w-16 h-16 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -173,43 +175,28 @@
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
             <div class="text-center p-4 rounded-lg text-white" style="background: #15803d; border: 2px solid #166534;">
                 <p class="text-3xl font-bold">{{ $nilais->where('grade', 'A')->count() }}</p>
-                <p class="text-sm mt-1">Grade A</p>
-            </div>
-            <div class="text-center p-4 rounded-lg text-white" style="background: #16a34a; border: 2px solid #15803d;">
-                <p class="text-3xl font-bold">{{ $nilais->where('grade', 'A-')->count() }}</p>
-                <p class="text-sm mt-1">Grade A-</p>
+                <p class="text-sm mt-1">A · Sangat Baik</p>
+                <p class="text-xs opacity-90">80 - 100</p>
             </div>
             <div class="text-center p-4 rounded-lg text-white" style="background: #22c55e; border: 2px solid #16a34a;">
-                <p class="text-3xl font-bold">{{ $nilais->where('grade', 'B+')->count() }}</p>
-                <p class="text-sm mt-1">Grade B+</p>
-            </div>
-            <div class="text-center p-4 rounded-lg text-white" style="background: #4ade80; border: 2px solid #22c55e;">
                 <p class="text-3xl font-bold">{{ $nilais->where('grade', 'B')->count() }}</p>
-                <p class="text-sm mt-1">Grade B</p>
-            </div>
-            <div class="text-center p-4 rounded-lg text-white" style="background: #14b8a6; border: 2px solid #0d9488;">
-                <p class="text-3xl font-bold">{{ $nilais->where('grade', 'B-')->count() }}</p>
-                <p class="text-sm mt-1">Grade B-</p>
+                <p class="text-sm mt-1">B · Baik</p>
+                <p class="text-xs opacity-90">70 - 79</p>
             </div>
             <div class="text-center p-4 rounded-lg text-white" style="background: #eab308; border: 2px solid #ca8a04;">
-                <p class="text-3xl font-bold">{{ $nilais->where('grade', 'C+')->count() }}</p>
-                <p class="text-sm mt-1">Grade C+</p>
-            </div>
-            <div class="text-center p-4 rounded-lg text-white" style="background: #ca8a04; border: 2px solid #a16207;">
                 <p class="text-3xl font-bold">{{ $nilais->where('grade', 'C')->count() }}</p>
-                <p class="text-sm mt-1">Grade C</p>
+                <p class="text-sm mt-1">C · Cukup</p>
+                <p class="text-xs opacity-90">60 - 69</p>
             </div>
             <div class="text-center p-4 rounded-lg text-white" style="background: #f97316; border: 2px solid #ea580c;">
-                <p class="text-3xl font-bold">{{ $nilais->where('grade', 'C-')->count() }}</p>
-                <p class="text-sm mt-1">Grade C-</p>
-            </div>
-            <div class="text-center p-4 rounded-lg text-white" style="background: #ea580c; border: 2px solid #c2410c;">
                 <p class="text-3xl font-bold">{{ $nilais->where('grade', 'D')->count() }}</p>
-                <p class="text-sm mt-1">Grade D</p>
+                <p class="text-sm mt-1">D · Tidak Lulus</p>
+                <p class="text-xs opacity-90">50 - 59</p>
             </div>
             <div class="text-center p-4 rounded-lg text-white" style="background: #ef4444; border: 2px solid #dc2626;">
                 <p class="text-3xl font-bold">{{ $nilais->where('grade', 'E')->count() }}</p>
-                <p class="text-sm mt-1">Grade E</p>
+                <p class="text-sm mt-1">E · Tidak Lulus</p>
+                <p class="text-xs opacity-90">0 - 49</p>
             </div>
         </div>
     </x-islamic-card>

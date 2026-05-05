@@ -19,18 +19,13 @@ class KhsSeeder extends Seeder
         $semester = Semester::where('is_active', true)->first();
         $mahasiswas = Mahasiswa::all();
 
-        // Grade to numeric mapping
+        // Grade to numeric mapping (A 4.00, B 3.00, C 2.00, D 1.00, E 0.00)
         $gradeToNumeric = [
-            'A' => 4.0,
-            'A-' => 3.7,
-            'B+' => 3.3,
-            'B' => 3.0,
-            'B-' => 2.7,
-            'C+' => 2.3,
-            'C' => 2.0,
-            'C-' => 1.7,
-            'D' => 1.0,
-            'E' => 0.0,
+            'A' => 4.00,
+            'B' => 3.00,
+            'C' => 2.00,
+            'D' => 1.00,
+            'E' => 0.00,
         ];
 
         foreach ($mahasiswas as $mahasiswa) {

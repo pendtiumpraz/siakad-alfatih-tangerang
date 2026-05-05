@@ -44,11 +44,32 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Nilai Kehadiran -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Kehadiran (15%) <span class="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        name="nilai_kehadiran"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        required
+                        value="{{ old('nilai_kehadiran', $nilai->nilai_kehadiran) }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        oninput="if(this.value < 0) this.value = 0; if(this.value > 100) this.value = 100;"
+                    >
+                    @error('nilai_kehadiran')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Nilai Tugas -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Nilai Tugas (30%) <span class="text-red-500">*</span>
+                        Tugas/Presentasi (15%) <span class="text-red-500">*</span>
                     </label>
                     <input
                         type="number"
@@ -90,7 +111,7 @@
                 <!-- Nilai UAS -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Nilai UAS (40%) <span class="text-red-500">*</span>
+                        UAS (40%) <span class="text-red-500">*</span>
                     </label>
                     <input
                         type="number"
@@ -148,9 +169,9 @@
                     <div class="text-sm text-blue-700">
                         <p class="font-semibold mb-1">Catatan:</p>
                         <ul class="list-disc list-inside space-y-1">
-                            <li>Nilai akhir akan dihitung ulang secara otomatis</li>
-                            <li>Grade: A (85-100), A- (80-84), B+ (75-79), B (70-74), B- (65-69), C+ (60-64), C (55-59), C- (50-54), D (45-49), E (<45)</li>
-                            <li>Status kelulusan akan diperbarui otomatis</li>
+                            <li>Bobot: Kehadiran 15% + Tugas 15% + UTS 30% + UAS 40%</li>
+                            <li>Konversi grade: A (80-100) Sangat Baik / 4.00, B (70-79) Baik / 3.00, C (60-69) Cukup / 2.00, D (50-59) Tidak Lulus / 1.00, E (0-49) Tidak Lulus / 0.00</li>
+                            <li>Nilai akhir, grade, dan status kelulusan akan dihitung ulang otomatis</li>
                         </ul>
                     </div>
                 </div>

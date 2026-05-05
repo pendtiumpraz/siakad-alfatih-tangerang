@@ -48,7 +48,7 @@
                             <td class="px-6 py-4 text-sm text-gray-900">{{ $nilai->mataKuliah->nama_mk ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $nilai->nilai_akhir ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <span class="px-2 py-1 rounded font-medium {{ in_array($nilai->grade, ['A+', 'A']) ? 'bg-green-100 text-green-800' : (in_array($nilai->grade, ['B+', 'B']) ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
+                                <span class="px-2 py-1 rounded font-medium {{ $nilai->grade === 'A' ? 'bg-green-100 text-green-800' : ($nilai->grade === 'B' ? 'bg-emerald-100 text-emerald-800' : ($nilai->grade === 'C' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) }}">
                                     {{ $nilai->grade ?? '-' }}
                                 </span>
                             </td>

@@ -425,13 +425,13 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('nilai', [MahasiswaController::class, 'nilai'])->name('nilai.index');
     Route::get('nilai/{semester_id}', [MahasiswaController::class, 'nilaiDetail'])->name('nilai.detail');
 
-    // KHS & KRS Routes (Protected by SPP payment check)
+    // KHS Routes - bisa diakses meski belum bayar SPP
+    Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
+    Route::get('khs/{id}/download-pdf', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'downloadPdf'])->name('khs.download-pdf');
+    Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
+
+    // KRS (Kartu Rencana Studi) - tetap di-gate oleh pembayaran SPP semester aktif
     Route::middleware('check.spp')->group(function () {
-        Route::get('khs', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'index'])->name('khs.index');
-        Route::get('khs/{id}/download-pdf', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'downloadPdf'])->name('khs.download-pdf');
-        Route::get('khs/{id}', [\App\Http\Controllers\Mahasiswa\KhsController::class, 'show'])->name('khs.show');
-        
-        // KRS (Kartu Rencana Studi)
         Route::get('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('krs.index');
         Route::post('krs', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'store'])->name('krs.store');
         Route::post('krs/submit', [\App\Http\Controllers\Mahasiswa\KrsController::class, 'submit'])->name('krs.submit');

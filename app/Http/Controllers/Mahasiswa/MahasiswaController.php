@@ -9,6 +9,7 @@ use App\Models\Khs;
 use App\Models\Pembayaran;
 use App\Models\Semester;
 use App\Services\GoogleDriveService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -195,12 +196,16 @@ class MahasiswaController extends Controller
 
     /**
      * Display jadwal for the authenticated mahasiswa for the current semester.
+     *
+     * Memuat tiga data: jadwal pribadi (berdasarkan KRS), jadwal kelas keseluruhan
+     * (semua mata kuliah di tingkat semester yang sama untuk prodi mahasiswa),
+     * dan jadwal yang sedang berlangsung saat ini.
      */
     public function jadwal(Request $request)
     {
         $mahasiswa = $this->getAuthMahasiswa();
+        $mahasiswa->loadMissing('programStudi');
 
-        // Get active semester
         $semester = Semester::where('is_active', true)->first();
 
         if (!$semester) {
@@ -213,38 +218,23 @@ class MahasiswaController extends Controller
 
             return view('mahasiswa.jadwal', [
                 'jadwals' => collect(),
+                'jadwalKelas' => collect(),
+                'jadwalSekarang' => null,
+                'jadwalSelanjutnya' => null,
                 'semester' => null,
-                'mataKuliahKrs' => collect()
+                'mataKuliahKrs' => collect(),
             ])->with('error', 'Tidak ada semester aktif');
         }
 
-        // Get approved KRS for active semester
         $krsApproved = \App\Models\Krs::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $semester->id)
             ->where('status', 'approved')
             ->with('mataKuliah')
             ->get();
 
-        if ($krsApproved->isEmpty()) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Belum ada KRS yang disetujui untuk semester ini'
-                ], 404);
-            }
-
-            return view('mahasiswa.jadwal', [
-                'jadwals' => collect(),
-                'semester' => $semester,
-                'mataKuliahKrs' => collect()
-            ])->with('info', 'Belum ada KRS yang disetujui. Silakan lengkapi KRS Anda terlebih dahulu.');
-        }
-
-        // Get mata kuliah IDs from approved KRS
         $mataKuliahIds = $krsApproved->pluck('mata_kuliah_id')->toArray();
         $mataKuliahKrs = $krsApproved->pluck('mataKuliah')->keyBy('id');
 
-        // Get jadwal for those mata kuliah with matching jenis_semester
         $jadwals = Jadwal::where('jenis_semester', $semester->jenis)
             ->whereIn('mata_kuliah_id', $mataKuliahIds)
             ->with(['mataKuliah', 'dosen', 'ruangan'])
@@ -252,18 +242,88 @@ class MahasiswaController extends Controller
             ->orderBy('jam_mulai')
             ->get();
 
+        // Jadwal kelas keseluruhan: semua mata kuliah di prodi & tingkat semester yang sama
+        $jadwalKelas = collect();
+        if ($mahasiswa->program_studi_id && $mahasiswa->semester_aktif) {
+            $jadwalKelas = Jadwal::where('jenis_semester', $semester->jenis)
+                ->whereHas('mataKuliah', function ($q) use ($mahasiswa) {
+                    $q->where('semester', $mahasiswa->semester_aktif)
+                      ->whereHas('kurikulum', function ($qq) use ($mahasiswa) {
+                          $qq->where('program_studi_id', $mahasiswa->program_studi_id);
+                      });
+                })
+                ->with(['mataKuliah', 'dosen', 'ruangan'])
+                ->orderBy('hari')
+                ->orderBy('jam_mulai')
+                ->get();
+        }
+
+        // Tentukan jadwal yang sedang berlangsung (gabungan kelas + KRS)
+        [$jadwalSekarang, $jadwalSelanjutnya] = $this->resolveJadwalAktif(
+            $jadwalKelas->isNotEmpty() ? $jadwalKelas : $jadwals
+        );
+
         if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'data' => [
                     'semester' => $semester,
                     'jadwals' => $jadwals,
-                    'total_mk' => $krsApproved->count()
-                ]
+                    'jadwal_kelas' => $jadwalKelas,
+                    'jadwal_sekarang' => $jadwalSekarang,
+                    'jadwal_selanjutnya' => $jadwalSelanjutnya,
+                    'total_mk' => $krsApproved->count(),
+                ],
             ]);
         }
 
-        return view('mahasiswa.jadwal', compact('jadwals', 'semester', 'mataKuliahKrs'));
+        return view('mahasiswa.jadwal', compact(
+            'jadwals',
+            'jadwalKelas',
+            'jadwalSekarang',
+            'jadwalSelanjutnya',
+            'semester',
+            'mataKuliahKrs'
+        ));
+    }
+
+    /**
+     * Cari jadwal yang sedang berlangsung dan jadwal berikutnya pada hari ini.
+     *
+     * @return array{0: ?Jadwal, 1: ?Jadwal}
+     */
+    private function resolveJadwalAktif($jadwals): array
+    {
+        if ($jadwals->isEmpty()) {
+            return [null, null];
+        }
+
+        $now = Carbon::now();
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+        $hariIni = $hariMap[$now->englishDayOfWeek] ?? null;
+        $jamSekarang = $now->format('H:i:s');
+
+        $hariIniJadwal = $jadwals->filter(function ($j) use ($hariIni) {
+            return strcasecmp((string) $j->hari, (string) $hariIni) === 0;
+        })->sortBy('jam_mulai')->values();
+
+        $sekarang = $hariIniJadwal->first(function ($j) use ($jamSekarang) {
+            return $jamSekarang >= $j->jam_mulai && $jamSekarang <= $j->jam_selesai;
+        });
+
+        $selanjutnya = $hariIniJadwal->first(function ($j) use ($jamSekarang) {
+            return $jamSekarang < $j->jam_mulai;
+        });
+
+        return [$sekarang, $selanjutnya];
     }
 
     /**

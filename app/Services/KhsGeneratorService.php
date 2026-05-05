@@ -12,22 +12,18 @@ use Illuminate\Support\Facades\Log;
 class KhsGeneratorService
 {
     /**
-     * Get bobot nilai from nilai_huruf
-     * A = 4.0, A- = 3.7, B+ = 3.3, B = 3.0, B- = 2.7, C+ = 2.3, C = 2.0, D = 1.0, E = 0.0
+     * Get bobot nilai from grade huruf.
+     * Skala penilaian: A 4.00, B 3.00, C 2.00, D 1.00, E 0.00.
      */
     public function getBobot(string $nilaiHuruf): float
     {
         return match(strtoupper($nilaiHuruf)) {
-            'A' => 4.0,
-            'A-' => 3.7,
-            'B+' => 3.3,
-            'B' => 3.0,
-            'B-' => 2.7,
-            'C+' => 2.3,
-            'C' => 2.0,
-            'D' => 1.0,
-            'E' => 0.0,
-            default => 0.0,
+            'A' => 4.00,
+            'B' => 3.00,
+            'C' => 2.00,
+            'D' => 1.00,
+            'E' => 0.00,
+            default => 0.00,
         };
     }
 
@@ -39,7 +35,7 @@ class KhsGeneratorService
     {
         $nilais = Nilai::where('mahasiswa_id', $mahasiswa->id)
             ->where('semester_id', $semester->id)
-            ->whereNotNull('nilai_huruf')
+            ->whereNotNull('grade')
             ->with('mataKuliah')
             ->get();
 
@@ -55,7 +51,7 @@ class KhsGeneratorService
         $totalSks = 0;
 
         foreach ($nilais as $nilai) {
-            $bobot = $this->getBobot($nilai->nilai_huruf);
+            $bobot = $this->getBobot($nilai->grade);
             $sks = $nilai->mataKuliah->sks ?? 0;
             
             $totalBobotXSks += ($bobot * $sks);
@@ -88,12 +84,12 @@ class KhsGeneratorService
         foreach ($semesters as $semester) {
             $nilais = Nilai::where('mahasiswa_id', $mahasiswa->id)
                 ->where('semester_id', $semester->id)
-                ->whereNotNull('nilai_huruf')
+                ->whereNotNull('grade')
                 ->with('mataKuliah')
                 ->get();
 
             foreach ($nilais as $nilai) {
-                $bobot = $this->getBobot($nilai->nilai_huruf);
+                $bobot = $this->getBobot($nilai->grade);
                 $sks = $nilai->mataKuliah->sks ?? 0;
                 
                 $totalBobotXSks += ($bobot * $sks);
@@ -170,7 +166,7 @@ class KhsGeneratorService
             // Check if mahasiswa has nilai for this semester
             $hasNilai = Nilai::where('mahasiswa_id', $mahasiswa->id)
                 ->where('semester_id', $semester->id)
-                ->whereNotNull('nilai_huruf')
+                ->whereNotNull('grade')
                 ->exists();
 
             if (!$hasNilai) {
@@ -204,7 +200,7 @@ class KhsGeneratorService
         $mahasiswasWithNilai = Mahasiswa::where('status', 'aktif')
             ->whereHas('nilais', function($q) use ($semester) {
                 $q->where('semester_id', $semester->id)
-                  ->whereNotNull('nilai_huruf');
+                  ->whereNotNull('grade');
             })
             ->count();
 

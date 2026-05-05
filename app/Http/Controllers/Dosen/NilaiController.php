@@ -199,6 +199,7 @@ class NilaiController extends Controller
             'semester_id' => 'required|exists:semesters,id',
             'nilai' => 'required|array',
             'nilai.*.mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'nilai.*.nilai_kehadiran' => 'required|numeric|min:0|max:100',
             'nilai.*.nilai_tugas' => 'required|numeric|min:0|max:100',
             'nilai.*.nilai_uts' => 'required|numeric|min:0|max:100',
             'nilai.*.nilai_uas' => 'required|numeric|min:0|max:100',
@@ -211,18 +212,15 @@ class NilaiController extends Controller
 
         DB::transaction(function () use ($validated, $dosen) {
             foreach ($validated['nilai'] as $nilaiData) {
-                // Calculate nilai_akhir
-                $nilaiAkhir = ($nilaiData['nilai_tugas'] * 0.3) +
-                             ($nilaiData['nilai_uts'] * 0.3) +
-                             ($nilaiData['nilai_uas'] * 0.4);
+                $nilaiAkhir = Nilai::hitungNilaiAkhir(
+                    $nilaiData['nilai_kehadiran'],
+                    $nilaiData['nilai_tugas'],
+                    $nilaiData['nilai_uts'],
+                    $nilaiData['nilai_uas']
+                );
 
-                // Calculate grade
-                $grade = $this->calculateGrade($nilaiAkhir);
+                $konversi = Nilai::konversiGrade($nilaiAkhir);
 
-                // Determine status
-                $status = $grade != 'E' ? 'lulus' : 'tidak_lulus';
-
-                // Create or update nilai
                 Nilai::updateOrCreate(
                     [
                         'mahasiswa_id' => $nilaiData['mahasiswa_id'],
@@ -231,12 +229,14 @@ class NilaiController extends Controller
                     ],
                     [
                         'dosen_id' => $dosen->id,
+                        'nilai_kehadiran' => $nilaiData['nilai_kehadiran'],
                         'nilai_tugas' => $nilaiData['nilai_tugas'],
                         'nilai_uts' => $nilaiData['nilai_uts'],
                         'nilai_uas' => $nilaiData['nilai_uas'],
                         'nilai_akhir' => $nilaiAkhir,
-                        'grade' => $grade,
-                        'status' => $status,
+                        'grade' => $konversi['grade'],
+                        'bobot' => $konversi['bobot'],
+                        'status' => $konversi['status'],
                     ]
                 );
             }
@@ -279,30 +279,30 @@ class NilaiController extends Controller
         $nilai = Nilai::where('dosen_id', $dosen->id)->findOrFail($nilaiId);
 
         $validated = $request->validate([
+            'nilai_kehadiran' => 'required|numeric|min:0|max:100',
             'nilai_tugas' => 'required|numeric|min:0|max:100',
             'nilai_uts' => 'required|numeric|min:0|max:100',
             'nilai_uas' => 'required|numeric|min:0|max:100',
         ]);
 
-        // Calculate nilai_akhir
-        $nilaiAkhir = ($validated['nilai_tugas'] * 0.3) +
-                     ($validated['nilai_uts'] * 0.3) +
-                     ($validated['nilai_uas'] * 0.4);
+        $nilaiAkhir = Nilai::hitungNilaiAkhir(
+            $validated['nilai_kehadiran'],
+            $validated['nilai_tugas'],
+            $validated['nilai_uts'],
+            $validated['nilai_uas']
+        );
 
-        // Calculate grade
-        $grade = $this->calculateGrade($nilaiAkhir);
+        $konversi = Nilai::konversiGrade($nilaiAkhir);
 
-        // Determine status
-        $status = $grade != 'E' ? 'lulus' : 'tidak_lulus';
-
-        // Update nilai
         $nilai->update([
+            'nilai_kehadiran' => $validated['nilai_kehadiran'],
             'nilai_tugas' => $validated['nilai_tugas'],
             'nilai_uts' => $validated['nilai_uts'],
             'nilai_uas' => $validated['nilai_uas'],
             'nilai_akhir' => $nilaiAkhir,
-            'grade' => $grade,
-            'status' => $status,
+            'grade' => $konversi['grade'],
+            'bobot' => $konversi['bobot'],
+            'status' => $konversi['status'],
         ]);
 
         return redirect()->route('dosen.nilai.mahasiswa', $nilai->mata_kuliah_id)
@@ -329,36 +329,4 @@ class NilaiController extends Controller
             ->with('success', 'Nilai berhasil dihapus');
     }
 
-    /**
-     * Calculate grade based on nilai_akhir
-     * A (90-100), A- (85-89), B+ (80-84), B (75-79), B- (70-74), C+ (65-69), C (60-64), C- (55-59), D (45-54), E (0-44)
-     */
-    /**
-     * Calculate nilai huruf based on nilai akhir
-     * Based on official STAI AL-FATIH grading system
-     * Grade: A+, A, B+, B, C+, C, D+, D, E (NO minus grades)
-     */
-    private function calculateGrade($nilaiAkhir)
-    {
-        if ($nilaiAkhir >= 98 && $nilaiAkhir <= 100) {
-            return 'A+';
-        } elseif ($nilaiAkhir >= 93 && $nilaiAkhir <= 97) {
-            return 'A';
-        } elseif ($nilaiAkhir >= 88 && $nilaiAkhir <= 92) {
-            return 'B+';
-        } elseif ($nilaiAkhir >= 80 && $nilaiAkhir <= 87) {
-            return 'B';
-        } elseif ($nilaiAkhir >= 70 && $nilaiAkhir <= 79) {
-            return 'C+';
-        } elseif ($nilaiAkhir >= 66 && $nilaiAkhir <= 69) {
-            return 'C';
-        } elseif ($nilaiAkhir >= 58 && $nilaiAkhir <= 65) {
-            return 'D+';
-        } elseif ($nilaiAkhir >= 50 && $nilaiAkhir <= 57) {
-            return 'D';
-        } else {
-            // 0-49
-            return 'E';
-        }
-    }
 }

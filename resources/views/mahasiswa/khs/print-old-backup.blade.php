@@ -369,13 +369,8 @@
                         $bobot = 0;
                         switch($nilai->grade) {
                             case 'A': $bobot = 4.0; break;
-                            case 'A-': $bobot = 3.7; break;
-                            case 'B+': $bobot = 3.3; break;
                             case 'B': $bobot = 3.0; break;
-                            case 'B-': $bobot = 2.7; break;
-                            case 'C+': $bobot = 2.3; break;
                             case 'C': $bobot = 2.0; break;
-                            case 'C-': $bobot = 1.7; break;
                             case 'D': $bobot = 1.0; break;
                             case 'E': $bobot = 0.0; break;
                         }

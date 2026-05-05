@@ -218,24 +218,19 @@ class KHSController extends Controller
     }
 
     /**
-     * Get numeric value for grade
-     * Grade numeric: A=4.0, A-=3.7, B+=3.3, B=3.0, B-=2.7, C+=2.3, C=2.0, C-=1.7, D=1.0, E=0
+     * Get numeric value for grade.
+     * Skala penilaian: A 4.00, B 3.00, C 2.00, D 1.00, E 0.00.
      */
     private function getGradeNumeric($grade)
     {
         $gradeMap = [
-            'A' => 4.0,
-            'A-' => 3.7,
-            'B+' => 3.3,
-            'B' => 3.0,
-            'B-' => 2.7,
-            'C+' => 2.3,
-            'C' => 2.0,
-            'C-' => 1.7,
-            'D' => 1.0,
-            'E' => 0.0,
+            'A' => 4.00,
+            'B' => 3.00,
+            'C' => 2.00,
+            'D' => 1.00,
+            'E' => 0.00,
         ];
 
-        return $gradeMap[$grade] ?? 0.0;
+        return $gradeMap[$grade] ?? 0.00;
     }
 }
